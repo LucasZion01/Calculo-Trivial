@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 
+import '../../dashboard/presentation/dashboard_screen.dart';
 import '../../learning_path/presentation/learning_path_screen.dart';
 import '../../profile/presentation/profile_screen.dart';
-import '../../statistics/presentation/statistics_screen.dart';
 
-class DashboardScreen extends StatelessWidget {
-  const DashboardScreen({super.key});
+class StatisticsScreen extends StatelessWidget {
+  const StatisticsScreen({super.key});
 
   void _onMenuTap(BuildContext context, int index) {
     if (index == 0) {
-      return;
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (_) => const DashboardScreen(),
+        ),
+      );
     }
 
     if (index == 1) {
@@ -21,11 +25,7 @@ class DashboardScreen extends StatelessWidget {
     }
 
     if (index == 2) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (_) => const StatisticsScreen(),
-        ),
-      );
+      return;
     }
 
     if (index == 3) {
@@ -48,16 +48,25 @@ class DashboardScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                'Olá, Lucas 👋',
+                'Estatísticas',
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
+                  color: Color(0xFF2563EB),
+                ),
+              ),
+              const SizedBox(height: 10),
+              const Text(
+                'Seu progresso',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w600,
                   color: Color(0xFF1E293B),
                 ),
               ),
-              const SizedBox(height: 6),
+              const SizedBox(height: 8),
               const Text(
-                'Pronto para evoluir hoje?',
+                'Acompanhe sua evolução nos estudos.',
                 style: TextStyle(
                   fontSize: 14,
                   color: Color(0xFF64748B),
@@ -66,20 +75,23 @@ class DashboardScreen extends StatelessWidget {
               const SizedBox(height: 24),
               Container(
                 width: double.infinity,
-                height: 130,
+                height: 120,
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF2563EB),
+                  color: Colors.white,
                   borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: const Color(0xFFE2E8F0),
+                  ),
                 ),
                 child: const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Nível 1',
+                      'XP total',
                       style: TextStyle(
                         fontSize: 14,
-                        color: Color(0xFFDBEAFE),
+                        color: Color(0xFF64748B),
                       ),
                     ),
                     SizedBox(height: 8),
@@ -88,94 +100,21 @@ class DashboardScreen extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 32,
                         fontWeight: FontWeight.w700,
-                        color: Colors.white,
+                        color: Color(0xFF1E293B),
                       ),
                     ),
-                    SizedBox(height: 8),
+                    SizedBox(height: 6),
                     Text(
-                      'Continue estudando para subir de nível',
+                      'Continue acumulando XP para subir de nível.',
                       style: TextStyle(
-                        fontSize: 13,
-                        color: Color(0xFFDBEAFE),
+                        fontSize: 12,
+                        color: Color(0xFF64748B),
                       ),
                     ),
                   ],
                 ),
               ),
-              const SizedBox(height: 28),
-              const Text(
-                'Continuar estudando',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                  color: Color(0xFF1E293B),
-                ),
-              ),
-              const SizedBox(height: 12),
-              Material(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(16),
-                  onTap: () {
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (_) => const LearningPathScreen(),
-                      ),
-                    );
-                  },
-                  child: Container(
-                    width: double.infinity,
-                    height: 96,
-                    padding: const EdgeInsets.all(18),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(
-                        color: const Color(0xFFE2E8F0),
-                      ),
-                    ),
-                    child: const Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Pré-Cálculo',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xFF1E293B),
-                          ),
-                        ),
-                        SizedBox(height: 6),
-                        Text(
-                          'Aula 1 — Álgebra Fundamental',
-                          style: TextStyle(
-                            fontSize: 13,
-                            color: Color(0xFF64748B),
-                          ),
-                        ),
-                        Spacer(),
-                        Text(
-                          'Continuar',
-                          style: TextStyle(
-                            fontSize: 13,
-                            color: Color(0xFF2563EB),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 28),
-              const Text(
-                'Resumo de hoje',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                  color: Color(0xFF1E293B),
-                ),
-              ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 16),
               Row(
                 children: [
                   Expanded(
@@ -193,10 +132,10 @@ class DashboardScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            '🔥 3 dias',
+                            '3 dias',
                             style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600,
+                              fontSize: 24,
+                              fontWeight: FontWeight.w700,
                               color: Color(0xFF1E293B),
                             ),
                           ),
@@ -212,16 +151,18 @@ class DashboardScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 16),
+                  SizedBox(width: 16),
                   Expanded(
                     child: Container(
                       height: 90,
-                      padding: const EdgeInsets.all(16),
+                      padding: EdgeInsets.all(16),
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          color: const Color(0xFFE2E8F0),
+                        borderRadius: BorderRadius.all(Radius.circular(16)),
+                        border: Border.fromBorderSide(
+                          BorderSide(
+                            color: Color(0xFFE2E8F0),
+                          ),
                         ),
                       ),
                       child: const Column(
@@ -230,8 +171,8 @@ class DashboardScreen extends StatelessWidget {
                           Text(
                             '40%',
                             style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600,
+                              fontSize: 24,
+                              fontWeight: FontWeight.w700,
                               color: Color(0xFF1E293B),
                             ),
                           ),
@@ -249,12 +190,63 @@ class DashboardScreen extends StatelessWidget {
                   ),
                 ],
               ),
+              const SizedBox(height: 24),
+              const Text(
+                'Desempenho',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF1E293B),
+                ),
+              ),
+              const SizedBox(height: 12),
+              Container(
+                width: double.infinity,
+                height: 110,
+                padding: const EdgeInsets.all(18),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color: const Color(0xFFE2E8F0),
+                  ),
+                ),
+                child: const Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Acertos nos exercícios',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Color(0xFF64748B),
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      '80%',
+                      style: TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.w700,
+                        color: Color(0xFF1E293B),
+                      ),
+                    ),
+                    SizedBox(height: 4),
+                    Text(
+                      'Você acertou 4 de 5 questões.',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Color(0xFF64748B),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 0,
+        currentIndex: 2,
         type: BottomNavigationBarType.fixed,
         backgroundColor: Colors.white,
         selectedItemColor: const Color(0xFF2563EB),
