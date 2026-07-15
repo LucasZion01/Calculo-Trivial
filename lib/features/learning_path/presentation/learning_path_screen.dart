@@ -1,5 +1,6 @@
 ﻿import 'package:flutter/material.dart';
 
+import 'package:calcquest/shared/data/mock_learning_data.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
 import 'package:calcquest/shared/widgets/app_bottom_navigation_bar.dart';
 import 'package:calcquest/shared/widgets/math_card.dart';
@@ -77,31 +78,29 @@ class LearningPathScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 24),
-              MathCard(
-                title: 'Fundamentos Matemáticos',
-                subtitle: 'Pré-Cálculo, funções e base algébrica',
-                symbol: 'f(x)',
-                status: '0%',
-                statusColor: AppColors.primary,
-                onTap: () {
-                  _goToModuleDetail(context);
-                },
-              ),
-              const SizedBox(height: 16),
-              const MathCard(
-                title: 'Cálculo I',
-                subtitle: 'Limites, continuidade e derivadas',
-                symbol: 'lim',
-                status: 'Bloqueado',
-                statusColor: AppColors.textMuted,
-              ),
-              const SizedBox(height: 16),
-              const MathCard(
-                title: 'Cálculo II',
-                subtitle: 'Integrais, séries e equações diferenciais',
-                symbol: '∫',
-                status: 'Bloqueado',
-                statusColor: AppColors.textMuted,
+              Expanded(
+                child: ListView.separated(
+                  itemCount: mockModules.length,
+                  separatorBuilder: (context, index) => const SizedBox(height: 16),
+                  itemBuilder: (context, index) {
+                    final module = mockModules[index];
+
+                    return MathCard(
+                      title: module.title,
+                      subtitle: module.subtitle,
+                      symbol: module.symbol,
+                      status: module.status,
+                      statusColor: module.isUnlocked
+                          ? AppColors.primary
+                          : AppColors.textMuted,
+                      onTap: module.isUnlocked
+                          ? () {
+                              _goToModuleDetail(context);
+                            }
+                          : null,
+                    );
+                  },
+                ),
               ),
             ],
           ),

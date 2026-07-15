@@ -1,5 +1,6 @@
 ﻿import 'package:flutter/material.dart';
 
+import 'package:calcquest/shared/data/mock_learning_data.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
 import 'package:calcquest/shared/widgets/app_bottom_navigation_bar.dart';
 import 'package:calcquest/shared/widgets/math_card.dart';
@@ -61,6 +62,8 @@ class ModuleDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final module = mockModules.first;
+
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
@@ -69,9 +72,9 @@ class ModuleDetailScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Fundamentos Matemáticos',
-                style: TextStyle(
+              Text(
+                module.title,
+                style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w600,
                   color: AppColors.textPrimary,
@@ -134,31 +137,29 @@ class ModuleDetailScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 12),
-              MathCard(
-                title: 'Aula 1 — Álgebra Fundamental',
-                subtitle: 'Operações, expressões e simplificação',
-                symbol: 'x',
-                status: 'Comece aqui',
-                statusColor: AppColors.primary,
-                onTap: () {
-                  _goToLesson(context);
-                },
-              ),
-              const SizedBox(height: 16),
-              const MathCard(
-                title: 'Aula 2 — Equações e Inequações',
-                subtitle: 'Manipulação algébrica e resolução',
-                symbol: '=',
-                status: 'Bloqueado',
-                statusColor: AppColors.textMuted,
-              ),
-              const SizedBox(height: 16),
-              const MathCard(
-                title: 'Aula 3 — Funções',
-                subtitle: 'Domínio, imagem e gráficos',
-                symbol: 'f',
-                status: 'Bloqueado',
-                statusColor: AppColors.textMuted,
+              Expanded(
+                child: ListView.separated(
+                  itemCount: module.lessons.length,
+                  separatorBuilder: (context, index) => const SizedBox(height: 16),
+                  itemBuilder: (context, index) {
+                    final lesson = module.lessons[index];
+
+                    return MathCard(
+                      title: lesson.title,
+                      subtitle: lesson.subtitle,
+                      symbol: lesson.symbol,
+                      status: lesson.status,
+                      statusColor: lesson.isUnlocked
+                          ? AppColors.primary
+                          : AppColors.textMuted,
+                      onTap: lesson.isUnlocked
+                          ? () {
+                              _goToLesson(context);
+                            }
+                          : null,
+                    );
+                  },
+                ),
               ),
             ],
           ),
