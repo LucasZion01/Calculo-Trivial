@@ -1,14 +1,157 @@
 ﻿import 'package:flutter/material.dart';
 
+import 'package:calcquest/shared/data/mock_exercise_data.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
+import 'package:calcquest/shared/widgets/app_bottom_navigation_bar.dart';
+import 'package:calcquest/shared/widgets/primary_button.dart';
 
+import '../../dashboard/presentation/dashboard_screen.dart';
+import '../../learning_path/presentation/learning_path_screen.dart';
+import '../../profile/presentation/profile_screen.dart';
 import '../../result/presentation/result_screen.dart';
+import '../../statistics/presentation/statistics_screen.dart';
 
-class ExercisesScreen extends StatelessWidget {
+class ExercisesScreen extends StatefulWidget {
   const ExercisesScreen({super.key});
 
   @override
+  State<ExercisesScreen> createState() => _ExercisesScreenState();
+}
+
+class _ExercisesScreenState extends State<ExercisesScreen> {
+  String? selectedOptionId;
+
+  void _onMenuTap(BuildContext context, int index) {
+    if (index == 0) {
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (_) => const DashboardScreen(),
+        ),
+        (route) => false,
+      );
+    }
+
+    if (index == 1) {
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (_) => const LearningPathScreen(),
+        ),
+        (route) => false,
+      );
+    }
+
+    if (index == 2) {
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (_) => const StatisticsScreen(),
+        ),
+        (route) => false,
+      );
+    }
+
+    if (index == 3) {
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (_) => const ProfileScreen(),
+        ),
+        (route) => false,
+      );
+    }
+  }
+
+  void _confirmAnswer(ExerciseData exercise) {
+    if (selectedOptionId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Escolha uma alternativa antes de continuar.'),
+        ),
+      );
+      return;
+    }
+
+    if (selectedOptionId == exercise.correctOptionId) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => const ResultScreen(),
+        ),
+      );
+      return;
+    }
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Resposta incorreta. Tente novamente.'),
+      ),
+    );
+  }
+
+  String _letterForIndex(int index) {
+    const letters = ['A', 'B', 'C', 'D'];
+    return letters[index];
+  }
+
+  Widget _buildOption({
+    required ExerciseOptionData option,
+    required int index,
+  }) {
+    final isSelected = selectedOptionId == option.id;
+
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          selectedOptionId = option.id;
+        });
+      },
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: isSelected ? AppColors.selectedBackground : AppColors.white,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(
+            color: isSelected ? AppColors.primary : AppColors.border,
+            width: isSelected ? 2 : 1,
+          ),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 34,
+              height: 34,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: isSelected ? AppColors.primary : AppColors.background,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Text(
+                _letterForIndex(index),
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                  color: isSelected ? AppColors.white : AppColors.textSecondary,
+                ),
+              ),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Text(
+                option.text,
+                style: const TextStyle(
+                  fontSize: 16,
+                  color: AppColors.textPrimary,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final exercise = mockExercises.first;
+
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
@@ -17,26 +160,17 @@ class ExercisesScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Exercícios',
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w500,
-                  color: AppColors.primary,
-                ),
-              ),
-              const SizedBox(height: 10),
-              const Text(
-                'Pratique Álgebra',
-                style: TextStyle(
-                  fontSize: 24,
+              Text(
+                exercise.title,
+                style: const TextStyle(
+                  fontSize: 22,
                   fontWeight: FontWeight.w600,
                   color: AppColors.textPrimary,
                 ),
               ),
               const SizedBox(height: 8),
               const Text(
-                'Resolva exercícios para fixar o conteúdo da aula.',
+                'Escolha a alternativa correta.',
                 style: TextStyle(
                   fontSize: 14,
                   color: AppColors.textSecondary,
@@ -45,193 +179,58 @@ class ExercisesScreen extends StatelessWidget {
               const SizedBox(height: 24),
               Container(
                 width: double.infinity,
-                height: 300,
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   color: AppColors.white,
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(18),
                   border: Border.all(
                     color: AppColors.border,
                   ),
                 ),
-                child: const Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Questão 1 de 5',
-                      style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500,
-                        color: AppColors.primary,
-                      ),
-                    ),
-                    SizedBox(height: 18),
-                    Text(
-                      'Simplifique a expressão:',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: AppColors.textSecondary,
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      '3x + 5x - 2x',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.textPrimary,
-                      ),
-                    ),
-                    SizedBox(height: 22),
-                    _AnswerOption(text: 'A) 6x'),
-                    SizedBox(height: 10),
-                    _AnswerOption(text: 'B) 8x'),
-                    SizedBox(height: 10),
-                    _AnswerOption(text: 'C) 10x'),
-                    SizedBox(height: 10),
-                    _AnswerOption(text: 'D) x'),
-                  ],
+                child: Text(
+                  exercise.statement,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    height: 1.4,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.textPrimary,
+                  ),
                 ),
               ),
               const SizedBox(height: 24),
-              SizedBox(
-                width: double.infinity,
-                height: 48,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) => const ResultScreen(),
-                      ),
+              Expanded(
+                child: ListView.separated(
+                  itemCount: exercise.options.length,
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(height: 12),
+                  itemBuilder: (context, index) {
+                    final option = exercise.options[index];
+
+                    return _buildOption(
+                      option: option,
+                      index: index,
                     );
                   },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    foregroundColor: AppColors.white,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: const Text(
-                    'Confirmar resposta',
-                    style: TextStyle(
-                      fontSize: 16,
-                    ),
-                  ),
                 ),
               ),
-              const SizedBox(height: 12),
-              const Center(
-                child: Text(
-                  '1/5 exercícios concluídos',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: AppColors.textSecondary,
-                  ),
-                ),
+              const SizedBox(height: 16),
+              PrimaryButton(
+                text: 'Confirmar resposta',
+                onPressed: () {
+                  _confirmAnswer(exercise);
+                },
               ),
+              const SizedBox(height: 24),
             ],
           ),
         ),
       ),
-      bottomNavigationBar: const _ExercisesBottomNavigationBar(),
-    );
-  }
-}
-
-class _AnswerOption extends StatelessWidget {
-  final String text;
-
-  const _AnswerOption({
-    required this.text,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: 40,
-      alignment: Alignment.centerLeft,
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: AppColors.inputBorder,
-        ),
-      ),
-      child: Text(
-        text,
-        style: const TextStyle(
-          fontSize: 14,
-          color: AppColors.textPrimary,
-        ),
+      bottomNavigationBar: AppBottomNavigationBar(
+        currentIndex: 1,
+        onTap: (index) {
+          _onMenuTap(context, index);
+        },
       ),
     );
   }
 }
-
-class _ExercisesBottomNavigationBar extends StatelessWidget {
-  const _ExercisesBottomNavigationBar();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 72,
-      decoration: const BoxDecoration(
-        color: AppColors.white,
-        border: Border(
-          top: BorderSide(
-            color: AppColors.border,
-          ),
-        ),
-      ),
-      child: const Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          _BottomNavItem(
-            label: 'Início',
-            isActive: false,
-          ),
-          _BottomNavItem(
-            label: 'Trilha',
-            isActive: true,
-          ),
-          _BottomNavItem(
-            label: 'Estatísticas',
-            isActive: false,
-          ),
-          _BottomNavItem(
-            label: 'Perfil',
-            isActive: false,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _BottomNavItem extends StatelessWidget {
-  final String label;
-  final bool isActive;
-
-  const _BottomNavItem({
-    required this.label,
-    required this.isActive,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      label,
-      style: TextStyle(
-        fontSize: 12,
-        fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
-        color: isActive ? AppColors.primary : AppColors.textSecondary,
-      ),
-    );
-  }
-}
-
-
