@@ -79,7 +79,7 @@ class ResultScreen extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               const Text(
-                'Atividade concluÃ­da',
+                'Atividade concluída',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w600,
@@ -110,7 +110,7 @@ class ResultScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'VocÃª acertou',
+                      'Você acertou',
                       style: TextStyle(
                         fontSize: 14,
                         color: AppColors.textSecondary,
@@ -127,7 +127,7 @@ class ResultScreen extends StatelessWidget {
                     ),
                     SizedBox(height: 12),
                     Text(
-                      'Bom desempenho. Continue praticando para dominar o mÃ³dulo.',
+                      'Bom desempenho. Continue praticando para dominar o módulo.',
                       style: TextStyle(
                         fontSize: 13,
                         height: 1.4,
@@ -171,7 +171,7 @@ class ResultScreen extends StatelessWidget {
                     ),
                     SizedBox(height: 2),
                     Text(
-                      'VocÃª estÃ¡ mais perto do NÃ­vel 2',
+                      'Você está mais perto do Nível 2',
                       style: TextStyle(
                         fontSize: 12,
                         color: AppColors.textSecondary,
@@ -200,4 +200,5 @@ class ResultScreen extends StatelessWidget {
     );
   }
 }
+
 

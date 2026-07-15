@@ -27,7 +27,7 @@ class RegisterScreen extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               const Text(
-                'Crie sua conta para comeÃ§ar sua jornada.',
+                'Crie sua conta para começar sua jornada.',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 16,
@@ -159,7 +159,7 @@ class RegisterScreen extends StatelessWidget {
                   Navigator.of(context).pop();
                 },
                 child: const Text(
-                  'JÃ¡ tem conta? Entrar',
+                  'Já tem conta? Entrar',
                   style: TextStyle(
                     fontSize: 13,
                     color: AppColors.textSecondary,
@@ -173,4 +173,5 @@ class RegisterScreen extends StatelessWidget {
     );
   }
 }
+
 

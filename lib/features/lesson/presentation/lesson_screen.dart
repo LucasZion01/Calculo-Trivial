@@ -79,7 +79,7 @@ class LessonScreen extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               const Text(
-                'Ãlgebra Fundamental',
+                'Álgebra Fundamental',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w600,
@@ -88,7 +88,7 @@ class LessonScreen extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               const Text(
-                'Entenda a base algÃ©brica necessÃ¡ria para avanÃ§ar em CÃ¡lculo.',
+                'Entenda a base algébrica necessária para avançar em Cálculo.',
                 style: TextStyle(
                   fontSize: 14,
                   color: AppColors.textSecondary,
@@ -110,7 +110,7 @@ class LessonScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      'MotivaÃ§Ã£o',
+                      'Motivação',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
@@ -119,7 +119,7 @@ class LessonScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 12),
                     const Text(
-                      'Antes de estudar limites, derivadas e integrais, vocÃª precisa dominar operaÃ§Ãµes algÃ©bricas, simplificaÃ§Ã£o de expressÃµes e manipulaÃ§Ã£o de equaÃ§Ãµes.',
+                      'Antes de estudar limites, derivadas e integrais, você precisa dominar operações algébricas, simplificação de expressões e manipulação de equações.',
                       style: TextStyle(
                         fontSize: 14,
                         height: 1.4,
@@ -155,7 +155,7 @@ class LessonScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Exemplo rÃ¡pido',
+                      'Exemplo rápido',
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
@@ -195,4 +195,5 @@ class LessonScreen extends StatelessWidget {
     );
   }
 }
+
 

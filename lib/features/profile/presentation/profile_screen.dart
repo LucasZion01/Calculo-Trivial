@@ -92,7 +92,7 @@ class ProfileScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'NÃ­vel 1',
+                      'Nível 1',
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
@@ -144,7 +144,7 @@ class ProfileScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Primeira aula concluÃ­da',
+                      'Primeira aula concluída',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
@@ -153,7 +153,7 @@ class ProfileScreen extends StatelessWidget {
                     ),
                     SizedBox(height: 8),
                     Text(
-                      'VocÃª iniciou sua jornada no CalcQuest.',
+                      'Você iniciou sua jornada no CalcQuest.',
                       style: TextStyle(
                         fontSize: 12,
                         color: AppColors.textSecondary,
@@ -187,7 +187,7 @@ class ProfileScreen extends StatelessWidget {
                       ),
                     ),
                     child: const Text(
-                      'ConfiguraÃ§Ãµes',
+                      'Configurações',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
@@ -210,4 +210,5 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 }
+
 

@@ -56,7 +56,7 @@ class SettingsScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                'ConfiguraÃ§Ãµes',
+                'Configurações',
                 style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w500,
@@ -74,7 +74,7 @@ class SettingsScreen extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               const Text(
-                'Gerencie preferÃªncias bÃ¡sicas do aplicativo.',
+                'Gerencie preferências básicas do aplicativo.',
                 style: TextStyle(
                   fontSize: 14,
                   color: AppColors.textSecondary,
@@ -87,8 +87,8 @@ class SettingsScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               const _SettingsCard(
-                title: 'NotificaÃ§Ãµes',
-                subtitle: 'Lembretes de estudo e metas diÃ¡rias',
+                title: 'Notificações',
+                subtitle: 'Lembretes de estudo e metas diárias',
               ),
               const SizedBox(height: 16),
               const _SettingsCard(
@@ -178,4 +178,5 @@ class _SettingsCard extends StatelessWidget {
     );
   }
 }
+
 

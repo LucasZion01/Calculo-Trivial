@@ -51,7 +51,7 @@ class DashboardScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                'OlÃ¡, Lucas ðŸ‘‹',
+                'Olá, Lucas 👋',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w600,
@@ -79,7 +79,7 @@ class DashboardScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'NÃ­vel 1',
+                      'Nível 1',
                       style: TextStyle(
                         fontSize: 14,
                         color: AppColors.primaryLight,
@@ -96,7 +96,7 @@ class DashboardScreen extends StatelessWidget {
                     ),
                     SizedBox(height: 8),
                     Text(
-                      'Continue estudando para subir de nÃ­vel',
+                      'Continue estudando para subir de nível',
                       style: TextStyle(
                         fontSize: 13,
                         color: AppColors.primaryLight,
@@ -141,7 +141,7 @@ class DashboardScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'PrÃ©-CÃ¡lculo',
+                          'Pré-Cálculo',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -150,7 +150,7 @@ class DashboardScreen extends StatelessWidget {
                         ),
                         SizedBox(height: 6),
                         Text(
-                          'Aula 1 â€” Ãlgebra Fundamental',
+                          'Aula 1 — Álgebra Fundamental',
                           style: TextStyle(
                             fontSize: 13,
                             color: AppColors.textSecondary,
@@ -196,7 +196,7 @@ class DashboardScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'ðŸ”¥ 3 dias',
+                            '🔥 3 dias',
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w600,
@@ -205,7 +205,7 @@ class DashboardScreen extends StatelessWidget {
                           ),
                           SizedBox(height: 8),
                           Text(
-                            'SequÃªncia',
+                            'Sequência',
                             style: TextStyle(
                               fontSize: 12,
                               color: AppColors.textSecondary,
@@ -240,7 +240,7 @@ class DashboardScreen extends StatelessWidget {
                           ),
                           SizedBox(height: 8),
                           Text(
-                            'Meta diÃ¡ria',
+                            'Meta diária',
                             style: TextStyle(
                               fontSize: 12,
                               color: AppColors.textSecondary,
@@ -265,4 +265,5 @@ class DashboardScreen extends StatelessWidget {
     );
   }
 }
+
 

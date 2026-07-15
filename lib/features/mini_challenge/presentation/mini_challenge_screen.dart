@@ -110,7 +110,7 @@ class _MiniChallengeScreenState extends State<MiniChallengeScreen> {
               ),
               const SizedBox(height: 10),
               const Text(
-                'Teste rÃ¡pido',
+                'Teste rápido',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w600,
@@ -119,7 +119,7 @@ class _MiniChallengeScreenState extends State<MiniChallengeScreen> {
               ),
               const SizedBox(height: 8),
               const Text(
-                'Escolha a resposta correta para liberar os prÃ³ximos exercÃ­cios.',
+                'Escolha a resposta correta para liberar os próximos exercícios.',
                 style: TextStyle(
                   fontSize: 14,
                   color: AppColors.textSecondary,
@@ -141,7 +141,7 @@ class _MiniChallengeScreenState extends State<MiniChallengeScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      'Qual Ã© o resultado de 4x + 2x?',
+                      'Qual é o resultado de 4x + 2x?',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
@@ -166,7 +166,7 @@ class _MiniChallengeScreenState extends State<MiniChallengeScreen> {
                     ),
                     const SizedBox(height: 12),
                     _AnswerOption(
-                      text: 'C) 4xÂ²',
+                      text: 'C) 4x²',
                       isSelected: selectedAnswer == 'C',
                       onTap: () {
                         _selectAnswer('C');
@@ -183,7 +183,7 @@ class _MiniChallengeScreenState extends State<MiniChallengeScreen> {
               const SizedBox(height: 12),
               const Center(
                 child: Text(
-                  'VocÃª ganha XP ao acertar o desafio.',
+                  'Você ganha XP ao acertar o desafio.',
                   style: TextStyle(
                     fontSize: 12,
                     color: AppColors.textSecondary,
@@ -252,4 +252,5 @@ class _AnswerOption extends StatelessWidget {
     );
   }
 }
+
 

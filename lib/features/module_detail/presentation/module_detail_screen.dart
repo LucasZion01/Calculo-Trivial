@@ -69,7 +69,7 @@ class ModuleDetailScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                'Fundamentos MatemÃ¡ticos',
+                'Fundamentos Matemáticos',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w600,
@@ -78,7 +78,7 @@ class ModuleDetailScreen extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               const Text(
-                'Construa a base necessÃ¡ria para estudar CÃ¡lculo.',
+                'Construa a base necessária para estudar Cálculo.',
                 style: TextStyle(
                   fontSize: 14,
                   color: AppColors.textSecondary,
@@ -97,7 +97,7 @@ class ModuleDetailScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Progresso do mÃ³dulo',
+                      'Progresso do módulo',
                       style: TextStyle(
                         fontSize: 14,
                         color: AppColors.primaryLight,
@@ -135,7 +135,7 @@ class ModuleDetailScreen extends StatelessWidget {
               const SizedBox(height: 12),
               _LessonCard(
                 lessonNumber: 'Aula 1',
-                title: 'Ãlgebra Fundamental',
+                title: 'Álgebra Fundamental',
                 status: 'Comece aqui',
                 statusColor: AppColors.textSecondary,
                 onTap: () {
@@ -145,14 +145,14 @@ class ModuleDetailScreen extends StatelessWidget {
               const SizedBox(height: 16),
               const _LessonCard(
                 lessonNumber: 'Aula 2',
-                title: 'EquaÃ§Ãµes e InequaÃ§Ãµes',
+                title: 'Equações e Inequações',
                 status: 'Bloqueado',
                 statusColor: AppColors.textMuted,
               ),
               const SizedBox(height: 16),
               const _LessonCard(
                 lessonNumber: 'Aula 3',
-                title: 'FunÃ§Ãµes',
+                title: 'Funções',
                 status: 'Bloqueado',
                 statusColor: AppColors.textMuted,
               ),
@@ -237,4 +237,5 @@ class _LessonCard extends StatelessWidget {
     );
   }
 }
+
 

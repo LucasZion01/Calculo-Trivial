@@ -18,7 +18,7 @@ class ExercisesScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                'ExercÃ­cios',
+                'Exercícios',
                 style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w500,
@@ -27,7 +27,7 @@ class ExercisesScreen extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               const Text(
-                'Pratique Ãlgebra',
+                'Pratique Álgebra',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w600,
@@ -36,7 +36,7 @@ class ExercisesScreen extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               const Text(
-                'Resolva exercÃ­cios para fixar o conteÃºdo da aula.',
+                'Resolva exercícios para fixar o conteúdo da aula.',
                 style: TextStyle(
                   fontSize: 14,
                   color: AppColors.textSecondary,
@@ -58,7 +58,7 @@ class ExercisesScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'QuestÃ£o 1 de 5',
+                      'Questão 1 de 5',
                       style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
@@ -67,7 +67,7 @@ class ExercisesScreen extends StatelessWidget {
                     ),
                     SizedBox(height: 18),
                     Text(
-                      'Simplifique a expressÃ£o:',
+                      'Simplifique a expressão:',
                       style: TextStyle(
                         fontSize: 14,
                         color: AppColors.textSecondary,
@@ -124,7 +124,7 @@ class ExercisesScreen extends StatelessWidget {
               const SizedBox(height: 12),
               const Center(
                 child: Text(
-                  '1/5 exercÃ­cios concluÃ­dos',
+                  '1/5 exercícios concluídos',
                   style: TextStyle(
                     fontSize: 12,
                     color: AppColors.textSecondary,
@@ -191,7 +191,7 @@ class _ExercisesBottomNavigationBar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           _BottomNavItem(
-            label: 'InÃ­cio',
+            label: 'Início',
             isActive: false,
           ),
           _BottomNavItem(
@@ -199,7 +199,7 @@ class _ExercisesBottomNavigationBar extends StatelessWidget {
             isActive: true,
           ),
           _BottomNavItem(
-            label: 'EstatÃ­sticas',
+            label: 'Estatísticas',
             isActive: false,
           ),
           _BottomNavItem(
@@ -233,4 +233,5 @@ class _BottomNavItem extends StatelessWidget {
     );
   }
 }
+
 

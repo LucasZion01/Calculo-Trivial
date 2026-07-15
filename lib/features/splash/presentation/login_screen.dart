@@ -25,7 +25,7 @@ class LoginScreen extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               const Text(
-                'Domine o CÃ¡lculo. Evolua como Engenheiro.',
+                'Domine o Cálculo. Evolua como Engenheiro.',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 16,
@@ -120,7 +120,7 @@ class LoginScreen extends StatelessWidget {
               const SizedBox(height: 16),
 
               const Text(
-                'Ainda nÃ£o tem conta? Criar conta',
+                'Ainda não tem conta? Criar conta',
                 style: TextStyle(
                   fontSize: 13,
                   color: AppColors.textSecondary,
@@ -143,4 +143,5 @@ class LoginScreen extends StatelessWidget {
     );
   }
 }
+
 

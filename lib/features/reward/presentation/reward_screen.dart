@@ -74,7 +74,7 @@ class RewardScreen extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               const Text(
-                'VocÃª evoluiu!',
+                'Você evoluiu!',
                 style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.w700,
@@ -83,7 +83,7 @@ class RewardScreen extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               const Text(
-                'Sua dedicaÃ§Ã£o gerou progresso no mÃ³dulo.',
+                'Sua dedicação gerou progresso no módulo.',
                 style: TextStyle(
                   fontSize: 14,
                   color: AppColors.textSecondary,
@@ -119,7 +119,7 @@ class RewardScreen extends StatelessWidget {
                     ),
                     SizedBox(height: 24),
                     Text(
-                      'NÃ­vel 1 â†’ NÃ­vel 2',
+                      'Nível 1 → Nível 2',
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
@@ -163,7 +163,7 @@ class RewardScreen extends StatelessWidget {
                     ),
                     SizedBox(height: 8),
                     Text(
-                      'Aula 2 â€” EquaÃ§Ãµes e InequaÃ§Ãµes',
+                      'Aula 2 — Equações e Inequações',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
@@ -193,4 +193,5 @@ class RewardScreen extends StatelessWidget {
     );
   }
 }
+
 

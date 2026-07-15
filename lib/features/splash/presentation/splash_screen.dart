@@ -50,7 +50,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 ),
                 SizedBox(height: 16),
                 Text(
-                  'Domine o CÃ¡lculo. Evolua como Engenheiro.',
+                  'Domine o Cálculo. Evolua como Engenheiro.',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 16,
@@ -73,4 +73,5 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 }
+
 

@@ -61,7 +61,7 @@ class LearningPathScreen extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               const Text(
-                'Avance mÃ³dulo por mÃ³dulo atÃ© dominar o CÃ¡lculo.',
+                'Avance módulo por módulo até dominar o Cálculo.',
                 style: TextStyle(
                   fontSize: 14,
                   color: AppColors.textSecondary,
@@ -69,8 +69,8 @@ class LearningPathScreen extends StatelessWidget {
               ),
               const SizedBox(height: 24),
               _ModuleCard(
-                title: 'Fundamentos MatemÃ¡ticos',
-                subtitle: 'PrÃ©-CÃ¡lculo, funÃ§Ãµes e base algÃ©brica',
+                title: 'Fundamentos Matemáticos',
+                subtitle: 'Pré-Cálculo, funções e base algébrica',
                 status: '0%',
                 statusColor: AppColors.primary,
                 onTap: () {
@@ -83,15 +83,15 @@ class LearningPathScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               const _ModuleCard(
-                title: 'CÃ¡lculo I',
+                title: 'Cálculo I',
                 subtitle: 'Limites, continuidade e derivadas',
                 status: 'Bloqueado',
                 statusColor: AppColors.textMuted,
               ),
               const SizedBox(height: 16),
               const _ModuleCard(
-                title: 'CÃ¡lculo II',
-                subtitle: 'Integrais, sÃ©ries e equaÃ§Ãµes diferenciais',
+                title: 'Cálculo II',
+                subtitle: 'Integrais, séries e equações diferenciais',
                 status: 'Bloqueado',
                 statusColor: AppColors.textMuted,
               ),
@@ -182,4 +182,5 @@ class _ModuleCard extends StatelessWidget {
     );
   }
 }
+
 

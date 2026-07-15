@@ -27,7 +27,7 @@ class AppBottomNavigationBar extends StatelessWidget {
         BottomNavigationBarItem(
           icon: Icon(Icons.home_outlined),
           activeIcon: Icon(Icons.home),
-          label: 'InÃ­cio',
+          label: 'Início',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.map_outlined),
@@ -37,7 +37,7 @@ class AppBottomNavigationBar extends StatelessWidget {
         BottomNavigationBarItem(
           icon: Icon(Icons.bar_chart_outlined),
           activeIcon: Icon(Icons.bar_chart),
-          label: 'EstatÃ­sticas',
+          label: 'Estatísticas',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.person_outline),
@@ -48,4 +48,5 @@ class AppBottomNavigationBar extends StatelessWidget {
     );
   }
 }
+
 

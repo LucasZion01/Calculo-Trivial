@@ -51,7 +51,7 @@ class StatisticsScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                'EstatÃ­sticas',
+                'Estatísticas',
                 style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w500,
@@ -69,7 +69,7 @@ class StatisticsScreen extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               const Text(
-                'Acompanhe sua evoluÃ§Ã£o nos estudos.',
+                'Acompanhe sua evolução nos estudos.',
                 style: TextStyle(
                   fontSize: 14,
                   color: AppColors.textSecondary,
@@ -108,7 +108,7 @@ class StatisticsScreen extends StatelessWidget {
                     ),
                     SizedBox(height: 6),
                     Text(
-                      'Continue acumulando XP para subir de nÃ­vel.',
+                      'Continue acumulando XP para subir de nível.',
                       style: TextStyle(
                         fontSize: 12,
                         color: AppColors.textSecondary,
@@ -144,7 +144,7 @@ class StatisticsScreen extends StatelessWidget {
                           ),
                           SizedBox(height: 8),
                           Text(
-                            'SequÃªncia',
+                            'Sequência',
                             style: TextStyle(
                               fontSize: 12,
                               color: AppColors.textSecondary,
@@ -179,7 +179,7 @@ class StatisticsScreen extends StatelessWidget {
                           ),
                           SizedBox(height: 8),
                           Text(
-                            'Meta diÃ¡ria',
+                            'Meta diária',
                             style: TextStyle(
                               fontSize: 12,
                               color: AppColors.textSecondary,
@@ -216,7 +216,7 @@ class StatisticsScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Acertos nos exercÃ­cios',
+                      'Acertos nos exercícios',
                       style: TextStyle(
                         fontSize: 14,
                         color: AppColors.textSecondary,
@@ -233,7 +233,7 @@ class StatisticsScreen extends StatelessWidget {
                     ),
                     SizedBox(height: 4),
                     Text(
-                      'VocÃª acertou 4 de 5 questÃµes.',
+                      'Você acertou 4 de 5 questões.',
                       style: TextStyle(
                         fontSize: 12,
                         color: AppColors.textSecondary,
@@ -255,4 +255,5 @@ class StatisticsScreen extends StatelessWidget {
     );
   }
 }
+
 
