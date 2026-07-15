@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../shared/widgets/app_bottom_navigation_bar.dart';
 import '../../dashboard/presentation/dashboard_screen.dart';
 import '../../learning_path/presentation/learning_path_screen.dart';
 import '../../settings/presentation/settings_screen.dart';
@@ -198,39 +199,11 @@ class ProfileScreen extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
+      bottomNavigationBar: AppBottomNavigationBar(
         currentIndex: 3,
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.white,
-        selectedItemColor: const Color(0xFF2563EB),
-        unselectedItemColor: const Color(0xFF64748B),
-        selectedFontSize: 12,
-        unselectedFontSize: 12,
         onTap: (index) {
           _onMenuTap(context, index);
         },
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            activeIcon: Icon(Icons.home),
-            label: 'Início',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.map_outlined),
-            activeIcon: Icon(Icons.map),
-            label: 'Trilha',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bar_chart_outlined),
-            activeIcon: Icon(Icons.bar_chart),
-            label: 'Estatísticas',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            activeIcon: Icon(Icons.person),
-            label: 'Perfil',
-          ),
-        ],
       ),
     );
   }

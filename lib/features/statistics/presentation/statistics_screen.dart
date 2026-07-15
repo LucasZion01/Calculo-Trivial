@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../shared/widgets/app_bottom_navigation_bar.dart';
 import '../../dashboard/presentation/dashboard_screen.dart';
 import '../../learning_path/presentation/learning_path_screen.dart';
 import '../../profile/presentation/profile_screen.dart';
@@ -151,18 +152,16 @@ class StatisticsScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(width: 16),
+                  const SizedBox(width: 16),
                   Expanded(
                     child: Container(
                       height: 90,
-                      padding: EdgeInsets.all(16),
+                      padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.all(Radius.circular(16)),
-                        border: Border.fromBorderSide(
-                          BorderSide(
-                            color: Color(0xFFE2E8F0),
-                          ),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                          color: const Color(0xFFE2E8F0),
                         ),
                       ),
                       child: const Column(
@@ -245,39 +244,11 @@ class StatisticsScreen extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
+      bottomNavigationBar: AppBottomNavigationBar(
         currentIndex: 2,
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.white,
-        selectedItemColor: const Color(0xFF2563EB),
-        unselectedItemColor: const Color(0xFF64748B),
-        selectedFontSize: 12,
-        unselectedFontSize: 12,
         onTap: (index) {
           _onMenuTap(context, index);
         },
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            activeIcon: Icon(Icons.home),
-            label: 'Início',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.map_outlined),
-            activeIcon: Icon(Icons.map),
-            label: 'Trilha',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bar_chart_outlined),
-            activeIcon: Icon(Icons.bar_chart),
-            label: 'Estatísticas',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            activeIcon: Icon(Icons.person),
-            label: 'Perfil',
-          ),
-        ],
       ),
     );
   }

@@ -1,7 +1,47 @@
 import 'package:flutter/material.dart';
 
+import '../../../shared/widgets/app_bottom_navigation_bar.dart';
+import '../../dashboard/presentation/dashboard_screen.dart';
+import '../../learning_path/presentation/learning_path_screen.dart';
+import '../../profile/presentation/profile_screen.dart';
+import '../../statistics/presentation/statistics_screen.dart';
+
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
+
+  void _onMenuTap(BuildContext context, int index) {
+    if (index == 0) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (_) => const DashboardScreen(),
+        ),
+      );
+    }
+
+    if (index == 1) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (_) => const LearningPathScreen(),
+        ),
+      );
+    }
+
+    if (index == 2) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (_) => const StatisticsScreen(),
+        ),
+      );
+    }
+
+    if (index == 3) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (_) => const ProfileScreen(),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,12 +83,12 @@ class SettingsScreen extends StatelessWidget {
                 title: 'Conta',
                 subtitle: 'Editar nome, e-mail e senha',
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               const _SettingsCard(
                 title: 'Notificações',
                 subtitle: 'Lembretes de estudo e metas diárias',
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               const _SettingsCard(
                 title: 'Tema',
                 subtitle: 'Modo claro ativado',
@@ -80,7 +120,12 @@ class SettingsScreen extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: const _SettingsBottomNavigationBar(),
+      bottomNavigationBar: AppBottomNavigationBar(
+        currentIndex: 3,
+        onTap: (index) {
+          _onMenuTap(context, index);
+        },
+      ),
     );
   }
 }
@@ -127,68 +172,6 @@ class _SettingsCard extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _SettingsBottomNavigationBar extends StatelessWidget {
-  const _SettingsBottomNavigationBar();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 72,
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        border: Border(
-          top: BorderSide(
-            color: Color(0xFFE2E8F0),
-          ),
-        ),
-      ),
-      child: const Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          _BottomNavItem(
-            label: 'Início',
-            isActive: false,
-          ),
-          _BottomNavItem(
-            label: 'Trilha',
-            isActive: false,
-          ),
-          _BottomNavItem(
-            label: 'Estatísticas',
-            isActive: false,
-          ),
-          _BottomNavItem(
-            label: 'Perfil',
-            isActive: true,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _BottomNavItem extends StatelessWidget {
-  final String label;
-  final bool isActive;
-
-  const _BottomNavItem({
-    required this.label,
-    required this.isActive,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      label,
-      style: TextStyle(
-        fontSize: 12,
-        fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
-        color: isActive ? const Color(0xFF2563EB) : const Color(0xFF64748B),
       ),
     );
   }
