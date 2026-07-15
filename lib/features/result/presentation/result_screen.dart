@@ -1,9 +1,61 @@
 import 'package:flutter/material.dart';
 
+import '../../../shared/widgets/app_bottom_navigation_bar.dart';
+import '../../../shared/widgets/primary_button.dart';
+import '../../dashboard/presentation/dashboard_screen.dart';
+import '../../learning_path/presentation/learning_path_screen.dart';
+import '../../profile/presentation/profile_screen.dart';
 import '../../reward/presentation/reward_screen.dart';
+import '../../statistics/presentation/statistics_screen.dart';
 
 class ResultScreen extends StatelessWidget {
   const ResultScreen({super.key});
+
+  void _onMenuTap(BuildContext context, int index) {
+    if (index == 0) {
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (_) => const DashboardScreen(),
+        ),
+        (route) => false,
+      );
+    }
+
+    if (index == 1) {
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (_) => const LearningPathScreen(),
+        ),
+        (route) => false,
+      );
+    }
+
+    if (index == 2) {
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (_) => const StatisticsScreen(),
+        ),
+        (route) => false,
+      );
+    }
+
+    if (index == 3) {
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (_) => const ProfileScreen(),
+        ),
+        (route) => false,
+      );
+    }
+  }
+
+  void _goToReward(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => const RewardScreen(),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -127,99 +179,21 @@ class ResultScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 24),
-              SizedBox(
-                width: double.infinity,
-                height: 48,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) => const RewardScreen(),
-                      ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF2563EB),
-                    foregroundColor: Colors.white,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: const Text(
-                    'Continuar',
-                    style: TextStyle(
-                      fontSize: 16,
-                    ),
-                  ),
-                ),
+              PrimaryButton(
+                text: 'Continuar',
+                onPressed: () {
+                  _goToReward(context);
+                },
               ),
             ],
           ),
         ),
       ),
-      bottomNavigationBar: const _ResultBottomNavigationBar(),
-    );
-  }
-}
-
-class _ResultBottomNavigationBar extends StatelessWidget {
-  const _ResultBottomNavigationBar();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 72,
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        border: Border(
-          top: BorderSide(
-            color: Color(0xFFE2E8F0),
-          ),
-        ),
-      ),
-      child: const Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          _BottomNavItem(
-            label: 'Início',
-            isActive: false,
-          ),
-          _BottomNavItem(
-            label: 'Trilha',
-            isActive: true,
-          ),
-          _BottomNavItem(
-            label: 'Estatísticas',
-            isActive: false,
-          ),
-          _BottomNavItem(
-            label: 'Perfil',
-            isActive: false,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _BottomNavItem extends StatelessWidget {
-  final String label;
-  final bool isActive;
-
-  const _BottomNavItem({
-    required this.label,
-    required this.isActive,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      label,
-      style: TextStyle(
-        fontSize: 12,
-        fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
-        color: isActive ? const Color(0xFF2563EB) : const Color(0xFF64748B),
+      bottomNavigationBar: AppBottomNavigationBar(
+        currentIndex: 1,
+        onTap: (index) {
+          _onMenuTap(context, index);
+        },
       ),
     );
   }

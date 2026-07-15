@@ -1,9 +1,60 @@
 import 'package:flutter/material.dart';
 
+import '../../../shared/widgets/app_bottom_navigation_bar.dart';
+import '../../dashboard/presentation/dashboard_screen.dart';
+import '../../learning_path/presentation/learning_path_screen.dart';
 import '../../lesson/presentation/lesson_screen.dart';
+import '../../profile/presentation/profile_screen.dart';
+import '../../statistics/presentation/statistics_screen.dart';
 
 class ModuleDetailScreen extends StatelessWidget {
   const ModuleDetailScreen({super.key});
+
+  void _onMenuTap(BuildContext context, int index) {
+    if (index == 0) {
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (_) => const DashboardScreen(),
+        ),
+        (route) => false,
+      );
+    }
+
+    if (index == 1) {
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (_) => const LearningPathScreen(),
+        ),
+        (route) => false,
+      );
+    }
+
+    if (index == 2) {
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (_) => const StatisticsScreen(),
+        ),
+        (route) => false,
+      );
+    }
+
+    if (index == 3) {
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (_) => const ProfileScreen(),
+        ),
+        (route) => false,
+      );
+    }
+  }
+
+  void _goToLesson(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => const LessonScreen(),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,11 +137,7 @@ class ModuleDetailScreen extends StatelessWidget {
                 status: 'Comece aqui',
                 statusColor: const Color(0xFF64748B),
                 onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (_) => const LessonScreen(),
-                    ),
-                  );
+                  _goToLesson(context);
                 },
               ),
               const SizedBox(height: 16),
@@ -111,7 +158,12 @@ class ModuleDetailScreen extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: const _ModuleDetailBottomNavigationBar(),
+      bottomNavigationBar: AppBottomNavigationBar(
+        currentIndex: 1,
+        onTap: (index) {
+          _onMenuTap(context, index);
+        },
+      ),
     );
   }
 }
@@ -179,68 +231,6 @@ class _LessonCard extends StatelessWidget {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _ModuleDetailBottomNavigationBar extends StatelessWidget {
-  const _ModuleDetailBottomNavigationBar();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 72,
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        border: Border(
-          top: BorderSide(
-            color: Color(0xFFE2E8F0),
-          ),
-        ),
-      ),
-      child: const Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          _BottomNavItem(
-            label: 'Início',
-            isActive: false,
-          ),
-          _BottomNavItem(
-            label: 'Trilha',
-            isActive: true,
-          ),
-          _BottomNavItem(
-            label: 'Estatísticas',
-            isActive: false,
-          ),
-          _BottomNavItem(
-            label: 'Perfil',
-            isActive: false,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _BottomNavItem extends StatelessWidget {
-  final String label;
-  final bool isActive;
-
-  const _BottomNavItem({
-    required this.label,
-    required this.isActive,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      label,
-      style: TextStyle(
-        fontSize: 12,
-        fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
-        color: isActive ? const Color(0xFF2563EB) : const Color(0xFF64748B),
       ),
     );
   }

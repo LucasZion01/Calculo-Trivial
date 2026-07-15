@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../shared/widgets/primary_button.dart';
 import '../../dashboard/presentation/dashboard_screen.dart';
 import 'register_screen.dart';
 
@@ -91,32 +92,15 @@ class LoginScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 24),
-              SizedBox(
-                width: double.infinity,
-                height: 48,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (_) => const DashboardScreen(),
-                      ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF2563EB),
-                    foregroundColor: Colors.white,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+              PrimaryButton(
+                text: 'Entrar',
+                onPressed: () {
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (_) => const DashboardScreen(),
                     ),
-                  ),
-                  child: const Text(
-                    'Entrar',
-                    style: TextStyle(
-                      fontSize: 16,
-                    ),
-                  ),
-                ),
+                  );
+                },
               ),
               const SizedBox(height: 16),
               GestureDetector(

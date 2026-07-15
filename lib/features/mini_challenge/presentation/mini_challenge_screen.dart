@@ -1,9 +1,92 @@
 import 'package:flutter/material.dart';
 
+import '../../../shared/widgets/app_bottom_navigation_bar.dart';
+import '../../../shared/widgets/primary_button.dart';
+import '../../dashboard/presentation/dashboard_screen.dart';
 import '../../exercises/presentation/exercises_screen.dart';
+import '../../learning_path/presentation/learning_path_screen.dart';
+import '../../profile/presentation/profile_screen.dart';
+import '../../statistics/presentation/statistics_screen.dart';
 
-class MiniChallengeScreen extends StatelessWidget {
+class MiniChallengeScreen extends StatefulWidget {
   const MiniChallengeScreen({super.key});
+
+  @override
+  State<MiniChallengeScreen> createState() => _MiniChallengeScreenState();
+}
+
+class _MiniChallengeScreenState extends State<MiniChallengeScreen> {
+  String? selectedAnswer;
+
+  void _onMenuTap(BuildContext context, int index) {
+    if (index == 0) {
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (_) => const DashboardScreen(),
+        ),
+        (route) => false,
+      );
+    }
+
+    if (index == 1) {
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (_) => const LearningPathScreen(),
+        ),
+        (route) => false,
+      );
+    }
+
+    if (index == 2) {
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (_) => const StatisticsScreen(),
+        ),
+        (route) => false,
+      );
+    }
+
+    if (index == 3) {
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (_) => const ProfileScreen(),
+        ),
+        (route) => false,
+      );
+    }
+  }
+
+  void _selectAnswer(String answer) {
+    setState(() {
+      selectedAnswer = answer;
+    });
+  }
+
+  void _confirmAnswer() {
+    if (selectedAnswer == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Escolha uma alternativa antes de responder.'),
+        ),
+      );
+      return;
+    }
+
+    if (selectedAnswer == 'A') {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => const ExercisesScreen(),
+        ),
+      );
+      return;
+    }
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Resposta incorreta. Tente novamente.'),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +117,7 @@ class MiniChallengeScreen extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               const Text(
-                'Responda para liberar os próximos exercícios.',
+                'Escolha a resposta correta para liberar os próximos exercícios.',
                 style: TextStyle(
                   fontSize: 14,
                   color: Color(0xFF64748B),
@@ -52,10 +135,10 @@ class MiniChallengeScreen extends StatelessWidget {
                     color: const Color(0xFFE2E8F0),
                   ),
                 ),
-                child: const Column(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    const Text(
                       'Qual é o resultado de 4x + 2x?',
                       style: TextStyle(
                         fontSize: 18,
@@ -63,42 +146,37 @@ class MiniChallengeScreen extends StatelessWidget {
                         color: Color(0xFF1E293B),
                       ),
                     ),
-                    SizedBox(height: 24),
-                    _AnswerOption(text: 'A) 6x'),
-                    SizedBox(height: 12),
-                    _AnswerOption(text: 'B) 8x'),
-                    SizedBox(height: 12),
-                    _AnswerOption(text: 'C) 4x²'),
+                    const SizedBox(height: 24),
+                    _AnswerOption(
+                      text: 'A) 6x',
+                      isSelected: selectedAnswer == 'A',
+                      onTap: () {
+                        _selectAnswer('A');
+                      },
+                    ),
+                    const SizedBox(height: 12),
+                    _AnswerOption(
+                      text: 'B) 8x',
+                      isSelected: selectedAnswer == 'B',
+                      onTap: () {
+                        _selectAnswer('B');
+                      },
+                    ),
+                    const SizedBox(height: 12),
+                    _AnswerOption(
+                      text: 'C) 4x²',
+                      isSelected: selectedAnswer == 'C',
+                      onTap: () {
+                        _selectAnswer('C');
+                      },
+                    ),
                   ],
                 ),
               ),
               const SizedBox(height: 24),
-              SizedBox(
-                width: double.infinity,
-                height: 48,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) => const ExercisesScreen(),
-                      ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF2563EB),
-                    foregroundColor: Colors.white,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: const Text(
-                    'Responder',
-                    style: TextStyle(
-                      fontSize: 16,
-                    ),
-                  ),
-                ),
+              PrimaryButton(
+                text: 'Responder',
+                onPressed: _confirmAnswer,
               ),
               const SizedBox(height: 12),
               const Center(
@@ -114,100 +192,60 @@ class MiniChallengeScreen extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: const _MiniChallengeBottomNavigationBar(),
+      bottomNavigationBar: AppBottomNavigationBar(
+        currentIndex: 1,
+        onTap: (index) {
+          _onMenuTap(context, index);
+        },
+      ),
     );
   }
 }
 
 class _AnswerOption extends StatelessWidget {
   final String text;
+  final bool isSelected;
+  final VoidCallback onTap;
 
   const _AnswerOption({
     required this.text,
+    required this.isSelected,
+    required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: 44,
-      alignment: Alignment.centerLeft,
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      decoration: BoxDecoration(
-        color: Colors.white,
+    return Material(
+      color: isSelected ? const Color(0xFFEFF6FF) : Colors.white,
+      borderRadius: BorderRadius.circular(12),
+      child: InkWell(
+        onTap: onTap,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: const Color(0xFFCBD5E1),
-        ),
-      ),
-      child: Text(
-        text,
-        style: const TextStyle(
-          fontSize: 14,
-          color: Color(0xFF1E293B),
-        ),
-      ),
-    );
-  }
-}
-
-class _MiniChallengeBottomNavigationBar extends StatelessWidget {
-  const _MiniChallengeBottomNavigationBar();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 72,
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        border: Border(
-          top: BorderSide(
-            color: Color(0xFFE2E8F0),
+        child: Container(
+          width: double.infinity,
+          height: 44,
+          alignment: Alignment.centerLeft,
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: isSelected
+                  ? const Color(0xFF2563EB)
+                  : const Color(0xFFCBD5E1),
+              width: isSelected ? 2 : 1,
+            ),
+          ),
+          child: Text(
+            text,
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+              color: isSelected
+                  ? const Color(0xFF2563EB)
+                  : const Color(0xFF1E293B),
+            ),
           ),
         ),
-      ),
-      child: const Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          _BottomNavItem(
-            label: 'Início',
-            isActive: false,
-          ),
-          _BottomNavItem(
-            label: 'Trilha',
-            isActive: true,
-          ),
-          _BottomNavItem(
-            label: 'Estatísticas',
-            isActive: false,
-          ),
-          _BottomNavItem(
-            label: 'Perfil',
-            isActive: false,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _BottomNavItem extends StatelessWidget {
-  final String label;
-  final bool isActive;
-
-  const _BottomNavItem({
-    required this.label,
-    required this.isActive,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      label,
-      style: TextStyle(
-        fontSize: 12,
-        fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
-        color: isActive ? const Color(0xFF2563EB) : const Color(0xFF64748B),
       ),
     );
   }
