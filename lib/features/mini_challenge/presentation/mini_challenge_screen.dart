@@ -1,4 +1,6 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+
+import 'package:calcquest/shared/theme/app_colors.dart';
 
 import '../../../shared/widgets/app_bottom_navigation_bar.dart';
 import '../../../shared/widgets/primary_button.dart';
@@ -91,7 +93,7 @@ class _MiniChallengeScreenState extends State<MiniChallengeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: AppColors.background,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(24, 40, 24, 0),
@@ -103,24 +105,24 @@ class _MiniChallengeScreenState extends State<MiniChallengeScreen> {
                 style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w500,
-                  color: Color(0xFF2563EB),
+                  color: AppColors.primary,
                 ),
               ),
               const SizedBox(height: 10),
               const Text(
-                'Teste rápido',
+                'Teste rÃ¡pido',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w600,
-                  color: Color(0xFF1E293B),
+                  color: AppColors.textPrimary,
                 ),
               ),
               const SizedBox(height: 8),
               const Text(
-                'Escolha a resposta correta para liberar os próximos exercícios.',
+                'Escolha a resposta correta para liberar os prÃ³ximos exercÃ­cios.',
                 style: TextStyle(
                   fontSize: 14,
-                  color: Color(0xFF64748B),
+                  color: AppColors.textSecondary,
                 ),
               ),
               const SizedBox(height: 24),
@@ -129,21 +131,21 @@ class _MiniChallengeScreenState extends State<MiniChallengeScreen> {
                 height: 260,
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: AppColors.white,
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
-                    color: const Color(0xFFE2E8F0),
+                    color: AppColors.border,
                   ),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      'Qual é o resultado de 4x + 2x?',
+                      'Qual Ã© o resultado de 4x + 2x?',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
-                        color: Color(0xFF1E293B),
+                        color: AppColors.textPrimary,
                       ),
                     ),
                     const SizedBox(height: 24),
@@ -164,7 +166,7 @@ class _MiniChallengeScreenState extends State<MiniChallengeScreen> {
                     ),
                     const SizedBox(height: 12),
                     _AnswerOption(
-                      text: 'C) 4x²',
+                      text: 'C) 4xÂ²',
                       isSelected: selectedAnswer == 'C',
                       onTap: () {
                         _selectAnswer('C');
@@ -181,10 +183,10 @@ class _MiniChallengeScreenState extends State<MiniChallengeScreen> {
               const SizedBox(height: 12),
               const Center(
                 child: Text(
-                  'Você ganha XP ao acertar o desafio.',
+                  'VocÃª ganha XP ao acertar o desafio.',
                   style: TextStyle(
                     fontSize: 12,
-                    color: Color(0xFF64748B),
+                    color: AppColors.textSecondary,
                   ),
                 ),
               ),
@@ -216,7 +218,7 @@ class _AnswerOption extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: isSelected ? const Color(0xFFEFF6FF) : Colors.white,
+      color: isSelected ? AppColors.selectedBackground : AppColors.white,
       borderRadius: BorderRadius.circular(12),
       child: InkWell(
         onTap: onTap,
@@ -230,8 +232,8 @@ class _AnswerOption extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
               color: isSelected
-                  ? const Color(0xFF2563EB)
-                  : const Color(0xFFCBD5E1),
+                  ? AppColors.primary
+                  : AppColors.inputBorder,
               width: isSelected ? 2 : 1,
             ),
           ),
@@ -241,8 +243,8 @@ class _AnswerOption extends StatelessWidget {
               fontSize: 14,
               fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
               color: isSelected
-                  ? const Color(0xFF2563EB)
-                  : const Color(0xFF1E293B),
+                  ? AppColors.primary
+                  : AppColors.textPrimary,
             ),
           ),
         ),
@@ -250,3 +252,4 @@ class _AnswerOption extends StatelessWidget {
     );
   }
 }
+

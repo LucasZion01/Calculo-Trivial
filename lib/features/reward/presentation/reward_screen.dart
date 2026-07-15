@@ -1,4 +1,6 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+
+import 'package:calcquest/shared/theme/app_colors.dart';
 
 import '../../../shared/widgets/app_bottom_navigation_bar.dart';
 import '../../../shared/widgets/primary_button.dart';
@@ -55,7 +57,7 @@ class RewardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: AppColors.background,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(24, 40, 24, 0),
@@ -67,24 +69,24 @@ class RewardScreen extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w500,
-                  color: Color(0xFF2563EB),
+                  color: AppColors.primary,
                 ),
               ),
               const SizedBox(height: 10),
               const Text(
-                'Você evoluiu!',
+                'VocÃª evoluiu!',
                 style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.w700,
-                  color: Color(0xFF1E293B),
+                  color: AppColors.textPrimary,
                 ),
               ),
               const SizedBox(height: 8),
               const Text(
-                'Sua dedicação gerou progresso no módulo.',
+                'Sua dedicaÃ§Ã£o gerou progresso no mÃ³dulo.',
                 style: TextStyle(
                   fontSize: 14,
-                  color: Color(0xFF64748B),
+                  color: AppColors.textSecondary,
                 ),
               ),
               const SizedBox(height: 24),
@@ -93,7 +95,7 @@ class RewardScreen extends StatelessWidget {
                 height: 220,
                 padding: const EdgeInsets.all(22),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF2563EB),
+                  color: AppColors.primary,
                   borderRadius: BorderRadius.circular(24),
                 ),
                 child: const Column(
@@ -104,7 +106,7 @@ class RewardScreen extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 40,
                         fontWeight: FontWeight.w700,
-                        color: Colors.white,
+                        color: AppColors.white,
                       ),
                     ),
                     SizedBox(height: 10),
@@ -112,16 +114,16 @@ class RewardScreen extends StatelessWidget {
                       'Recompensa recebida',
                       style: TextStyle(
                         fontSize: 14,
-                        color: Color(0xFFDBEAFE),
+                        color: AppColors.primaryLight,
                       ),
                     ),
                     SizedBox(height: 24),
                     Text(
-                      'Nível 1 → Nível 2',
+                      'NÃ­vel 1 â†’ NÃ­vel 2',
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
-                        color: Colors.white,
+                        color: AppColors.white,
                       ),
                     ),
                     SizedBox(height: 12),
@@ -130,7 +132,7 @@ class RewardScreen extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 13,
                         height: 1.4,
-                        color: Color(0xFFDBEAFE),
+                        color: AppColors.primaryLight,
                       ),
                     ),
                   ],
@@ -142,10 +144,10 @@ class RewardScreen extends StatelessWidget {
                 height: 90,
                 padding: const EdgeInsets.all(18),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: AppColors.white,
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
-                    color: const Color(0xFFE2E8F0),
+                    color: AppColors.border,
                   ),
                 ),
                 child: const Column(
@@ -156,16 +158,16 @@ class RewardScreen extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
-                        color: Color(0xFF2563EB),
+                        color: AppColors.primary,
                       ),
                     ),
                     SizedBox(height: 8),
                     Text(
-                      'Aula 2 — Equações e Inequações',
+                      'Aula 2 â€” EquaÃ§Ãµes e InequaÃ§Ãµes',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
-                        color: Color(0xFF1E293B),
+                        color: AppColors.textPrimary,
                       ),
                     ),
                   ],
@@ -191,3 +193,4 @@ class RewardScreen extends StatelessWidget {
     );
   }
 }
+

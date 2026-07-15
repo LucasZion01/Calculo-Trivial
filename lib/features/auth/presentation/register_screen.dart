@@ -1,4 +1,6 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+
+import 'package:calcquest/shared/theme/app_colors.dart';
 
 import '../../../shared/widgets/primary_button.dart';
 
@@ -8,7 +10,7 @@ class RegisterScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: AppColors.background,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -20,16 +22,16 @@ class RegisterScreen extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 36,
                   fontWeight: FontWeight.w700,
-                  color: Color(0xFF1E293B),
+                  color: AppColors.textPrimary,
                 ),
               ),
               const SizedBox(height: 12),
               const Text(
-                'Crie sua conta para começar sua jornada.',
+                'Crie sua conta para comeÃ§ar sua jornada.',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 16,
-                  color: Color(0xFF64748B),
+                  color: AppColors.textSecondary,
                 ),
               ),
               const SizedBox(height: 32),
@@ -37,11 +39,11 @@ class RegisterScreen extends StatelessWidget {
                 decoration: InputDecoration(
                   hintText: 'Nome',
                   hintStyle: const TextStyle(
-                    color: Color(0xFF94A3B8),
+                    color: AppColors.textMuted,
                     fontSize: 14,
                   ),
                   filled: true,
-                  fillColor: Colors.white,
+                  fillColor: AppColors.white,
                   contentPadding: const EdgeInsets.symmetric(
                     horizontal: 16,
                     vertical: 14,
@@ -49,13 +51,13 @@ class RegisterScreen extends StatelessWidget {
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: const BorderSide(
-                      color: Color(0xFFCBD5E1),
+                      color: AppColors.inputBorder,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: const BorderSide(
-                      color: Color(0xFF2563EB),
+                      color: AppColors.primary,
                     ),
                   ),
                 ),
@@ -65,11 +67,11 @@ class RegisterScreen extends StatelessWidget {
                 decoration: InputDecoration(
                   hintText: 'E-mail',
                   hintStyle: const TextStyle(
-                    color: Color(0xFF94A3B8),
+                    color: AppColors.textMuted,
                     fontSize: 14,
                   ),
                   filled: true,
-                  fillColor: Colors.white,
+                  fillColor: AppColors.white,
                   contentPadding: const EdgeInsets.symmetric(
                     horizontal: 16,
                     vertical: 14,
@@ -77,13 +79,13 @@ class RegisterScreen extends StatelessWidget {
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: const BorderSide(
-                      color: Color(0xFFCBD5E1),
+                      color: AppColors.inputBorder,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: const BorderSide(
-                      color: Color(0xFF2563EB),
+                      color: AppColors.primary,
                     ),
                   ),
                 ),
@@ -94,11 +96,11 @@ class RegisterScreen extends StatelessWidget {
                 decoration: InputDecoration(
                   hintText: 'Senha',
                   hintStyle: const TextStyle(
-                    color: Color(0xFF94A3B8),
+                    color: AppColors.textMuted,
                     fontSize: 14,
                   ),
                   filled: true,
-                  fillColor: Colors.white,
+                  fillColor: AppColors.white,
                   contentPadding: const EdgeInsets.symmetric(
                     horizontal: 16,
                     vertical: 14,
@@ -106,13 +108,13 @@ class RegisterScreen extends StatelessWidget {
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: const BorderSide(
-                      color: Color(0xFFCBD5E1),
+                      color: AppColors.inputBorder,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: const BorderSide(
-                      color: Color(0xFF2563EB),
+                      color: AppColors.primary,
                     ),
                   ),
                 ),
@@ -123,11 +125,11 @@ class RegisterScreen extends StatelessWidget {
                 decoration: InputDecoration(
                   hintText: 'Confirmar senha',
                   hintStyle: const TextStyle(
-                    color: Color(0xFF94A3B8),
+                    color: AppColors.textMuted,
                     fontSize: 14,
                   ),
                   filled: true,
-                  fillColor: Colors.white,
+                  fillColor: AppColors.white,
                   contentPadding: const EdgeInsets.symmetric(
                     horizontal: 16,
                     vertical: 14,
@@ -135,13 +137,13 @@ class RegisterScreen extends StatelessWidget {
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: const BorderSide(
-                      color: Color(0xFFCBD5E1),
+                      color: AppColors.inputBorder,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: const BorderSide(
-                      color: Color(0xFF2563EB),
+                      color: AppColors.primary,
                     ),
                   ),
                 ),
@@ -157,10 +159,10 @@ class RegisterScreen extends StatelessWidget {
                   Navigator.of(context).pop();
                 },
                 child: const Text(
-                  'Já tem conta? Entrar',
+                  'JÃ¡ tem conta? Entrar',
                   style: TextStyle(
                     fontSize: 13,
-                    color: Color(0xFF64748B),
+                    color: AppColors.textSecondary,
                   ),
                 ),
               ),
@@ -171,3 +173,4 @@ class RegisterScreen extends StatelessWidget {
     );
   }
 }
+

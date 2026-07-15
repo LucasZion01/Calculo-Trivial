@@ -1,4 +1,6 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+
+import 'package:calcquest/shared/theme/app_colors.dart';
 
 import '../../../shared/widgets/app_bottom_navigation_bar.dart';
 import '../../learning_path/presentation/learning_path_screen.dart';
@@ -41,7 +43,7 @@ class DashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: AppColors.background,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(24, 40, 24, 0),
@@ -49,11 +51,11 @@ class DashboardScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                'Olá, Lucas 👋',
+                'OlÃ¡, Lucas ðŸ‘‹',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w600,
-                  color: Color(0xFF1E293B),
+                  color: AppColors.textPrimary,
                 ),
               ),
               const SizedBox(height: 6),
@@ -61,7 +63,7 @@ class DashboardScreen extends StatelessWidget {
                 'Pronto para evoluir hoje?',
                 style: TextStyle(
                   fontSize: 14,
-                  color: Color(0xFF64748B),
+                  color: AppColors.textSecondary,
                 ),
               ),
               const SizedBox(height: 24),
@@ -70,17 +72,17 @@ class DashboardScreen extends StatelessWidget {
                 height: 130,
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF2563EB),
+                  color: AppColors.primary,
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Nível 1',
+                      'NÃ­vel 1',
                       style: TextStyle(
                         fontSize: 14,
-                        color: Color(0xFFDBEAFE),
+                        color: AppColors.primaryLight,
                       ),
                     ),
                     SizedBox(height: 8),
@@ -89,15 +91,15 @@ class DashboardScreen extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 32,
                         fontWeight: FontWeight.w700,
-                        color: Colors.white,
+                        color: AppColors.white,
                       ),
                     ),
                     SizedBox(height: 8),
                     Text(
-                      'Continue estudando para subir de nível',
+                      'Continue estudando para subir de nÃ­vel',
                       style: TextStyle(
                         fontSize: 13,
-                        color: Color(0xFFDBEAFE),
+                        color: AppColors.primaryLight,
                       ),
                     ),
                   ],
@@ -109,12 +111,12 @@ class DashboardScreen extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
-                  color: Color(0xFF1E293B),
+                  color: AppColors.textPrimary,
                 ),
               ),
               const SizedBox(height: 12),
               Material(
-                color: Colors.white,
+                color: AppColors.white,
                 borderRadius: BorderRadius.circular(16),
                 child: InkWell(
                   borderRadius: BorderRadius.circular(16),
@@ -132,26 +134,26 @@ class DashboardScreen extends StatelessWidget {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
-                        color: const Color(0xFFE2E8F0),
+                        color: AppColors.border,
                       ),
                     ),
                     child: const Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Pré-Cálculo',
+                          'PrÃ©-CÃ¡lculo',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
-                            color: Color(0xFF1E293B),
+                            color: AppColors.textPrimary,
                           ),
                         ),
                         SizedBox(height: 6),
                         Text(
-                          'Aula 1 — Álgebra Fundamental',
+                          'Aula 1 â€” Ãlgebra Fundamental',
                           style: TextStyle(
                             fontSize: 13,
-                            color: Color(0xFF64748B),
+                            color: AppColors.textSecondary,
                           ),
                         ),
                         Spacer(),
@@ -159,7 +161,7 @@ class DashboardScreen extends StatelessWidget {
                           'Continuar',
                           style: TextStyle(
                             fontSize: 13,
-                            color: Color(0xFF2563EB),
+                            color: AppColors.primary,
                           ),
                         ),
                       ],
@@ -173,7 +175,7 @@ class DashboardScreen extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
-                  color: Color(0xFF1E293B),
+                  color: AppColors.textPrimary,
                 ),
               ),
               const SizedBox(height: 12),
@@ -184,29 +186,29 @@ class DashboardScreen extends StatelessWidget {
                       height: 90,
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: AppColors.white,
                         borderRadius: BorderRadius.circular(16),
                         border: Border.all(
-                          color: const Color(0xFFE2E8F0),
+                          color: AppColors.border,
                         ),
                       ),
                       child: const Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            '🔥 3 dias',
+                            'ðŸ”¥ 3 dias',
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w600,
-                              color: Color(0xFF1E293B),
+                              color: AppColors.textPrimary,
                             ),
                           ),
                           SizedBox(height: 8),
                           Text(
-                            'Sequência',
+                            'SequÃªncia',
                             style: TextStyle(
                               fontSize: 12,
-                              color: Color(0xFF64748B),
+                              color: AppColors.textSecondary,
                             ),
                           ),
                         ],
@@ -219,10 +221,10 @@ class DashboardScreen extends StatelessWidget {
                       height: 90,
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: AppColors.white,
                         borderRadius: BorderRadius.circular(16),
                         border: Border.all(
-                          color: const Color(0xFFE2E8F0),
+                          color: AppColors.border,
                         ),
                       ),
                       child: const Column(
@@ -233,15 +235,15 @@ class DashboardScreen extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w600,
-                              color: Color(0xFF1E293B),
+                              color: AppColors.textPrimary,
                             ),
                           ),
                           SizedBox(height: 8),
                           Text(
-                            'Meta diária',
+                            'Meta diÃ¡ria',
                             style: TextStyle(
                               fontSize: 12,
-                              color: Color(0xFF64748B),
+                              color: AppColors.textSecondary,
                             ),
                           ),
                         ],
@@ -263,3 +265,4 @@ class DashboardScreen extends StatelessWidget {
     );
   }
 }
+

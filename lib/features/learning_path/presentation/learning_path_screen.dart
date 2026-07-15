@@ -1,4 +1,6 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+
+import 'package:calcquest/shared/theme/app_colors.dart';
 
 import '../../../shared/widgets/app_bottom_navigation_bar.dart';
 import '../../dashboard/presentation/dashboard_screen.dart';
@@ -42,7 +44,7 @@ class LearningPathScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: AppColors.background,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(24, 40, 24, 0),
@@ -54,23 +56,23 @@ class LearningPathScreen extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w600,
-                  color: Color(0xFF1E293B),
+                  color: AppColors.textPrimary,
                 ),
               ),
               const SizedBox(height: 8),
               const Text(
-                'Avance módulo por módulo até dominar o Cálculo.',
+                'Avance mÃ³dulo por mÃ³dulo atÃ© dominar o CÃ¡lculo.',
                 style: TextStyle(
                   fontSize: 14,
-                  color: Color(0xFF64748B),
+                  color: AppColors.textSecondary,
                 ),
               ),
               const SizedBox(height: 24),
               _ModuleCard(
-                title: 'Fundamentos Matemáticos',
-                subtitle: 'Pré-Cálculo, funções e base algébrica',
+                title: 'Fundamentos MatemÃ¡ticos',
+                subtitle: 'PrÃ©-CÃ¡lculo, funÃ§Ãµes e base algÃ©brica',
                 status: '0%',
-                statusColor: const Color(0xFF2563EB),
+                statusColor: AppColors.primary,
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
@@ -81,17 +83,17 @@ class LearningPathScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               const _ModuleCard(
-                title: 'Cálculo I',
+                title: 'CÃ¡lculo I',
                 subtitle: 'Limites, continuidade e derivadas',
                 status: 'Bloqueado',
-                statusColor: Color(0xFF94A3B8),
+                statusColor: AppColors.textMuted,
               ),
               const SizedBox(height: 16),
               const _ModuleCard(
-                title: 'Cálculo II',
-                subtitle: 'Integrais, séries e equações diferenciais',
+                title: 'CÃ¡lculo II',
+                subtitle: 'Integrais, sÃ©ries e equaÃ§Ãµes diferenciais',
                 status: 'Bloqueado',
-                statusColor: Color(0xFF94A3B8),
+                statusColor: AppColors.textMuted,
               ),
             ],
           ),
@@ -125,7 +127,7 @@ class _ModuleCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Colors.white,
+      color: AppColors.white,
       borderRadius: BorderRadius.circular(16),
       child: InkWell(
         onTap: onTap,
@@ -137,7 +139,7 @@ class _ModuleCard extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: const Color(0xFFE2E8F0),
+              color: AppColors.border,
             ),
           ),
           child: Row(
@@ -151,7 +153,7 @@ class _ModuleCard extends StatelessWidget {
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
-                        color: Color(0xFF1E293B),
+                        color: AppColors.textPrimary,
                       ),
                     ),
                     const SizedBox(height: 6),
@@ -159,7 +161,7 @@ class _ModuleCard extends StatelessWidget {
                       subtitle,
                       style: const TextStyle(
                         fontSize: 13,
-                        color: Color(0xFF64748B),
+                        color: AppColors.textSecondary,
                       ),
                     ),
                   ],
@@ -180,3 +182,4 @@ class _ModuleCard extends StatelessWidget {
     );
   }
 }
+

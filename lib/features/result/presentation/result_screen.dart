@@ -1,4 +1,6 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+
+import 'package:calcquest/shared/theme/app_colors.dart';
 
 import '../../../shared/widgets/app_bottom_navigation_bar.dart';
 import '../../../shared/widgets/primary_button.dart';
@@ -60,7 +62,7 @@ class ResultScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: AppColors.background,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(24, 40, 24, 0),
@@ -72,16 +74,16 @@ class ResultScreen extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w500,
-                  color: Color(0xFF2563EB),
+                  color: AppColors.primary,
                 ),
               ),
               const SizedBox(height: 10),
               const Text(
-                'Atividade concluída',
+                'Atividade concluÃ­da',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w600,
-                  color: Color(0xFF1E293B),
+                  color: AppColors.textPrimary,
                 ),
               ),
               const SizedBox(height: 8),
@@ -89,7 +91,7 @@ class ResultScreen extends StatelessWidget {
                 'Veja seu desempenho nesta atividade.',
                 style: TextStyle(
                   fontSize: 14,
-                  color: Color(0xFF64748B),
+                  color: AppColors.textSecondary,
                 ),
               ),
               const SizedBox(height: 24),
@@ -98,20 +100,20 @@ class ResultScreen extends StatelessWidget {
                 height: 220,
                 padding: const EdgeInsets.all(22),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: AppColors.white,
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
-                    color: const Color(0xFFE2E8F0),
+                    color: AppColors.border,
                   ),
                 ),
                 child: const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Você acertou',
+                      'VocÃª acertou',
                       style: TextStyle(
                         fontSize: 14,
-                        color: Color(0xFF64748B),
+                        color: AppColors.textSecondary,
                       ),
                     ),
                     SizedBox(height: 10),
@@ -120,16 +122,16 @@ class ResultScreen extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 40,
                         fontWeight: FontWeight.w700,
-                        color: Color(0xFF1E293B),
+                        color: AppColors.textPrimary,
                       ),
                     ),
                     SizedBox(height: 12),
                     Text(
-                      'Bom desempenho. Continue praticando para dominar o módulo.',
+                      'Bom desempenho. Continue praticando para dominar o mÃ³dulo.',
                       style: TextStyle(
                         fontSize: 13,
                         height: 1.4,
-                        color: Color(0xFF64748B),
+                        color: AppColors.textSecondary,
                       ),
                     ),
                   ],
@@ -141,10 +143,10 @@ class ResultScreen extends StatelessWidget {
                 height: 100,
                 padding: const EdgeInsets.all(18),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: AppColors.white,
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
-                    color: const Color(0xFFE2E8F0),
+                    color: AppColors.border,
                   ),
                 ),
                 child: const Column(
@@ -155,7 +157,7 @@ class ResultScreen extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
-                        color: Color(0xFF2563EB),
+                        color: AppColors.primary,
                       ),
                     ),
                     SizedBox(height: 6),
@@ -164,15 +166,15 @@ class ResultScreen extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.w700,
-                        color: Color(0xFF1E293B),
+                        color: AppColors.textPrimary,
                       ),
                     ),
                     SizedBox(height: 2),
                     Text(
-                      'Você está mais perto do Nível 2',
+                      'VocÃª estÃ¡ mais perto do NÃ­vel 2',
                       style: TextStyle(
                         fontSize: 12,
-                        color: Color(0xFF64748B),
+                        color: AppColors.textSecondary,
                       ),
                     ),
                   ],
@@ -198,3 +200,4 @@ class ResultScreen extends StatelessWidget {
     );
   }
 }
+

@@ -1,4 +1,6 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+
+import 'package:calcquest/shared/theme/app_colors.dart';
 
 class AppBottomNavigationBar extends StatelessWidget {
   final int currentIndex;
@@ -15,9 +17,9 @@ class AppBottomNavigationBar extends StatelessWidget {
     return BottomNavigationBar(
       currentIndex: currentIndex,
       type: BottomNavigationBarType.fixed,
-      backgroundColor: Colors.white,
-      selectedItemColor: const Color(0xFF2563EB),
-      unselectedItemColor: const Color(0xFF64748B),
+      backgroundColor: AppColors.white,
+      selectedItemColor: AppColors.primary,
+      unselectedItemColor: AppColors.textSecondary,
       selectedFontSize: 12,
       unselectedFontSize: 12,
       onTap: onTap,
@@ -25,7 +27,7 @@ class AppBottomNavigationBar extends StatelessWidget {
         BottomNavigationBarItem(
           icon: Icon(Icons.home_outlined),
           activeIcon: Icon(Icons.home),
-          label: 'Início',
+          label: 'InÃ­cio',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.map_outlined),
@@ -35,7 +37,7 @@ class AppBottomNavigationBar extends StatelessWidget {
         BottomNavigationBarItem(
           icon: Icon(Icons.bar_chart_outlined),
           activeIcon: Icon(Icons.bar_chart),
-          label: 'Estatísticas',
+          label: 'EstatÃ­sticas',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.person_outline),
@@ -46,3 +48,4 @@ class AppBottomNavigationBar extends StatelessWidget {
     );
   }
 }
+

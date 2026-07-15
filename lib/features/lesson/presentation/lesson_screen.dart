@@ -1,4 +1,6 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+
+import 'package:calcquest/shared/theme/app_colors.dart';
 
 import '../../../shared/widgets/app_bottom_navigation_bar.dart';
 import '../../../shared/widgets/primary_button.dart';
@@ -60,7 +62,7 @@ class LessonScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: AppColors.background,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(24, 40, 24, 0),
@@ -72,24 +74,24 @@ class LessonScreen extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w500,
-                  color: Color(0xFF2563EB),
+                  color: AppColors.primary,
                 ),
               ),
               const SizedBox(height: 10),
               const Text(
-                'Álgebra Fundamental',
+                'Ãlgebra Fundamental',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w600,
-                  color: Color(0xFF1E293B),
+                  color: AppColors.textPrimary,
                 ),
               ),
               const SizedBox(height: 8),
               const Text(
-                'Entenda a base algébrica necessária para avançar em Cálculo.',
+                'Entenda a base algÃ©brica necessÃ¡ria para avanÃ§ar em CÃ¡lculo.',
                 style: TextStyle(
                   fontSize: 14,
-                  color: Color(0xFF64748B),
+                  color: AppColors.textSecondary,
                 ),
               ),
               const SizedBox(height: 24),
@@ -98,26 +100,26 @@ class LessonScreen extends StatelessWidget {
                 height: 220,
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: AppColors.white,
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
-                    color: const Color(0xFFE2E8F0),
+                    color: AppColors.border,
                   ),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      'Motivação',
+                      'MotivaÃ§Ã£o',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
-                        color: Color(0xFF1E293B),
+                        color: AppColors.textPrimary,
                       ),
                     ),
                     const SizedBox(height: 12),
                     const Text(
-                      'Antes de estudar limites, derivadas e integrais, você precisa dominar operações algébricas, simplificação de expressões e manipulação de equações.',
+                      'Antes de estudar limites, derivadas e integrais, vocÃª precisa dominar operaÃ§Ãµes algÃ©bricas, simplificaÃ§Ã£o de expressÃµes e manipulaÃ§Ã£o de equaÃ§Ãµes.',
                       style: TextStyle(
                         fontSize: 14,
                         height: 1.4,
@@ -143,21 +145,21 @@ class LessonScreen extends StatelessWidget {
                 height: 120,
                 padding: const EdgeInsets.all(18),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: AppColors.white,
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
-                    color: const Color(0xFFE2E8F0),
+                    color: AppColors.border,
                   ),
                 ),
                 child: const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Exemplo rápido',
+                      'Exemplo rÃ¡pido',
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
-                        color: Color(0xFF2563EB),
+                        color: AppColors.primary,
                       ),
                     ),
                     SizedBox(height: 10),
@@ -166,7 +168,7 @@ class LessonScreen extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
-                        color: Color(0xFF1E293B),
+                        color: AppColors.textPrimary,
                       ),
                     ),
                     SizedBox(height: 8),
@@ -174,7 +176,7 @@ class LessonScreen extends StatelessWidget {
                       'Resposta: 5x',
                       style: TextStyle(
                         fontSize: 14,
-                        color: Color(0xFF64748B),
+                        color: AppColors.textSecondary,
                       ),
                     ),
                   ],
@@ -193,3 +195,4 @@ class LessonScreen extends StatelessWidget {
     );
   }
 }
+

@@ -1,6 +1,7 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 import 'features/splash/presentation/splash_screen.dart';
+import 'shared/theme/app_colors.dart';
 
 void main() {
   runApp(const CalcQuestApp());
@@ -15,7 +16,7 @@ class CalcQuestApp extends StatelessWidget {
       title: 'CalcQuest',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        scaffoldBackgroundColor: const Color(0xFFF8FAFC),
+        scaffoldBackgroundColor: AppColors.background,
         fontFamily: 'Roboto',
         useMaterial3: true,
       ),
@@ -23,3 +24,4 @@ class CalcQuestApp extends StatelessWidget {
     );
   }
 }
+

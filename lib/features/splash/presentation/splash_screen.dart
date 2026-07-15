@@ -1,6 +1,8 @@
-import 'dart:async';
+﻿import 'dart:async';
 
 import 'package:flutter/material.dart';
+
+import 'package:calcquest/shared/theme/app_colors.dart';
 
 import '../../auth/presentation/login_screen.dart';
 
@@ -30,7 +32,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      backgroundColor: Color(0xFFF8FAFC),
+      backgroundColor: AppColors.background,
       body: SafeArea(
         child: Center(
           child: Padding(
@@ -43,16 +45,16 @@ class _SplashScreenState extends State<SplashScreen> {
                   style: TextStyle(
                     fontSize: 36,
                     fontWeight: FontWeight.w700,
-                    color: Color(0xFF1E293B),
+                    color: AppColors.textPrimary,
                   ),
                 ),
                 SizedBox(height: 16),
                 Text(
-                  'Domine o Cálculo. Evolua como Engenheiro.',
+                  'Domine o CÃ¡lculo. Evolua como Engenheiro.',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 16,
-                    color: Color(0xFF64748B),
+                    color: AppColors.textSecondary,
                   ),
                 ),
                 SizedBox(height: 32),
@@ -60,7 +62,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   'Carregando...',
                   style: TextStyle(
                     fontSize: 14,
-                    color: Color(0xFF94A3B8),
+                    color: AppColors.textMuted,
                   ),
                 ),
               ],
@@ -71,3 +73,4 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 }
+

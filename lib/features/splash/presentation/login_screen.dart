@@ -1,4 +1,6 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+
+import 'package:calcquest/shared/theme/app_colors.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -6,7 +8,7 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: AppColors.background,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -18,16 +20,16 @@ class LoginScreen extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 36,
                   fontWeight: FontWeight.w700,
-                  color: Color(0xFF1E293B),
+                  color: AppColors.textPrimary,
                 ),
               ),
               const SizedBox(height: 12),
               const Text(
-                'Domine o Cálculo. Evolua como Engenheiro.',
+                'Domine o CÃ¡lculo. Evolua como Engenheiro.',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 16,
-                  color: Color(0xFF64748B),
+                  color: AppColors.textSecondary,
                 ),
               ),
               const SizedBox(height: 40),
@@ -36,11 +38,11 @@ class LoginScreen extends StatelessWidget {
                 decoration: InputDecoration(
                   hintText: 'E-mail',
                   hintStyle: const TextStyle(
-                    color: Color(0xFF94A3B8),
+                    color: AppColors.textMuted,
                     fontSize: 14,
                   ),
                   filled: true,
-                  fillColor: Colors.white,
+                  fillColor: AppColors.white,
                   contentPadding: const EdgeInsets.symmetric(
                     horizontal: 16,
                     vertical: 14,
@@ -48,13 +50,13 @@ class LoginScreen extends StatelessWidget {
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: const BorderSide(
-                      color: Color(0xFFCBD5E1),
+                      color: AppColors.inputBorder,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: const BorderSide(
-                      color: Color(0xFF2563EB),
+                      color: AppColors.primary,
                     ),
                   ),
                 ),
@@ -67,11 +69,11 @@ class LoginScreen extends StatelessWidget {
                 decoration: InputDecoration(
                   hintText: 'Senha',
                   hintStyle: const TextStyle(
-                    color: Color(0xFF94A3B8),
+                    color: AppColors.textMuted,
                     fontSize: 14,
                   ),
                   filled: true,
-                  fillColor: Colors.white,
+                  fillColor: AppColors.white,
                   contentPadding: const EdgeInsets.symmetric(
                     horizontal: 16,
                     vertical: 14,
@@ -79,13 +81,13 @@ class LoginScreen extends StatelessWidget {
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: const BorderSide(
-                      color: Color(0xFFCBD5E1),
+                      color: AppColors.inputBorder,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: const BorderSide(
-                      color: Color(0xFF2563EB),
+                      color: AppColors.primary,
                     ),
                   ),
                 ),
@@ -99,8 +101,8 @@ class LoginScreen extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () {},
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF2563EB),
-                    foregroundColor: Colors.white,
+                    backgroundColor: AppColors.primary,
+                    foregroundColor: AppColors.white,
                     elevation: 0,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -118,10 +120,10 @@ class LoginScreen extends StatelessWidget {
               const SizedBox(height: 16),
 
               const Text(
-                'Ainda não tem conta? Criar conta',
+                'Ainda nÃ£o tem conta? Criar conta',
                 style: TextStyle(
                   fontSize: 13,
-                  color: Color(0xFF64748B),
+                  color: AppColors.textSecondary,
                 ),
               ),
 
@@ -131,7 +133,7 @@ class LoginScreen extends StatelessWidget {
                 'Esqueci minha senha',
                 style: TextStyle(
                   fontSize: 13,
-                  color: Color(0xFF2563EB),
+                  color: AppColors.primary,
                 ),
               ),
             ],
@@ -141,3 +143,4 @@ class LoginScreen extends StatelessWidget {
     );
   }
 }
+

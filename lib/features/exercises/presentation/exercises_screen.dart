@@ -1,4 +1,6 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+
+import 'package:calcquest/shared/theme/app_colors.dart';
 
 import '../../result/presentation/result_screen.dart';
 
@@ -8,7 +10,7 @@ class ExercisesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: AppColors.background,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(24, 40, 24, 0),
@@ -16,28 +18,28 @@ class ExercisesScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                'Exercícios',
+                'ExercÃ­cios',
                 style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w500,
-                  color: Color(0xFF2563EB),
+                  color: AppColors.primary,
                 ),
               ),
               const SizedBox(height: 10),
               const Text(
-                'Pratique Álgebra',
+                'Pratique Ãlgebra',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w600,
-                  color: Color(0xFF1E293B),
+                  color: AppColors.textPrimary,
                 ),
               ),
               const SizedBox(height: 8),
               const Text(
-                'Resolva exercícios para fixar o conteúdo da aula.',
+                'Resolva exercÃ­cios para fixar o conteÃºdo da aula.',
                 style: TextStyle(
                   fontSize: 14,
-                  color: Color(0xFF64748B),
+                  color: AppColors.textSecondary,
                 ),
               ),
               const SizedBox(height: 24),
@@ -46,29 +48,29 @@ class ExercisesScreen extends StatelessWidget {
                 height: 300,
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: AppColors.white,
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
-                    color: const Color(0xFFE2E8F0),
+                    color: AppColors.border,
                   ),
                 ),
                 child: const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Questão 1 de 5',
+                      'QuestÃ£o 1 de 5',
                       style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
-                        color: Color(0xFF2563EB),
+                        color: AppColors.primary,
                       ),
                     ),
                     SizedBox(height: 18),
                     Text(
-                      'Simplifique a expressão:',
+                      'Simplifique a expressÃ£o:',
                       style: TextStyle(
                         fontSize: 14,
-                        color: Color(0xFF64748B),
+                        color: AppColors.textSecondary,
                       ),
                     ),
                     SizedBox(height: 8),
@@ -77,7 +79,7 @@ class ExercisesScreen extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.w700,
-                        color: Color(0xFF1E293B),
+                        color: AppColors.textPrimary,
                       ),
                     ),
                     SizedBox(height: 22),
@@ -104,8 +106,8 @@ class ExercisesScreen extends StatelessWidget {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF2563EB),
-                    foregroundColor: Colors.white,
+                    backgroundColor: AppColors.primary,
+                    foregroundColor: AppColors.white,
                     elevation: 0,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -122,10 +124,10 @@ class ExercisesScreen extends StatelessWidget {
               const SizedBox(height: 12),
               const Center(
                 child: Text(
-                  '1/5 exercícios concluídos',
+                  '1/5 exercÃ­cios concluÃ­dos',
                   style: TextStyle(
                     fontSize: 12,
-                    color: Color(0xFF64748B),
+                    color: AppColors.textSecondary,
                   ),
                 ),
               ),
@@ -153,17 +155,17 @@ class _AnswerOption extends StatelessWidget {
       alignment: Alignment.centerLeft,
       padding: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: const Color(0xFFCBD5E1),
+          color: AppColors.inputBorder,
         ),
       ),
       child: Text(
         text,
         style: const TextStyle(
           fontSize: 14,
-          color: Color(0xFF1E293B),
+          color: AppColors.textPrimary,
         ),
       ),
     );
@@ -178,10 +180,10 @@ class _ExercisesBottomNavigationBar extends StatelessWidget {
     return Container(
       height: 72,
       decoration: const BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         border: Border(
           top: BorderSide(
-            color: Color(0xFFE2E8F0),
+            color: AppColors.border,
           ),
         ),
       ),
@@ -189,7 +191,7 @@ class _ExercisesBottomNavigationBar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           _BottomNavItem(
-            label: 'Início',
+            label: 'InÃ­cio',
             isActive: false,
           ),
           _BottomNavItem(
@@ -197,7 +199,7 @@ class _ExercisesBottomNavigationBar extends StatelessWidget {
             isActive: true,
           ),
           _BottomNavItem(
-            label: 'Estatísticas',
+            label: 'EstatÃ­sticas',
             isActive: false,
           ),
           _BottomNavItem(
@@ -226,8 +228,9 @@ class _BottomNavItem extends StatelessWidget {
       style: TextStyle(
         fontSize: 12,
         fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
-        color: isActive ? const Color(0xFF2563EB) : const Color(0xFF64748B),
+        color: isActive ? AppColors.primary : AppColors.textSecondary,
       ),
     );
   }
 }
+

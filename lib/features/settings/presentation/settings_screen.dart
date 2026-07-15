@@ -1,4 +1,6 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+
+import 'package:calcquest/shared/theme/app_colors.dart';
 
 import '../../../shared/widgets/app_bottom_navigation_bar.dart';
 import '../../dashboard/presentation/dashboard_screen.dart';
@@ -46,7 +48,7 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: AppColors.background,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(24, 40, 24, 0),
@@ -54,11 +56,11 @@ class SettingsScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                'Configurações',
+                'ConfiguraÃ§Ãµes',
                 style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w500,
-                  color: Color(0xFF2563EB),
+                  color: AppColors.primary,
                 ),
               ),
               const SizedBox(height: 10),
@@ -67,15 +69,15 @@ class SettingsScreen extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w600,
-                  color: Color(0xFF1E293B),
+                  color: AppColors.textPrimary,
                 ),
               ),
               const SizedBox(height: 8),
               const Text(
-                'Gerencie preferências básicas do aplicativo.',
+                'Gerencie preferÃªncias bÃ¡sicas do aplicativo.',
                 style: TextStyle(
                   fontSize: 14,
-                  color: Color(0xFF64748B),
+                  color: AppColors.textSecondary,
                 ),
               ),
               const SizedBox(height: 24),
@@ -85,8 +87,8 @@ class SettingsScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               const _SettingsCard(
-                title: 'Notificações',
-                subtitle: 'Lembretes de estudo e metas diárias',
+                title: 'NotificaÃ§Ãµes',
+                subtitle: 'Lembretes de estudo e metas diÃ¡rias',
               ),
               const SizedBox(height: 16),
               const _SettingsCard(
@@ -100,9 +102,9 @@ class SettingsScreen extends StatelessWidget {
                 child: OutlinedButton(
                   onPressed: () {},
                   style: OutlinedButton.styleFrom(
-                    foregroundColor: const Color(0xFFDC2626),
+                    foregroundColor: AppColors.danger,
                     side: const BorderSide(
-                      color: Color(0xFFDC2626),
+                      color: AppColors.danger,
                     ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -146,10 +148,10 @@ class _SettingsCard extends StatelessWidget {
       height: 80,
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: const Color(0xFFE2E8F0),
+          color: AppColors.border,
         ),
       ),
       child: Column(
@@ -160,7 +162,7 @@ class _SettingsCard extends StatelessWidget {
             style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w600,
-              color: Color(0xFF1E293B),
+              color: AppColors.textPrimary,
             ),
           ),
           const SizedBox(height: 8),
@@ -168,7 +170,7 @@ class _SettingsCard extends StatelessWidget {
             subtitle,
             style: const TextStyle(
               fontSize: 12,
-              color: Color(0xFF64748B),
+              color: AppColors.textSecondary,
             ),
           ),
         ],
@@ -176,3 +178,4 @@ class _SettingsCard extends StatelessWidget {
     );
   }
 }
+

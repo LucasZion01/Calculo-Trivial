@@ -1,4 +1,6 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+
+import 'package:calcquest/shared/theme/app_colors.dart';
 
 import '../../../shared/widgets/app_bottom_navigation_bar.dart';
 import '../../dashboard/presentation/dashboard_screen.dart';
@@ -59,7 +61,7 @@ class ModuleDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: AppColors.background,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(24, 40, 24, 0),
@@ -67,19 +69,19 @@ class ModuleDetailScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                'Fundamentos Matemáticos',
+                'Fundamentos MatemÃ¡ticos',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w600,
-                  color: Color(0xFF1E293B),
+                  color: AppColors.textPrimary,
                 ),
               ),
               const SizedBox(height: 8),
               const Text(
-                'Construa a base necessária para estudar Cálculo.',
+                'Construa a base necessÃ¡ria para estudar CÃ¡lculo.',
                 style: TextStyle(
                   fontSize: 14,
-                  color: Color(0xFF64748B),
+                  color: AppColors.textSecondary,
                 ),
               ),
               const SizedBox(height: 24),
@@ -88,17 +90,17 @@ class ModuleDetailScreen extends StatelessWidget {
                 height: 110,
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF2563EB),
+                  color: AppColors.primary,
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Progresso do módulo',
+                      'Progresso do mÃ³dulo',
                       style: TextStyle(
                         fontSize: 14,
-                        color: Color(0xFFDBEAFE),
+                        color: AppColors.primaryLight,
                       ),
                     ),
                     SizedBox(height: 8),
@@ -107,7 +109,7 @@ class ModuleDetailScreen extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 32,
                         fontWeight: FontWeight.w700,
-                        color: Colors.white,
+                        color: AppColors.white,
                       ),
                     ),
                     SizedBox(height: 6),
@@ -115,7 +117,7 @@ class ModuleDetailScreen extends StatelessWidget {
                       'Comece pela primeira aula',
                       style: TextStyle(
                         fontSize: 13,
-                        color: Color(0xFFDBEAFE),
+                        color: AppColors.primaryLight,
                       ),
                     ),
                   ],
@@ -127,15 +129,15 @@ class ModuleDetailScreen extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
-                  color: Color(0xFF1E293B),
+                  color: AppColors.textPrimary,
                 ),
               ),
               const SizedBox(height: 12),
               _LessonCard(
                 lessonNumber: 'Aula 1',
-                title: 'Álgebra Fundamental',
+                title: 'Ãlgebra Fundamental',
                 status: 'Comece aqui',
-                statusColor: const Color(0xFF64748B),
+                statusColor: AppColors.textSecondary,
                 onTap: () {
                   _goToLesson(context);
                 },
@@ -143,16 +145,16 @@ class ModuleDetailScreen extends StatelessWidget {
               const SizedBox(height: 16),
               const _LessonCard(
                 lessonNumber: 'Aula 2',
-                title: 'Equações e Inequações',
+                title: 'EquaÃ§Ãµes e InequaÃ§Ãµes',
                 status: 'Bloqueado',
-                statusColor: Color(0xFF94A3B8),
+                statusColor: AppColors.textMuted,
               ),
               const SizedBox(height: 16),
               const _LessonCard(
                 lessonNumber: 'Aula 3',
-                title: 'Funções',
+                title: 'FunÃ§Ãµes',
                 status: 'Bloqueado',
-                statusColor: Color(0xFF94A3B8),
+                statusColor: AppColors.textMuted,
               ),
             ],
           ),
@@ -186,7 +188,7 @@ class _LessonCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Colors.white,
+      color: AppColors.white,
       borderRadius: BorderRadius.circular(16),
       child: InkWell(
         onTap: onTap,
@@ -198,7 +200,7 @@ class _LessonCard extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: const Color(0xFFE2E8F0),
+              color: AppColors.border,
             ),
           ),
           child: Column(
@@ -208,7 +210,7 @@ class _LessonCard extends StatelessWidget {
                 lessonNumber,
                 style: const TextStyle(
                   fontSize: 12,
-                  color: Color(0xFF2563EB),
+                  color: AppColors.primary,
                 ),
               ),
               const SizedBox(height: 4),
@@ -217,7 +219,7 @@ class _LessonCard extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
-                  color: Color(0xFF1E293B),
+                  color: AppColors.textPrimary,
                 ),
               ),
               const SizedBox(height: 4),
@@ -235,3 +237,4 @@ class _LessonCard extends StatelessWidget {
     );
   }
 }
+
