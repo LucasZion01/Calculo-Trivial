@@ -1,8 +1,9 @@
 ﻿import 'package:flutter/material.dart';
 
 import 'package:calcquest/shared/theme/app_colors.dart';
+import 'package:calcquest/shared/widgets/app_text_field.dart';
+import 'package:calcquest/shared/widgets/primary_button.dart';
 
-import '../../../shared/widgets/primary_button.dart';
 import '../../dashboard/presentation/dashboard_screen.dart';
 import 'register_screen.dart';
 
@@ -37,61 +38,13 @@ class LoginScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 40),
-              TextField(
-                decoration: InputDecoration(
-                  hintText: 'E-mail',
-                  hintStyle: const TextStyle(
-                    color: AppColors.textMuted,
-                    fontSize: 14,
-                  ),
-                  filled: true,
-                  fillColor: AppColors.white,
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 14,
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(
-                      color: AppColors.inputBorder,
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(
-                      color: AppColors.primary,
-                    ),
-                  ),
-                ),
+              const AppTextField(
+                hintText: 'E-mail',
               ),
               const SizedBox(height: 16),
-              TextField(
+              const AppTextField(
+                hintText: 'Senha',
                 obscureText: true,
-                decoration: InputDecoration(
-                  hintText: 'Senha',
-                  hintStyle: const TextStyle(
-                    color: AppColors.textMuted,
-                    fontSize: 14,
-                  ),
-                  filled: true,
-                  fillColor: AppColors.white,
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 14,
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(
-                      color: AppColors.inputBorder,
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(
-                      color: AppColors.primary,
-                    ),
-                  ),
-                ),
               ),
               const SizedBox(height: 24),
               PrimaryButton(
@@ -136,5 +89,3 @@ class LoginScreen extends StatelessWidget {
     );
   }
 }
-
-
