@@ -19,7 +19,14 @@ class ExercisesScreen extends StatefulWidget {
 }
 
 class _ExercisesScreenState extends State<ExercisesScreen> {
+  int currentExerciseIndex = 0;
   String? selectedOptionId;
+
+  ExerciseData get currentExercise => mockExercises[currentExerciseIndex];
+
+  bool get isLastExercise => currentExerciseIndex == mockExercises.length - 1;
+
+  double get progress => (currentExerciseIndex + 1) / mockExercises.length;
 
   void _onMenuTap(BuildContext context, int index) {
     if (index == 0) {
@@ -59,7 +66,7 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
     }
   }
 
-  void _confirmAnswer(ExerciseData exercise) {
+  void _confirmAnswer() {
     if (selectedOptionId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -69,20 +76,39 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
       return;
     }
 
-    if (selectedOptionId == exercise.correctOptionId) {
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (_) => const ResultScreen(),
+    if (selectedOptionId != currentExercise.correctOptionId) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Resposta incorreta. Tente novamente.'),
         ),
       );
       return;
     }
 
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Resposta incorreta. Tente novamente.'),
+      SnackBar(
+        content: Text(currentExercise.explanation),
       ),
     );
+
+    if (isLastExercise) {
+      Future.delayed(const Duration(milliseconds: 700), () {
+        if (!mounted) return;
+
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => const ResultScreen(),
+          ),
+        );
+      });
+
+      return;
+    }
+
+    setState(() {
+      currentExerciseIndex++;
+      selectedOptionId = null;
+    });
   }
 
   String _letterForIndex(int index) {
@@ -150,7 +176,7 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final exercise = mockExercises.first;
+    final exercise = currentExercise;
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -161,7 +187,7 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                exercise.title,
+                'Questão ${currentExerciseIndex + 1} de ${mockExercises.length}',
                 style: const TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.w600,
@@ -175,6 +201,14 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
                   fontSize: 14,
                   color: AppColors.textSecondary,
                 ),
+              ),
+              const SizedBox(height: 16),
+              LinearProgressIndicator(
+                value: progress,
+                minHeight: 8,
+                borderRadius: BorderRadius.circular(12),
+                backgroundColor: AppColors.border,
+                color: AppColors.primary,
               ),
               const SizedBox(height: 24),
               Container(
@@ -215,10 +249,8 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
               ),
               const SizedBox(height: 16),
               PrimaryButton(
-                text: 'Confirmar resposta',
-                onPressed: () {
-                  _confirmAnswer(exercise);
-                },
+                text: isLastExercise ? 'Finalizar exercícios' : 'Próxima questão',
+                onPressed: _confirmAnswer,
               ),
               const SizedBox(height: 24),
             ],
