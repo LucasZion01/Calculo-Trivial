@@ -1,8 +1,9 @@
 ﻿import 'package:flutter/material.dart';
 
 import 'package:calcquest/shared/theme/app_colors.dart';
+import 'package:calcquest/shared/widgets/app_bottom_navigation_bar.dart';
+import 'package:calcquest/shared/widgets/math_card.dart';
 
-import '../../../shared/widgets/app_bottom_navigation_bar.dart';
 import '../../dashboard/presentation/dashboard_screen.dart';
 import '../../learning_path/presentation/learning_path_screen.dart';
 import '../../lesson/presentation/lesson_screen.dart';
@@ -133,26 +134,29 @@ class ModuleDetailScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 12),
-              _LessonCard(
-                lessonNumber: 'Aula 1',
-                title: 'Álgebra Fundamental',
+              MathCard(
+                title: 'Aula 1 — Álgebra Fundamental',
+                subtitle: 'Operações, expressões e simplificação',
+                symbol: 'x',
                 status: 'Comece aqui',
-                statusColor: AppColors.textSecondary,
+                statusColor: AppColors.primary,
                 onTap: () {
                   _goToLesson(context);
                 },
               ),
               const SizedBox(height: 16),
-              const _LessonCard(
-                lessonNumber: 'Aula 2',
-                title: 'Equações e Inequações',
+              const MathCard(
+                title: 'Aula 2 — Equações e Inequações',
+                subtitle: 'Manipulação algébrica e resolução',
+                symbol: '=',
                 status: 'Bloqueado',
                 statusColor: AppColors.textMuted,
               ),
               const SizedBox(height: 16),
-              const _LessonCard(
-                lessonNumber: 'Aula 3',
-                title: 'Funções',
+              const MathCard(
+                title: 'Aula 3 — Funções',
+                subtitle: 'Domínio, imagem e gráficos',
+                symbol: 'f',
                 status: 'Bloqueado',
                 statusColor: AppColors.textMuted,
               ),
@@ -169,73 +173,3 @@ class ModuleDetailScreen extends StatelessWidget {
     );
   }
 }
-
-class _LessonCard extends StatelessWidget {
-  final String lessonNumber;
-  final String title;
-  final String status;
-  final Color statusColor;
-  final VoidCallback? onTap;
-
-  const _LessonCard({
-    required this.lessonNumber,
-    required this.title,
-    required this.status,
-    required this.statusColor,
-    this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: AppColors.white,
-      borderRadius: BorderRadius.circular(16),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
-        child: Container(
-          width: double.infinity,
-          height: 76,
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: AppColors.border,
-            ),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                lessonNumber,
-                style: const TextStyle(
-                  fontSize: 12,
-                  color: AppColors.primary,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.textPrimary,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                status,
-                style: TextStyle(
-                  fontSize: 12,
-                  color: statusColor,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-

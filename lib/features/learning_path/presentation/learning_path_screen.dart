@@ -1,8 +1,9 @@
 ﻿import 'package:flutter/material.dart';
 
 import 'package:calcquest/shared/theme/app_colors.dart';
+import 'package:calcquest/shared/widgets/app_bottom_navigation_bar.dart';
+import 'package:calcquest/shared/widgets/math_card.dart';
 
-import '../../../shared/widgets/app_bottom_navigation_bar.dart';
 import '../../dashboard/presentation/dashboard_screen.dart';
 import '../../module_detail/presentation/module_detail_screen.dart';
 import '../../profile/presentation/profile_screen.dart';
@@ -41,6 +42,14 @@ class LearningPathScreen extends StatelessWidget {
     }
   }
 
+  void _goToModuleDetail(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => const ModuleDetailScreen(),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,30 +77,29 @@ class LearningPathScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 24),
-              _ModuleCard(
+              MathCard(
                 title: 'Fundamentos Matemáticos',
                 subtitle: 'Pré-Cálculo, funções e base algébrica',
+                symbol: 'f(x)',
                 status: '0%',
                 statusColor: AppColors.primary,
                 onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (_) => const ModuleDetailScreen(),
-                    ),
-                  );
+                  _goToModuleDetail(context);
                 },
               ),
               const SizedBox(height: 16),
-              const _ModuleCard(
+              const MathCard(
                 title: 'Cálculo I',
                 subtitle: 'Limites, continuidade e derivadas',
+                symbol: 'lim',
                 status: 'Bloqueado',
                 statusColor: AppColors.textMuted,
               ),
               const SizedBox(height: 16),
-              const _ModuleCard(
+              const MathCard(
                 title: 'Cálculo II',
                 subtitle: 'Integrais, séries e equações diferenciais',
+                symbol: '∫',
                 status: 'Bloqueado',
                 statusColor: AppColors.textMuted,
               ),
@@ -108,79 +116,3 @@ class LearningPathScreen extends StatelessWidget {
     );
   }
 }
-
-class _ModuleCard extends StatelessWidget {
-  final String title;
-  final String subtitle;
-  final String status;
-  final Color statusColor;
-  final VoidCallback? onTap;
-
-  const _ModuleCard({
-    required this.title,
-    required this.subtitle,
-    required this.status,
-    required this.statusColor,
-    this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: AppColors.white,
-      borderRadius: BorderRadius.circular(16),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
-        child: Container(
-          width: double.infinity,
-          height: 96,
-          padding: const EdgeInsets.all(18),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: AppColors.border,
-            ),
-          ),
-          child: Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.textPrimary,
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                    Text(
-                      subtitle,
-                      style: const TextStyle(
-                        fontSize: 13,
-                        color: AppColors.textSecondary,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Text(
-                status,
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: statusColor,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-
