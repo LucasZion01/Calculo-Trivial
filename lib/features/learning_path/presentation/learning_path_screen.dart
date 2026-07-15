@@ -1,6 +1,7 @@
 ﻿import 'package:flutter/material.dart';
 
 import 'package:calcquest/shared/data/mock_learning_data.dart';
+import 'package:calcquest/shared/state/app_progress.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
 import 'package:calcquest/shared/widgets/app_bottom_navigation_bar.dart';
 import 'package:calcquest/shared/widgets/math_card.dart';
@@ -51,6 +52,24 @@ class LearningPathScreen extends StatelessWidget {
     );
   }
 
+  String _getModuleStatus(ModuleData module) {
+    if (module.id == 'fundamentos' &&
+        AppProgress.algebraFundamentalCompleted) {
+      return '33%';
+    }
+
+    return module.status;
+  }
+
+  Color _getModuleStatusColor(ModuleData module) {
+    if (module.id == 'fundamentos' &&
+        AppProgress.algebraFundamentalCompleted) {
+      return AppColors.primary;
+    }
+
+    return module.isUnlocked ? AppColors.primary : AppColors.textMuted;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -81,7 +100,8 @@ class LearningPathScreen extends StatelessWidget {
               Expanded(
                 child: ListView.separated(
                   itemCount: mockModules.length,
-                  separatorBuilder: (context, index) => const SizedBox(height: 16),
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(height: 16),
                   itemBuilder: (context, index) {
                     final module = mockModules[index];
 
@@ -89,10 +109,8 @@ class LearningPathScreen extends StatelessWidget {
                       title: module.title,
                       subtitle: module.subtitle,
                       symbol: module.symbol,
-                      status: module.status,
-                      statusColor: module.isUnlocked
-                          ? AppColors.primary
-                          : AppColors.textMuted,
+                      status: _getModuleStatus(module),
+                      statusColor: _getModuleStatusColor(module),
                       onTap: module.isUnlocked
                           ? () {
                               _goToModuleDetail(context);

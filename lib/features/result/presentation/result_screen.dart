@@ -1,5 +1,6 @@
 ﻿import 'package:flutter/material.dart';
 
+import 'package:calcquest/shared/data/mock_exercise_data.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
 import 'package:calcquest/shared/widgets/app_bottom_navigation_bar.dart';
 import 'package:calcquest/shared/widgets/primary_button.dart';
@@ -115,10 +116,10 @@ class ResultScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const totalQuestions = 3;
-    const correctAnswers = 3;
-    const xpEarned = 50;
-    const goldEarned = 20;
+    final totalQuestions = mockExercises.length;
+    final correctAnswers = totalQuestions;
+    const xpEarned = 60;
+    const goldEarned = 25;
 
     return Scaffold(
       backgroundColor: AppColors.background,

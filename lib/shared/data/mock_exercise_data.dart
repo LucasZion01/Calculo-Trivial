@@ -32,24 +32,13 @@ const List<ExerciseData> mockExercises = [
     title: 'Questão 1 de 5',
     statement: 'Simplifique a expressão:\n3x + 5x - 2x',
     correctOptionId: 'a',
-    explanation: 'Somamos os coeficientes semelhantes: 3 + 5 - 2 = 6. Portanto, o resultado é 6x.',
+    explanation:
+        'Somamos os coeficientes semelhantes: 3 + 5 - 2 = 6. Portanto, o resultado é 6x.',
     options: [
-      ExerciseOptionData(
-        id: 'a',
-        text: '6x',
-      ),
-      ExerciseOptionData(
-        id: 'b',
-        text: '8x',
-      ),
-      ExerciseOptionData(
-        id: 'c',
-        text: '10x',
-      ),
-      ExerciseOptionData(
-        id: 'd',
-        text: 'x',
-      ),
+      ExerciseOptionData(id: 'a', text: '6x'),
+      ExerciseOptionData(id: 'b', text: '8x'),
+      ExerciseOptionData(id: 'c', text: '10x'),
+      ExerciseOptionData(id: 'd', text: 'x'),
     ],
   ),
   ExerciseData(
@@ -57,24 +46,13 @@ const List<ExerciseData> mockExercises = [
     title: 'Questão 2 de 5',
     statement: 'Simplifique a expressão:\n7a - 2a + 4a',
     correctOptionId: 'c',
-    explanation: 'Somamos os coeficientes: 7 - 2 + 4 = 9. Portanto, o resultado é 9a.',
+    explanation:
+        'Somamos os coeficientes semelhantes: 7 - 2 + 4 = 9. Portanto, o resultado é 9a.',
     options: [
-      ExerciseOptionData(
-        id: 'a',
-        text: '5a',
-      ),
-      ExerciseOptionData(
-        id: 'b',
-        text: '7a',
-      ),
-      ExerciseOptionData(
-        id: 'c',
-        text: '9a',
-      ),
-      ExerciseOptionData(
-        id: 'd',
-        text: '13a',
-      ),
+      ExerciseOptionData(id: 'a', text: '5a'),
+      ExerciseOptionData(id: 'b', text: '7a'),
+      ExerciseOptionData(id: 'c', text: '9a'),
+      ExerciseOptionData(id: 'd', text: '13a'),
     ],
   ),
   ExerciseData(
@@ -82,24 +60,41 @@ const List<ExerciseData> mockExercises = [
     title: 'Questão 3 de 5',
     statement: 'Simplifique a expressão:\n10y - 3y - y',
     correctOptionId: 'b',
-    explanation: 'Somamos os coeficientes: 10 - 3 - 1 = 6. Portanto, o resultado é 6y.',
+    explanation:
+        'Somamos os coeficientes semelhantes: 10 - 3 - 1 = 6. Portanto, o resultado é 6y.',
     options: [
-      ExerciseOptionData(
-        id: 'a',
-        text: '4y',
-      ),
-      ExerciseOptionData(
-        id: 'b',
-        text: '6y',
-      ),
-      ExerciseOptionData(
-        id: 'c',
-        text: '7y',
-      ),
-      ExerciseOptionData(
-        id: 'd',
-        text: '10y',
-      ),
+      ExerciseOptionData(id: 'a', text: '4y'),
+      ExerciseOptionData(id: 'b', text: '6y'),
+      ExerciseOptionData(id: 'c', text: '7y'),
+      ExerciseOptionData(id: 'd', text: '10y'),
+    ],
+  ),
+  ExerciseData(
+    id: 'simplificacao-4',
+    title: 'Questão 4 de 5',
+    statement: 'Simplifique a expressão:\n4m + 6m - 3m',
+    correctOptionId: 'd',
+    explanation:
+        'Somamos os coeficientes semelhantes: 4 + 6 - 3 = 7. Portanto, o resultado é 7m.',
+    options: [
+      ExerciseOptionData(id: 'a', text: '3m'),
+      ExerciseOptionData(id: 'b', text: '6m'),
+      ExerciseOptionData(id: 'c', text: '10m'),
+      ExerciseOptionData(id: 'd', text: '7m'),
+    ],
+  ),
+  ExerciseData(
+    id: 'simplificacao-5',
+    title: 'Questão 5 de 5',
+    statement: 'Simplifique a expressão:\n12x - 5x + 2x',
+    correctOptionId: 'c',
+    explanation:
+        'Somamos os coeficientes semelhantes: 12 - 5 + 2 = 9. Portanto, o resultado é 9x.',
+    options: [
+      ExerciseOptionData(id: 'a', text: '7x'),
+      ExerciseOptionData(id: 'b', text: '8x'),
+      ExerciseOptionData(id: 'c', text: '9x'),
+      ExerciseOptionData(id: 'd', text: '19x'),
     ],
   ),
 ];

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:calcquest/shared/state/app_progress.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
 import 'package:calcquest/shared/widgets/app_bottom_navigation_bar.dart';
 import 'package:calcquest/shared/widgets/primary_button.dart';
@@ -9,8 +10,19 @@ import '../../learning_path/presentation/learning_path_screen.dart';
 import '../../profile/presentation/profile_screen.dart';
 import '../../statistics/presentation/statistics_screen.dart';
 
-class RewardScreen extends StatelessWidget {
+class RewardScreen extends StatefulWidget {
   const RewardScreen({super.key});
+
+  @override
+  State<RewardScreen> createState() => _RewardScreenState();
+}
+
+class _RewardScreenState extends State<RewardScreen> {
+  @override
+  void initState() {
+    super.initState();
+    AppProgress.completeAlgebraFundamental();
+  }
 
   void _onMenuTap(BuildContext context, int index) {
     if (index == 0) {
@@ -115,8 +127,8 @@ class RewardScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const xpEarned = 50;
-    const goldEarned = 20;
+    const xpEarned = 60;
+    const goldEarned = 25;
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -156,7 +168,7 @@ class RewardScreen extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               const Text(
-                'Você concluiu a primeira sequência de Álgebra Fundamental.',
+                'Você concluiu a sequência de Álgebra Fundamental.',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 14,
