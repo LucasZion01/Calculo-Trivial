@@ -8,6 +8,7 @@ import 'package:calcquest/shared/widgets/math_card.dart';
 
 import '../../dashboard/presentation/dashboard_screen.dart';
 import '../../learning_path/presentation/learning_path_screen.dart';
+import '../../lesson/presentation/equations_lesson_screen.dart';
 import '../../lesson/presentation/lesson_screen.dart';
 import '../../profile/presentation/profile_screen.dart';
 import '../../statistics/presentation/statistics_screen.dart';
@@ -61,6 +62,14 @@ class ModuleDetailScreen extends StatelessWidget {
     );
   }
 
+  void _goToEquationsLesson(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => const EquationsLessonScreen(),
+      ),
+    );
+  }
+
   String _getLessonStatus(LessonData lesson) {
     if (lesson.id == 'algebra-fundamental' &&
         AppProgress.algebraFundamentalCompleted) {
@@ -110,11 +119,7 @@ class ModuleDetailScreen extends StatelessWidget {
 
     if (lesson.id == 'equacoes-inequacoes' &&
         AppProgress.algebraFundamentalCompleted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Aula 2 desbloqueada. Conteúdo será criado na próxima etapa.'),
-        ),
-      );
+      _goToEquationsLesson(context);
       return;
     }
 
@@ -128,7 +133,8 @@ class ModuleDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final module = mockModules.first;
-    final moduleProgress = AppProgress.algebraFundamentalCompleted ? '33%' : '0%';
+    final moduleProgress =
+        AppProgress.algebraFundamentalCompleted ? '33%' : '0%';
     final moduleProgressText = AppProgress.algebraFundamentalCompleted
         ? 'Aula 1 concluída'
         : 'Comece pela primeira aula';
