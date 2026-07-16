@@ -1,6 +1,7 @@
 ﻿import 'package:flutter/material.dart';
 
 import 'package:calcquest/shared/data/mock_learning_data.dart';
+import 'package:calcquest/shared/state/app_progress.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
 import 'package:calcquest/shared/widgets/app_bottom_navigation_bar.dart';
 import 'package:calcquest/shared/widgets/math_card.dart';
@@ -60,9 +61,77 @@ class ModuleDetailScreen extends StatelessWidget {
     );
   }
 
+  String _getLessonStatus(LessonData lesson) {
+    if (lesson.id == 'algebra-fundamental' &&
+        AppProgress.algebraFundamentalCompleted) {
+      return 'Concluída';
+    }
+
+    if (lesson.id == 'equacoes-inequacoes' &&
+        AppProgress.algebraFundamentalCompleted) {
+      return 'Desbloqueada';
+    }
+
+    return lesson.status;
+  }
+
+  bool _isLessonUnlocked(LessonData lesson) {
+    if (lesson.id == 'algebra-fundamental') {
+      return true;
+    }
+
+    if (lesson.id == 'equacoes-inequacoes' &&
+        AppProgress.algebraFundamentalCompleted) {
+      return true;
+    }
+
+    return lesson.isUnlocked;
+  }
+
+  Color _getLessonStatusColor(LessonData lesson) {
+    if (lesson.id == 'algebra-fundamental' &&
+        AppProgress.algebraFundamentalCompleted) {
+      return AppColors.primary;
+    }
+
+    if (lesson.id == 'equacoes-inequacoes' &&
+        AppProgress.algebraFundamentalCompleted) {
+      return AppColors.primary;
+    }
+
+    return lesson.isUnlocked ? AppColors.primary : AppColors.textMuted;
+  }
+
+  void _handleLessonTap(BuildContext context, LessonData lesson) {
+    if (lesson.id == 'algebra-fundamental') {
+      _goToLesson(context);
+      return;
+    }
+
+    if (lesson.id == 'equacoes-inequacoes' &&
+        AppProgress.algebraFundamentalCompleted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Aula 2 desbloqueada. Conteúdo será criado na próxima etapa.'),
+        ),
+      );
+      return;
+    }
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Esta aula ainda está bloqueada.'),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final module = mockModules.first;
+    final moduleProgress = AppProgress.algebraFundamentalCompleted ? '33%' : '0%';
+    final moduleProgressText = AppProgress.algebraFundamentalCompleted
+        ? 'Aula 1 concluída'
+        : 'Comece pela primeira aula';
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -91,35 +160,43 @@ class ModuleDetailScreen extends StatelessWidget {
               const SizedBox(height: 24),
               Container(
                 width: double.infinity,
-                height: 110,
+                height: 126,
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   color: AppColors.primary,
                   borderRadius: BorderRadius.circular(20),
                 ),
-                child: const Column(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    const Text(
                       'Progresso do módulo',
                       style: TextStyle(
                         fontSize: 14,
                         color: AppColors.primaryLight,
                       ),
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     Text(
-                      '0%',
-                      style: TextStyle(
+                      moduleProgress,
+                      style: const TextStyle(
                         fontSize: 32,
                         fontWeight: FontWeight.w700,
                         color: AppColors.white,
                       ),
                     ),
-                    SizedBox(height: 6),
+                    const SizedBox(height: 8),
+                    LinearProgressIndicator(
+                      value: AppProgress.algebraFundamentalCompleted ? 0.33 : 0,
+                      minHeight: 6,
+                      borderRadius: BorderRadius.circular(12),
+                      backgroundColor: AppColors.primaryLight,
+                      color: AppColors.white,
+                    ),
+                    const SizedBox(height: 8),
                     Text(
-                      'Comece pela primeira aula',
-                      style: TextStyle(
+                      moduleProgressText,
+                      style: const TextStyle(
                         fontSize: 13,
                         color: AppColors.primaryLight,
                       ),
@@ -140,21 +217,21 @@ class ModuleDetailScreen extends StatelessWidget {
               Expanded(
                 child: ListView.separated(
                   itemCount: module.lessons.length,
-                  separatorBuilder: (context, index) => const SizedBox(height: 16),
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(height: 16),
                   itemBuilder: (context, index) {
                     final lesson = module.lessons[index];
+                    final isUnlocked = _isLessonUnlocked(lesson);
 
                     return MathCard(
                       title: lesson.title,
                       subtitle: lesson.subtitle,
                       symbol: lesson.symbol,
-                      status: lesson.status,
-                      statusColor: lesson.isUnlocked
-                          ? AppColors.primary
-                          : AppColors.textMuted,
-                      onTap: lesson.isUnlocked
+                      status: _getLessonStatus(lesson),
+                      statusColor: _getLessonStatusColor(lesson),
+                      onTap: isUnlocked
                           ? () {
-                              _goToLesson(context);
+                              _handleLessonTap(context, lesson);
                             }
                           : null,
                     );
