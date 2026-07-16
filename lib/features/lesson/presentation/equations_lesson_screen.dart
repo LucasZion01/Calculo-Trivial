@@ -5,6 +5,7 @@ import 'package:calcquest/shared/widgets/app_bottom_navigation_bar.dart';
 import 'package:calcquest/shared/widgets/primary_button.dart';
 
 import '../../dashboard/presentation/dashboard_screen.dart';
+import '../../exercises/presentation/equations_exercises_screen.dart';
 import '../../learning_path/presentation/learning_path_screen.dart';
 import '../../profile/presentation/profile_screen.dart';
 import '../../statistics/presentation/statistics_screen.dart';
@@ -50,10 +51,10 @@ class EquationsLessonScreen extends StatelessWidget {
     }
   }
 
-  void _showNextStepMessage(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Na próxima etapa, criaremos os exercícios da Aula 2.'),
+  void _goToExercises(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => const EquationsExercisesScreen(),
       ),
     );
   }
@@ -195,7 +196,7 @@ class EquationsLessonScreen extends StatelessWidget {
               PrimaryButton(
                 text: 'Iniciar exercícios',
                 onPressed: () {
-                  _showNextStepMessage(context);
+                  _goToExercises(context);
                 },
               ),
               const SizedBox(height: 24),
