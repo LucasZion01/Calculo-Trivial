@@ -1,9 +1,14 @@
 ﻿import 'package:flutter/material.dart';
 
 import 'features/splash/presentation/splash_screen.dart';
+import 'shared/state/app_progress.dart';
 import 'shared/theme/app_colors.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await AppProgress.loadProgress();
+
   runApp(const CalcQuestApp());
 }
 
@@ -24,4 +29,3 @@ class CalcQuestApp extends StatelessWidget {
     );
   }
 }
-

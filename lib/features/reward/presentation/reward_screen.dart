@@ -21,7 +21,11 @@ class _RewardScreenState extends State<RewardScreen> {
   @override
   void initState() {
     super.initState();
-    AppProgress.completeAlgebraFundamental();
+    _saveProgress();
+  }
+
+  Future<void> _saveProgress() async {
+    await AppProgress.completeAlgebraFundamental();
   }
 
   void _onMenuTap(BuildContext context, int index) {
