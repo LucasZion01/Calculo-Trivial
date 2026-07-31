@@ -98,8 +98,14 @@ class LearningPathScreen extends StatelessWidget {
       return '100%';
     }
 
-    if (module.id == 'calculo-1' && AppProgress.functionsCompleted) {
-      return 'Desbloqueado';
+    if (module.id == 'calculo-1') {
+      if (AppProgress.limitsCompleted) {
+        return '33%';
+      }
+
+      if (AppProgress.functionsCompleted) {
+        return 'Desbloqueado';
+      }
     }
 
     return module.status;

@@ -5,10 +5,12 @@ class AppProgress {
   static const String _equationsAndInequationsKey =
       'equations_and_inequations_completed';
   static const String _functionsKey = 'functions_completed';
+  static const String _limitsKey = 'limits_completed';
 
   static bool algebraFundamentalCompleted = false;
   static bool equationsAndInequationsCompleted = false;
   static bool functionsCompleted = false;
+  static bool limitsCompleted = false;
 
   static Future<void> loadProgress() async {
     final preferences = await SharedPreferences.getInstance();
@@ -20,6 +22,8 @@ class AppProgress {
         preferences.getBool(_equationsAndInequationsKey) ?? false;
 
     functionsCompleted = preferences.getBool(_functionsKey) ?? false;
+
+    limitsCompleted = preferences.getBool(_limitsKey) ?? false;
   }
 
   static Future<void> completeAlgebraFundamental() async {
@@ -43,14 +47,23 @@ class AppProgress {
     await preferences.setBool(_functionsKey, true);
   }
 
+  static Future<void> completeLimits() async {
+    limitsCompleted = true;
+
+    final preferences = await SharedPreferences.getInstance();
+    await preferences.setBool(_limitsKey, true);
+  }
+
   static Future<void> resetProgress() async {
     algebraFundamentalCompleted = false;
     equationsAndInequationsCompleted = false;
     functionsCompleted = false;
+    limitsCompleted = false;
 
     final preferences = await SharedPreferences.getInstance();
     await preferences.setBool(_algebraFundamentalKey, false);
     await preferences.setBool(_equationsAndInequationsKey, false);
     await preferences.setBool(_functionsKey, false);
+    await preferences.setBool(_limitsKey, false);
   }
 }

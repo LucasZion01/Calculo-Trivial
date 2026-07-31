@@ -5,6 +5,7 @@ import 'package:calcquest/shared/widgets/app_bottom_navigation_bar.dart';
 import 'package:calcquest/shared/widgets/primary_button.dart';
 
 import '../../dashboard/presentation/dashboard_screen.dart';
+import '../../exercises/presentation/limits_exercises_screen.dart';
 import '../../learning_path/presentation/learning_path_screen.dart';
 import '../../profile/presentation/profile_screen.dart';
 import '../../statistics/presentation/statistics_screen.dart';
@@ -50,10 +51,10 @@ class LimitsLessonScreen extends StatelessWidget {
     }
   }
 
-  void _showExercisesMessage(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Na próxima etapa, criaremos os exercícios de Limites.'),
+  void _goToExercises(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => const LimitsExercisesScreen(),
       ),
     );
   }
@@ -144,16 +145,16 @@ class LimitsLessonScreen extends StatelessWidget {
           ),
           SizedBox(height: 10),
           Text(
-            'lim x → 2  (x + 3)',
+            'lim x → 2  (x² - 4) / (x - 2)',
             style: TextStyle(
-              fontSize: 22,
+              fontSize: 20,
               fontWeight: FontWeight.w700,
               color: AppColors.white,
             ),
           ),
           SizedBox(height: 10),
           Text(
-            'Como a expressão x + 3 não tem problema em x = 2, basta substituir x por 2.',
+            'A substituição direta gera 0/0. Então fatoramos x² - 4 como (x - 2)(x + 2), cancelamos x - 2 e avaliamos x + 2 em x = 2.',
             style: TextStyle(
               fontSize: 14,
               height: 1.45,
@@ -162,7 +163,7 @@ class LimitsLessonScreen extends StatelessWidget {
           ),
           SizedBox(height: 8),
           Text(
-            'Resultado: 2 + 3 = 5',
+            'Resultado: 4',
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w700,
@@ -194,7 +195,7 @@ class LimitsLessonScreen extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               const Text(
-                'Entenda a ideia de aproximação antes das regras formais.',
+                'Entenda limites com substituição, fatoração, racionalização e análise no infinito.',
                 style: TextStyle(
                   fontSize: 14,
                   height: 1.4,
@@ -206,33 +207,33 @@ class LimitsLessonScreen extends StatelessWidget {
                 child: ListView(
                   children: [
                     _buildConceptCard(
-                      title: 'O que é limite?',
+                      title: 'Ideia central',
                       symbol: 'lim',
                       content:
-                          'Limite descreve o valor que uma função se aproxima quando x chega perto de determinado número. O foco não é exatamente o ponto, mas o comportamento perto dele.',
+                          'Limite descreve o valor que uma função se aproxima quando x chega perto de um número. Em Cálculo, isso prepara a base para continuidade, derivadas e integrais.',
                     ),
                     const SizedBox(height: 16),
                     _buildConceptCard(
-                      title: 'Ideia intuitiva',
-                      symbol: '→',
-                      content:
-                          'Quando escrevemos x → 2, estamos dizendo que x está se aproximando de 2. Ele pode vir pela esquerda, pela direita ou pelos dois lados.',
-                    ),
-                    const SizedBox(height: 16),
-                    _buildConceptCard(
-                      title: 'Substituição direta',
+                      title: 'Quando substituir diretamente?',
                       symbol: 'x',
                       content:
-                          'Em muitos limites simples, basta substituir o valor de x na expressão. Isso funciona quando a função não gera divisão por zero ou outra indeterminação.',
+                          'Em funções polinomiais e em expressões contínuas, geralmente podemos substituir o valor de x diretamente.',
+                    ),
+                    const SizedBox(height: 16),
+                    _buildConceptCard(
+                      title: 'Quando aparece 0/0',
+                      symbol: '0/0',
+                      content:
+                          'A forma 0/0 é uma indeterminação. Ela indica que é necessário transformar a expressão, geralmente por fatoração, simplificação ou racionalização.',
                     ),
                     const SizedBox(height: 16),
                     _buildExampleCard(),
                     const SizedBox(height: 16),
                     _buildConceptCard(
-                      title: 'Atenção',
-                      symbol: '!',
+                      title: 'Limite no infinito',
+                      symbol: '∞',
                       content:
-                          'Nem todo limite pode ser resolvido só substituindo. Em alguns casos aparecem formas como 0/0, exigindo fatoração, simplificação ou outra estratégia.',
+                          'Em funções racionais, quando x tende ao infinito, comparamos os termos de maior grau. Eles dominam o comportamento da função.',
                     ),
                     const SizedBox(height: 24),
                   ],
@@ -241,7 +242,7 @@ class LimitsLessonScreen extends StatelessWidget {
               PrimaryButton(
                 text: 'Iniciar exercícios',
                 onPressed: () {
-                  _showExercisesMessage(context);
+                  _goToExercises(context);
                 },
               ),
               const SizedBox(height: 24),

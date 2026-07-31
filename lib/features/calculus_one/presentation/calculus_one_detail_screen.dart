@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:calcquest/shared/state/app_progress.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
 import 'package:calcquest/shared/widgets/app_bottom_navigation_bar.dart';
 import 'package:calcquest/shared/widgets/math_card.dart';
@@ -59,6 +60,14 @@ class CalculusOneDetailScreen extends StatelessWidget {
     );
   }
 
+  void _showContinuityMessage(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Aula de Continuidade será criada na próxima etapa.'),
+      ),
+    );
+  }
+
   void _showLockedMessage(BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
@@ -67,8 +76,38 @@ class CalculusOneDetailScreen extends StatelessWidget {
     );
   }
 
+  String _moduleProgressText() {
+    if (AppProgress.limitsCompleted) {
+      return '33%';
+    }
+
+    return '0%';
+  }
+
+  double _moduleProgressValue() {
+    if (AppProgress.limitsCompleted) {
+      return 0.33;
+    }
+
+    return 0;
+  }
+
+  String _moduleProgressDescription() {
+    if (AppProgress.limitsCompleted) {
+      return 'Aula 1 concluída';
+    }
+
+    return 'Comece pela aula de Limites';
+  }
+
   @override
   Widget build(BuildContext context) {
+    final limitsStatus =
+        AppProgress.limitsCompleted ? 'Concluída' : 'Comece aqui';
+
+    final continuityStatus =
+        AppProgress.limitsCompleted ? 'Desbloqueada' : 'Bloqueado';
+
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
@@ -114,9 +153,9 @@ class CalculusOneDetailScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 8),
-                    const Text(
-                      '0%',
-                      style: TextStyle(
+                    Text(
+                      _moduleProgressText(),
+                      style: const TextStyle(
                         fontSize: 32,
                         fontWeight: FontWeight.w700,
                         color: AppColors.white,
@@ -124,16 +163,16 @@ class CalculusOneDetailScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     LinearProgressIndicator(
-                      value: 0,
+                      value: _moduleProgressValue(),
                       minHeight: 6,
                       borderRadius: BorderRadius.circular(12),
                       backgroundColor: AppColors.primaryLight,
                       color: AppColors.white,
                     ),
                     const SizedBox(height: 8),
-                    const Text(
-                      'Comece pela aula de Limites',
-                      style: TextStyle(
+                    Text(
+                      _moduleProgressDescription(),
+                      style: const TextStyle(
                         fontSize: 13,
                         color: AppColors.primaryLight,
                       ),
@@ -158,7 +197,7 @@ class CalculusOneDetailScreen extends StatelessWidget {
                       title: 'Aula 1 — Limites',
                       subtitle: 'Ideia intuitiva, notação e cálculo inicial',
                       symbol: 'lim',
-                      status: 'Comece aqui',
+                      status: limitsStatus,
                       statusColor: AppColors.primary,
                       onTap: () {
                         _goToLimitsLesson(context);
@@ -169,11 +208,17 @@ class CalculusOneDetailScreen extends StatelessWidget {
                       title: 'Aula 2 — Continuidade',
                       subtitle: 'Funções contínuas e pontos de descontinuidade',
                       symbol: 'C',
-                      status: 'Bloqueado',
-                      statusColor: AppColors.textMuted,
-                      onTap: () {
-                        _showLockedMessage(context);
-                      },
+                      status: continuityStatus,
+                      statusColor: AppProgress.limitsCompleted
+                          ? AppColors.primary
+                          : AppColors.textMuted,
+                      onTap: AppProgress.limitsCompleted
+                          ? () {
+                              _showContinuityMessage(context);
+                            }
+                          : () {
+                              _showLockedMessage(context);
+                            },
                     ),
                     const SizedBox(height: 16),
                     MathCard(

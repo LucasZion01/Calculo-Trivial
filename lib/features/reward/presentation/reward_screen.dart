@@ -34,6 +34,11 @@ class _RewardScreenState extends State<RewardScreen> {
   }
 
   Future<void> _saveProgress() async {
+    if (widget.completedLessonId == 'limites') {
+      await AppProgress.completeLimits();
+      return;
+    }
+
     if (widget.completedLessonId == 'funcoes') {
       await AppProgress.completeFunctions();
       return;
@@ -95,6 +100,10 @@ class _RewardScreenState extends State<RewardScreen> {
   }
 
   String get _rewardDescription {
+    if (widget.completedLessonId == 'limites') {
+      return 'Você concluiu a sequência universitária de Limites.';
+    }
+
     if (widget.completedLessonId == 'funcoes') {
       return 'Você concluiu a sequência de Funções e finalizou o módulo Fundamentos Matemáticos.';
     }
