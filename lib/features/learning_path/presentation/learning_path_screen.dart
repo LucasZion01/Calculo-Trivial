@@ -52,22 +52,80 @@ class LearningPathScreen extends StatelessWidget {
     );
   }
 
+  int _completedFundamentalsLessons() {
+    int completed = 0;
+
+    if (AppProgress.algebraFundamentalCompleted) {
+      completed++;
+    }
+
+    if (AppProgress.equationsAndInequationsCompleted) {
+      completed++;
+    }
+
+    if (AppProgress.functionsCompleted) {
+      completed++;
+    }
+
+    return completed;
+  }
+
   String _getModuleStatus(ModuleData module) {
-    if (module.id == 'fundamentos' &&
-        AppProgress.algebraFundamentalCompleted) {
-      return '33%';
+    if (module.id == 'fundamentos') {
+      final completed = _completedFundamentalsLessons();
+
+      if (completed == 0) {
+        return '0%';
+      }
+
+      if (completed == 1) {
+        return '33%';
+      }
+
+      if (completed == 2) {
+        return '66%';
+      }
+
+      return '100%';
+    }
+
+    if (module.id == 'calculo-1' && AppProgress.functionsCompleted) {
+      return 'Desbloqueado';
     }
 
     return module.status;
   }
 
   Color _getModuleStatusColor(ModuleData module) {
-    if (module.id == 'fundamentos' &&
-        AppProgress.algebraFundamentalCompleted) {
+    if (module.id == 'fundamentos') {
+      return AppColors.primary;
+    }
+
+    if (module.id == 'calculo-1' && AppProgress.functionsCompleted) {
       return AppColors.primary;
     }
 
     return module.isUnlocked ? AppColors.primary : AppColors.textMuted;
+  }
+
+  VoidCallback? _getModuleTap(BuildContext context, ModuleData module) {
+    if (module.id == 'fundamentos') {
+      return () {
+        _goToModuleDetail(context);
+      };
+    }
+
+    if (module.id == 'calculo-1' && AppProgress.functionsCompleted) {
+      return () {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Cálculo I desbloqueado. Conteúdo será criado na próxima etapa.'),
+          ),
+        );
+      };
+    }
+
+    return null;
   }
 
   @override
@@ -111,11 +169,7 @@ class LearningPathScreen extends StatelessWidget {
                       symbol: module.symbol,
                       status: _getModuleStatus(module),
                       statusColor: _getModuleStatusColor(module),
-                      onTap: module.isUnlocked
-                          ? () {
-                              _goToModuleDetail(context);
-                            }
-                          : null,
+                      onTap: _getModuleTap(context, module),
                     );
                   },
                 ),

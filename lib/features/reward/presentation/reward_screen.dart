@@ -34,6 +34,11 @@ class _RewardScreenState extends State<RewardScreen> {
   }
 
   Future<void> _saveProgress() async {
+    if (widget.completedLessonId == 'funcoes') {
+      await AppProgress.completeFunctions();
+      return;
+    }
+
     if (widget.completedLessonId == 'equacoes-inequacoes') {
       await AppProgress.completeEquationsAndInequations();
       return;
@@ -90,6 +95,10 @@ class _RewardScreenState extends State<RewardScreen> {
   }
 
   String get _rewardDescription {
+    if (widget.completedLessonId == 'funcoes') {
+      return 'Você concluiu a sequência de Funções e finalizou o módulo Fundamentos Matemáticos.';
+    }
+
     if (widget.completedLessonId == 'equacoes-inequacoes') {
       return 'Você concluiu a sequência de Equações e Inequações.';
     }
@@ -153,6 +162,10 @@ class _RewardScreenState extends State<RewardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final progressText = widget.completedLessonId == 'funcoes'
+        ? 'Módulo concluído'
+        : 'Aula concluída';
+
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
@@ -215,7 +228,7 @@ class _RewardScreenState extends State<RewardScreen> {
               _buildRewardItem(
                 icon: Icons.school_outlined,
                 title: 'Progresso',
-                value: 'Aula concluída',
+                value: progressText,
               ),
               const Spacer(),
               PrimaryButton(

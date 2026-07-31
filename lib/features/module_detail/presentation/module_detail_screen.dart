@@ -9,6 +9,7 @@ import 'package:calcquest/shared/widgets/math_card.dart';
 import '../../dashboard/presentation/dashboard_screen.dart';
 import '../../learning_path/presentation/learning_path_screen.dart';
 import '../../lesson/presentation/equations_lesson_screen.dart';
+import '../../lesson/presentation/functions_lesson_screen.dart';
 import '../../lesson/presentation/lesson_screen.dart';
 import '../../profile/presentation/profile_screen.dart';
 import '../../statistics/presentation/statistics_screen.dart';
@@ -70,6 +71,14 @@ class ModuleDetailScreen extends StatelessWidget {
     );
   }
 
+  void _goToFunctionsLesson(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => const FunctionsLessonScreen(),
+      ),
+    );
+  }
+
   int _completedLessons() {
     int completed = 0;
 
@@ -78,6 +87,10 @@ class ModuleDetailScreen extends StatelessWidget {
     }
 
     if (AppProgress.equationsAndInequationsCompleted) {
+      completed++;
+    }
+
+    if (AppProgress.functionsCompleted) {
       completed++;
     }
 
@@ -121,6 +134,10 @@ class ModuleDetailScreen extends StatelessWidget {
   }
 
   String _moduleProgressDescription() {
+    if (AppProgress.functionsCompleted) {
+      return 'Módulo concluído';
+    }
+
     if (AppProgress.equationsAndInequationsCompleted) {
       return 'Aula 2 concluída';
     }
@@ -146,6 +163,10 @@ class ModuleDetailScreen extends StatelessWidget {
     if (lesson.id == 'equacoes-inequacoes' &&
         AppProgress.algebraFundamentalCompleted) {
       return 'Desbloqueada';
+    }
+
+    if (lesson.id == 'funcoes' && AppProgress.functionsCompleted) {
+      return 'Concluída';
     }
 
     if (lesson.id == 'funcoes' &&
@@ -207,11 +228,7 @@ class ModuleDetailScreen extends StatelessWidget {
 
     if (lesson.id == 'funcoes' &&
         AppProgress.equationsAndInequationsCompleted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Aula 3 desbloqueada. Conteúdo será criado na próxima etapa.'),
-        ),
-      );
+      _goToFunctionsLesson(context);
       return;
     }
 

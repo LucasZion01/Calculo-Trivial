@@ -89,6 +89,10 @@ class DashboardScreen extends StatelessWidget {
   }
 
   double _progressValue() {
+    if (AppProgress.functionsCompleted) {
+      return 1;
+    }
+
     if (AppProgress.equationsAndInequationsCompleted) {
       return 0.66;
     }
@@ -101,6 +105,10 @@ class DashboardScreen extends StatelessWidget {
   }
 
   String _progressText() {
+    if (AppProgress.functionsCompleted) {
+      return '100%';
+    }
+
     if (AppProgress.equationsAndInequationsCompleted) {
       return '66%';
     }
@@ -113,6 +121,10 @@ class DashboardScreen extends StatelessWidget {
   }
 
   int _xp() {
+    if (AppProgress.functionsCompleted) {
+      return 210;
+    }
+
     if (AppProgress.equationsAndInequationsCompleted) {
       return 130;
     }
@@ -125,6 +137,10 @@ class DashboardScreen extends StatelessWidget {
   }
 
   int _gold() {
+    if (AppProgress.functionsCompleted) {
+      return 90;
+    }
+
     if (AppProgress.equationsAndInequationsCompleted) {
       return 55;
     }
@@ -137,6 +153,10 @@ class DashboardScreen extends StatelessWidget {
   }
 
   String _lastLesson() {
+    if (AppProgress.functionsCompleted) {
+      return 'Fundamentos Matemáticos concluído';
+    }
+
     if (AppProgress.equationsAndInequationsCompleted) {
       return 'Equações e Inequações concluída';
     }
@@ -149,8 +169,12 @@ class DashboardScreen extends StatelessWidget {
   }
 
   String _nextMission() {
+    if (AppProgress.functionsCompleted) {
+      return 'Próxima etapa: iniciar Cálculo I.';
+    }
+
     if (AppProgress.equationsAndInequationsCompleted) {
-      return 'Próxima etapa: Aula 3 — Funções.';
+      return 'Continue com Aula 3 — Funções.';
     }
 
     if (AppProgress.algebraFundamentalCompleted) {
