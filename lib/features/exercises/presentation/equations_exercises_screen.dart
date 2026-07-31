@@ -102,7 +102,13 @@ class _EquationsExercisesScreenState extends State<EquationsExercisesScreen> {
 
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (_) => const ResultScreen(),
+            builder: (_) => ResultScreen(
+              completedLessonId: 'equacoes-inequacoes',
+              totalQuestions: mockEquationsExercises.length,
+              correctAnswers: mockEquationsExercises.length,
+              xpEarned: 70,
+              goldEarned: 30,
+            ),
           ),
         );
       });
@@ -254,7 +260,8 @@ class _EquationsExercisesScreenState extends State<EquationsExercisesScreen> {
               ),
               const SizedBox(height: 16),
               PrimaryButton(
-                text: isLastExercise ? 'Finalizar exercícios' : 'Próxima questão',
+                text:
+                    isLastExercise ? 'Finalizar exercícios' : 'Próxima questão',
                 onPressed: _confirmAnswer,
               ),
               const SizedBox(height: 24),

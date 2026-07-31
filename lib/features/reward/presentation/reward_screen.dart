@@ -11,7 +11,16 @@ import '../../profile/presentation/profile_screen.dart';
 import '../../statistics/presentation/statistics_screen.dart';
 
 class RewardScreen extends StatefulWidget {
-  const RewardScreen({super.key});
+  final String completedLessonId;
+  final int xpEarned;
+  final int goldEarned;
+
+  const RewardScreen({
+    super.key,
+    this.completedLessonId = 'algebra-fundamental',
+    this.xpEarned = 60,
+    this.goldEarned = 25,
+  });
 
   @override
   State<RewardScreen> createState() => _RewardScreenState();
@@ -25,6 +34,11 @@ class _RewardScreenState extends State<RewardScreen> {
   }
 
   Future<void> _saveProgress() async {
+    if (widget.completedLessonId == 'equacoes-inequacoes') {
+      await AppProgress.completeEquationsAndInequations();
+      return;
+    }
+
     await AppProgress.completeAlgebraFundamental();
   }
 
@@ -73,6 +87,14 @@ class _RewardScreenState extends State<RewardScreen> {
       ),
       (route) => false,
     );
+  }
+
+  String get _rewardDescription {
+    if (widget.completedLessonId == 'equacoes-inequacoes') {
+      return 'Você concluiu a sequência de Equações e Inequações.';
+    }
+
+    return 'Você concluiu a sequência de Álgebra Fundamental.';
   }
 
   Widget _buildRewardItem({
@@ -131,9 +153,6 @@ class _RewardScreenState extends State<RewardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    const xpEarned = 60;
-    const goldEarned = 25;
-
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
@@ -171,10 +190,10 @@ class _RewardScreenState extends State<RewardScreen> {
                 ),
               ),
               const SizedBox(height: 8),
-              const Text(
-                'Você concluiu a sequência de Álgebra Fundamental.',
+              Text(
+                _rewardDescription,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 14,
                   height: 1.4,
                   color: AppColors.textSecondary,
@@ -184,13 +203,13 @@ class _RewardScreenState extends State<RewardScreen> {
               _buildRewardItem(
                 icon: Icons.bolt_outlined,
                 title: 'Experiência recebida',
-                value: '+$xpEarned XP',
+                value: '+${widget.xpEarned} XP',
               ),
               const SizedBox(height: 14),
               _buildRewardItem(
                 icon: Icons.monetization_on_outlined,
                 title: 'Ouro recebido',
-                value: '+$goldEarned',
+                value: '+${widget.goldEarned}',
               ),
               const SizedBox(height: 14),
               _buildRewardItem(

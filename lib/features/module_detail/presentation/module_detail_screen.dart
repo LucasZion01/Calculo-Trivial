@@ -70,6 +70,68 @@ class ModuleDetailScreen extends StatelessWidget {
     );
   }
 
+  int _completedLessons() {
+    int completed = 0;
+
+    if (AppProgress.algebraFundamentalCompleted) {
+      completed++;
+    }
+
+    if (AppProgress.equationsAndInequationsCompleted) {
+      completed++;
+    }
+
+    return completed;
+  }
+
+  String _moduleProgressText() {
+    final completed = _completedLessons();
+
+    if (completed == 0) {
+      return '0%';
+    }
+
+    if (completed == 1) {
+      return '33%';
+    }
+
+    if (completed == 2) {
+      return '66%';
+    }
+
+    return '100%';
+  }
+
+  double _moduleProgressValue() {
+    final completed = _completedLessons();
+
+    if (completed == 0) {
+      return 0;
+    }
+
+    if (completed == 1) {
+      return 0.33;
+    }
+
+    if (completed == 2) {
+      return 0.66;
+    }
+
+    return 1;
+  }
+
+  String _moduleProgressDescription() {
+    if (AppProgress.equationsAndInequationsCompleted) {
+      return 'Aula 2 concluída';
+    }
+
+    if (AppProgress.algebraFundamentalCompleted) {
+      return 'Aula 1 concluída';
+    }
+
+    return 'Comece pela primeira aula';
+  }
+
   String _getLessonStatus(LessonData lesson) {
     if (lesson.id == 'algebra-fundamental' &&
         AppProgress.algebraFundamentalCompleted) {
@@ -77,7 +139,17 @@ class ModuleDetailScreen extends StatelessWidget {
     }
 
     if (lesson.id == 'equacoes-inequacoes' &&
+        AppProgress.equationsAndInequationsCompleted) {
+      return 'Concluída';
+    }
+
+    if (lesson.id == 'equacoes-inequacoes' &&
         AppProgress.algebraFundamentalCompleted) {
+      return 'Desbloqueada';
+    }
+
+    if (lesson.id == 'funcoes' &&
+        AppProgress.equationsAndInequationsCompleted) {
       return 'Desbloqueada';
     }
 
@@ -94,6 +166,11 @@ class ModuleDetailScreen extends StatelessWidget {
       return true;
     }
 
+    if (lesson.id == 'funcoes' &&
+        AppProgress.equationsAndInequationsCompleted) {
+      return true;
+    }
+
     return lesson.isUnlocked;
   }
 
@@ -105,6 +182,11 @@ class ModuleDetailScreen extends StatelessWidget {
 
     if (lesson.id == 'equacoes-inequacoes' &&
         AppProgress.algebraFundamentalCompleted) {
+      return AppColors.primary;
+    }
+
+    if (lesson.id == 'funcoes' &&
+        AppProgress.equationsAndInequationsCompleted) {
       return AppColors.primary;
     }
 
@@ -123,6 +205,16 @@ class ModuleDetailScreen extends StatelessWidget {
       return;
     }
 
+    if (lesson.id == 'funcoes' &&
+        AppProgress.equationsAndInequationsCompleted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Aula 3 desbloqueada. Conteúdo será criado na próxima etapa.'),
+        ),
+      );
+      return;
+    }
+
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Esta aula ainda está bloqueada.'),
@@ -133,11 +225,6 @@ class ModuleDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final module = mockModules.first;
-    final moduleProgress =
-        AppProgress.algebraFundamentalCompleted ? '33%' : '0%';
-    final moduleProgressText = AppProgress.algebraFundamentalCompleted
-        ? 'Aula 1 concluída'
-        : 'Comece pela primeira aula';
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -184,7 +271,7 @@ class ModuleDetailScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      moduleProgress,
+                      _moduleProgressText(),
                       style: const TextStyle(
                         fontSize: 32,
                         fontWeight: FontWeight.w700,
@@ -193,7 +280,7 @@ class ModuleDetailScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     LinearProgressIndicator(
-                      value: AppProgress.algebraFundamentalCompleted ? 0.33 : 0,
+                      value: _moduleProgressValue(),
                       minHeight: 6,
                       borderRadius: BorderRadius.circular(12),
                       backgroundColor: AppColors.primaryLight,
@@ -201,7 +288,7 @@ class ModuleDetailScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      moduleProgressText,
+                      _moduleProgressDescription(),
                       style: const TextStyle(
                         fontSize: 13,
                         color: AppColors.primaryLight,

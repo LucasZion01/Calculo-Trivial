@@ -1,6 +1,5 @@
 ﻿import 'package:flutter/material.dart';
 
-import 'package:calcquest/shared/data/mock_exercise_data.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
 import 'package:calcquest/shared/widgets/app_bottom_navigation_bar.dart';
 import 'package:calcquest/shared/widgets/primary_button.dart';
@@ -12,7 +11,20 @@ import '../../reward/presentation/reward_screen.dart';
 import '../../statistics/presentation/statistics_screen.dart';
 
 class ResultScreen extends StatelessWidget {
-  const ResultScreen({super.key});
+  final String completedLessonId;
+  final int totalQuestions;
+  final int correctAnswers;
+  final int xpEarned;
+  final int goldEarned;
+
+  const ResultScreen({
+    super.key,
+    this.completedLessonId = 'algebra-fundamental',
+    this.totalQuestions = 5,
+    this.correctAnswers = 5,
+    this.xpEarned = 60,
+    this.goldEarned = 25,
+  });
 
   void _onMenuTap(BuildContext context, int index) {
     if (index == 0) {
@@ -55,7 +67,11 @@ class ResultScreen extends StatelessWidget {
   void _goToReward(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => const RewardScreen(),
+        builder: (_) => RewardScreen(
+          completedLessonId: completedLessonId,
+          xpEarned: xpEarned,
+          goldEarned: goldEarned,
+        ),
       ),
     );
   }
@@ -116,11 +132,6 @@ class ResultScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final totalQuestions = mockExercises.length;
-    final correctAnswers = totalQuestions;
-    const xpEarned = 60;
-    const goldEarned = 25;
-
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
