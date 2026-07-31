@@ -6,6 +6,7 @@ import 'package:calcquest/shared/theme/app_colors.dart';
 import 'package:calcquest/shared/widgets/app_bottom_navigation_bar.dart';
 import 'package:calcquest/shared/widgets/math_card.dart';
 
+import '../../calculus_one/presentation/calculus_one_detail_screen.dart';
 import '../../dashboard/presentation/dashboard_screen.dart';
 import '../../module_detail/presentation/module_detail_screen.dart';
 import '../../profile/presentation/profile_screen.dart';
@@ -52,6 +53,14 @@ class LearningPathScreen extends StatelessWidget {
     );
   }
 
+  void _goToCalculusOne(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => const CalculusOneDetailScreen(),
+      ),
+    );
+  }
+
   int _completedFundamentalsLessons() {
     int completed = 0;
 
@@ -60,6 +69,10 @@ class LearningPathScreen extends StatelessWidget {
     }
 
     if (AppProgress.equationsAndInequationsCompleted) {
+      completed++;
+    }
+
+    if (AppProgress.functionsCompleted) {
       completed++;
     }
 
@@ -85,6 +98,10 @@ class LearningPathScreen extends StatelessWidget {
       return '100%';
     }
 
+    if (module.id == 'calculo-1' && AppProgress.functionsCompleted) {
+      return 'Desbloqueado';
+    }
+
     return module.status;
   }
 
@@ -93,7 +110,27 @@ class LearningPathScreen extends StatelessWidget {
       return AppColors.primary;
     }
 
+    if (module.id == 'calculo-1' && AppProgress.functionsCompleted) {
+      return AppColors.primary;
+    }
+
     return module.isUnlocked ? AppColors.primary : AppColors.textMuted;
+  }
+
+  VoidCallback? _getModuleTap(BuildContext context, ModuleData module) {
+    if (module.id == 'fundamentos') {
+      return () {
+        _goToModuleDetail(context);
+      };
+    }
+
+    if (module.id == 'calculo-1' && AppProgress.functionsCompleted) {
+      return () {
+        _goToCalculusOne(context);
+      };
+    }
+
+    return null;
   }
 
   @override
@@ -137,11 +174,7 @@ class LearningPathScreen extends StatelessWidget {
                       symbol: module.symbol,
                       status: _getModuleStatus(module),
                       statusColor: _getModuleStatusColor(module),
-                      onTap: module.isUnlocked
-                          ? () {
-                              _goToModuleDetail(context);
-                            }
-                          : null,
+                      onTap: _getModuleTap(context, module),
                     );
                   },
                 ),
