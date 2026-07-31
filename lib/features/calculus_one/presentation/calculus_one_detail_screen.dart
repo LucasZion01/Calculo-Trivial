@@ -6,6 +6,7 @@ import 'package:calcquest/shared/widgets/math_card.dart';
 
 import '../../dashboard/presentation/dashboard_screen.dart';
 import '../../learning_path/presentation/learning_path_screen.dart';
+import '../../lesson/presentation/limits_lesson_screen.dart';
 import '../../profile/presentation/profile_screen.dart';
 import '../../statistics/presentation/statistics_screen.dart';
 
@@ -50,10 +51,18 @@ class CalculusOneDetailScreen extends StatelessWidget {
     }
   }
 
-  void _showNextStepMessage(BuildContext context) {
+  void _goToLimitsLesson(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => const LimitsLessonScreen(),
+      ),
+    );
+  }
+
+  void _showLockedMessage(BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text('Aula de Limites será criada na próxima etapa.'),
+        content: Text('Esta aula ainda está bloqueada.'),
       ),
     );
   }
@@ -152,24 +161,30 @@ class CalculusOneDetailScreen extends StatelessWidget {
                       status: 'Comece aqui',
                       statusColor: AppColors.primary,
                       onTap: () {
-                        _showNextStepMessage(context);
+                        _goToLimitsLesson(context);
                       },
                     ),
                     const SizedBox(height: 16),
-                    const MathCard(
+                    MathCard(
                       title: 'Aula 2 — Continuidade',
                       subtitle: 'Funções contínuas e pontos de descontinuidade',
                       symbol: 'C',
                       status: 'Bloqueado',
                       statusColor: AppColors.textMuted,
+                      onTap: () {
+                        _showLockedMessage(context);
+                      },
                     ),
                     const SizedBox(height: 16),
-                    const MathCard(
+                    MathCard(
                       title: 'Aula 3 — Derivadas',
                       subtitle: 'Taxa de variação e reta tangente',
                       symbol: "f'",
                       status: 'Bloqueado',
                       statusColor: AppColors.textMuted,
+                      onTap: () {
+                        _showLockedMessage(context);
+                      },
                     ),
                   ],
                 ),

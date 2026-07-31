@@ -6,6 +6,7 @@ import 'package:calcquest/shared/theme/app_colors.dart';
 import 'package:calcquest/shared/widgets/app_bottom_navigation_bar.dart';
 import 'package:calcquest/shared/widgets/math_card.dart';
 
+import '../../calculus_one/presentation/calculus_one_detail_screen.dart';
 import '../../dashboard/presentation/dashboard_screen.dart';
 import '../../module_detail/presentation/module_detail_screen.dart';
 import '../../profile/presentation/profile_screen.dart';
@@ -48,6 +49,14 @@ class LearningPathScreen extends StatelessWidget {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => const ModuleDetailScreen(),
+      ),
+    );
+  }
+
+  void _goToCalculusOne(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => const CalculusOneDetailScreen(),
       ),
     );
   }
@@ -117,11 +126,7 @@ class LearningPathScreen extends StatelessWidget {
 
     if (module.id == 'calculo-1' && AppProgress.functionsCompleted) {
       return () {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Cálculo I desbloqueado. Conteúdo será criado na próxima etapa.'),
-          ),
-        );
+        _goToCalculusOne(context);
       };
     }
 
