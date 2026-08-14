@@ -1,13 +1,13 @@
-import 'package:calcquest/shared/data/mock_exercise_data.dart';
+﻿import 'package:calcquest/shared/data/mock_exercise_data.dart';
 
 const List<ExerciseData> mockEquationsExercises = [
   ExerciseData(
     id: 'equacao-1',
-    title: 'Questão 1 de 5',
-    statement: 'Resolva a equação:\nx + 3 = 8',
+    title: 'QuestÃ£o 1 de 5',
+    statement: 'Resolva a equaÃ§Ã£o:\nx + 3 = 8',
     correctOptionId: 'b',
     explanation:
-        'Para isolar x, subtraímos 3 dos dois lados: x = 8 - 3. Portanto, x = 5.',
+        'Para isolar x, subtraÃ­mos 3 dos dois lados: x = 8 - 3. Portanto, x = 5.',
     options: [
       ExerciseOptionData(id: 'a', text: '3'),
       ExerciseOptionData(id: 'b', text: '5'),
@@ -17,11 +17,11 @@ const List<ExerciseData> mockEquationsExercises = [
   ),
   ExerciseData(
     id: 'equacao-2',
-    title: 'Questão 2 de 5',
-    statement: 'Resolva a equação:\n2x = 10',
+    title: 'QuestÃ£o 2 de 5',
+    statement: 'Resolva a equaÃ§Ã£o:\n2x = 10',
     correctOptionId: 'c',
     explanation:
-        'Para isolar x, dividimos os dois lados por 2: x = 10 ÷ 2. Portanto, x = 5.',
+        'Para isolar x, dividimos os dois lados por 2: x = 10 Ã· 2. Portanto, x = 5.',
     options: [
       ExerciseOptionData(id: 'a', text: '2'),
       ExerciseOptionData(id: 'b', text: '4'),
@@ -31,8 +31,8 @@ const List<ExerciseData> mockEquationsExercises = [
   ),
   ExerciseData(
     id: 'equacao-3',
-    title: 'Questão 3 de 5',
-    statement: 'Resolva a equação:\nx - 4 = 9',
+    title: 'QuestÃ£o 3 de 5',
+    statement: 'Resolva a equaÃ§Ã£o:\nx - 4 = 9',
     correctOptionId: 'd',
     explanation:
         'Para isolar x, somamos 4 dos dois lados: x = 9 + 4. Portanto, x = 13.',
@@ -45,11 +45,11 @@ const List<ExerciseData> mockEquationsExercises = [
   ),
   ExerciseData(
     id: 'equacao-4',
-    title: 'Questão 4 de 5',
-    statement: 'Resolva a equação:\n3x + 2 = 11',
+    title: 'QuestÃ£o 4 de 5',
+    statement: 'Resolva a equaÃ§Ã£o:\n3x + 2 = 11',
     correctOptionId: 'a',
     explanation:
-        'Primeiro subtraímos 2 dos dois lados: 3x = 9. Depois dividimos por 3: x = 3.',
+        'Primeiro subtraÃ­mos 2 dos dois lados: 3x = 9. Depois dividimos por 3: x = 3.',
     options: [
       ExerciseOptionData(id: 'a', text: '3'),
       ExerciseOptionData(id: 'b', text: '4'),
@@ -59,11 +59,11 @@ const List<ExerciseData> mockEquationsExercises = [
   ),
   ExerciseData(
     id: 'inequacao-1',
-    title: 'Questão 5 de 5',
-    statement: 'Resolva a inequação:\nx + 2 > 7',
+    title: 'QuestÃ£o 5 de 5',
+    statement: 'Resolva a inequaÃ§Ã£o:\nx + 2 > 7',
     correctOptionId: 'c',
     explanation:
-        'Para isolar x, subtraímos 2 dos dois lados: x > 7 - 2. Portanto, x > 5.',
+        'Para isolar x, subtraÃ­mos 2 dos dois lados: x > 7 - 2. Portanto, x > 5.',
     options: [
       ExerciseOptionData(id: 'a', text: 'x > 2'),
       ExerciseOptionData(id: 'b', text: 'x > 3'),

@@ -153,7 +153,7 @@ class ProfileScreen extends StatelessWidget {
                     ),
                     SizedBox(height: 8),
                     Text(
-                      'Você iniciou sua jornada no CalcQuest.',
+                      'Você iniciou sua jornada no Calcivium.',
                       style: TextStyle(
                         fontSize: 12,
                         color: AppColors.textSecondary,
@@ -210,5 +210,7 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 }
+
+
 
 

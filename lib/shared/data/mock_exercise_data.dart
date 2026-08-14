@@ -1,4 +1,4 @@
-class ExerciseOptionData {
+﻿class ExerciseOptionData {
   final String id;
   final String text;
 
@@ -29,11 +29,11 @@ class ExerciseData {
 const List<ExerciseData> mockExercises = [
   ExerciseData(
     id: 'simplificacao-1',
-    title: 'Questão 1 de 5',
-    statement: 'Simplifique a expressão:\n3x + 5x - 2x',
+    title: 'QuestÃ£o 1 de 5',
+    statement: 'Simplifique a expressÃ£o:\n3x + 5x - 2x',
     correctOptionId: 'a',
     explanation:
-        'Somamos os coeficientes semelhantes: 3 + 5 - 2 = 6. Portanto, o resultado é 6x.',
+        'Somamos os coeficientes semelhantes: 3 + 5 - 2 = 6. Portanto, o resultado Ã© 6x.',
     options: [
       ExerciseOptionData(id: 'a', text: '6x'),
       ExerciseOptionData(id: 'b', text: '8x'),
@@ -43,11 +43,11 @@ const List<ExerciseData> mockExercises = [
   ),
   ExerciseData(
     id: 'simplificacao-2',
-    title: 'Questão 2 de 5',
-    statement: 'Simplifique a expressão:\n7a - 2a + 4a',
+    title: 'QuestÃ£o 2 de 5',
+    statement: 'Simplifique a expressÃ£o:\n7a - 2a + 4a',
     correctOptionId: 'c',
     explanation:
-        'Somamos os coeficientes semelhantes: 7 - 2 + 4 = 9. Portanto, o resultado é 9a.',
+        'Somamos os coeficientes semelhantes: 7 - 2 + 4 = 9. Portanto, o resultado Ã© 9a.',
     options: [
       ExerciseOptionData(id: 'a', text: '5a'),
       ExerciseOptionData(id: 'b', text: '7a'),
@@ -57,11 +57,11 @@ const List<ExerciseData> mockExercises = [
   ),
   ExerciseData(
     id: 'simplificacao-3',
-    title: 'Questão 3 de 5',
-    statement: 'Simplifique a expressão:\n10y - 3y - y',
+    title: 'QuestÃ£o 3 de 5',
+    statement: 'Simplifique a expressÃ£o:\n10y - 3y - y',
     correctOptionId: 'b',
     explanation:
-        'Somamos os coeficientes semelhantes: 10 - 3 - 1 = 6. Portanto, o resultado é 6y.',
+        'Somamos os coeficientes semelhantes: 10 - 3 - 1 = 6. Portanto, o resultado Ã© 6y.',
     options: [
       ExerciseOptionData(id: 'a', text: '4y'),
       ExerciseOptionData(id: 'b', text: '6y'),
@@ -71,11 +71,11 @@ const List<ExerciseData> mockExercises = [
   ),
   ExerciseData(
     id: 'simplificacao-4',
-    title: 'Questão 4 de 5',
-    statement: 'Simplifique a expressão:\n4m + 6m - 3m',
+    title: 'QuestÃ£o 4 de 5',
+    statement: 'Simplifique a expressÃ£o:\n4m + 6m - 3m',
     correctOptionId: 'd',
     explanation:
-        'Somamos os coeficientes semelhantes: 4 + 6 - 3 = 7. Portanto, o resultado é 7m.',
+        'Somamos os coeficientes semelhantes: 4 + 6 - 3 = 7. Portanto, o resultado Ã© 7m.',
     options: [
       ExerciseOptionData(id: 'a', text: '3m'),
       ExerciseOptionData(id: 'b', text: '6m'),
@@ -85,11 +85,11 @@ const List<ExerciseData> mockExercises = [
   ),
   ExerciseData(
     id: 'simplificacao-5',
-    title: 'Questão 5 de 5',
-    statement: 'Simplifique a expressão:\n12x - 5x + 2x',
+    title: 'QuestÃ£o 5 de 5',
+    statement: 'Simplifique a expressÃ£o:\n12x - 5x + 2x',
     correctOptionId: 'c',
     explanation:
-        'Somamos os coeficientes semelhantes: 12 - 5 + 2 = 9. Portanto, o resultado é 9x.',
+        'Somamos os coeficientes semelhantes: 12 - 5 + 2 = 9. Portanto, o resultado Ã© 9x.',
     options: [
       ExerciseOptionData(id: 'a', text: '7x'),
       ExerciseOptionData(id: 'b', text: '8x'),

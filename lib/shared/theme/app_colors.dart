@@ -13,3 +13,4 @@ class AppColors {
   static const Color danger = Color(0xFFDC2626);
   static const Color white = Colors.white;
 }
+

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 import 'package:calcquest/shared/data/mock_equations_exercise_data.dart';
 import 'package:calcquest/shared/data/mock_exercise_data.dart';
@@ -198,7 +198,7 @@ class _EquationsExercisesScreenState extends State<EquationsExercisesScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Questão ${currentExerciseIndex + 1} de ${mockEquationsExercises.length}',
+                'QuestÃ£o ${currentExerciseIndex + 1} de ${mockEquationsExercises.length}',
                 style: const TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.w600,
@@ -207,7 +207,7 @@ class _EquationsExercisesScreenState extends State<EquationsExercisesScreen> {
               ),
               const SizedBox(height: 8),
               const Text(
-                'Resolva a equação ou inequação.',
+                'Resolva a equaÃ§Ã£o ou inequaÃ§Ã£o.',
                 style: TextStyle(
                   fontSize: 14,
                   color: AppColors.textSecondary,
@@ -261,7 +261,7 @@ class _EquationsExercisesScreenState extends State<EquationsExercisesScreen> {
               const SizedBox(height: 16),
               PrimaryButton(
                 text:
-                    isLastExercise ? 'Finalizar exercícios' : 'Próxima questão',
+                    isLastExercise ? 'Finalizar exercÃ­cios' : 'PrÃ³xima questÃ£o',
                 onPressed: _confirmAnswer,
               ),
               const SizedBox(height: 24),

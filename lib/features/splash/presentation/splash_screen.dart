@@ -41,7 +41,7 @@ class _SplashScreenState extends State<SplashScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'CalcQuest',
+                  'Calcivium',
                   style: TextStyle(
                     fontSize: 36,
                     fontWeight: FontWeight.w700,
@@ -73,5 +73,6 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 }
+
 
 

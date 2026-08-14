@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 import 'package:calcquest/shared/data/mock_exercise_data.dart';
 import 'package:calcquest/shared/data/mock_limits_exercise_data.dart';
@@ -197,7 +197,7 @@ class _LimitsExercisesScreenState extends State<LimitsExercisesScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Questão ${currentExerciseIndex + 1} de ${mockLimitsExercises.length}',
+                'QuestÃ£o ${currentExerciseIndex + 1} de ${mockLimitsExercises.length}',
                 style: const TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.w600,
@@ -206,7 +206,7 @@ class _LimitsExercisesScreenState extends State<LimitsExercisesScreen> {
               ),
               const SizedBox(height: 8),
               const Text(
-                'Resolva o limite usando a estratégia adequada.',
+                'Resolva o limite usando a estratÃ©gia adequada.',
                 style: TextStyle(
                   fontSize: 14,
                   color: AppColors.textSecondary,
@@ -260,7 +260,7 @@ class _LimitsExercisesScreenState extends State<LimitsExercisesScreen> {
               const SizedBox(height: 16),
               PrimaryButton(
                 text:
-                    isLastExercise ? 'Finalizar exercícios' : 'Próxima questão',
+                    isLastExercise ? 'Finalizar exercÃ­cios' : 'PrÃ³xima questÃ£o',
                 onPressed: _confirmAnswer,
               ),
               const SizedBox(height: 24),

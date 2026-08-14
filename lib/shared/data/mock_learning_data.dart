@@ -1,4 +1,4 @@
-class LessonData {
+﻿class LessonData {
   final String id;
   final String title;
   final String subtitle;
@@ -39,32 +39,32 @@ class ModuleData {
 const List<ModuleData> mockModules = [
   ModuleData(
     id: 'fundamentos',
-    title: 'Fundamentos Matemáticos',
-    subtitle: 'Pré-Cálculo, funções e base algébrica',
+    title: 'Fundamentos MatemÃ¡ticos',
+    subtitle: 'PrÃ©-CÃ¡lculo, funÃ§Ãµes e base algÃ©brica',
     symbol: 'f(x)',
     status: '0%',
     isUnlocked: true,
     lessons: [
       LessonData(
         id: 'algebra-fundamental',
-        title: 'Aula 1 — Álgebra Fundamental',
-        subtitle: 'Operações, expressões e simplificação',
+        title: 'Aula 1 â€” Ãlgebra Fundamental',
+        subtitle: 'OperaÃ§Ãµes, expressÃµes e simplificaÃ§Ã£o',
         symbol: 'x',
         status: 'Comece aqui',
         isUnlocked: true,
       ),
       LessonData(
         id: 'equacoes-inequacoes',
-        title: 'Aula 2 — Equações e Inequações',
-        subtitle: 'Manipulação algébrica e resolução',
+        title: 'Aula 2 â€” EquaÃ§Ãµes e InequaÃ§Ãµes',
+        subtitle: 'ManipulaÃ§Ã£o algÃ©brica e resoluÃ§Ã£o',
         symbol: '=',
         status: 'Bloqueado',
         isUnlocked: false,
       ),
       LessonData(
         id: 'funcoes',
-        title: 'Aula 3 — Funções',
-        subtitle: 'Domínio, imagem e gráficos',
+        title: 'Aula 3 â€” FunÃ§Ãµes',
+        subtitle: 'DomÃ­nio, imagem e grÃ¡ficos',
         symbol: 'f',
         status: 'Bloqueado',
         isUnlocked: false,
@@ -73,7 +73,7 @@ const List<ModuleData> mockModules = [
   ),
   ModuleData(
     id: 'calculo-1',
-    title: 'Cálculo I',
+    title: 'CÃ¡lculo I',
     subtitle: 'Limites, continuidade e derivadas',
     symbol: 'lim',
     status: 'Bloqueado',
@@ -82,9 +82,9 @@ const List<ModuleData> mockModules = [
   ),
   ModuleData(
     id: 'calculo-2',
-    title: 'Cálculo II',
-    subtitle: 'Integrais, séries e equações diferenciais',
-    symbol: '∫',
+    title: 'CÃ¡lculo II',
+    subtitle: 'Integrais, sÃ©ries e equaÃ§Ãµes diferenciais',
+    symbol: 'âˆ«',
     status: 'Bloqueado',
     isUnlocked: false,
     lessons: [],

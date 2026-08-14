@@ -21,7 +21,7 @@ class LoginScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text(
-                'CalcQuest',
+                'Calcivium',
                 style: TextStyle(
                   fontSize: 36,
                   fontWeight: FontWeight.w700,

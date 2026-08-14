@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 import 'package:calcquest/shared/theme/app_colors.dart';
 import 'package:calcquest/shared/widgets/app_bottom_navigation_bar.dart';
@@ -137,7 +137,7 @@ class LimitsLessonScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Exemplo rápido',
+            'Exemplo rÃ¡pido',
             style: TextStyle(
               fontSize: 14,
               color: AppColors.primaryLight,
@@ -145,7 +145,7 @@ class LimitsLessonScreen extends StatelessWidget {
           ),
           SizedBox(height: 10),
           Text(
-            'lim x → 2  (x² - 4) / (x - 2)',
+            'lim x â†’ 2  (xÂ² - 4) / (x - 2)',
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w700,
@@ -154,7 +154,7 @@ class LimitsLessonScreen extends StatelessWidget {
           ),
           SizedBox(height: 10),
           Text(
-            'A substituição direta gera 0/0. Então fatoramos x² - 4 como (x - 2)(x + 2), cancelamos x - 2 e avaliamos x + 2 em x = 2.',
+            'A substituiÃ§Ã£o direta gera 0/0. EntÃ£o fatoramos xÂ² - 4 como (x - 2)(x + 2), cancelamos x - 2 e avaliamos x + 2 em x = 2.',
             style: TextStyle(
               fontSize: 14,
               height: 1.45,
@@ -186,7 +186,7 @@ class LimitsLessonScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                'Aula 1 — Limites',
+                'Aula 1 â€” Limites',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w700,
@@ -195,7 +195,7 @@ class LimitsLessonScreen extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               const Text(
-                'Entenda limites com substituição, fatoração, racionalização e análise no infinito.',
+                'Entenda limites com substituiÃ§Ã£o, fatoraÃ§Ã£o, racionalizaÃ§Ã£o e anÃ¡lise no infinito.',
                 style: TextStyle(
                   fontSize: 14,
                   height: 1.4,
@@ -210,37 +210,37 @@ class LimitsLessonScreen extends StatelessWidget {
                       title: 'Ideia central',
                       symbol: 'lim',
                       content:
-                          'Limite descreve o valor que uma função se aproxima quando x chega perto de um número. Em Cálculo, isso prepara a base para continuidade, derivadas e integrais.',
+                          'Limite descreve o valor que uma funÃ§Ã£o se aproxima quando x chega perto de um nÃºmero. Em CÃ¡lculo, isso prepara a base para continuidade, derivadas e integrais.',
                     ),
                     const SizedBox(height: 16),
                     _buildConceptCard(
                       title: 'Quando substituir diretamente?',
                       symbol: 'x',
                       content:
-                          'Em funções polinomiais e em expressões contínuas, geralmente podemos substituir o valor de x diretamente.',
+                          'Em funÃ§Ãµes polinomiais e em expressÃµes contÃ­nuas, geralmente podemos substituir o valor de x diretamente.',
                     ),
                     const SizedBox(height: 16),
                     _buildConceptCard(
                       title: 'Quando aparece 0/0',
                       symbol: '0/0',
                       content:
-                          'A forma 0/0 é uma indeterminação. Ela indica que é necessário transformar a expressão, geralmente por fatoração, simplificação ou racionalização.',
+                          'A forma 0/0 Ã© uma indeterminaÃ§Ã£o. Ela indica que Ã© necessÃ¡rio transformar a expressÃ£o, geralmente por fatoraÃ§Ã£o, simplificaÃ§Ã£o ou racionalizaÃ§Ã£o.',
                     ),
                     const SizedBox(height: 16),
                     _buildExampleCard(),
                     const SizedBox(height: 16),
                     _buildConceptCard(
                       title: 'Limite no infinito',
-                      symbol: '∞',
+                      symbol: 'âˆž',
                       content:
-                          'Em funções racionais, quando x tende ao infinito, comparamos os termos de maior grau. Eles dominam o comportamento da função.',
+                          'Em funÃ§Ãµes racionais, quando x tende ao infinito, comparamos os termos de maior grau. Eles dominam o comportamento da funÃ§Ã£o.',
                     ),
                     const SizedBox(height: 24),
                   ],
                 ),
               ),
               PrimaryButton(
-                text: 'Iniciar exercícios',
+                text: 'Iniciar exercÃ­cios',
                 onPressed: () {
                   _goToExercises(context);
                 },

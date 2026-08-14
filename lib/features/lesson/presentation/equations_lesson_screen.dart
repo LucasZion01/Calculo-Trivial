@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 import 'package:calcquest/shared/theme/app_colors.dart';
 import 'package:calcquest/shared/widgets/app_bottom_navigation_bar.dart';
@@ -135,7 +135,7 @@ class EquationsLessonScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                'Aula 2 — Equações e Inequações',
+                'Aula 2 â€” EquaÃ§Ãµes e InequaÃ§Ãµes',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w700,
@@ -144,7 +144,7 @@ class EquationsLessonScreen extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               const Text(
-                'Aprenda a resolver igualdades e desigualdades usando manipulação algébrica.',
+                'Aprenda a resolver igualdades e desigualdades usando manipulaÃ§Ã£o algÃ©brica.',
                 style: TextStyle(
                   fontSize: 14,
                   height: 1.4,
@@ -156,45 +156,45 @@ class EquationsLessonScreen extends StatelessWidget {
                 child: ListView(
                   children: [
                     _buildConceptCard(
-                      title: 'O que é uma equação?',
+                      title: 'O que Ã© uma equaÃ§Ã£o?',
                       symbol: '=',
                       content:
-                          'Uma equação é uma igualdade que possui uma incógnita. Resolver uma equação significa descobrir qual valor torna a igualdade verdadeira.',
+                          'Uma equaÃ§Ã£o Ã© uma igualdade que possui uma incÃ³gnita. Resolver uma equaÃ§Ã£o significa descobrir qual valor torna a igualdade verdadeira.',
                     ),
                     const SizedBox(height: 16),
                     _buildConceptCard(
                       title: 'Exemplo simples',
                       symbol: 'x',
                       content:
-                          'Na equação x + 3 = 8, queremos isolar o x. Subtraindo 3 dos dois lados, temos x = 5.',
+                          'Na equaÃ§Ã£o x + 3 = 8, queremos isolar o x. Subtraindo 3 dos dois lados, temos x = 5.',
                     ),
                     const SizedBox(height: 16),
                     _buildConceptCard(
                       title: 'Regra principal',
-                      symbol: '±',
+                      symbol: 'Â±',
                       content:
-                          'Tudo que você faz de um lado da equação também deve fazer do outro. Isso mantém a igualdade equilibrada.',
+                          'Tudo que vocÃª faz de um lado da equaÃ§Ã£o tambÃ©m deve fazer do outro. Isso mantÃ©m a igualdade equilibrada.',
                     ),
                     const SizedBox(height: 16),
                     _buildConceptCard(
-                      title: 'O que é uma inequação?',
+                      title: 'O que Ã© uma inequaÃ§Ã£o?',
                       symbol: '<',
                       content:
-                          'Uma inequação usa sinais como <, >, ≤ ou ≥. Ela representa uma comparação entre expressões, não uma igualdade exata.',
+                          'Uma inequaÃ§Ã£o usa sinais como <, >, â‰¤ ou â‰¥. Ela representa uma comparaÃ§Ã£o entre expressÃµes, nÃ£o uma igualdade exata.',
                     ),
                     const SizedBox(height: 16),
                     _buildConceptCard(
-                      title: 'Atenção importante',
+                      title: 'AtenÃ§Ã£o importante',
                       symbol: '!',
                       content:
-                          'Ao multiplicar ou dividir uma inequação por número negativo, o sinal da desigualdade inverte.',
+                          'Ao multiplicar ou dividir uma inequaÃ§Ã£o por nÃºmero negativo, o sinal da desigualdade inverte.',
                     ),
                     const SizedBox(height: 24),
                   ],
                 ),
               ),
               PrimaryButton(
-                text: 'Iniciar exercícios',
+                text: 'Iniciar exercÃ­cios',
                 onPressed: () {
                   _goToExercises(context);
                 },
