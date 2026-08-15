@@ -63,7 +63,7 @@ class CalculusOneDetailScreen extends StatelessWidget {
   void _showContinuityMessage(BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text('Aula de Continuidade serÃ¡ criada na prÃ³xima etapa.'),
+        content: Text('Aula de Continuidade será criada na próxima etapa.'),
       ),
     );
   }
@@ -71,7 +71,7 @@ class CalculusOneDetailScreen extends StatelessWidget {
   void _showLockedMessage(BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text('Esta aula ainda estÃ¡ bloqueada.'),
+        content: Text('Esta aula ainda está bloqueada.'),
       ),
     );
   }
@@ -94,7 +94,7 @@ class CalculusOneDetailScreen extends StatelessWidget {
 
   String _moduleProgressDescription() {
     if (AppProgress.limitsCompleted) {
-      return 'Aula 1 concluÃ­da';
+      return 'Aula 1 concluída';
     }
 
     return 'Comece pela aula de Limites';
@@ -103,7 +103,7 @@ class CalculusOneDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final limitsStatus =
-        AppProgress.limitsCompleted ? 'ConcluÃ­da' : 'Comece aqui';
+        AppProgress.limitsCompleted ? 'Concluída' : 'Comece aqui';
 
     final continuityStatus =
         AppProgress.limitsCompleted ? 'Desbloqueada' : 'Bloqueado';
@@ -117,7 +117,7 @@ class CalculusOneDetailScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                'CÃ¡lculo I',
+                'Cálculo I',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w700,
@@ -146,7 +146,7 @@ class CalculusOneDetailScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      'Progresso do mÃ³dulo',
+                      'Progresso do módulo',
                       style: TextStyle(
                         fontSize: 14,
                         color: AppColors.primaryLight,
@@ -194,8 +194,8 @@ class CalculusOneDetailScreen extends StatelessWidget {
                 child: ListView(
                   children: [
                     MathCard(
-                      title: 'Aula 1 â€” Limites',
-                      subtitle: 'Ideia intuitiva, notaÃ§Ã£o e cÃ¡lculo inicial',
+                      title: 'Aula 1 — Limites',
+                      subtitle: 'Ideia intuitiva, notação e cálculo inicial',
                       symbol: 'lim',
                       status: limitsStatus,
                       statusColor: AppColors.primary,
@@ -205,8 +205,8 @@ class CalculusOneDetailScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 16),
                     MathCard(
-                      title: 'Aula 2 â€” Continuidade',
-                      subtitle: 'FunÃ§Ãµes contÃ­nuas e pontos de descontinuidade',
+                      title: 'Aula 2 — Continuidade',
+                      subtitle: 'Funções contínuas e pontos de descontinuidade',
                       symbol: 'C',
                       status: continuityStatus,
                       statusColor: AppProgress.limitsCompleted
@@ -222,8 +222,8 @@ class CalculusOneDetailScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 16),
                     MathCard(
-                      title: 'Aula 3 â€” Derivadas',
-                      subtitle: 'Taxa de variaÃ§Ã£o e reta tangente',
+                      title: 'Aula 3 — Derivadas',
+                      subtitle: 'Taxa de variação e reta tangente',
                       symbol: "f'",
                       status: 'Bloqueado',
                       statusColor: AppColors.textMuted,
