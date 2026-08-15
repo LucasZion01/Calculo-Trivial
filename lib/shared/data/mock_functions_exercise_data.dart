@@ -2,73 +2,138 @@
 
 const List<ExerciseData> mockFunctionsExercises = [
   ExerciseData(
-    id: 'funcao-1',
-    title: 'QuestÃ£o 1 de 5',
-    statement: 'Dada a funÃ§Ã£o:\nf(x) = 2x + 1\n\nCalcule f(3).',
+    id: 'funcoes-dominio',
+    title: 'Questão 1 de 5',
+    statement:
+        'Considere a função:\n\nf(x) = √(x - 2)\n\nQual é o domínio de f?',
+    correctOptionId: 'c',
+    explanation:
+        'Para que a raiz quadrada seja real, o radicando deve ser maior ou igual a zero. Assim, x - 2 ≥ 0, portanto x ≥ 2. Logo, o domínio é [2, ∞).',
+    options: [
+      ExerciseOptionData(
+        id: 'a',
+        text: '(-∞, 2)',
+      ),
+      ExerciseOptionData(
+        id: 'b',
+        text: '(-∞, 2]',
+      ),
+      ExerciseOptionData(
+        id: 'c',
+        text: '[2, ∞)',
+      ),
+      ExerciseOptionData(
+        id: 'd',
+        text: 'ℝ',
+      ),
+    ],
+  ),
+  ExerciseData(
+    id: 'funcoes-composicao',
+    title: 'Questão 2 de 5',
+    statement:
+        'Sejam:\n\nf(x) = 2x + 1\ng(x) = x²\n\nDetermine (f ∘ g)(x).',
     correctOptionId: 'b',
     explanation:
-        'SubstituÃ­mos x por 3: f(3) = 2 Â· 3 + 1 = 6 + 1 = 7.',
+        'Na composição (f ∘ g)(x), calculamos f(g(x)). Como g(x) = x², substituímos x por x² em f: f(x²) = 2x² + 1.',
     options: [
-      ExerciseOptionData(id: 'a', text: '6'),
-      ExerciseOptionData(id: 'b', text: '7'),
-      ExerciseOptionData(id: 'c', text: '8'),
-      ExerciseOptionData(id: 'd', text: '9'),
+      ExerciseOptionData(
+        id: 'a',
+        text: '4x² + 1',
+      ),
+      ExerciseOptionData(
+        id: 'b',
+        text: '2x² + 1',
+      ),
+      ExerciseOptionData(
+        id: 'c',
+        text: '(2x + 1)²',
+      ),
+      ExerciseOptionData(
+        id: 'd',
+        text: '2x + x²',
+      ),
     ],
   ),
   ExerciseData(
-    id: 'funcao-2',
-    title: 'QuestÃ£o 2 de 5',
-    statement: 'Dada a funÃ§Ã£o:\nf(x) = xÂ²\n\nCalcule f(4).',
-    correctOptionId: 'c',
-    explanation:
-        'SubstituÃ­mos x por 4: f(4) = 4Â² = 16.',
-    options: [
-      ExerciseOptionData(id: 'a', text: '4'),
-      ExerciseOptionData(id: 'b', text: '8'),
-      ExerciseOptionData(id: 'c', text: '16'),
-      ExerciseOptionData(id: 'd', text: '20'),
-    ],
-  ),
-  ExerciseData(
-    id: 'funcao-3',
-    title: 'QuestÃ£o 3 de 5',
-    statement: 'Na funÃ§Ã£o:\nf(x) = 3x - 2\n\nQual Ã© o coeficiente de x?',
+    id: 'funcoes-inversa',
+    title: 'Questão 3 de 5',
+    statement:
+        'Considere a função:\n\nf(x) = 3x - 6\n\nQual é a função inversa f⁻¹(x)?',
     correctOptionId: 'a',
     explanation:
-        'O coeficiente de x Ã© o nÃºmero que multiplica x. Em f(x) = 3x - 2, esse nÃºmero Ã© 3.',
+        'Escrevemos y = 3x - 6 e isolamos x: y + 6 = 3x, então x = (y + 6)/3. Trocando y por x, obtemos f⁻¹(x) = (x + 6)/3.',
     options: [
-      ExerciseOptionData(id: 'a', text: '3'),
-      ExerciseOptionData(id: 'b', text: '-2'),
-      ExerciseOptionData(id: 'c', text: '1'),
-      ExerciseOptionData(id: 'd', text: '5'),
+      ExerciseOptionData(
+        id: 'a',
+        text: 'f⁻¹(x) = (x + 6) / 3',
+      ),
+      ExerciseOptionData(
+        id: 'b',
+        text: 'f⁻¹(x) = (x - 6) / 3',
+      ),
+      ExerciseOptionData(
+        id: 'c',
+        text: 'f⁻¹(x) = 3x + 6',
+      ),
+      ExerciseOptionData(
+        id: 'd',
+        text: 'f⁻¹(x) = 1 / (3x - 6)',
+      ),
     ],
   ),
   ExerciseData(
-    id: 'funcao-4',
-    title: 'QuestÃ£o 4 de 5',
-    statement: 'Dada a funÃ§Ã£o constante:\nf(x) = 5\n\nCalcule f(10).',
+    id: 'funcoes-paridade',
+    title: 'Questão 4 de 5',
+    statement:
+        'Considere a função:\n\nf(x) = x² + 4\n\nComo essa função pode ser classificada quanto à paridade?',
+    correctOptionId: 'a',
+    explanation:
+        'Calculando f(-x), temos (-x)² + 4 = x² + 4 = f(x). Portanto, f(-x) = f(x), o que caracteriza uma função par.',
+    options: [
+      ExerciseOptionData(
+        id: 'a',
+        text: 'Função par',
+      ),
+      ExerciseOptionData(
+        id: 'b',
+        text: 'Função ímpar',
+      ),
+      ExerciseOptionData(
+        id: 'c',
+        text: 'Nem par nem ímpar',
+      ),
+      ExerciseOptionData(
+        id: 'd',
+        text: 'Função constante',
+      ),
+    ],
+  ),
+  ExerciseData(
+    id: 'funcoes-imagem-quadratica',
+    title: 'Questão 5 de 5',
+    statement:
+        'Considere a função:\n\nf(x) = x² - 4x + 3\n\nQual é o menor valor assumido por f(x)?',
     correctOptionId: 'd',
     explanation:
-        'A funÃ§Ã£o Ã© constante. Isso significa que a saÃ­da sempre serÃ¡ 5, independentemente do valor de x.',
+        'Completando o quadrado, temos f(x) = (x - 2)² - 1. Como (x - 2)² ≥ 0, o menor valor ocorre quando x = 2. Portanto, o valor mínimo da função é -1.',
     options: [
-      ExerciseOptionData(id: 'a', text: '10'),
-      ExerciseOptionData(id: 'b', text: '15'),
-      ExerciseOptionData(id: 'c', text: '50'),
-      ExerciseOptionData(id: 'd', text: '5'),
-    ],
-  ),
-  ExerciseData(
-    id: 'funcao-5',
-    title: 'QuestÃ£o 5 de 5',
-    statement: 'Se:\nf(x) = x + 4\n\ne f(x) = 9, qual Ã© o valor de x?',
-    correctOptionId: 'c',
-    explanation:
-        'Temos x + 4 = 9. Subtraindo 4 dos dois lados, obtemos x = 5.',
-    options: [
-      ExerciseOptionData(id: 'a', text: '3'),
-      ExerciseOptionData(id: 'b', text: '4'),
-      ExerciseOptionData(id: 'c', text: '5'),
-      ExerciseOptionData(id: 'd', text: '9'),
+      ExerciseOptionData(
+        id: 'a',
+        text: '3',
+      ),
+      ExerciseOptionData(
+        id: 'b',
+        text: '1',
+      ),
+      ExerciseOptionData(
+        id: 'c',
+        text: '0',
+      ),
+      ExerciseOptionData(
+        id: 'd',
+        text: '-1',
+      ),
     ],
   ),
 ];
