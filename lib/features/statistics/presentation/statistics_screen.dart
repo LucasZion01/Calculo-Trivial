@@ -17,6 +17,7 @@ class StatisticsScreen extends StatelessWidget {
           builder: (_) => const DashboardScreen(),
         ),
       );
+      return;
     }
 
     if (index == 1) {
@@ -25,6 +26,7 @@ class StatisticsScreen extends StatelessWidget {
           builder: (_) => const LearningPathScreen(),
         ),
       );
+      return;
     }
 
     if (index == 2) {
@@ -40,13 +42,52 @@ class StatisticsScreen extends StatelessWidget {
     }
   }
 
+  Widget _buildSmallStatCard({
+    required String value,
+    required String label,
+  }) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: AppColors.border,
+        ),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            value,
+            style: const TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.w700,
+              color: AppColors.textPrimary,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            label,
+            style: const TextStyle(
+              fontSize: 12,
+              color: AppColors.textSecondary,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(24, 32, 24, 24),
+          padding: const EdgeInsets.fromLTRB(24, 32, 24, 32),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -76,6 +117,8 @@ class StatisticsScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 24),
+
+              // XP total
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(20),
@@ -118,82 +161,31 @@ class StatisticsScreen extends StatelessWidget {
                   ],
                 ),
               ),
+
               const SizedBox(height: 16),
+
+              // Sequência e meta diária
               Row(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: AppColors.white,
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          color: AppColors.border,
-                        ),
-                      ),
-                      child: const Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '3 dias',
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.w700,
-                              color: AppColors.textPrimary,
-                            ),
-                          ),
-                          SizedBox(height: 8),
-                          Text(
-                            'Sequência',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: AppColors.textSecondary,
-                            ),
-                          ),
-                        ],
-                      ),
+                    child: _buildSmallStatCard(
+                      value: '3 dias',
+                      label: 'Sequência',
                     ),
                   ),
                   const SizedBox(width: 16),
                   Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: AppColors.white,
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          color: AppColors.border,
-                        ),
-                      ),
-                      child: const Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '40%',
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.w700,
-                              color: AppColors.textPrimary,
-                            ),
-                          ),
-                          SizedBox(height: 8),
-                          Text(
-                            'Meta diária',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: AppColors.textSecondary,
-                            ),
-                          ),
-                        ],
-                      ),
+                    child: _buildSmallStatCard(
+                      value: '40%',
+                      label: 'Meta diária',
                     ),
                   ),
                 ],
               ),
+
               const SizedBox(height: 24),
+
               const Text(
                 'Desempenho',
                 style: TextStyle(
@@ -203,6 +195,8 @@ class StatisticsScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 12),
+
+              // Desempenho
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(18),
@@ -245,6 +239,8 @@ class StatisticsScreen extends StatelessWidget {
                   ],
                 ),
               ),
+
+              const SizedBox(height: 24),
             ],
           ),
         ),
