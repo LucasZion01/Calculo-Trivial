@@ -1,6 +1,8 @@
 ﻿import 'package:flutter/material.dart';
 
 import 'package:calcquest/shared/theme/app_colors.dart';
+import 'package:calcquest/shared/theme/app_spacing.dart';
+import 'package:calcquest/shared/theme/app_typography.dart';
 import 'package:calcquest/shared/widgets/app_bottom_navigation_bar.dart';
 import 'package:calcquest/shared/widgets/primary_button.dart';
 
@@ -21,6 +23,7 @@ class FunctionsLessonScreen extends StatelessWidget {
         ),
         (route) => false,
       );
+      return;
     }
 
     if (index == 1) {
@@ -30,6 +33,7 @@ class FunctionsLessonScreen extends StatelessWidget {
         ),
         (route) => false,
       );
+      return;
     }
 
     if (index == 2) {
@@ -39,6 +43,7 @@ class FunctionsLessonScreen extends StatelessWidget {
         ),
         (route) => false,
       );
+      return;
     }
 
     if (index == 3) {
@@ -66,55 +71,60 @@ class FunctionsLessonScreen extends StatelessWidget {
   }) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(18),
+      padding: const EdgeInsets.all(
+        AppSpacing.cardPaddingLarge,
+      ),
       decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(18),
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(
+          AppSpacing.radiusLarge,
+        ),
         border: Border.all(
           color: AppColors.border,
         ),
+        boxShadow: const [
+          BoxShadow(
+            color: AppColors.shadow,
+            blurRadius: 12,
+            offset: Offset(0, 6),
+          ),
+        ],
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            width: 46,
-            height: 46,
+            width: 48,
+            height: 48,
             alignment: Alignment.center,
             decoration: BoxDecoration(
               color: AppColors.selectedBackground,
-              borderRadius: BorderRadius.circular(14),
+              borderRadius: BorderRadius.circular(
+                AppSpacing.radiusMedium,
+              ),
             ),
             child: Text(
               symbol,
-              style: const TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.w700,
+              textAlign: TextAlign.center,
+              style: AppTypography.headingSmall.copyWith(
                 color: AppColors.primary,
+                fontWeight: FontWeight.w700,
               ),
             ),
           ),
-          const SizedBox(width: 14),
+          const SizedBox(width: AppSpacing.sm),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.textPrimary,
-                  ),
+                  style: AppTypography.titleMedium,
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: AppSpacing.xs),
                 Text(
                   content,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    height: 1.45,
-                    color: AppColors.textSecondary,
-                  ),
+                  style: AppTypography.bodyMedium,
                 ),
               ],
             ),
@@ -130,30 +140,30 @@ class FunctionsLessonScreen extends StatelessWidget {
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(24, 40, 24, 0),
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.screenHorizontal,
+            AppSpacing.screenTop,
+            AppSpacing.screenHorizontal,
+            0,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
+              Text(
                 'Aula 3 — Funções',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.textPrimary,
-                ),
+                style: AppTypography.headingMedium,
               ),
-              const SizedBox(height: 8),
-              const Text(
+              const SizedBox(height: AppSpacing.xs),
+              Text(
                 'Entenda como uma função relaciona uma entrada a uma saída.',
-                style: TextStyle(
-                  fontSize: 14,
-                  height: 1.4,
-                  color: AppColors.textSecondary,
-                ),
+                style: AppTypography.bodyMedium,
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: AppSpacing.lg),
               Expanded(
                 child: ListView(
+                  padding: const EdgeInsets.only(
+                    bottom: AppSpacing.md,
+                  ),
                   children: [
                     _buildConceptCard(
                       title: 'O que é uma função?',
@@ -161,45 +171,47 @@ class FunctionsLessonScreen extends StatelessWidget {
                       content:
                           'Uma função é uma regra que associa cada valor de entrada a um único valor de saída. A entrada geralmente é representada por x, e a saída por f(x).',
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: AppSpacing.md),
                     _buildConceptCard(
                       title: 'Exemplo',
                       symbol: 'f(x)',
                       content:
                           'Na função f(x) = 2x + 1, cada valor de x gera um valor de f(x). Se x = 3, então f(3) = 2 · 3 + 1 = 7.',
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: AppSpacing.md),
                     _buildConceptCard(
                       title: 'Domínio',
                       symbol: 'D',
                       content:
                           'O domínio é o conjunto dos valores que podem ser usados como entrada da função.',
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: AppSpacing.md),
                     _buildConceptCard(
                       title: 'Imagem',
                       symbol: 'Im',
                       content:
                           'A imagem é o conjunto dos valores que podem aparecer como saída da função.',
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: AppSpacing.md),
                     _buildConceptCard(
                       title: 'Por que isso importa?',
                       symbol: 'π',
                       content:
                           'Funções aparecem em limites, derivadas, integrais, gráficos, movimento, crescimento, custo, receita e muitos problemas de engenharia.',
                     ),
-                    const SizedBox(height: 24),
                   ],
                 ),
               ),
               PrimaryButton(
                 text: 'Iniciar exercícios',
+                icon: Icons.play_arrow_rounded,
                 onPressed: () {
                   _goToExercises(context);
                 },
               ),
-              const SizedBox(height: 24),
+              const SizedBox(
+                height: AppSpacing.screenBottom,
+              ),
             ],
           ),
         ),

@@ -1,8 +1,12 @@
 ﻿import 'package:flutter/material.dart';
 
 import 'package:calcquest/shared/theme/app_colors.dart';
+import 'package:calcquest/shared/theme/app_spacing.dart';
+import 'package:calcquest/shared/theme/app_typography.dart';
+import 'package:calcquest/shared/widgets/app_bottom_navigation_bar.dart';
+import 'package:calcquest/shared/widgets/app_icon.dart';
+import 'package:calcquest/shared/widgets/app_progress_bar.dart';
 
-import '../../../shared/widgets/app_bottom_navigation_bar.dart';
 import '../../dashboard/presentation/dashboard_screen.dart';
 import '../../learning_path/presentation/learning_path_screen.dart';
 import '../../profile/presentation/profile_screen.dart';
@@ -43,38 +47,62 @@ class StatisticsScreen extends StatelessWidget {
   }
 
   Widget _buildSmallStatCard({
+    required IconData icon,
     required String value,
     required String label,
+    required Color iconColor,
+    required Color iconBackground,
   }) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(
+        AppSpacing.cardPadding,
+      ),
       decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(16),
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(
+          AppSpacing.radiusLarge,
+        ),
         border: Border.all(
           color: AppColors.border,
         ),
+        boxShadow: const [
+          BoxShadow(
+            color: AppColors.shadow,
+            blurRadius: 12,
+            offset: Offset(0, 6),
+          ),
+        ],
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            value,
-            style: const TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.w700,
-              color: AppColors.textPrimary,
+          Container(
+            width: 40,
+            height: 40,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: iconBackground,
+              borderRadius: BorderRadius.circular(
+                AppSpacing.radiusMedium,
+              ),
+            ),
+            child: AppIcon(
+              icon: icon,
+              size: AppIconSize.medium,
+              color: iconColor,
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSpacing.sm),
+          Text(
+            value,
+            style: AppTypography.headingSmall,
+          ),
+          const SizedBox(height: AppSpacing.xxs),
           Text(
             label,
-            style: const TextStyle(
-              fontSize: 12,
-              color: AppColors.textSecondary,
-            ),
+            style: AppTypography.bodySmall,
           ),
         ],
       ),
@@ -87,160 +115,200 @@ class StatisticsScreen extends StatelessWidget {
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(24, 32, 24, 32),
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.screenHorizontal,
+            AppSpacing.screenTop,
+            AppSpacing.screenHorizontal,
+            AppSpacing.screenBottom,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
+              Text(
                 'Estatísticas',
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w500,
+                style: AppTypography.labelMedium.copyWith(
                   color: AppColors.primary,
                 ),
               ),
-              const SizedBox(height: 10),
-              const Text(
+              const SizedBox(height: AppSpacing.xs),
+              Text(
                 'Seu progresso',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.textPrimary,
-                ),
+                style: AppTypography.headingMedium,
               ),
-              const SizedBox(height: 8),
-              const Text(
+              const SizedBox(height: AppSpacing.xs),
+              Text(
                 'Acompanhe sua evolução nos estudos.',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: AppColors.textSecondary,
-                ),
+                style: AppTypography.bodyMedium,
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: AppSpacing.lg),
 
-              // XP total
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.all(20),
+                padding: const EdgeInsets.all(
+                  AppSpacing.cardPaddingLarge,
+                ),
                 decoration: BoxDecoration(
-                  color: AppColors.white,
-                  borderRadius: BorderRadius.circular(20),
+                  color: AppColors.surface,
+                  borderRadius: BorderRadius.circular(
+                    AppSpacing.radiusXLarge,
+                  ),
                   border: Border.all(
                     color: AppColors.border,
                   ),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: AppColors.shadow,
+                      blurRadius: 14,
+                      offset: Offset(0, 7),
+                    ),
+                  ],
                 ),
-                child: const Column(
+                child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'XP total',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: AppColors.textSecondary,
-                      ),
+                    Row(
+                      children: [
+                        Container(
+                          width: 44,
+                          height: 44,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: AppColors.xpLight,
+                            borderRadius: BorderRadius.circular(
+                              AppSpacing.radiusMedium,
+                            ),
+                          ),
+                          child: const AppIcon(
+                            icon: Icons.bolt_outlined,
+                            size: AppIconSize.large,
+                            color: AppColors.xp,
+                          ),
+                        ),
+                        const SizedBox(width: AppSpacing.sm),
+                        Text(
+                          'XP total',
+                          style: AppTypography.titleMedium,
+                        ),
+                      ],
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: AppSpacing.md),
                     Text(
                       '120 XP',
-                      style: TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.textPrimary,
-                      ),
+                      style: AppTypography.headingLarge,
                     ),
-                    SizedBox(height: 6),
+                    const SizedBox(height: AppSpacing.xs),
                     Text(
                       'Continue acumulando XP para subir de nível.',
-                      style: TextStyle(
-                        fontSize: 12,
-                        height: 1.35,
-                        color: AppColors.textSecondary,
-                      ),
+                      style: AppTypography.bodySmall,
                     ),
                   ],
                 ),
               ),
 
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.md),
 
-              // Sequência e meta diária
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
                     child: _buildSmallStatCard(
+                      icon: Icons.local_fire_department_outlined,
                       value: '3 dias',
                       label: 'Sequência',
+                      iconColor: AppColors.warning,
+                      iconBackground: AppColors.warningLight,
                     ),
                   ),
-                  const SizedBox(width: 16),
+                  const SizedBox(width: AppSpacing.sm),
                   Expanded(
                     child: _buildSmallStatCard(
+                      icon: Icons.flag_outlined,
                       value: '40%',
                       label: 'Meta diária',
+                      iconColor: AppColors.primary,
+                      iconBackground: AppColors.selectedBackground,
                     ),
                   ),
                 ],
               ),
 
-              const SizedBox(height: 24),
+              const SizedBox(height: AppSpacing.lg),
 
-              const Text(
+              Text(
                 'Desempenho',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.textPrimary,
-                ),
+                style: AppTypography.titleLarge,
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: AppSpacing.sm),
 
-              // Desempenho
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.all(18),
+                padding: const EdgeInsets.all(
+                  AppSpacing.cardPaddingLarge,
+                ),
                 decoration: BoxDecoration(
-                  color: AppColors.white,
-                  borderRadius: BorderRadius.circular(16),
+                  color: AppColors.surface,
+                  borderRadius: BorderRadius.circular(
+                    AppSpacing.radiusLarge,
+                  ),
                   border: Border.all(
                     color: AppColors.border,
                   ),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: AppColors.shadow,
+                      blurRadius: 12,
+                      offset: Offset(0, 6),
+                    ),
+                  ],
                 ),
-                child: const Column(
+                child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Acertos nos exercícios',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: AppColors.textSecondary,
-                      ),
+                    Row(
+                      children: [
+                        Container(
+                          width: 44,
+                          height: 44,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: AppColors.successLight,
+                            borderRadius: BorderRadius.circular(
+                              AppSpacing.radiusMedium,
+                            ),
+                          ),
+                          child: const AppIcon(
+                            icon: Icons.check_circle_outline_rounded,
+                            size: AppIconSize.large,
+                            color: AppColors.success,
+                          ),
+                        ),
+                        const SizedBox(width: AppSpacing.sm),
+                        Text(
+                          'Acertos nos exercícios',
+                          style: AppTypography.titleMedium,
+                        ),
+                      ],
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: AppSpacing.md),
                     Text(
                       '80%',
-                      style: TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.textPrimary,
-                      ),
+                      style: AppTypography.headingLarge,
                     ),
-                    SizedBox(height: 4),
+                    const SizedBox(height: AppSpacing.sm),
+                    const AppProgressBar(
+                      value: 0.8,
+                      state: AppProgressBarState.success,
+                    ),
+                    const SizedBox(height: AppSpacing.xs),
                     Text(
                       'Você acertou 4 de 5 questões.',
-                      style: TextStyle(
-                        fontSize: 12,
-                        height: 1.35,
-                        color: AppColors.textSecondary,
-                      ),
+                      style: AppTypography.bodySmall,
                     ),
                   ],
                 ),
               ),
-
-              const SizedBox(height: 24),
             ],
           ),
         ),

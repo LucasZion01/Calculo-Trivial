@@ -3,7 +3,10 @@
 import 'package:calcquest/shared/data/mock_equations_exercise_data.dart';
 import 'package:calcquest/shared/data/mock_exercise_data.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
+import 'package:calcquest/shared/theme/app_spacing.dart';
+import 'package:calcquest/shared/theme/app_typography.dart';
 import 'package:calcquest/shared/widgets/app_bottom_navigation_bar.dart';
+import 'package:calcquest/shared/widgets/app_progress_bar.dart';
 import 'package:calcquest/shared/widgets/primary_button.dart';
 
 import '../../dashboard/presentation/dashboard_screen.dart';
@@ -41,6 +44,7 @@ class _EquationsExercisesScreenState extends State<EquationsExercisesScreen> {
         ),
         (route) => false,
       );
+      return;
     }
 
     if (index == 1) {
@@ -50,6 +54,7 @@ class _EquationsExercisesScreenState extends State<EquationsExercisesScreen> {
         ),
         (route) => false,
       );
+      return;
     }
 
     if (index == 2) {
@@ -59,6 +64,7 @@ class _EquationsExercisesScreenState extends State<EquationsExercisesScreen> {
         ),
         (route) => false,
       );
+      return;
     }
 
     if (index == 3) {
@@ -71,47 +77,88 @@ class _EquationsExercisesScreenState extends State<EquationsExercisesScreen> {
     }
   }
 
+  void _showFeedback({
+    required String message,
+    required Color backgroundColor,
+    required IconData icon,
+  }) {
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: backgroundColor,
+          margin: const EdgeInsets.all(AppSpacing.md),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(
+              AppSpacing.radiusMedium,
+            ),
+          ),
+          content: Row(
+            children: [
+              Icon(
+                icon,
+                color: AppColors.white,
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              Expanded(
+                child: Text(
+                  message,
+                  style: AppTypography.bodyMedium.copyWith(
+                    color: AppColors.white,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+  }
+
   void _confirmAnswer() {
     if (selectedOptionId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Escolha uma alternativa antes de continuar.'),
-        ),
+      _showFeedback(
+        message: 'Escolha uma alternativa antes de continuar.',
+        backgroundColor: AppColors.warning,
+        icon: Icons.warning_amber_rounded,
       );
       return;
     }
 
     if (selectedOptionId != currentExercise.correctOptionId) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Resposta incorreta. Tente novamente.'),
-        ),
+      _showFeedback(
+        message: 'Resposta incorreta. Tente novamente.',
+        backgroundColor: AppColors.error,
+        icon: Icons.close_rounded,
       );
       return;
     }
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(currentExercise.explanation),
-      ),
+    _showFeedback(
+      message: currentExercise.explanation,
+      backgroundColor: AppColors.success,
+      icon: Icons.check_rounded,
     );
 
     if (isLastExercise) {
-      Future.delayed(const Duration(milliseconds: 700), () {
-        if (!mounted) return;
+      Future.delayed(
+        const Duration(milliseconds: 700),
+        () {
+          if (!mounted) return;
 
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (_) => ResultScreen(
-              completedLessonId: 'equacoes-inequacoes',
-              totalQuestions: mockEquationsExercises.length,
-              correctAnswers: mockEquationsExercises.length,
-              xpEarned: 70,
-              goldEarned: 30,
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => ResultScreen(
+                completedLessonId: 'equacoes-inequacoes',
+                totalQuestions: mockEquationsExercises.length,
+                correctAnswers: mockEquationsExercises.length,
+                xpEarned: 70,
+                goldEarned: 30,
+              ),
             ),
-          ),
-        );
-      });
+          );
+        },
+      );
 
       return;
     }
@@ -133,53 +180,82 @@ class _EquationsExercisesScreenState extends State<EquationsExercisesScreen> {
   }) {
     final isSelected = selectedOptionId == option.id;
 
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          selectedOptionId = option.id;
-        });
-      },
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: isSelected ? AppColors.selectedBackground : AppColors.white,
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(
-            color: isSelected ? AppColors.primary : AppColors.border,
-            width: isSelected ? 2 : 1,
-          ),
+    return Material(
+      color: Colors.transparent,
+      borderRadius: BorderRadius.circular(
+        AppSpacing.radiusLarge,
+      ),
+      child: InkWell(
+        onTap: () {
+          setState(() {
+            selectedOptionId = option.id;
+          });
+        },
+        borderRadius: BorderRadius.circular(
+          AppSpacing.radiusLarge,
         ),
-        child: Row(
-          children: [
-            Container(
-              width: 34,
-              height: 34,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: isSelected ? AppColors.primary : AppColors.background,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Text(
-                _letterForIndex(index),
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700,
-                  color: isSelected ? AppColors.white : AppColors.textSecondary,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 160),
+          width: double.infinity,
+          padding: const EdgeInsets.all(
+            AppSpacing.cardPadding,
+          ),
+          decoration: BoxDecoration(
+            color: isSelected
+                ? AppColors.selectedBackground
+                : AppColors.surface,
+            borderRadius: BorderRadius.circular(
+              AppSpacing.radiusLarge,
+            ),
+            border: Border.all(
+              color: isSelected
+                  ? AppColors.primary
+                  : AppColors.border,
+              width: isSelected ? 2 : 1,
+            ),
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 36,
+                height: 36,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: isSelected
+                      ? AppColors.primary
+                      : AppColors.surfaceSecondary,
+                  borderRadius: BorderRadius.circular(
+                    AppSpacing.radiusMedium,
+                  ),
+                ),
+                child: Text(
+                  _letterForIndex(index),
+                  style: AppTypography.labelMedium.copyWith(
+                    color: isSelected
+                        ? AppColors.white
+                        : AppColors.textSecondary,
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(width: 14),
-            Expanded(
-              child: Text(
-                option.text,
-                style: const TextStyle(
-                  fontSize: 16,
-                  color: AppColors.textPrimary,
+              const SizedBox(width: AppSpacing.sm),
+              Expanded(
+                child: Text(
+                  option.text,
+                  style: AppTypography.bodyLarge.copyWith(
+                    color: AppColors.textPrimary,
+                  ),
                 ),
               ),
-            ),
-          ],
+              if (isSelected) ...[
+                const SizedBox(width: AppSpacing.xs),
+                const Icon(
+                  Icons.check_circle_rounded,
+                  color: AppColors.primary,
+                  size: AppSpacing.iconLarge,
+                ),
+              ],
+            ],
+          ),
         ),
       ),
     );
@@ -193,61 +269,68 @@ class _EquationsExercisesScreenState extends State<EquationsExercisesScreen> {
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(24, 40, 24, 0),
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.screenHorizontal,
+            AppSpacing.screenTop,
+            AppSpacing.screenHorizontal,
+            0,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 'Questão ${currentExerciseIndex + 1} de ${mockEquationsExercises.length}',
-                style: const TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.textPrimary,
-                ),
+                style: AppTypography.headingSmall,
               ),
-              const SizedBox(height: 8),
-              const Text(
+              const SizedBox(height: AppSpacing.xs),
+              Text(
                 'Resolva a equação ou inequação.',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: AppColors.textSecondary,
-                ),
+                style: AppTypography.bodyMedium,
               ),
-              const SizedBox(height: 16),
-              LinearProgressIndicator(
+              const SizedBox(height: AppSpacing.md),
+              AppProgressBar(
                 value: progress,
-                minHeight: 8,
-                borderRadius: BorderRadius.circular(12),
-                backgroundColor: AppColors.border,
-                color: AppColors.primary,
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: AppSpacing.lg),
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.all(20),
+                padding: const EdgeInsets.all(
+                  AppSpacing.cardPaddingLarge,
+                ),
                 decoration: BoxDecoration(
-                  color: AppColors.white,
-                  borderRadius: BorderRadius.circular(18),
+                  color: AppColors.surface,
+                  borderRadius: BorderRadius.circular(
+                    AppSpacing.radiusLarge,
+                  ),
                   border: Border.all(
                     color: AppColors.border,
                   ),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: AppColors.shadow,
+                      blurRadius: 12,
+                      offset: Offset(0, 6),
+                    ),
+                  ],
                 ),
                 child: Text(
                   exercise.statement,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    height: 1.4,
+                  style: AppTypography.headingSmall.copyWith(
                     fontWeight: FontWeight.w600,
-                    color: AppColors.textPrimary,
                   ),
                 ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: AppSpacing.lg),
               Expanded(
                 child: ListView.separated(
+                  padding: const EdgeInsets.only(
+                    bottom: AppSpacing.md,
+                  ),
                   itemCount: exercise.options.length,
                   separatorBuilder: (context, index) =>
-                      const SizedBox(height: 12),
+                      const SizedBox(
+                    height: AppSpacing.sm,
+                  ),
                   itemBuilder: (context, index) {
                     final option = exercise.options[index];
 
@@ -258,14 +341,19 @@ class _EquationsExercisesScreenState extends State<EquationsExercisesScreen> {
                   },
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.sm),
               PrimaryButton(
                 text: isLastExercise
                     ? 'Finalizar exercícios'
                     : 'Próxima questão',
+                icon: isLastExercise
+                    ? Icons.flag_rounded
+                    : Icons.arrow_forward_rounded,
                 onPressed: _confirmAnswer,
               ),
-              const SizedBox(height: 24),
+              const SizedBox(
+                height: AppSpacing.screenBottom,
+              ),
             ],
           ),
         ),

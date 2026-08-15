@@ -1,8 +1,12 @@
 ﻿import 'package:flutter/material.dart';
 
 import 'package:calcquest/shared/theme/app_colors.dart';
+import 'package:calcquest/shared/theme/app_spacing.dart';
+import 'package:calcquest/shared/theme/app_typography.dart';
+import 'package:calcquest/shared/widgets/app_bottom_navigation_bar.dart';
+import 'package:calcquest/shared/widgets/app_icon.dart';
+import 'package:calcquest/shared/widgets/primary_button.dart';
 
-import '../../../shared/widgets/app_bottom_navigation_bar.dart';
 import '../../dashboard/presentation/dashboard_screen.dart';
 import '../../learning_path/presentation/learning_path_screen.dart';
 import '../../profile/presentation/profile_screen.dart';
@@ -18,6 +22,7 @@ class SettingsScreen extends StatelessWidget {
           builder: (_) => const DashboardScreen(),
         ),
       );
+      return;
     }
 
     if (index == 1) {
@@ -26,6 +31,7 @@ class SettingsScreen extends StatelessWidget {
           builder: (_) => const LearningPathScreen(),
         ),
       );
+      return;
     }
 
     if (index == 2) {
@@ -34,6 +40,7 @@ class SettingsScreen extends StatelessWidget {
           builder: (_) => const StatisticsScreen(),
         ),
       );
+      return;
     }
 
     if (index == 3) {
@@ -50,73 +57,63 @@ class SettingsScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(24, 40, 24, 0),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.screenHorizontal,
+            AppSpacing.screenTop,
+            AppSpacing.screenHorizontal,
+            AppSpacing.screenBottom,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
+              Text(
                 'Configurações',
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w500,
+                style: AppTypography.labelMedium.copyWith(
                   color: AppColors.primary,
                 ),
               ),
-              const SizedBox(height: 10),
-              const Text(
+              const SizedBox(height: AppSpacing.xs),
+              Text(
                 'Ajustes da conta',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.textPrimary,
-                ),
+                style: AppTypography.headingMedium,
               ),
-              const SizedBox(height: 8),
-              const Text(
+              const SizedBox(height: AppSpacing.xs),
+              Text(
                 'Gerencie preferências básicas do aplicativo.',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: AppColors.textSecondary,
-                ),
+                style: AppTypography.bodyMedium,
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: AppSpacing.lg),
+
               const _SettingsCard(
+                icon: Icons.person_outline_rounded,
                 title: 'Conta',
                 subtitle: 'Editar nome, e-mail e senha',
               ),
-              const SizedBox(height: 16),
+
+              const SizedBox(height: AppSpacing.md),
+
               const _SettingsCard(
+                icon: Icons.notifications_none_rounded,
                 title: 'Notificações',
                 subtitle: 'Lembretes de estudo e metas diárias',
               ),
-              const SizedBox(height: 16),
+
+              const SizedBox(height: AppSpacing.md),
+
               const _SettingsCard(
+                icon: Icons.light_mode_outlined,
                 title: 'Tema',
                 subtitle: 'Modo claro ativado',
               ),
-              const SizedBox(height: 24),
-              SizedBox(
-                width: double.infinity,
-                height: 48,
-                child: OutlinedButton(
-                  onPressed: () {},
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: AppColors.danger,
-                    side: const BorderSide(
-                      color: AppColors.danger,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: const Text(
-                    'Sair da conta',
-                    style: TextStyle(
-                      fontSize: 16,
-                    ),
-                  ),
-                ),
+
+              const SizedBox(height: AppSpacing.lg),
+
+              PrimaryButton(
+                text: 'Sair da conta',
+                icon: Icons.logout_rounded,
+                variant: PrimaryButtonVariant.destructive,
+                onPressed: () {},
               ),
             ],
           ),
@@ -133,51 +130,86 @@ class SettingsScreen extends StatelessWidget {
 }
 
 class _SettingsCard extends StatelessWidget {
+  final IconData icon;
   final String title;
   final String subtitle;
 
   const _SettingsCard({
+    required this.icon,
     required this.title,
     required this.subtitle,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: 80,
-      padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: AppColors.border,
-        ),
+    return Material(
+      color: Colors.transparent,
+      borderRadius: BorderRadius.circular(
+        AppSpacing.radiusLarge,
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: AppColors.textPrimary,
+      child: InkWell(
+        onTap: () {},
+        borderRadius: BorderRadius.circular(
+          AppSpacing.radiusLarge,
+        ),
+        child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(
+            AppSpacing.cardPaddingLarge,
+          ),
+          decoration: BoxDecoration(
+            color: AppColors.surface,
+            borderRadius: BorderRadius.circular(
+              AppSpacing.radiusLarge,
+            ),
+            border: Border.all(
+              color: AppColors.border,
             ),
           ),
-          const SizedBox(height: 8),
-          Text(
-            subtitle,
-            style: const TextStyle(
-              fontSize: 12,
-              color: AppColors.textSecondary,
-            ),
+          child: Row(
+            children: [
+              Container(
+                width: 44,
+                height: 44,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: AppColors.surfaceSecondary,
+                  borderRadius: BorderRadius.circular(
+                    AppSpacing.radiusMedium,
+                  ),
+                ),
+                child: AppIcon(
+                  icon: icon,
+                  size: AppIconSize.large,
+                  color: AppColors.textSecondary,
+                ),
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: AppTypography.titleMedium,
+                    ),
+                    const SizedBox(height: AppSpacing.xxs),
+                    Text(
+                      subtitle,
+                      style: AppTypography.bodySmall,
+                    ),
+                  ],
+                ),
+              ),
+              const AppIcon(
+                icon: Icons.chevron_right_rounded,
+                size: AppIconSize.large,
+                color: AppColors.textMuted,
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
 }
-
-
-

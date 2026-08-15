@@ -1,7 +1,10 @@
 ﻿import 'package:flutter/material.dart';
 
 import 'package:calcquest/shared/theme/app_colors.dart';
+import 'package:calcquest/shared/theme/app_spacing.dart';
+import 'package:calcquest/shared/theme/app_typography.dart';
 import 'package:calcquest/shared/widgets/app_bottom_navigation_bar.dart';
+import 'package:calcquest/shared/widgets/app_icon.dart';
 import 'package:calcquest/shared/widgets/primary_button.dart';
 
 import '../../dashboard/presentation/dashboard_screen.dart';
@@ -34,6 +37,7 @@ class ResultScreen extends StatelessWidget {
         ),
         (route) => false,
       );
+      return;
     }
 
     if (index == 1) {
@@ -43,6 +47,7 @@ class ResultScreen extends StatelessWidget {
         ),
         (route) => false,
       );
+      return;
     }
 
     if (index == 2) {
@@ -52,6 +57,7 @@ class ResultScreen extends StatelessWidget {
         ),
         (route) => false,
       );
+      return;
     }
 
     if (index == 3) {
@@ -80,50 +86,63 @@ class ResultScreen extends StatelessWidget {
     required IconData icon,
     required String title,
     required String value,
+    Color? iconColor,
+    Color? iconBackground,
   }) {
+    final resolvedIconColor = iconColor ?? AppColors.primary;
+    final resolvedIconBackground =
+        iconBackground ?? AppColors.selectedBackground;
+
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(18),
+      padding: const EdgeInsets.all(
+        AppSpacing.cardPaddingLarge,
+      ),
       decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(18),
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(
+          AppSpacing.radiusLarge,
+        ),
         border: Border.all(
           color: AppColors.border,
         ),
+        boxShadow: const [
+          BoxShadow(
+            color: AppColors.shadow,
+            blurRadius: 12,
+            offset: Offset(0, 6),
+          ),
+        ],
       ),
       child: Row(
         children: [
           Container(
-            width: 46,
-            height: 46,
+            width: 48,
+            height: 48,
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: AppColors.selectedBackground,
-              borderRadius: BorderRadius.circular(14),
+              color: resolvedIconBackground,
+              borderRadius: BorderRadius.circular(
+                AppSpacing.radiusMedium,
+              ),
             ),
-            child: Icon(
-              icon,
-              color: AppColors.primary,
-              size: 24,
+            child: AppIcon(
+              icon: icon,
+              size: AppIconSize.large,
+              color: resolvedIconColor,
             ),
           ),
-          const SizedBox(width: 14),
+          const SizedBox(width: AppSpacing.sm),
           Expanded(
             child: Text(
               title,
-              style: const TextStyle(
-                fontSize: 15,
-                color: AppColors.textSecondary,
-              ),
+              style: AppTypography.bodyMedium,
             ),
           ),
+          const SizedBox(width: AppSpacing.sm),
           Text(
             value,
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-              color: AppColors.textPrimary,
-            ),
+            style: AppTypography.titleLarge,
           ),
         ],
       ),
@@ -132,78 +151,98 @@ class ResultScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final performance =
+        totalQuestions == 0 ? 0 : correctAnswers / totalQuestions;
+
+    final performanceText =
+        '${(performance * 100).round()}% de aproveitamento';
+
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(24, 40, 24, 0),
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.screenHorizontal,
+            AppSpacing.screenTop,
+            AppSpacing.screenHorizontal,
+            0,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.sm),
               Container(
                 width: 88,
                 height: 88,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  color: AppColors.selectedBackground,
-                  borderRadius: BorderRadius.circular(28),
-                ),
-                child: const Text(
-                  '✓',
-                  style: TextStyle(
-                    fontSize: 48,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.primary,
+                  color: AppColors.successLight,
+                  borderRadius: BorderRadius.circular(
+                    AppSpacing.radiusXLarge,
                   ),
                 ),
+                child: const AppIcon(
+                  icon: Icons.check_rounded,
+                  size: AppIconSize.extraLarge,
+                  color: AppColors.success,
+                  semanticLabel: 'Exercícios concluídos',
+                ),
               ),
-              const SizedBox(height: 24),
-              const Text(
+              const SizedBox(height: AppSpacing.lg),
+              Text(
                 'Exercícios concluídos',
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 26,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.textPrimary,
-                ),
+                style: AppTypography.headingLarge,
               ),
-              const SizedBox(height: 8),
-              const Text(
+              const SizedBox(height: AppSpacing.xs),
+              Text(
                 'Você concluiu a sequência de exercícios com ótimo desempenho.',
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 14,
-                  height: 1.4,
-                  color: AppColors.textSecondary,
+                style: AppTypography.bodyMedium,
+              ),
+              const SizedBox(height: AppSpacing.xs),
+              Text(
+                performanceText,
+                textAlign: TextAlign.center,
+                style: AppTypography.labelMedium.copyWith(
+                  color: AppColors.success,
                 ),
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height: AppSpacing.xl),
               _buildResultCard(
-                icon: Icons.check_circle_outline,
+                icon: Icons.check_circle_outline_rounded,
                 title: 'Acertos',
                 value: '$correctAnswers de $totalQuestions',
+                iconColor: AppColors.success,
+                iconBackground: AppColors.successLight,
               ),
-              const SizedBox(height: 14),
+              const SizedBox(height: AppSpacing.sm),
               _buildResultCard(
                 icon: Icons.bolt_outlined,
                 title: 'XP ganho',
                 value: '+$xpEarned XP',
+                iconColor: AppColors.xp,
+                iconBackground: AppColors.xpLight,
               ),
-              const SizedBox(height: 14),
+              const SizedBox(height: AppSpacing.sm),
               _buildResultCard(
                 icon: Icons.monetization_on_outlined,
                 title: 'Ouro ganho',
                 value: '+$goldEarned',
+                iconColor: AppColors.gold,
+                iconBackground: AppColors.goldLight,
               ),
               const Spacer(),
               PrimaryButton(
                 text: 'Continuar',
+                icon: Icons.arrow_forward_rounded,
                 onPressed: () {
                   _goToReward(context);
                 },
               ),
-              const SizedBox(height: 24),
+              const SizedBox(
+                height: AppSpacing.screenBottom,
+              ),
             ],
           ),
         ),

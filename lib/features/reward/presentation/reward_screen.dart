@@ -2,7 +2,10 @@
 
 import 'package:calcquest/shared/state/app_progress.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
+import 'package:calcquest/shared/theme/app_spacing.dart';
+import 'package:calcquest/shared/theme/app_typography.dart';
 import 'package:calcquest/shared/widgets/app_bottom_navigation_bar.dart';
+import 'package:calcquest/shared/widgets/app_icon.dart';
 import 'package:calcquest/shared/widgets/primary_button.dart';
 
 import '../../dashboard/presentation/dashboard_screen.dart';
@@ -60,6 +63,7 @@ class _RewardScreenState extends State<RewardScreen> {
         ),
         (route) => false,
       );
+      return;
     }
 
     if (index == 1) {
@@ -69,6 +73,7 @@ class _RewardScreenState extends State<RewardScreen> {
         ),
         (route) => false,
       );
+      return;
     }
 
     if (index == 2) {
@@ -78,6 +83,7 @@ class _RewardScreenState extends State<RewardScreen> {
         ),
         (route) => false,
       );
+      return;
     }
 
     if (index == 3) {
@@ -115,54 +121,71 @@ class _RewardScreenState extends State<RewardScreen> {
     return 'Você concluiu a sequência de Álgebra Fundamental.';
   }
 
+  String get _progressText {
+    if (widget.completedLessonId == 'funcoes') {
+      return 'Módulo concluído';
+    }
+
+    return 'Aula concluída';
+  }
+
   Widget _buildRewardItem({
     required IconData icon,
     required String title,
     required String value,
+    required Color iconColor,
+    required Color iconBackground,
   }) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(18),
+      padding: const EdgeInsets.all(
+        AppSpacing.cardPaddingLarge,
+      ),
       decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(18),
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(
+          AppSpacing.radiusLarge,
+        ),
         border: Border.all(
           color: AppColors.border,
         ),
+        boxShadow: const [
+          BoxShadow(
+            color: AppColors.shadow,
+            blurRadius: 12,
+            offset: Offset(0, 6),
+          ),
+        ],
       ),
       child: Row(
         children: [
           Container(
-            width: 46,
-            height: 46,
+            width: 48,
+            height: 48,
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: AppColors.selectedBackground,
-              borderRadius: BorderRadius.circular(14),
+              color: iconBackground,
+              borderRadius: BorderRadius.circular(
+                AppSpacing.radiusMedium,
+              ),
             ),
-            child: Icon(
-              icon,
-              color: AppColors.primary,
-              size: 24,
+            child: AppIcon(
+              icon: icon,
+              size: AppIconSize.large,
+              color: iconColor,
             ),
           ),
-          const SizedBox(width: 14),
+          const SizedBox(width: AppSpacing.sm),
           Expanded(
             child: Text(
               title,
-              style: const TextStyle(
-                fontSize: 15,
-                color: AppColors.textSecondary,
-              ),
+              style: AppTypography.bodyMedium,
             ),
           ),
+          const SizedBox(width: AppSpacing.sm),
           Text(
             value,
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-              color: AppColors.textPrimary,
-            ),
+            style: AppTypography.titleLarge,
           ),
         ],
       ),
@@ -171,82 +194,100 @@ class _RewardScreenState extends State<RewardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final progressText = widget.completedLessonId == 'funcoes'
-        ? 'Módulo concluído'
-        : 'Aula concluída';
-
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(24, 40, 24, 0),
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.screenHorizontal,
+            AppSpacing.screenTop,
+            AppSpacing.screenHorizontal,
+            0,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(height: 12),
+              const SizedBox(height: AppSpacing.sm),
+
               Container(
-                width: 104,
-                height: 104,
+                width: 96,
+                height: 96,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  color: AppColors.primary,
-                  borderRadius: BorderRadius.circular(32),
+                  color: AppColors.achievementLight,
+                  borderRadius: BorderRadius.circular(
+                    AppSpacing.radiusXLarge,
+                  ),
                 ),
                 child: const Text(
                   '∑',
                   style: TextStyle(
-                    fontSize: 56,
+                    fontSize: 52,
                     fontWeight: FontWeight.w800,
-                    color: AppColors.white,
+                    color: AppColors.achievement,
                   ),
                 ),
               ),
-              const SizedBox(height: 24),
-              const Text(
+
+              const SizedBox(height: AppSpacing.lg),
+
+              Text(
                 'Recompensa desbloqueada',
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 26,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.textPrimary,
-                ),
+                style: AppTypography.headingLarge,
               ),
-              const SizedBox(height: 8),
+
+              const SizedBox(height: AppSpacing.xs),
+
               Text(
                 _rewardDescription,
                 textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 14,
-                  height: 1.4,
-                  color: AppColors.textSecondary,
-                ),
+                style: AppTypography.bodyMedium,
               ),
-              const SizedBox(height: 32),
+
+              const SizedBox(height: AppSpacing.xl),
+
               _buildRewardItem(
                 icon: Icons.bolt_outlined,
                 title: 'Experiência recebida',
                 value: '+${widget.xpEarned} XP',
+                iconColor: AppColors.xp,
+                iconBackground: AppColors.xpLight,
               ),
-              const SizedBox(height: 14),
+
+              const SizedBox(height: AppSpacing.sm),
+
               _buildRewardItem(
                 icon: Icons.monetization_on_outlined,
                 title: 'Ouro recebido',
                 value: '+${widget.goldEarned}',
+                iconColor: AppColors.gold,
+                iconBackground: AppColors.goldLight,
               ),
-              const SizedBox(height: 14),
+
+              const SizedBox(height: AppSpacing.sm),
+
               _buildRewardItem(
                 icon: Icons.school_outlined,
                 title: 'Progresso',
-                value: progressText,
+                value: _progressText,
+                iconColor: AppColors.success,
+                iconBackground: AppColors.successLight,
               ),
+
               const Spacer(),
+
               PrimaryButton(
                 text: 'Voltar para a trilha',
+                icon: Icons.map_outlined,
                 onPressed: () {
                   _backToLearningPath(context);
                 },
               ),
-              const SizedBox(height: 24),
+
+              const SizedBox(
+                height: AppSpacing.screenBottom,
+              ),
             ],
           ),
         ),
