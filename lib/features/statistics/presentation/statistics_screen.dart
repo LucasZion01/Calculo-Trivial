@@ -45,8 +45,8 @@ class StatisticsScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(24, 40, 24, 0),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(24, 32, 24, 24),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -78,7 +78,6 @@ class StatisticsScreen extends StatelessWidget {
               const SizedBox(height: 24),
               Container(
                 width: double.infinity,
-                height: 120,
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   color: AppColors.white,
@@ -88,6 +87,7 @@ class StatisticsScreen extends StatelessWidget {
                   ),
                 ),
                 child: const Column(
+                  mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
@@ -111,6 +111,7 @@ class StatisticsScreen extends StatelessWidget {
                       'Continue acumulando XP para subir de nível.',
                       style: TextStyle(
                         fontSize: 12,
+                        height: 1.35,
                         color: AppColors.textSecondary,
                       ),
                     ),
@@ -119,10 +120,10 @@ class StatisticsScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Expanded(
                     child: Container(
-                      height: 90,
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
                         color: AppColors.white,
@@ -132,6 +133,7 @@ class StatisticsScreen extends StatelessWidget {
                         ),
                       ),
                       child: const Column(
+                        mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
@@ -157,7 +159,6 @@ class StatisticsScreen extends StatelessWidget {
                   const SizedBox(width: 16),
                   Expanded(
                     child: Container(
-                      height: 90,
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
                         color: AppColors.white,
@@ -167,6 +168,7 @@ class StatisticsScreen extends StatelessWidget {
                         ),
                       ),
                       child: const Column(
+                        mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
@@ -203,7 +205,6 @@ class StatisticsScreen extends StatelessWidget {
               const SizedBox(height: 12),
               Container(
                 width: double.infinity,
-                height: 110,
                 padding: const EdgeInsets.all(18),
                 decoration: BoxDecoration(
                   color: AppColors.white,
@@ -213,6 +214,7 @@ class StatisticsScreen extends StatelessWidget {
                   ),
                 ),
                 child: const Column(
+                  mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
@@ -236,6 +238,7 @@ class StatisticsScreen extends StatelessWidget {
                       'Você acertou 4 de 5 questões.',
                       style: TextStyle(
                         fontSize: 12,
+                        height: 1.35,
                         color: AppColors.textSecondary,
                       ),
                     ),
@@ -255,6 +258,3 @@ class StatisticsScreen extends StatelessWidget {
     );
   }
 }
-
-
-

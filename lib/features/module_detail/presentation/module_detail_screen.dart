@@ -247,7 +247,7 @@ class ModuleDetailScreen extends StatelessWidget {
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(24, 40, 24, 0),
+          padding: const EdgeInsets.fromLTRB(24, 32, 24, 0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -255,7 +255,7 @@ class ModuleDetailScreen extends StatelessWidget {
                 module.title,
                 style: const TextStyle(
                   fontSize: 24,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w700,
                   color: AppColors.textPrimary,
                 ),
               ),
@@ -264,13 +264,13 @@ class ModuleDetailScreen extends StatelessWidget {
                 'Construa a base necessária para estudar Cálculo.',
                 style: TextStyle(
                   fontSize: 14,
+                  height: 1.4,
                   color: AppColors.textSecondary,
                 ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 20),
               Container(
                 width: double.infinity,
-                height: 126,
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   color: AppColors.primary,
@@ -278,6 +278,7 @@ class ModuleDetailScreen extends StatelessWidget {
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     const Text(
                       'Progresso do módulo',
@@ -308,13 +309,14 @@ class ModuleDetailScreen extends StatelessWidget {
                       _moduleProgressDescription(),
                       style: const TextStyle(
                         fontSize: 13,
+                        height: 1.3,
                         color: AppColors.primaryLight,
                       ),
                     ),
                   ],
                 ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 20),
               const Text(
                 'Aulas',
                 style: TextStyle(
@@ -326,6 +328,7 @@ class ModuleDetailScreen extends StatelessWidget {
               const SizedBox(height: 12),
               Expanded(
                 child: ListView.separated(
+                  padding: const EdgeInsets.only(bottom: 24),
                   itemCount: module.lessons.length,
                   separatorBuilder: (context, index) =>
                       const SizedBox(height: 16),
