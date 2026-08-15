@@ -1,6 +1,8 @@
 ﻿import 'package:flutter/material.dart';
 
 import 'package:calcquest/shared/theme/app_colors.dart';
+import 'package:calcquest/shared/theme/app_spacing.dart';
+import 'package:calcquest/shared/theme/app_typography.dart';
 import 'package:calcquest/shared/widgets/app_bottom_navigation_bar.dart';
 import 'package:calcquest/shared/widgets/primary_button.dart';
 
@@ -21,6 +23,7 @@ class LimitsLessonScreen extends StatelessWidget {
         ),
         (route) => false,
       );
+      return;
     }
 
     if (index == 1) {
@@ -30,6 +33,7 @@ class LimitsLessonScreen extends StatelessWidget {
         ),
         (route) => false,
       );
+      return;
     }
 
     if (index == 2) {
@@ -39,6 +43,7 @@ class LimitsLessonScreen extends StatelessWidget {
         ),
         (route) => false,
       );
+      return;
     }
 
     if (index == 3) {
@@ -66,56 +71,60 @@ class LimitsLessonScreen extends StatelessWidget {
   }) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(18),
+      padding: const EdgeInsets.all(
+        AppSpacing.cardPaddingLarge,
+      ),
       decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(18),
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(
+          AppSpacing.radiusLarge,
+        ),
         border: Border.all(
           color: AppColors.border,
         ),
+        boxShadow: const [
+          BoxShadow(
+            color: AppColors.shadow,
+            blurRadius: 12,
+            offset: Offset(0, 6),
+          ),
+        ],
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            width: 46,
-            height: 46,
+            width: 48,
+            height: 48,
             alignment: Alignment.center,
             decoration: BoxDecoration(
               color: AppColors.selectedBackground,
-              borderRadius: BorderRadius.circular(14),
+              borderRadius: BorderRadius.circular(
+                AppSpacing.radiusMedium,
+              ),
             ),
             child: Text(
               symbol,
               textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w700,
+              style: AppTypography.headingSmall.copyWith(
                 color: AppColors.primary,
+                fontWeight: FontWeight.w700,
               ),
             ),
           ),
-          const SizedBox(width: 14),
+          const SizedBox(width: AppSpacing.sm),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.textPrimary,
-                  ),
+                  style: AppTypography.titleMedium,
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: AppSpacing.xs),
                 Text(
                   content,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    height: 1.45,
-                    color: AppColors.textSecondary,
-                  ),
+                  style: AppTypography.bodyMedium,
                 ),
               ],
             ),
@@ -128,45 +137,50 @@ class LimitsLessonScreen extends StatelessWidget {
   Widget _buildExampleCard() {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(
+        AppSpacing.cardPaddingLarge,
+      ),
       decoration: BoxDecoration(
         color: AppColors.primary,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(
+          AppSpacing.radiusXLarge,
+        ),
+        boxShadow: const [
+          BoxShadow(
+            color: AppColors.shadow,
+            blurRadius: 16,
+            offset: Offset(0, 8),
+          ),
+        ],
       ),
-      child: const Column(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             'Exemplo rápido',
-            style: TextStyle(
-              fontSize: 14,
+            style: AppTypography.bodyMedium.copyWith(
               color: AppColors.primaryLight,
             ),
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: AppSpacing.sm),
           Text(
             'lim x → 2  (x² - 4) / (x - 2)',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w700,
+            style: AppTypography.headingSmall.copyWith(
               color: AppColors.white,
+              fontWeight: FontWeight.w700,
             ),
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: AppSpacing.sm),
           Text(
             'A substituição direta gera 0/0. Então fatoramos x² - 4 como (x - 2)(x + 2), cancelamos x - 2 e avaliamos x + 2 em x = 2.',
-            style: TextStyle(
-              fontSize: 14,
-              height: 1.45,
+            style: AppTypography.bodyMedium.copyWith(
               color: AppColors.primaryLight,
             ),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: AppSpacing.xs),
           Text(
             'Resultado: 4',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w700,
+            style: AppTypography.titleMedium.copyWith(
               color: AppColors.white,
             ),
           ),
@@ -181,30 +195,30 @@ class LimitsLessonScreen extends StatelessWidget {
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(24, 40, 24, 0),
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.screenHorizontal,
+            AppSpacing.screenTop,
+            AppSpacing.screenHorizontal,
+            0,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
+              Text(
                 'Aula 1 — Limites',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.textPrimary,
-                ),
+                style: AppTypography.headingMedium,
               ),
-              const SizedBox(height: 8),
-              const Text(
+              const SizedBox(height: AppSpacing.xs),
+              Text(
                 'Entenda limites com substituição, fatoração, racionalização e análise no infinito.',
-                style: TextStyle(
-                  fontSize: 14,
-                  height: 1.4,
-                  color: AppColors.textSecondary,
-                ),
+                style: AppTypography.bodyMedium,
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: AppSpacing.lg),
               Expanded(
                 child: ListView(
+                  padding: const EdgeInsets.only(
+                    bottom: AppSpacing.lg,
+                  ),
                   children: [
                     _buildConceptCard(
                       title: 'Ideia central',
@@ -212,40 +226,42 @@ class LimitsLessonScreen extends StatelessWidget {
                       content:
                           'Limite descreve o valor que uma função se aproxima quando x chega perto de um número. Em Cálculo, isso prepara a base para continuidade, derivadas e integrais.',
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: AppSpacing.md),
                     _buildConceptCard(
                       title: 'Quando substituir diretamente?',
                       symbol: 'x',
                       content:
                           'Em funções polinomiais e em expressões contínuas, geralmente podemos substituir o valor de x diretamente.',
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: AppSpacing.md),
                     _buildConceptCard(
                       title: 'Quando aparece 0/0',
                       symbol: '0/0',
                       content:
                           'A forma 0/0 é uma indeterminação. Ela indica que é necessário transformar a expressão, geralmente por fatoração, simplificação ou racionalização.',
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: AppSpacing.md),
                     _buildExampleCard(),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: AppSpacing.md),
                     _buildConceptCard(
                       title: 'Limite no infinito',
                       symbol: '∞',
                       content:
                           'Em funções racionais, quando x tende ao infinito, comparamos os termos de maior grau. Eles dominam o comportamento da função.',
                     ),
-                    const SizedBox(height: 24),
                   ],
                 ),
               ),
               PrimaryButton(
                 text: 'Iniciar exercícios',
+                icon: Icons.play_arrow_rounded,
                 onPressed: () {
                   _goToExercises(context);
                 },
               ),
-              const SizedBox(height: 24),
+              const SizedBox(
+                height: AppSpacing.screenBottom,
+              ),
             ],
           ),
         ),

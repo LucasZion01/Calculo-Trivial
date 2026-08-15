@@ -14,6 +14,8 @@ dependencies:
 
   cupertino_icons: ^1.0.8
   shared_preferences: ^2.5.5
+  purchases_flutter: ^10.9.0
+  purchases_ui_flutter: ^10.9.0
 
 dev_dependencies:
   flutter_test:

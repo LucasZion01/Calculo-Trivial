@@ -3,7 +3,10 @@
 import 'package:calcquest/shared/data/mock_learning_data.dart';
 import 'package:calcquest/shared/state/app_progress.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
+import 'package:calcquest/shared/theme/app_spacing.dart';
+import 'package:calcquest/shared/theme/app_typography.dart';
 import 'package:calcquest/shared/widgets/app_bottom_navigation_bar.dart';
+import 'package:calcquest/shared/widgets/app_progress_bar.dart';
 import 'package:calcquest/shared/widgets/math_card.dart';
 
 import '../../dashboard/presentation/dashboard_screen.dart';
@@ -25,6 +28,7 @@ class ModuleDetailScreen extends StatelessWidget {
         ),
         (route) => false,
       );
+      return;
     }
 
     if (index == 1) {
@@ -34,6 +38,7 @@ class ModuleDetailScreen extends StatelessWidget {
         ),
         (route) => false,
       );
+      return;
     }
 
     if (index == 2) {
@@ -43,6 +48,7 @@ class ModuleDetailScreen extends StatelessWidget {
         ),
         (route) => false,
       );
+      return;
     }
 
     if (index == 3) {
@@ -165,7 +171,8 @@ class ModuleDetailScreen extends StatelessWidget {
       return 'Desbloqueada';
     }
 
-    if (lesson.id == 'funcoes' && AppProgress.functionsCompleted) {
+    if (lesson.id == 'funcoes' &&
+        AppProgress.functionsCompleted) {
       return 'Concluída';
     }
 
@@ -195,26 +202,50 @@ class ModuleDetailScreen extends StatelessWidget {
     return lesson.isUnlocked;
   }
 
-  Color _getLessonStatusColor(LessonData lesson) {
-    if (lesson.id == 'algebra-fundamental' &&
-        AppProgress.algebraFundamentalCompleted) {
-      return AppColors.primary;
+  bool _isLessonCompleted(LessonData lesson) {
+    if (lesson.id == 'algebra-fundamental') {
+      return AppProgress.algebraFundamentalCompleted;
     }
 
-    if (lesson.id == 'equacoes-inequacoes' &&
-        AppProgress.algebraFundamentalCompleted) {
-      return AppColors.primary;
+    if (lesson.id == 'equacoes-inequacoes') {
+      return AppProgress.equationsAndInequationsCompleted;
     }
 
-    if (lesson.id == 'funcoes' &&
-        AppProgress.equationsAndInequationsCompleted) {
-      return AppColors.primary;
+    if (lesson.id == 'funcoes') {
+      return AppProgress.functionsCompleted;
     }
 
-    return lesson.isUnlocked ? AppColors.primary : AppColors.textMuted;
+    return false;
   }
 
-  void _handleLessonTap(BuildContext context, LessonData lesson) {
+  Color _getLessonStatusColor(LessonData lesson) {
+    if (_isLessonCompleted(lesson)) {
+      return AppColors.success;
+    }
+
+    if (_isLessonUnlocked(lesson)) {
+      return AppColors.primary;
+    }
+
+    return AppColors.locked;
+  }
+
+  MathCardState _getLessonCardState(LessonData lesson) {
+    if (_isLessonCompleted(lesson)) {
+      return MathCardState.completed;
+    }
+
+    if (_isLessonUnlocked(lesson)) {
+      return MathCardState.normal;
+    }
+
+    return MathCardState.locked;
+  }
+
+  void _handleLessonTap(
+    BuildContext context,
+    LessonData lesson,
+  ) {
     if (lesson.id == 'algebra-fundamental') {
       _goToLesson(context);
       return;
@@ -231,120 +262,125 @@ class ModuleDetailScreen extends StatelessWidget {
       _goToFunctionsLesson(context);
       return;
     }
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Esta aula ainda está bloqueada.'),
-      ),
-    );
   }
 
   @override
   Widget build(BuildContext context) {
     final module = mockModules.first;
+    final progress = _moduleProgressValue();
+    final moduleCompleted = progress >= 1;
 
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(24, 32, 24, 0),
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.screenHorizontal,
+            AppSpacing.screenTop,
+            AppSpacing.screenHorizontal,
+            0,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 module.title,
-                style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.textPrimary,
-                ),
+                style: AppTypography.headingMedium,
               ),
-              const SizedBox(height: 8),
-              const Text(
+              const SizedBox(height: AppSpacing.xs),
+              Text(
                 'Construa a base necessária para estudar Cálculo.',
-                style: TextStyle(
-                  fontSize: 14,
-                  height: 1.4,
-                  color: AppColors.textSecondary,
-                ),
+                style: AppTypography.bodyMedium,
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: AppSpacing.lg),
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.all(20),
+                padding: const EdgeInsets.all(
+                  AppSpacing.cardPaddingLarge,
+                ),
                 decoration: BoxDecoration(
                   color: AppColors.primary,
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(
+                    AppSpacing.radiusXLarge,
+                  ),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: AppColors.shadow,
+                      blurRadius: 16,
+                      offset: Offset(0, 8),
+                    ),
+                  ],
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Text(
+                    Text(
                       'Progresso do módulo',
-                      style: TextStyle(
-                        fontSize: 14,
+                      style: AppTypography.bodyMedium.copyWith(
                         color: AppColors.primaryLight,
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: AppSpacing.xs),
                     Text(
                       _moduleProgressText(),
-                      style: const TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.w700,
+                      style: AppTypography.displayLarge.copyWith(
                         color: AppColors.white,
                       ),
                     ),
-                    const SizedBox(height: 8),
-                    LinearProgressIndicator(
-                      value: _moduleProgressValue(),
-                      minHeight: 6,
-                      borderRadius: BorderRadius.circular(12),
-                      backgroundColor: AppColors.primaryLight,
-                      color: AppColors.white,
+                    const SizedBox(height: AppSpacing.sm),
+                    AppProgressBar(
+                      value: progress,
+                      state: moduleCompleted
+                          ? AppProgressBarState.success
+                          : AppProgressBarState.normal,
+                      height: 8,
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: AppSpacing.sm),
                     Text(
                       _moduleProgressDescription(),
-                      style: const TextStyle(
-                        fontSize: 13,
-                        height: 1.3,
+                      style: AppTypography.bodySmall.copyWith(
                         color: AppColors.primaryLight,
                       ),
                     ),
                   ],
                 ),
               ),
-              const SizedBox(height: 20),
-              const Text(
+              const SizedBox(height: AppSpacing.lg),
+              Text(
                 'Aulas',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.textPrimary,
-                ),
+                style: AppTypography.titleLarge,
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: AppSpacing.sm),
               Expanded(
                 child: ListView.separated(
-                  padding: const EdgeInsets.only(bottom: 24),
+                  padding: const EdgeInsets.only(
+                    bottom: AppSpacing.lg,
+                  ),
                   itemCount: module.lessons.length,
                   separatorBuilder: (context, index) =>
-                      const SizedBox(height: 16),
+                      const SizedBox(
+                    height: AppSpacing.md,
+                  ),
                   itemBuilder: (context, index) {
                     final lesson = module.lessons[index];
-                    final isUnlocked = _isLessonUnlocked(lesson);
+                    final isUnlocked =
+                        _isLessonUnlocked(lesson);
 
                     return MathCard(
                       title: lesson.title,
                       subtitle: lesson.subtitle,
                       symbol: lesson.symbol,
                       status: _getLessonStatus(lesson),
-                      statusColor: _getLessonStatusColor(lesson),
+                      statusColor:
+                          _getLessonStatusColor(lesson),
+                      state: _getLessonCardState(lesson),
                       onTap: isUnlocked
                           ? () {
-                              _handleLessonTap(context, lesson);
+                              _handleLessonTap(
+                                context,
+                                lesson,
+                              );
                             }
                           : null,
                     );

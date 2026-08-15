@@ -2,7 +2,10 @@
 
 import 'package:calcquest/shared/state/app_progress.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
+import 'package:calcquest/shared/theme/app_spacing.dart';
+import 'package:calcquest/shared/theme/app_typography.dart';
 import 'package:calcquest/shared/widgets/app_bottom_navigation_bar.dart';
+import 'package:calcquest/shared/widgets/app_progress_bar.dart';
 import 'package:calcquest/shared/widgets/math_card.dart';
 
 import '../../dashboard/presentation/dashboard_screen.dart';
@@ -22,6 +25,7 @@ class CalculusOneDetailScreen extends StatelessWidget {
         ),
         (route) => false,
       );
+      return;
     }
 
     if (index == 1) {
@@ -31,6 +35,7 @@ class CalculusOneDetailScreen extends StatelessWidget {
         ),
         (route) => false,
       );
+      return;
     }
 
     if (index == 2) {
@@ -40,6 +45,7 @@ class CalculusOneDetailScreen extends StatelessWidget {
         ),
         (route) => false,
       );
+      return;
     }
 
     if (index == 3) {
@@ -63,15 +69,9 @@ class CalculusOneDetailScreen extends StatelessWidget {
   void _showContinuityMessage(BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text('Aula de Continuidade será criada na próxima etapa.'),
-      ),
-    );
-  }
-
-  void _showLockedMessage(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Esta aula ainda está bloqueada.'),
+        content: Text(
+          'Aula de Continuidade será criada na próxima etapa.',
+        ),
       ),
     );
   }
@@ -102,134 +102,149 @@ class CalculusOneDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final limitsCompleted = AppProgress.limitsCompleted;
+
     final limitsStatus =
-        AppProgress.limitsCompleted ? 'Concluída' : 'Comece aqui';
+        limitsCompleted ? 'Concluída' : 'Comece aqui';
 
     final continuityStatus =
-        AppProgress.limitsCompleted ? 'Desbloqueada' : 'Bloqueado';
+        limitsCompleted ? 'Desbloqueada' : 'Bloqueado';
+
+    final progress = _moduleProgressValue();
 
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(24, 40, 24, 0),
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.screenHorizontal,
+            AppSpacing.screenTop,
+            AppSpacing.screenHorizontal,
+            0,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
+              Text(
                 'Cálculo I',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.textPrimary,
-                ),
+                style: AppTypography.headingMedium,
               ),
-              const SizedBox(height: 8),
-              const Text(
+              const SizedBox(height: AppSpacing.xs),
+              Text(
                 'Estude limites, continuidade e derivadas passo a passo.',
-                style: TextStyle(
-                  fontSize: 14,
-                  height: 1.4,
-                  color: AppColors.textSecondary,
-                ),
+                style: AppTypography.bodyMedium,
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: AppSpacing.lg),
               Container(
                 width: double.infinity,
-                height: 126,
-                padding: const EdgeInsets.all(20),
+                padding: const EdgeInsets.all(
+                  AppSpacing.cardPaddingLarge,
+                ),
                 decoration: BoxDecoration(
                   color: AppColors.primary,
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(
+                    AppSpacing.radiusXLarge,
+                  ),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: AppColors.shadow,
+                      blurRadius: 16,
+                      offset: Offset(0, 8),
+                    ),
+                  ],
                 ),
                 child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                    Text(
                       'Progresso do módulo',
-                      style: TextStyle(
-                        fontSize: 14,
+                      style: AppTypography.bodyMedium.copyWith(
                         color: AppColors.primaryLight,
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: AppSpacing.xs),
                     Text(
                       _moduleProgressText(),
-                      style: const TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.w700,
+                      style: AppTypography.displayLarge.copyWith(
                         color: AppColors.white,
                       ),
                     ),
-                    const SizedBox(height: 8),
-                    LinearProgressIndicator(
-                      value: _moduleProgressValue(),
-                      minHeight: 6,
-                      borderRadius: BorderRadius.circular(12),
-                      backgroundColor: AppColors.primaryLight,
-                      color: AppColors.white,
+                    const SizedBox(height: AppSpacing.sm),
+                    AppProgressBar(
+                      value: progress,
+                      state: progress >= 1
+                          ? AppProgressBarState.success
+                          : AppProgressBarState.normal,
+                      height: 8,
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: AppSpacing.sm),
                     Text(
                       _moduleProgressDescription(),
-                      style: const TextStyle(
-                        fontSize: 13,
+                      style: AppTypography.bodySmall.copyWith(
                         color: AppColors.primaryLight,
                       ),
                     ),
                   ],
                 ),
               ),
-              const SizedBox(height: 24),
-              const Text(
+              const SizedBox(height: AppSpacing.lg),
+              Text(
                 'Aulas',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.textPrimary,
-                ),
+                style: AppTypography.titleLarge,
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: AppSpacing.sm),
               Expanded(
                 child: ListView(
+                  padding: const EdgeInsets.only(
+                    bottom: AppSpacing.lg,
+                  ),
                   children: [
                     MathCard(
                       title: 'Aula 1 — Limites',
-                      subtitle: 'Ideia intuitiva, notação e cálculo inicial',
+                      subtitle:
+                          'Ideia intuitiva, notação e cálculo inicial',
                       symbol: 'lim',
                       status: limitsStatus,
-                      statusColor: AppColors.primary,
+                      statusColor: limitsCompleted
+                          ? AppColors.success
+                          : AppColors.primary,
+                      state: limitsCompleted
+                          ? MathCardState.completed
+                          : MathCardState.normal,
                       onTap: () {
                         _goToLimitsLesson(context);
                       },
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: AppSpacing.md),
                     MathCard(
                       title: 'Aula 2 — Continuidade',
-                      subtitle: 'Funções contínuas e pontos de descontinuidade',
+                      subtitle:
+                          'Funções contínuas e pontos de descontinuidade',
                       symbol: 'C',
                       status: continuityStatus,
-                      statusColor: AppProgress.limitsCompleted
+                      statusColor: limitsCompleted
                           ? AppColors.primary
-                          : AppColors.textMuted,
-                      onTap: AppProgress.limitsCompleted
+                          : AppColors.locked,
+                      state: limitsCompleted
+                          ? MathCardState.normal
+                          : MathCardState.locked,
+                      onTap: limitsCompleted
                           ? () {
                               _showContinuityMessage(context);
                             }
-                          : () {
-                              _showLockedMessage(context);
-                            },
+                          : null,
                     ),
-                    const SizedBox(height: 16),
-                    MathCard(
+                    const SizedBox(height: AppSpacing.md),
+                    const MathCard(
                       title: 'Aula 3 — Derivadas',
-                      subtitle: 'Taxa de variação e reta tangente',
+                      subtitle:
+                          'Taxa de variação e reta tangente',
                       symbol: "f'",
                       status: 'Bloqueado',
-                      statusColor: AppColors.textMuted,
-                      onTap: () {
-                        _showLockedMessage(context);
-                      },
+                      statusColor: AppColors.locked,
+                      state: MathCardState.locked,
+                      onTap: null,
                     ),
                   ],
                 ),

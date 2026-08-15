@@ -3,6 +3,8 @@
 import 'package:calcquest/shared/data/mock_learning_data.dart';
 import 'package:calcquest/shared/state/app_progress.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
+import 'package:calcquest/shared/theme/app_spacing.dart';
+import 'package:calcquest/shared/theme/app_typography.dart';
 import 'package:calcquest/shared/widgets/app_bottom_navigation_bar.dart';
 import 'package:calcquest/shared/widgets/math_card.dart';
 
@@ -22,6 +24,7 @@ class LearningPathScreen extends StatelessWidget {
           builder: (_) => const DashboardScreen(),
         ),
       );
+      return;
     }
 
     if (index == 1) {
@@ -34,6 +37,7 @@ class LearningPathScreen extends StatelessWidget {
           builder: (_) => const StatisticsScreen(),
         ),
       );
+      return;
     }
 
     if (index == 3) {
@@ -106,6 +110,8 @@ class LearningPathScreen extends StatelessWidget {
       if (AppProgress.functionsCompleted) {
         return 'Desbloqueado';
       }
+
+      return 'Bloqueado';
     }
 
     return module.status;
@@ -113,6 +119,10 @@ class LearningPathScreen extends StatelessWidget {
 
   Color _getModuleStatusColor(ModuleData module) {
     if (module.id == 'fundamentos') {
+      if (_completedFundamentalsLessons() == 3) {
+        return AppColors.success;
+      }
+
       return AppColors.primary;
     }
 
@@ -120,17 +130,41 @@ class LearningPathScreen extends StatelessWidget {
       return AppColors.primary;
     }
 
-    return module.isUnlocked ? AppColors.primary : AppColors.textMuted;
+    return AppColors.locked;
   }
 
-  VoidCallback? _getModuleTap(BuildContext context, ModuleData module) {
+  MathCardState _getModuleCardState(ModuleData module) {
+    if (module.id == 'fundamentos') {
+      if (_completedFundamentalsLessons() == 3) {
+        return MathCardState.completed;
+      }
+
+      return MathCardState.normal;
+    }
+
+    if (module.id == 'calculo-1') {
+      if (AppProgress.functionsCompleted) {
+        return MathCardState.normal;
+      }
+
+      return MathCardState.locked;
+    }
+
+    return MathCardState.locked;
+  }
+
+  VoidCallback? _getModuleTap(
+    BuildContext context,
+    ModuleData module,
+  ) {
     if (module.id == 'fundamentos') {
       return () {
         _goToModuleDetail(context);
       };
     }
 
-    if (module.id == 'calculo-1' && AppProgress.functionsCompleted) {
+    if (module.id == 'calculo-1' &&
+        AppProgress.functionsCompleted) {
       return () {
         _goToCalculusOne(context);
       };
@@ -145,32 +179,35 @@ class LearningPathScreen extends StatelessWidget {
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(24, 40, 24, 0),
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.screenHorizontal,
+            AppSpacing.screenTop,
+            AppSpacing.screenHorizontal,
+            0,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
+              Text(
                 'Trilha de Aprendizagem',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.textPrimary,
-                ),
+                style: AppTypography.headingMedium,
               ),
-              const SizedBox(height: 8),
-              const Text(
+              const SizedBox(height: AppSpacing.xs),
+              Text(
                 'Avance módulo por módulo até dominar o Cálculo.',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: AppColors.textSecondary,
-                ),
+                style: AppTypography.bodyMedium,
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: AppSpacing.lg),
               Expanded(
                 child: ListView.separated(
+                  padding: const EdgeInsets.only(
+                    bottom: AppSpacing.lg,
+                  ),
                   itemCount: mockModules.length,
                   separatorBuilder: (context, index) =>
-                      const SizedBox(height: 16),
+                      const SizedBox(
+                    height: AppSpacing.md,
+                  ),
                   itemBuilder: (context, index) {
                     final module = mockModules[index];
 
@@ -180,7 +217,11 @@ class LearningPathScreen extends StatelessWidget {
                       symbol: module.symbol,
                       status: _getModuleStatus(module),
                       statusColor: _getModuleStatusColor(module),
-                      onTap: _getModuleTap(context, module),
+                      state: _getModuleCardState(module),
+                      onTap: _getModuleTap(
+                        context,
+                        module,
+                      ),
                     );
                   },
                 ),
