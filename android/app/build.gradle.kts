@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.calcquest"
+    namespace = "com.lucaszion01.calculotrivial"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -15,10 +15,8 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.example.calcquest"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
+        applicationId = "com.lucaszion01.calculotrivial"
+
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
@@ -27,8 +25,8 @@ android {
 
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
+            // Temporariamente usando debug signing.
+            // A assinatura de release será configurada antes da publicação.
             signingConfig = signingConfigs.getByName("debug")
         }
     }
@@ -36,7 +34,7 @@ android {
 
 kotlin {
     compilerOptions {
-        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
+        jvmTarget = org.gradle.jvm.dsl.JvmTarget.JVM_17
     }
 }
 

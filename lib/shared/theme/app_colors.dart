@@ -4,7 +4,7 @@ class AppColors {
   AppColors._();
 
   // =========================================================
-  // BRAND — CALCIVIUM
+  // BRAND — CÁLCULO TRIVIAL
   // =========================================================
 
   static const Color primary = Color(0xFF2563EB);

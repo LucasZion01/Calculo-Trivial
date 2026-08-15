@@ -16,7 +16,7 @@ class LoginScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text(
-                'Calcivium',
+                'Cálculo Trivial',
                 style: TextStyle(
                   fontSize: 36,
                   fontWeight: FontWeight.w700,
@@ -25,7 +25,7 @@ class LoginScreen extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               const Text(
-                'Domine o Cálculo. Evolua como Engenheiro.',
+                'Domine o cálculo. Evolua além.',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 16,
@@ -143,6 +143,3 @@ class LoginScreen extends StatelessWidget {
     );
   }
 }
-
-
-

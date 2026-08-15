@@ -156,7 +156,6 @@ class ProfileScreen extends StatelessWidget {
                 style: AppTypography.bodyMedium,
               ),
               const SizedBox(height: AppSpacing.lg),
-
               _buildInfoCard(
                 icon: Icons.military_tech_outlined,
                 iconColor: AppColors.primary,
@@ -166,15 +165,12 @@ class ProfileScreen extends StatelessWidget {
                 description:
                     'Continue estudando para evoluir seu perfil.',
               ),
-
               const SizedBox(height: AppSpacing.lg),
-
               Text(
                 'Conquistas',
                 style: AppTypography.titleLarge,
               ),
               const SizedBox(height: AppSpacing.sm),
-
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(
@@ -225,7 +221,7 @@ class ProfileScreen extends StatelessWidget {
                           ),
                           const SizedBox(height: AppSpacing.xs),
                           Text(
-                            'Você iniciou sua jornada no Calcivium.',
+                            'Você iniciou sua jornada no Cálculo Trivial.',
                             style: AppTypography.bodySmall,
                           ),
                         ],
@@ -234,9 +230,7 @@ class ProfileScreen extends StatelessWidget {
                   ],
                 ),
               ),
-
               const SizedBox(height: AppSpacing.md),
-
               Material(
                 color: Colors.transparent,
                 borderRadius: BorderRadius.circular(

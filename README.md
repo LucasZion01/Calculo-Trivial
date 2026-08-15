@@ -1,12 +1,12 @@
-# Calcivium
+# Cálculo Trivial
 
 **Aprender Cálculo como uma jornada, não como uma sequência de fórmulas.**
 
-Calcivium é um aplicativo educacional desenvolvido em Flutter para tornar o estudo de Cálculo mais progressivo, organizado e envolvente.
+Cálculo Trivial é um aplicativo educacional desenvolvido em Flutter para tornar o estudo de Cálculo mais progressivo, organizado e envolvente.
 
 O projeto combina conteúdos de aprendizagem, exercícios, progressão por módulos e elementos de gamificação em uma experiência pensada especialmente para estudantes que estão construindo sua base matemática para disciplinas de Cálculo.
 
-> O Calcivium está em desenvolvimento ativo. Este repositório representa a evolução técnica do projeto e ainda não corresponde a uma versão final de produção.
+> O Cálculo Trivial está em desenvolvimento ativo. Este repositório representa a evolução técnica do projeto e ainda não corresponde a uma versão final de produção.
 
 ---
 
@@ -14,7 +14,7 @@ O projeto combina conteúdos de aprendizagem, exercícios, progressão por módu
 
 Cálculo costuma representar uma das primeiras grandes dificuldades na formação de estudantes das áreas de ciência, tecnologia e engenharia.
 
-O Calcivium nasceu da ideia de transformar esse processo em uma jornada de aprendizagem estruturada: o estudante avança por fundamentos matemáticos, conteúdos de Cálculo, exercícios e desafios enquanto acompanha sua própria evolução.
+O Cálculo Trivial nasceu da ideia de transformar esse processo em uma jornada de aprendizagem estruturada: o estudante avança por fundamentos matemáticos, conteúdos de Cálculo, exercícios e desafios enquanto acompanha sua própria evolução.
 
 Em vez de funcionar apenas como uma coleção de questões, o aplicativo busca conectar três elementos:
 
@@ -51,7 +51,7 @@ A arquitetura foi organizada para permitir a expansão gradual dessas funcionali
 
 ## Trilha de aprendizagem
 
-O Calcivium utiliza uma estrutura progressiva de conteúdos.
+O Cálculo Trivial utiliza uma estrutura progressiva de conteúdos.
 
 Entre os conteúdos atualmente representados no projeto estão fundamentos necessários para avançar em Cálculo, como:
 
@@ -84,7 +84,7 @@ Esses sistemas ainda estão sendo desenvolvidos e refinados.
 
 ## Design System
 
-O Calcivium possui um Design System próprio para manter consistência visual e facilitar a evolução da interface.
+O Cálculo Trivial possui um Design System próprio para manter consistência visual e facilitar a evolução da interface.
 
 A estrutura compartilhada inclui componentes e definições para:
 

@@ -2,9 +2,9 @@ flutter_launcher_icons:
   android: true
   ios: false
 
-  image_path: "assets/branding/calcivium_icon_1024.png"
+  image_path: "assets/branding/calculo_trivial_icon_1024.png"
 
   adaptive_icon_background: "#07111F"
-  adaptive_icon_foreground: "assets/branding/calcivium_icon_1024.png"
+  adaptive_icon_foreground: "assets/branding/calculo_trivial_icon_1024.png"
 
   min_sdk_android: 21
