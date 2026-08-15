@@ -1,45 +1,232 @@
+# ============================================================
+# Calcivium
+# Flutter / Dart / Android / iOS
+# Security-conscious Git ignore rules
+# ============================================================
+
+
+# ------------------------------------------------------------
 # Miscellaneous
+# ------------------------------------------------------------
+
 *.class
 *.log
 *.pyc
 *.swp
+
 .DS_Store
+Thumbs.db
+
 .atom/
 .build/
 .buildlog/
-.history
+.history/
 .svn/
 .swiftpm/
 migrate_working_dir/
 
-# IntelliJ related
+
+# ------------------------------------------------------------
+# IntelliJ / Android Studio
+# ------------------------------------------------------------
+
 *.iml
 *.ipr
 *.iws
+
 .idea/
 
-# The .vscode folder contains launch configuration and tasks you configure in
-# VS Code which you may wish to be included in version control, so this line
-# is commented out by default.
-#.vscode/
 
-# Flutter/Dart/Pub related
+# ------------------------------------------------------------
+# VS Code
+# ------------------------------------------------------------
+
+# Mantido fora do Git para evitar configurações locais.
+.vscode/
+
+
+# ------------------------------------------------------------
+# Flutter / Dart / Pub
+# ------------------------------------------------------------
+
 **/doc/api/
 **/ios/Flutter/.last_build_id
+
 .dart_tool/
+.flutter-plugins
 .flutter-plugins-dependencies
+
 .pub-cache/
 .pub/
-/build/
-/coverage/
 
-# Symbolication related
+build/
+coverage/
+
+.packages
+
+
+# ------------------------------------------------------------
+# Flutter generated / ephemeral files
+# ------------------------------------------------------------
+
+**/flutter/ephemeral/
+**/Flutter/ephemeral/
+
+**/GeneratedPluginRegistrant.*
+**/generated_plugin_registrant.*
+**/generated_plugins.cmake
+
+ios/Flutter/Generated.xcconfig
+ios/Flutter/flutter_export_environment.sh
+
+
+# ------------------------------------------------------------
+# Android local / generated files
+# ------------------------------------------------------------
+
+android/.gradle/
+android/.kotlin/
+
+android/local.properties
+
+android/app/debug/
+android/app/profile/
+android/app/release/
+
+*.apk
+*.aab
+
+
+# ------------------------------------------------------------
+# Android signing / release credentials
+# NEVER commit these files
+# ------------------------------------------------------------
+
+*.jks
+*.keystore
+
+key.properties
+android/key.properties
+
+*.p12
+*.pfx
+*.pem
+*.key
+
+upload-keystore.*
+release-keystore.*
+debug-keystore.*
+
+
+# ------------------------------------------------------------
+# Environment variables / secrets
+# ------------------------------------------------------------
+
+.env
+.env.*
+!.env.example
+
+*.env
+
+secrets/
+secret/
+credentials/
+credentials.json
+
+*.secrets.json
+*.credentials.json
+
+
+# ------------------------------------------------------------
+# Service accounts / private credentials
+# ------------------------------------------------------------
+
+*service-account*.json
+*service_account*.json
+
+serviceAccountKey.json
+service-account.json
+
+firebase-adminsdk-*.json
+
+*-private-key.json
+*private_key*.json
+
+
+# ------------------------------------------------------------
+# Firebase client configuration
+#
+# Estes arquivos normalmente contêm configurações de cliente,
+# não credenciais administrativas. Para este repositório,
+# ficam privados por segurança e controle de ambiente.
+# ------------------------------------------------------------
+
+google-services.json
+**/google-services.json
+
+GoogleService-Info.plist
+**/GoogleService-Info.plist
+
+firebase_options.dart
+**/firebase_options.dart
+
+
+# ------------------------------------------------------------
+# Firebase App Check / debug tokens
+# ------------------------------------------------------------
+
+*app-check*
+*app_check*
+
+appcheck-debug-token*
+app_check_debug_token*
+
+firebase-debug.log
+firebase-debug.*
+
+
+# ------------------------------------------------------------
+# RevenueCat
+#
+# Arquivos locais usados futuramente para armazenar chaves
+# ou configurações privadas não devem entrar no Git.
+# ------------------------------------------------------------
+
+revenuecat.env
+revenuecat.json
+revenuecat.config.json
+
+*revenuecat-secret*
+*revenuecat_private*
+
+purchases.env
+
+
+# ------------------------------------------------------------
+# Apple certificates / provisioning profiles
+# ------------------------------------------------------------
+
+*.mobileprovision
+*.cer
+*.p8
+
+
+# ------------------------------------------------------------
+# Symbolication / obfuscation
+# ------------------------------------------------------------
+
 app.*.symbols
-
-# Obfuscation related
 app.*.map.json
 
-# Android Studio will place build artifacts here
-/android/app/debug
-/android/app/profile
-/android/app/release
+
+# ------------------------------------------------------------
+# Temporary / backup files
+# ------------------------------------------------------------
+
+*.tmp
+*.temp
+*.bak
+*.backup
+*.orig
+
+~$*
