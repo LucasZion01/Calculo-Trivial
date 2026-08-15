@@ -1,6 +1,15 @@
 ﻿import 'package:flutter/material.dart';
 
 import 'package:calcquest/shared/theme/app_colors.dart';
+import 'package:calcquest/shared/theme/app_spacing.dart';
+import 'package:calcquest/shared/theme/app_typography.dart';
+
+enum MathCardState {
+  normal,
+  selected,
+  completed,
+  locked,
+}
 
 class MathCard extends StatefulWidget {
   final String title;
@@ -9,6 +18,7 @@ class MathCard extends StatefulWidget {
   final String? status;
   final Color? statusColor;
   final VoidCallback? onTap;
+  final MathCardState state;
 
   const MathCard({
     super.key,
@@ -18,6 +28,7 @@ class MathCard extends StatefulWidget {
     this.status,
     this.statusColor,
     this.onTap,
+    this.state = MathCardState.normal,
   });
 
   @override
@@ -25,101 +36,211 @@ class MathCard extends StatefulWidget {
 }
 
 class _MathCardState extends State<MathCard> {
-  bool isPressed = false;
+  bool _isPressed = false;
+
+  bool get _isLocked =>
+      widget.state == MathCardState.locked || widget.onTap == null;
 
   void _setPressed(bool value) {
-    if (widget.onTap == null) return;
+    if (_isLocked) return;
 
     setState(() {
-      isPressed = value;
+      _isPressed = value;
     });
+  }
+
+  Color get _backgroundColor {
+    switch (widget.state) {
+      case MathCardState.selected:
+        return AppColors.selectedBackground;
+
+      case MathCardState.completed:
+        return AppColors.successLight;
+
+      case MathCardState.locked:
+        return AppColors.lockedBackground;
+
+      case MathCardState.normal:
+        return AppColors.surface;
+    }
+  }
+
+  Color get _borderColor {
+    switch (widget.state) {
+      case MathCardState.selected:
+        return AppColors.primary;
+
+      case MathCardState.completed:
+        return AppColors.success;
+
+      case MathCardState.locked:
+        return AppColors.border;
+
+      case MathCardState.normal:
+        return AppColors.border;
+    }
+  }
+
+  Color get _symbolBackgroundColor {
+    switch (widget.state) {
+      case MathCardState.completed:
+        return AppColors.successLight;
+
+      case MathCardState.locked:
+        return AppColors.lockedBackground;
+
+      case MathCardState.selected:
+      case MathCardState.normal:
+        return AppColors.selectedBackground;
+    }
+  }
+
+  Color get _symbolColor {
+    switch (widget.state) {
+      case MathCardState.completed:
+        return AppColors.success;
+
+      case MathCardState.locked:
+        return AppColors.locked;
+
+      case MathCardState.selected:
+      case MathCardState.normal:
+        return AppColors.primary;
+    }
+  }
+
+  Color get _titleColor {
+    if (_isLocked) {
+      return AppColors.textDisabled;
+    }
+
+    return AppColors.textPrimary;
+  }
+
+  Color get _subtitleColor {
+    if (_isLocked) {
+      return AppColors.textDisabled;
+    }
+
+    return AppColors.textSecondary;
   }
 
   @override
   Widget build(BuildContext context) {
     return AnimatedScale(
-      scale: isPressed ? 0.98 : 1.0,
+      scale: _isPressed ? 0.985 : 1,
       duration: const Duration(milliseconds: 120),
       curve: Curves.easeOut,
       child: Material(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(18),
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(
+          AppSpacing.radiusLarge,
+        ),
         child: InkWell(
-          onTap: widget.onTap,
+          onTap: _isLocked ? null : widget.onTap,
           onTapDown: (_) => _setPressed(true),
           onTapUp: (_) => _setPressed(false),
           onTapCancel: () => _setPressed(false),
-          borderRadius: BorderRadius.circular(18),
-          child: Container(
+          borderRadius: BorderRadius.circular(
+            AppSpacing.radiusLarge,
+          ),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 180),
+            curve: Curves.easeOut,
             width: double.infinity,
             constraints: const BoxConstraints(
               minHeight: 96,
             ),
-            padding: const EdgeInsets.all(18),
+            padding: const EdgeInsets.all(
+              AppSpacing.cardPaddingLarge,
+            ),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(18),
-              border: Border.all(
-                color: AppColors.border,
+              color: _backgroundColor,
+              borderRadius: BorderRadius.circular(
+                AppSpacing.radiusLarge,
               ),
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.textPrimary.withValues(alpha: 0.04),
-                  blurRadius: 12,
-                  offset: const Offset(0, 6),
-                ),
-              ],
+              border: Border.all(
+                color: _borderColor,
+                width: widget.state == MathCardState.selected ? 2 : 1,
+              ),
+              boxShadow: _isLocked
+                  ? const []
+                  : [
+                      const BoxShadow(
+                        color: AppColors.shadow,
+                        blurRadius: 12,
+                        offset: Offset(0, 6),
+                      ),
+                    ],
             ),
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(
                   width: 48,
                   height: 48,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    color: AppColors.selectedBackground,
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                  child: Text(
-                    widget.symbol,
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.primary,
+                    color: _symbolBackgroundColor,
+                    borderRadius: BorderRadius.circular(
+                      AppSpacing.radiusMedium,
                     ),
                   ),
+                  child: _isLocked
+                      ? const Icon(
+                          Icons.lock_outline_rounded,
+                          size: AppSpacing.iconLarge,
+                          color: AppColors.locked,
+                        )
+                      : Text(
+                          widget.symbol,
+                          textAlign: TextAlign.center,
+                          style: AppTypography.headingSmall.copyWith(
+                            color: _symbolColor,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
                 ),
-                const SizedBox(width: 14),
+                const SizedBox(width: AppSpacing.sm),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
                         widget.title,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.textPrimary,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTypography.titleMedium.copyWith(
+                          color: _titleColor,
                         ),
                       ),
-                      const SizedBox(height: 6),
+                      const SizedBox(height: AppSpacing.xs),
                       Text(
                         widget.subtitle,
-                        style: const TextStyle(
-                          fontSize: 13,
-                          color: AppColors.textSecondary,
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTypography.bodySmall.copyWith(
+                          color: _subtitleColor,
                         ),
                       ),
                     ],
                   ),
                 ),
                 if (widget.status != null) ...[
-                  const SizedBox(width: 12),
-                  Text(
-                    widget.status!,
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      color: widget.statusColor ?? AppColors.textSecondary,
+                  const SizedBox(width: AppSpacing.sm),
+                  Flexible(
+                    child: Text(
+                      widget.status!,
+                      maxLines: 2,
+                      textAlign: TextAlign.end,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTypography.labelSmall.copyWith(
+                        color: widget.statusColor ??
+                            (_isLocked
+                                ? AppColors.locked
+                                : AppColors.textSecondary),
+                      ),
                     ),
                   ),
                 ],
