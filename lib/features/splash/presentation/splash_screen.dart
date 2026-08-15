@@ -2,8 +2,6 @@
 
 import 'package:flutter/material.dart';
 
-import 'package:calcquest/shared/theme/app_colors.dart';
-
 import '../../auth/presentation/login_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -14,6 +12,11 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  static const Color _navy = Color(0xFF07111F);
+  static const Color _navyLight = Color(0xFF0D1B2A);
+  static const Color _blue = Color(0xFF2563EB);
+  static const Color _cyan = Color(0xFF06B6D4);
+
   @override
   void initState() {
     super.initState();
@@ -31,40 +34,119 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      backgroundColor: AppColors.background,
-      body: SafeArea(
-        child: Center(
+    return Scaffold(
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              _navy,
+              _navyLight,
+            ],
+          ),
+        ),
+        child: SafeArea(
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 24),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 32,
+              vertical: 24,
+            ),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  'Calcivium',
-                  style: TextStyle(
-                    fontSize: 36,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.textPrimary,
+                const Spacer(flex: 3),
+
+                Container(
+                  width: 156,
+                  height: 156,
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(38),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Color(0x3306B6D4),
+                        blurRadius: 32,
+                        spreadRadius: 4,
+                      ),
+                    ],
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(32),
+                    child: Image.asset(
+                      'assets/branding/calcivium_icon_1024.png',
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
-                SizedBox(height: 16),
-                Text(
-                  'Domine o Cálculo. Evolua como Engenheiro.',
+
+                const SizedBox(height: 28),
+
+                const Text(
+                  'Calcivium',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 38,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: -0.8,
+                    color: Colors.white,
+                  ),
+                ),
+
+                const SizedBox(height: 12),
+
+                const Text(
+                  'Domine o cálculo. Evolua além.',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 16,
-                    color: AppColors.textSecondary,
+                    height: 1.4,
+                    fontWeight: FontWeight.w500,
+                    color: Color(0xFFB7C4D6),
                   ),
                 ),
-                SizedBox(height: 32),
-                Text(
-                  'Carregando...',
+
+                const SizedBox(height: 8),
+
+                Container(
+                  width: 64,
+                  height: 3,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(999),
+                    gradient: const LinearGradient(
+                      colors: [
+                        _blue,
+                        _cyan,
+                      ],
+                    ),
+                  ),
+                ),
+
+                const Spacer(flex: 3),
+
+                const SizedBox(
+                  width: 24,
+                  height: 24,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2.5,
+                    valueColor: AlwaysStoppedAnimation<Color>(_cyan),
+                  ),
+                ),
+
+                const SizedBox(height: 14),
+
+                const Text(
+                  'Preparando sua jornada...',
+                  textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 14,
-                    color: AppColors.textMuted,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                    color: Color(0xFF8291A6),
                   ),
                 ),
+
+                const SizedBox(height: 18),
               ],
             ),
           ),
@@ -73,6 +155,3 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 }
-
-
-
