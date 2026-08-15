@@ -101,18 +101,18 @@ class _RewardScreenState extends State<RewardScreen> {
 
   String get _rewardDescription {
     if (widget.completedLessonId == 'limites') {
-      return 'VocÃª concluiu a sequÃªncia universitÃ¡ria de Limites.';
+      return 'Você concluiu a sequência universitária de Limites.';
     }
 
     if (widget.completedLessonId == 'funcoes') {
-      return 'VocÃª concluiu a sequÃªncia de FunÃ§Ãµes e finalizou o mÃ³dulo Fundamentos MatemÃ¡ticos.';
+      return 'Você concluiu a sequência de Funções e finalizou o módulo Fundamentos Matemáticos.';
     }
 
     if (widget.completedLessonId == 'equacoes-inequacoes') {
-      return 'VocÃª concluiu a sequÃªncia de EquaÃ§Ãµes e InequaÃ§Ãµes.';
+      return 'Você concluiu a sequência de Equações e Inequações.';
     }
 
-    return 'VocÃª concluiu a sequÃªncia de Ãlgebra Fundamental.';
+    return 'Você concluiu a sequência de Álgebra Fundamental.';
   }
 
   Widget _buildRewardItem({
@@ -172,8 +172,8 @@ class _RewardScreenState extends State<RewardScreen> {
   @override
   Widget build(BuildContext context) {
     final progressText = widget.completedLessonId == 'funcoes'
-        ? 'MÃ³dulo concluÃ­do'
-        : 'Aula concluÃ­da';
+        ? 'Módulo concluído'
+        : 'Aula concluída';
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -193,7 +193,7 @@ class _RewardScreenState extends State<RewardScreen> {
                   borderRadius: BorderRadius.circular(32),
                 ),
                 child: const Text(
-                  'âˆ‘',
+                  '∑',
                   style: TextStyle(
                     fontSize: 56,
                     fontWeight: FontWeight.w800,
@@ -224,7 +224,7 @@ class _RewardScreenState extends State<RewardScreen> {
               const SizedBox(height: 32),
               _buildRewardItem(
                 icon: Icons.bolt_outlined,
-                title: 'ExperiÃªncia recebida',
+                title: 'Experiência recebida',
                 value: '+${widget.xpEarned} XP',
               ),
               const SizedBox(height: 14),

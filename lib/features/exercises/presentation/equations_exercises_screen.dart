@@ -198,7 +198,7 @@ class _EquationsExercisesScreenState extends State<EquationsExercisesScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'QuestÃ£o ${currentExerciseIndex + 1} de ${mockEquationsExercises.length}',
+                'Questão ${currentExerciseIndex + 1} de ${mockEquationsExercises.length}',
                 style: const TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.w600,
@@ -207,7 +207,7 @@ class _EquationsExercisesScreenState extends State<EquationsExercisesScreen> {
               ),
               const SizedBox(height: 8),
               const Text(
-                'Resolva a equaÃ§Ã£o ou inequaÃ§Ã£o.',
+                'Resolva a equação ou inequação.',
                 style: TextStyle(
                   fontSize: 14,
                   color: AppColors.textSecondary,
@@ -260,8 +260,9 @@ class _EquationsExercisesScreenState extends State<EquationsExercisesScreen> {
               ),
               const SizedBox(height: 16),
               PrimaryButton(
-                text:
-                    isLastExercise ? 'Finalizar exercÃ­cios' : 'PrÃ³xima questÃ£o',
+                text: isLastExercise
+                    ? 'Finalizar exercícios'
+                    : 'Próxima questão',
                 onPressed: _confirmAnswer,
               ),
               const SizedBox(height: 24),

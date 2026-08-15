@@ -135,7 +135,7 @@ class FunctionsLessonScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                'Aula 3 â€” FunÃ§Ãµes',
+                'Aula 3 — Funções',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w700,
@@ -144,7 +144,7 @@ class FunctionsLessonScreen extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               const Text(
-                'Entenda como uma funÃ§Ã£o relaciona uma entrada a uma saÃ­da.',
+                'Entenda como uma função relaciona uma entrada a uma saída.',
                 style: TextStyle(
                   fontSize: 14,
                   height: 1.4,
@@ -156,45 +156,45 @@ class FunctionsLessonScreen extends StatelessWidget {
                 child: ListView(
                   children: [
                     _buildConceptCard(
-                      title: 'O que Ã© uma funÃ§Ã£o?',
+                      title: 'O que é uma função?',
                       symbol: 'f',
                       content:
-                          'Uma funÃ§Ã£o Ã© uma regra que associa cada valor de entrada a um Ãºnico valor de saÃ­da. A entrada geralmente Ã© representada por x, e a saÃ­da por f(x).',
+                          'Uma função é uma regra que associa cada valor de entrada a um único valor de saída. A entrada geralmente é representada por x, e a saída por f(x).',
                     ),
                     const SizedBox(height: 16),
                     _buildConceptCard(
                       title: 'Exemplo',
                       symbol: 'f(x)',
                       content:
-                          'Na funÃ§Ã£o f(x) = 2x + 1, cada valor de x gera um valor de f(x). Se x = 3, entÃ£o f(3) = 2 Â· 3 + 1 = 7.',
+                          'Na função f(x) = 2x + 1, cada valor de x gera um valor de f(x). Se x = 3, então f(3) = 2 · 3 + 1 = 7.',
                     ),
                     const SizedBox(height: 16),
                     _buildConceptCard(
-                      title: 'DomÃ­nio',
+                      title: 'Domínio',
                       symbol: 'D',
                       content:
-                          'O domÃ­nio Ã© o conjunto dos valores que podem ser usados como entrada da funÃ§Ã£o.',
+                          'O domínio é o conjunto dos valores que podem ser usados como entrada da função.',
                     ),
                     const SizedBox(height: 16),
                     _buildConceptCard(
                       title: 'Imagem',
                       symbol: 'Im',
                       content:
-                          'A imagem Ã© o conjunto dos valores que podem aparecer como saÃ­da da funÃ§Ã£o.',
+                          'A imagem é o conjunto dos valores que podem aparecer como saída da função.',
                     ),
                     const SizedBox(height: 16),
                     _buildConceptCard(
                       title: 'Por que isso importa?',
-                      symbol: 'Ï€',
+                      symbol: 'π',
                       content:
-                          'FunÃ§Ãµes aparecem em limites, derivadas, integrais, grÃ¡ficos, movimento, crescimento, custo, receita e muitos problemas de engenharia.',
+                          'Funções aparecem em limites, derivadas, integrais, gráficos, movimento, crescimento, custo, receita e muitos problemas de engenharia.',
                     ),
                     const SizedBox(height: 24),
                   ],
                 ),
               ),
               PrimaryButton(
-                text: 'Iniciar exercÃ­cios',
+                text: 'Iniciar exercícios',
                 onPressed: () {
                   _goToExercises(context);
                 },

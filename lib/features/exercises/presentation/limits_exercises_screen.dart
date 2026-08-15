@@ -197,7 +197,7 @@ class _LimitsExercisesScreenState extends State<LimitsExercisesScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'QuestÃ£o ${currentExerciseIndex + 1} de ${mockLimitsExercises.length}',
+                'Questão ${currentExerciseIndex + 1} de ${mockLimitsExercises.length}',
                 style: const TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.w600,
@@ -206,7 +206,7 @@ class _LimitsExercisesScreenState extends State<LimitsExercisesScreen> {
               ),
               const SizedBox(height: 8),
               const Text(
-                'Resolva o limite usando a estratÃ©gia adequada.',
+                'Resolva o limite usando a estratégia adequada.',
                 style: TextStyle(
                   fontSize: 14,
                   color: AppColors.textSecondary,
@@ -259,8 +259,9 @@ class _LimitsExercisesScreenState extends State<LimitsExercisesScreen> {
               ),
               const SizedBox(height: 16),
               PrimaryButton(
-                text:
-                    isLastExercise ? 'Finalizar exercÃ­cios' : 'PrÃ³xima questÃ£o',
+                text: isLastExercise
+                    ? 'Finalizar exercícios'
+                    : 'Próxima questão',
                 onPressed: _confirmAnswer,
               ),
               const SizedBox(height: 24),
