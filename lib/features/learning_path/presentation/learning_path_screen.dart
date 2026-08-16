@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:calcquest/shared/data/mock_learning_data.dart';
+import 'package:calcquest/shared/services/premium_access_guard.dart';
+import 'package:calcquest/shared/services/revenuecat_service.dart';
 import 'package:calcquest/shared/state/app_progress.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
 import 'package:calcquest/shared/theme/app_spacing.dart';
@@ -55,6 +57,10 @@ class LearningPathScreen extends StatelessWidget {
     ).push(MaterialPageRoute(builder: (_) => const CalculusOneDetailScreen()));
   }
 
+  bool _isPremiumModule(ModuleData module) {
+    return module.id != 'fundamentos';
+  }
+
   int _completedFundamentalsLessons() {
     int completed = 0;
 
@@ -73,7 +79,10 @@ class LearningPathScreen extends StatelessWidget {
     return completed;
   }
 
-  String _getModuleStatus(ModuleData module) {
+  String _getModuleStatus({
+    required ModuleData module,
+    required bool isPremiumUser,
+  }) {
     if (module.id == 'fundamentos') {
       final completed = _completedFundamentalsLessons();
 
@@ -97,17 +106,24 @@ class LearningPathScreen extends StatelessWidget {
         return '33%';
       }
 
-      if (AppProgress.functionsCompleted) {
+      if (!AppProgress.functionsCompleted) {
+        return 'Bloqueado';
+      }
+
+      if (isPremiumUser) {
         return 'Desbloqueado';
       }
 
-      return 'Bloqueado';
+      return 'Premium';
     }
 
     return module.status;
   }
 
-  Color _getModuleStatusColor(ModuleData module) {
+  Color _getModuleStatusColor({
+    required ModuleData module,
+    required bool isPremiumUser,
+  }) {
     if (module.id == 'fundamentos') {
       if (_completedFundamentalsLessons() == 3) {
         return AppColors.success;
@@ -117,7 +133,11 @@ class LearningPathScreen extends StatelessWidget {
     }
 
     if (module.id == 'calculo-1' && AppProgress.functionsCompleted) {
-      return AppColors.primary;
+      if (isPremiumUser) {
+        return AppColors.success;
+      }
+
+      return const Color(0xFFFFB300);
     }
 
     return AppColors.locked;
@@ -151,12 +171,94 @@ class LearningPathScreen extends StatelessWidget {
     }
 
     if (module.id == 'calculo-1' && AppProgress.functionsCompleted) {
-      return () {
+      return () async {
+        final hasAccess = await PremiumAccessGuard.ensureAccess(context);
+
+        if (!context.mounted || !hasAccess) {
+          return;
+        }
+
         _goToCalculusOne(context);
       };
     }
 
     return null;
+  }
+
+  Widget _buildPremiumBadge({required bool isPremiumUser}) {
+    final badgeColor = isPremiumUser
+        ? AppColors.success
+        : const Color(0xFFFFB300);
+
+    return Align(
+      alignment: Alignment.centerRight,
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.sm,
+          vertical: 6,
+        ),
+        decoration: BoxDecoration(
+          color: badgeColor.withValues(alpha: 0.14),
+          borderRadius: BorderRadius.circular(999),
+          border: Border.all(color: badgeColor.withValues(alpha: 0.55)),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              isPremiumUser
+                  ? Icons.workspace_premium_rounded
+                  : Icons.lock_rounded,
+              size: 16,
+              color: badgeColor,
+            ),
+            const SizedBox(width: 6),
+            Text(
+              isPremiumUser ? 'PREMIUM ATIVO' : 'PREMIUM',
+              style: TextStyle(
+                color: badgeColor,
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 0.6,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildModuleCard({
+    required BuildContext context,
+    required ModuleData module,
+    required bool isPremiumUser,
+  }) {
+    final isPremiumModule = _isPremiumModule(module);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        if (isPremiumModule) ...[
+          _buildPremiumBadge(isPremiumUser: isPremiumUser),
+          const SizedBox(height: AppSpacing.xs),
+        ],
+        MathCard(
+          title: module.title,
+          subtitle: module.subtitle,
+          symbol: module.symbol,
+          status: _getModuleStatus(
+            module: module,
+            isPremiumUser: isPremiumUser,
+          ),
+          statusColor: _getModuleStatusColor(
+            module: module,
+            isPremiumUser: isPremiumUser,
+          ),
+          state: _getModuleCardState(module),
+          onTap: _getModuleTap(context, module),
+        ),
+      ],
+    );
   }
 
   @override
@@ -185,22 +287,24 @@ class LearningPathScreen extends StatelessWidget {
               ),
               const SizedBox(height: AppSpacing.lg),
               Expanded(
-                child: ListView.separated(
-                  padding: const EdgeInsets.only(bottom: AppSpacing.lg),
-                  itemCount: mockModules.length,
-                  separatorBuilder: (context, index) =>
-                      const SizedBox(height: AppSpacing.md),
-                  itemBuilder: (context, index) {
-                    final module = mockModules[index];
+                child: ValueListenableBuilder<bool>(
+                  valueListenable: RevenueCatService.premiumAccess,
+                  builder: (context, isPremiumUser, child) {
+                    return ListView.separated(
+                      padding: const EdgeInsets.only(bottom: AppSpacing.lg),
+                      itemCount: mockModules.length,
+                      separatorBuilder: (context, index) {
+                        return const SizedBox(height: AppSpacing.md);
+                      },
+                      itemBuilder: (context, index) {
+                        final module = mockModules[index];
 
-                    return MathCard(
-                      title: module.title,
-                      subtitle: module.subtitle,
-                      symbol: module.symbol,
-                      status: _getModuleStatus(module),
-                      statusColor: _getModuleStatusColor(module),
-                      state: _getModuleCardState(module),
-                      onTap: _getModuleTap(context, module),
+                        return _buildModuleCard(
+                          context: context,
+                          module: module,
+                          isPremiumUser: isPremiumUser,
+                        );
+                      },
                     );
                   },
                 ),
