@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:calcquest/shared/services/premium_access_guard.dart';
+import 'package:calcquest/shared/services/revenuecat_service.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
 import 'package:calcquest/shared/theme/app_spacing.dart';
 import 'package:calcquest/shared/theme/app_typography.dart';
@@ -13,6 +15,22 @@ class AppBottomNavigationBar extends StatelessWidget {
     required this.currentIndex,
     required this.onTap,
   });
+
+  Future<void> _handleTap(BuildContext context, int index) async {
+    if (index == currentIndex) {
+      return;
+    }
+
+    if (index == 2) {
+      final hasAccess = await PremiumAccessGuard.ensureAccess(context);
+
+      if (!context.mounted || !hasAccess) {
+        return;
+      }
+    }
+
+    onTap(index);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +55,9 @@ class AppBottomNavigationBar extends StatelessWidget {
           unselectedLabelStyle: AppTypography.labelSmall,
           elevation: 0,
           iconSize: AppSpacing.iconLarge,
-          onTap: onTap,
+          onTap: (index) {
+            _handleTap(context, index);
+          },
           items: const [
             BottomNavigationBarItem(
               icon: Icon(Icons.home_outlined, semanticLabel: 'Início'),
@@ -50,14 +70,8 @@ class AppBottomNavigationBar extends StatelessWidget {
               label: 'Trilha',
             ),
             BottomNavigationBarItem(
-              icon: Icon(
-                Icons.bar_chart_outlined,
-                semanticLabel: 'Estatísticas',
-              ),
-              activeIcon: Icon(
-                Icons.bar_chart_rounded,
-                semanticLabel: 'Estatísticas',
-              ),
+              icon: _PremiumStatisticsIcon(isActive: false),
+              activeIcon: _PremiumStatisticsIcon(isActive: true),
               label: 'Estatísticas',
             ),
             BottomNavigationBarItem(
@@ -68,6 +82,49 @@ class AppBottomNavigationBar extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _PremiumStatisticsIcon extends StatelessWidget {
+  final bool isActive;
+
+  const _PremiumStatisticsIcon({required this.isActive});
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder<bool>(
+      valueListenable: RevenueCatService.premiumAccess,
+      builder: (context, isPremiumUser, child) {
+        return Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Icon(
+              isActive ? Icons.bar_chart_rounded : Icons.bar_chart_outlined,
+              semanticLabel: 'Estatísticas Premium',
+            ),
+            if (!isPremiumUser)
+              Positioned(
+                top: -5,
+                right: -8,
+                child: Container(
+                  width: 16,
+                  height: 16,
+                  alignment: Alignment.center,
+                  decoration: const BoxDecoration(
+                    color: Color(0xFFFFB300),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.lock_rounded,
+                    size: 10,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+          ],
+        );
+      },
     );
   }
 }

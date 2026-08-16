@@ -7,6 +7,10 @@ class PremiumAccessGuard {
   PremiumAccessGuard._();
 
   static Future<bool> ensureAccess(BuildContext context) async {
+    if (RevenueCatService.isPremium) {
+      return true;
+    }
+
     if (!RevenueCatService.isConfigured) {
       _showMessage(context, 'O sistema Premium está indisponível no momento.');
 
@@ -27,11 +31,7 @@ class PremiumAccessGuard {
       final premiumAfterPaywall =
           await RevenueCatService.refreshPremiumStatus();
 
-      if (premiumAfterPaywall) {
-        return true;
-      }
-
-      return false;
+      return premiumAfterPaywall;
     } catch (error) {
       debugPrint('PremiumAccessGuard: erro ao verificar acesso: $error');
 
