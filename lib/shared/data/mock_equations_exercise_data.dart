@@ -1,4 +1,4 @@
-﻿import 'package:calcquest/shared/data/mock_exercise_data.dart';
+import 'package:calcquest/shared/data/mock_exercise_data.dart';
 
 const List<ExerciseData> mockEquationsExercises = [
   ExerciseData(

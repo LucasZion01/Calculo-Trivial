@@ -1,15 +1,10 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import 'package:calcquest/shared/theme/app_colors.dart';
 import 'package:calcquest/shared/theme/app_spacing.dart';
 import 'package:calcquest/shared/theme/app_typography.dart';
 
-enum MathCardState {
-  normal,
-  selected,
-  completed,
-  locked,
-}
+enum MathCardState { normal, selected, completed, locked }
 
 class MathCard extends StatefulWidget {
   final String title;
@@ -133,32 +128,22 @@ class _MathCardState extends State<MathCard> {
       curve: Curves.easeOut,
       child: Material(
         color: Colors.transparent,
-        borderRadius: BorderRadius.circular(
-          AppSpacing.radiusLarge,
-        ),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
         child: InkWell(
           onTap: _isLocked ? null : widget.onTap,
           onTapDown: (_) => _setPressed(true),
           onTapUp: (_) => _setPressed(false),
           onTapCancel: () => _setPressed(false),
-          borderRadius: BorderRadius.circular(
-            AppSpacing.radiusLarge,
-          ),
+          borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 180),
             curve: Curves.easeOut,
             width: double.infinity,
-            constraints: const BoxConstraints(
-              minHeight: 96,
-            ),
-            padding: const EdgeInsets.all(
-              AppSpacing.cardPaddingLarge,
-            ),
+            constraints: const BoxConstraints(minHeight: 96),
+            padding: const EdgeInsets.all(AppSpacing.cardPaddingLarge),
             decoration: BoxDecoration(
               color: _backgroundColor,
-              borderRadius: BorderRadius.circular(
-                AppSpacing.radiusLarge,
-              ),
+              borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
               border: Border.all(
                 color: _borderColor,
                 width: widget.state == MathCardState.selected ? 2 : 1,
@@ -236,7 +221,8 @@ class _MathCardState extends State<MathCard> {
                       textAlign: TextAlign.end,
                       overflow: TextOverflow.ellipsis,
                       style: AppTypography.labelSmall.copyWith(
-                        color: widget.statusColor ??
+                        color:
+                            widget.statusColor ??
                             (_isLocked
                                 ? AppColors.locked
                                 : AppColors.textSecondary),

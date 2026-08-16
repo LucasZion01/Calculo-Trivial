@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import 'package:calcquest/shared/state/app_progress.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
@@ -58,9 +58,7 @@ class _RewardScreenState extends State<RewardScreen> {
   void _onMenuTap(BuildContext context, int index) {
     if (index == 0) {
       Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(
-          builder: (_) => const DashboardScreen(),
-        ),
+        MaterialPageRoute(builder: (_) => const DashboardScreen()),
         (route) => false,
       );
       return;
@@ -68,9 +66,7 @@ class _RewardScreenState extends State<RewardScreen> {
 
     if (index == 1) {
       Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(
-          builder: (_) => const LearningPathScreen(),
-        ),
+        MaterialPageRoute(builder: (_) => const LearningPathScreen()),
         (route) => false,
       );
       return;
@@ -78,9 +74,7 @@ class _RewardScreenState extends State<RewardScreen> {
 
     if (index == 2) {
       Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(
-          builder: (_) => const StatisticsScreen(),
-        ),
+        MaterialPageRoute(builder: (_) => const StatisticsScreen()),
         (route) => false,
       );
       return;
@@ -88,9 +82,7 @@ class _RewardScreenState extends State<RewardScreen> {
 
     if (index == 3) {
       Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(
-          builder: (_) => const ProfileScreen(),
-        ),
+        MaterialPageRoute(builder: (_) => const ProfileScreen()),
         (route) => false,
       );
     }
@@ -98,9 +90,7 @@ class _RewardScreenState extends State<RewardScreen> {
 
   void _backToLearningPath(BuildContext context) {
     Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(
-        builder: (_) => const LearningPathScreen(),
-      ),
+      MaterialPageRoute(builder: (_) => const LearningPathScreen()),
       (route) => false,
     );
   }
@@ -138,17 +128,11 @@ class _RewardScreenState extends State<RewardScreen> {
   }) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(
-        AppSpacing.cardPaddingLarge,
-      ),
+      padding: const EdgeInsets.all(AppSpacing.cardPaddingLarge),
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(
-          AppSpacing.radiusLarge,
-        ),
-        border: Border.all(
-          color: AppColors.border,
-        ),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
+        border: Border.all(color: AppColors.border),
         boxShadow: const [
           BoxShadow(
             color: AppColors.shadow,
@@ -165,9 +149,7 @@ class _RewardScreenState extends State<RewardScreen> {
             alignment: Alignment.center,
             decoration: BoxDecoration(
               color: iconBackground,
-              borderRadius: BorderRadius.circular(
-                AppSpacing.radiusMedium,
-              ),
+              borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
             ),
             child: AppIcon(
               icon: icon,
@@ -176,17 +158,9 @@ class _RewardScreenState extends State<RewardScreen> {
             ),
           ),
           const SizedBox(width: AppSpacing.sm),
-          Expanded(
-            child: Text(
-              title,
-              style: AppTypography.bodyMedium,
-            ),
-          ),
+          Expanded(child: Text(title, style: AppTypography.bodyMedium)),
           const SizedBox(width: AppSpacing.sm),
-          Text(
-            value,
-            style: AppTypography.titleLarge,
-          ),
+          Text(value, style: AppTypography.titleLarge),
         ],
       ),
     );
@@ -215,9 +189,7 @@ class _RewardScreenState extends State<RewardScreen> {
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   color: AppColors.achievementLight,
-                  borderRadius: BorderRadius.circular(
-                    AppSpacing.radiusXLarge,
-                  ),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusXLarge),
                 ),
                 child: const Text(
                   '∑',
@@ -285,9 +257,7 @@ class _RewardScreenState extends State<RewardScreen> {
                 },
               ),
 
-              const SizedBox(
-                height: AppSpacing.screenBottom,
-              ),
+              const SizedBox(height: AppSpacing.screenBottom),
             ],
           ),
         ),

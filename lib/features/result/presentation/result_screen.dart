@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import 'package:calcquest/shared/theme/app_colors.dart';
 import 'package:calcquest/shared/theme/app_spacing.dart';
@@ -32,9 +32,7 @@ class ResultScreen extends StatelessWidget {
   void _onMenuTap(BuildContext context, int index) {
     if (index == 0) {
       Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(
-          builder: (_) => const DashboardScreen(),
-        ),
+        MaterialPageRoute(builder: (_) => const DashboardScreen()),
         (route) => false,
       );
       return;
@@ -42,9 +40,7 @@ class ResultScreen extends StatelessWidget {
 
     if (index == 1) {
       Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(
-          builder: (_) => const LearningPathScreen(),
-        ),
+        MaterialPageRoute(builder: (_) => const LearningPathScreen()),
         (route) => false,
       );
       return;
@@ -52,9 +48,7 @@ class ResultScreen extends StatelessWidget {
 
     if (index == 2) {
       Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(
-          builder: (_) => const StatisticsScreen(),
-        ),
+        MaterialPageRoute(builder: (_) => const StatisticsScreen()),
         (route) => false,
       );
       return;
@@ -62,9 +56,7 @@ class ResultScreen extends StatelessWidget {
 
     if (index == 3) {
       Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(
-          builder: (_) => const ProfileScreen(),
-        ),
+        MaterialPageRoute(builder: (_) => const ProfileScreen()),
         (route) => false,
       );
     }
@@ -95,17 +87,11 @@ class ResultScreen extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(
-        AppSpacing.cardPaddingLarge,
-      ),
+      padding: const EdgeInsets.all(AppSpacing.cardPaddingLarge),
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(
-          AppSpacing.radiusLarge,
-        ),
-        border: Border.all(
-          color: AppColors.border,
-        ),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
+        border: Border.all(color: AppColors.border),
         boxShadow: const [
           BoxShadow(
             color: AppColors.shadow,
@@ -122,9 +108,7 @@ class ResultScreen extends StatelessWidget {
             alignment: Alignment.center,
             decoration: BoxDecoration(
               color: resolvedIconBackground,
-              borderRadius: BorderRadius.circular(
-                AppSpacing.radiusMedium,
-              ),
+              borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
             ),
             child: AppIcon(
               icon: icon,
@@ -133,17 +117,9 @@ class ResultScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(width: AppSpacing.sm),
-          Expanded(
-            child: Text(
-              title,
-              style: AppTypography.bodyMedium,
-            ),
-          ),
+          Expanded(child: Text(title, style: AppTypography.bodyMedium)),
           const SizedBox(width: AppSpacing.sm),
-          Text(
-            value,
-            style: AppTypography.titleLarge,
-          ),
+          Text(value, style: AppTypography.titleLarge),
         ],
       ),
     );
@@ -151,11 +127,11 @@ class ResultScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final performance =
-        totalQuestions == 0 ? 0 : correctAnswers / totalQuestions;
+    final performance = totalQuestions == 0
+        ? 0
+        : correctAnswers / totalQuestions;
 
-    final performanceText =
-        '${(performance * 100).round()}% de aproveitamento';
+    final performanceText = '${(performance * 100).round()}% de aproveitamento';
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -177,9 +153,7 @@ class ResultScreen extends StatelessWidget {
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   color: AppColors.successLight,
-                  borderRadius: BorderRadius.circular(
-                    AppSpacing.radiusXLarge,
-                  ),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusXLarge),
                 ),
                 child: const AppIcon(
                   icon: Icons.check_rounded,
@@ -240,9 +214,7 @@ class ResultScreen extends StatelessWidget {
                   _goToReward(context);
                 },
               ),
-              const SizedBox(
-                height: AppSpacing.screenBottom,
-              ),
+              const SizedBox(height: AppSpacing.screenBottom),
             ],
           ),
         ),

@@ -1,11 +1,8 @@
-﻿class ExerciseOptionData {
+class ExerciseOptionData {
   final String id;
   final String text;
 
-  const ExerciseOptionData({
-    required this.id,
-    required this.text,
-  });
+  const ExerciseOptionData({required this.id, required this.text});
 }
 
 class ExerciseData {

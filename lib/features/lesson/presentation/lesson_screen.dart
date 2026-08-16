@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import 'package:calcquest/shared/theme/app_colors.dart';
 import 'package:calcquest/shared/theme/app_spacing.dart';
@@ -19,9 +19,7 @@ class LessonScreen extends StatelessWidget {
   void _onMenuTap(BuildContext context, int index) {
     if (index == 0) {
       Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(
-          builder: (_) => const DashboardScreen(),
-        ),
+        MaterialPageRoute(builder: (_) => const DashboardScreen()),
         (route) => false,
       );
       return;
@@ -29,9 +27,7 @@ class LessonScreen extends StatelessWidget {
 
     if (index == 1) {
       Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(
-          builder: (_) => const LearningPathScreen(),
-        ),
+        MaterialPageRoute(builder: (_) => const LearningPathScreen()),
         (route) => false,
       );
       return;
@@ -39,9 +35,7 @@ class LessonScreen extends StatelessWidget {
 
     if (index == 2) {
       Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(
-          builder: (_) => const StatisticsScreen(),
-        ),
+        MaterialPageRoute(builder: (_) => const StatisticsScreen()),
         (route) => false,
       );
       return;
@@ -49,20 +43,16 @@ class LessonScreen extends StatelessWidget {
 
     if (index == 3) {
       Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(
-          builder: (_) => const ProfileScreen(),
-        ),
+        MaterialPageRoute(builder: (_) => const ProfileScreen()),
         (route) => false,
       );
     }
   }
 
   void _goToMiniChallenge(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => const MiniChallengeScreen(),
-      ),
-    );
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (_) => const MiniChallengeScreen()));
   }
 
   Widget _buildContentCard({
@@ -72,17 +62,11 @@ class LessonScreen extends StatelessWidget {
   }) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(
-        AppSpacing.cardPaddingLarge,
-      ),
+      padding: const EdgeInsets.all(AppSpacing.cardPaddingLarge),
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(
-          AppSpacing.radiusLarge,
-        ),
-        border: Border.all(
-          color: AppColors.border,
-        ),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
+        border: Border.all(color: AppColors.border),
         boxShadow: const [
           BoxShadow(
             color: AppColors.shadow,
@@ -100,9 +84,7 @@ class LessonScreen extends StatelessWidget {
             alignment: Alignment.center,
             decoration: BoxDecoration(
               color: AppColors.selectedBackground,
-              borderRadius: BorderRadius.circular(
-                AppSpacing.radiusMedium,
-              ),
+              borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
             ),
             child: AppIcon(
               icon: icon,
@@ -115,15 +97,9 @@ class LessonScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  title,
-                  style: AppTypography.titleMedium,
-                ),
+                Text(title, style: AppTypography.titleMedium),
                 const SizedBox(height: AppSpacing.xs),
-                Text(
-                  content,
-                  style: AppTypography.bodyMedium,
-                ),
+                Text(content, style: AppTypography.bodyMedium),
               ],
             ),
           ),
@@ -154,10 +130,7 @@ class LessonScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: AppSpacing.xs),
-              Text(
-                'Álgebra Fundamental',
-                style: AppTypography.headingMedium,
-              ),
+              Text('Álgebra Fundamental', style: AppTypography.headingMedium),
               const SizedBox(height: AppSpacing.xs),
               Text(
                 'Entenda a base algébrica necessária para avançar em Cálculo.',
@@ -166,9 +139,7 @@ class LessonScreen extends StatelessWidget {
               const SizedBox(height: AppSpacing.lg),
               Expanded(
                 child: ListView(
-                  padding: const EdgeInsets.only(
-                    bottom: AppSpacing.md,
-                  ),
+                  padding: const EdgeInsets.only(bottom: AppSpacing.md),
                   children: [
                     _buildContentCard(
                       icon: Icons.school_outlined,
@@ -231,9 +202,7 @@ class LessonScreen extends StatelessWidget {
                   _goToMiniChallenge(context);
                 },
               ),
-              const SizedBox(
-                height: AppSpacing.screenBottom,
-              ),
+              const SizedBox(height: AppSpacing.screenBottom),
             ],
           ),
         ),

@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import 'package:calcquest/shared/data/mock_exercise_data.dart';
 import 'package:calcquest/shared/data/mock_limits_exercise_data.dart';
@@ -26,8 +26,7 @@ class _LimitsExercisesScreenState extends State<LimitsExercisesScreen> {
   int currentExerciseIndex = 0;
   String? selectedOptionId;
 
-  ExerciseData get currentExercise =>
-      mockLimitsExercises[currentExerciseIndex];
+  ExerciseData get currentExercise => mockLimitsExercises[currentExerciseIndex];
 
   bool get isLastExercise =>
       currentExerciseIndex == mockLimitsExercises.length - 1;
@@ -38,9 +37,7 @@ class _LimitsExercisesScreenState extends State<LimitsExercisesScreen> {
   void _onMenuTap(BuildContext context, int index) {
     if (index == 0) {
       Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(
-          builder: (_) => const DashboardScreen(),
-        ),
+        MaterialPageRoute(builder: (_) => const DashboardScreen()),
         (route) => false,
       );
       return;
@@ -48,9 +45,7 @@ class _LimitsExercisesScreenState extends State<LimitsExercisesScreen> {
 
     if (index == 1) {
       Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(
-          builder: (_) => const LearningPathScreen(),
-        ),
+        MaterialPageRoute(builder: (_) => const LearningPathScreen()),
         (route) => false,
       );
       return;
@@ -58,9 +53,7 @@ class _LimitsExercisesScreenState extends State<LimitsExercisesScreen> {
 
     if (index == 2) {
       Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(
-          builder: (_) => const StatisticsScreen(),
-        ),
+        MaterialPageRoute(builder: (_) => const StatisticsScreen()),
         (route) => false,
       );
       return;
@@ -68,9 +61,7 @@ class _LimitsExercisesScreenState extends State<LimitsExercisesScreen> {
 
     if (index == 3) {
       Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(
-          builder: (_) => const ProfileScreen(),
-        ),
+        MaterialPageRoute(builder: (_) => const ProfileScreen()),
         (route) => false,
       );
     }
@@ -89,16 +80,11 @@ class _LimitsExercisesScreenState extends State<LimitsExercisesScreen> {
           backgroundColor: backgroundColor,
           margin: const EdgeInsets.all(AppSpacing.md),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(
-              AppSpacing.radiusMedium,
-            ),
+            borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
           ),
           content: Row(
             children: [
-              Icon(
-                icon,
-                color: AppColors.white,
-              ),
+              Icon(icon, color: AppColors.white),
               const SizedBox(width: AppSpacing.sm),
               Expanded(
                 child: Text(
@@ -178,35 +164,25 @@ class _LimitsExercisesScreenState extends State<LimitsExercisesScreen> {
 
     return Material(
       color: Colors.transparent,
-      borderRadius: BorderRadius.circular(
-        AppSpacing.radiusLarge,
-      ),
+      borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
       child: InkWell(
         onTap: () {
           setState(() {
             selectedOptionId = option.id;
           });
         },
-        borderRadius: BorderRadius.circular(
-          AppSpacing.radiusLarge,
-        ),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 160),
           width: double.infinity,
-          padding: const EdgeInsets.all(
-            AppSpacing.cardPadding,
-          ),
+          padding: const EdgeInsets.all(AppSpacing.cardPadding),
           decoration: BoxDecoration(
             color: isSelected
                 ? AppColors.selectedBackground
                 : AppColors.surface,
-            borderRadius: BorderRadius.circular(
-              AppSpacing.radiusLarge,
-            ),
+            borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
             border: Border.all(
-              color: isSelected
-                  ? AppColors.primary
-                  : AppColors.border,
+              color: isSelected ? AppColors.primary : AppColors.border,
               width: isSelected ? 2 : 1,
             ),
           ),
@@ -220,9 +196,7 @@ class _LimitsExercisesScreenState extends State<LimitsExercisesScreen> {
                   color: isSelected
                       ? AppColors.primary
                       : AppColors.surfaceSecondary,
-                  borderRadius: BorderRadius.circular(
-                    AppSpacing.radiusMedium,
-                  ),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
                 ),
                 child: Text(
                   _letterForIndex(index),
@@ -284,23 +258,15 @@ class _LimitsExercisesScreenState extends State<LimitsExercisesScreen> {
                 style: AppTypography.bodyMedium,
               ),
               const SizedBox(height: AppSpacing.md),
-              AppProgressBar(
-                value: progress,
-              ),
+              AppProgressBar(value: progress),
               const SizedBox(height: AppSpacing.lg),
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.all(
-                  AppSpacing.cardPaddingLarge,
-                ),
+                padding: const EdgeInsets.all(AppSpacing.cardPaddingLarge),
                 decoration: BoxDecoration(
                   color: AppColors.surface,
-                  borderRadius: BorderRadius.circular(
-                    AppSpacing.radiusLarge,
-                  ),
-                  border: Border.all(
-                    color: AppColors.border,
-                  ),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
+                  border: Border.all(color: AppColors.border),
                   boxShadow: const [
                     BoxShadow(
                       color: AppColors.shadow,
@@ -319,19 +285,14 @@ class _LimitsExercisesScreenState extends State<LimitsExercisesScreen> {
               const SizedBox(height: AppSpacing.lg),
               Expanded(
                 child: ListView.separated(
-                  padding: const EdgeInsets.only(
-                    bottom: AppSpacing.md,
-                  ),
+                  padding: const EdgeInsets.only(bottom: AppSpacing.md),
                   itemCount: exercise.options.length,
                   separatorBuilder: (context, index) =>
                       const SizedBox(height: AppSpacing.sm),
                   itemBuilder: (context, index) {
                     final option = exercise.options[index];
 
-                    return _buildOption(
-                      option: option,
-                      index: index,
-                    );
+                    return _buildOption(option: option, index: index);
                   },
                 ),
               ),
@@ -345,9 +306,7 @@ class _LimitsExercisesScreenState extends State<LimitsExercisesScreen> {
                     : Icons.arrow_forward_rounded,
                 onPressed: _confirmAnswer,
               ),
-              const SizedBox(
-                height: AppSpacing.screenBottom,
-              ),
+              const SizedBox(height: AppSpacing.screenBottom),
             ],
           ),
         ),

@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import 'package:calcquest/shared/theme/app_colors.dart';
 
@@ -23,36 +23,28 @@ class _MiniChallengeScreenState extends State<MiniChallengeScreen> {
   void _onMenuTap(BuildContext context, int index) {
     if (index == 0) {
       Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(
-          builder: (_) => const DashboardScreen(),
-        ),
+        MaterialPageRoute(builder: (_) => const DashboardScreen()),
         (route) => false,
       );
     }
 
     if (index == 1) {
       Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(
-          builder: (_) => const LearningPathScreen(),
-        ),
+        MaterialPageRoute(builder: (_) => const LearningPathScreen()),
         (route) => false,
       );
     }
 
     if (index == 2) {
       Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(
-          builder: (_) => const StatisticsScreen(),
-        ),
+        MaterialPageRoute(builder: (_) => const StatisticsScreen()),
         (route) => false,
       );
     }
 
     if (index == 3) {
       Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(
-          builder: (_) => const ProfileScreen(),
-        ),
+        MaterialPageRoute(builder: (_) => const ProfileScreen()),
         (route) => false,
       );
     }
@@ -75,18 +67,14 @@ class _MiniChallengeScreenState extends State<MiniChallengeScreen> {
     }
 
     if (selectedAnswer == 'A') {
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (_) => const ExercisesScreen(),
-        ),
-      );
+      Navigator.of(
+        context,
+      ).push(MaterialPageRoute(builder: (_) => const ExercisesScreen()));
       return;
     }
 
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Resposta incorreta. Tente novamente.'),
-      ),
+      const SnackBar(content: Text('Resposta incorreta. Tente novamente.')),
     );
   }
 
@@ -120,10 +108,7 @@ class _MiniChallengeScreenState extends State<MiniChallengeScreen> {
               const SizedBox(height: 8),
               const Text(
                 'Escolha a resposta correta para liberar os próximos exercícios.',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: AppColors.textSecondary,
-                ),
+                style: TextStyle(fontSize: 14, color: AppColors.textSecondary),
               ),
               const SizedBox(height: 24),
               Container(
@@ -133,9 +118,7 @@ class _MiniChallengeScreenState extends State<MiniChallengeScreen> {
                 decoration: BoxDecoration(
                   color: AppColors.white,
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                    color: AppColors.border,
-                  ),
+                  border: Border.all(color: AppColors.border),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -176,10 +159,7 @@ class _MiniChallengeScreenState extends State<MiniChallengeScreen> {
                 ),
               ),
               const SizedBox(height: 24),
-              PrimaryButton(
-                text: 'Responder',
-                onPressed: _confirmAnswer,
-              ),
+              PrimaryButton(text: 'Responder', onPressed: _confirmAnswer),
               const SizedBox(height: 12),
               const Center(
                 child: Text(
@@ -231,9 +211,7 @@ class _AnswerOption extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: isSelected
-                  ? AppColors.primary
-                  : AppColors.inputBorder,
+              color: isSelected ? AppColors.primary : AppColors.inputBorder,
               width: isSelected ? 2 : 1,
             ),
           ),
@@ -242,9 +220,7 @@ class _AnswerOption extends StatelessWidget {
             style: TextStyle(
               fontSize: 14,
               fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-              color: isSelected
-                  ? AppColors.primary
-                  : AppColors.textPrimary,
+              color: isSelected ? AppColors.primary : AppColors.textPrimary,
             ),
           ),
         ),
@@ -252,6 +228,3 @@ class _AnswerOption extends StatelessWidget {
     );
   }
 }
-
-
-

@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import 'package:calcquest/shared/state/app_progress.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
@@ -20,9 +20,7 @@ class CalculusOneDetailScreen extends StatelessWidget {
   void _onMenuTap(BuildContext context, int index) {
     if (index == 0) {
       Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(
-          builder: (_) => const DashboardScreen(),
-        ),
+        MaterialPageRoute(builder: (_) => const DashboardScreen()),
         (route) => false,
       );
       return;
@@ -30,9 +28,7 @@ class CalculusOneDetailScreen extends StatelessWidget {
 
     if (index == 1) {
       Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(
-          builder: (_) => const LearningPathScreen(),
-        ),
+        MaterialPageRoute(builder: (_) => const LearningPathScreen()),
         (route) => false,
       );
       return;
@@ -40,9 +36,7 @@ class CalculusOneDetailScreen extends StatelessWidget {
 
     if (index == 2) {
       Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(
-          builder: (_) => const StatisticsScreen(),
-        ),
+        MaterialPageRoute(builder: (_) => const StatisticsScreen()),
         (route) => false,
       );
       return;
@@ -50,28 +44,22 @@ class CalculusOneDetailScreen extends StatelessWidget {
 
     if (index == 3) {
       Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(
-          builder: (_) => const ProfileScreen(),
-        ),
+        MaterialPageRoute(builder: (_) => const ProfileScreen()),
         (route) => false,
       );
     }
   }
 
   void _goToLimitsLesson(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => const LimitsLessonScreen(),
-      ),
-    );
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (_) => const LimitsLessonScreen()));
   }
 
   void _showContinuityMessage(BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text(
-          'Aula de Continuidade será criada na próxima etapa.',
-        ),
+        content: Text('Aula de Continuidade será criada na próxima etapa.'),
       ),
     );
   }
@@ -104,11 +92,9 @@ class CalculusOneDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final limitsCompleted = AppProgress.limitsCompleted;
 
-    final limitsStatus =
-        limitsCompleted ? 'Concluída' : 'Comece aqui';
+    final limitsStatus = limitsCompleted ? 'Concluída' : 'Comece aqui';
 
-    final continuityStatus =
-        limitsCompleted ? 'Desbloqueada' : 'Bloqueado';
+    final continuityStatus = limitsCompleted ? 'Desbloqueada' : 'Bloqueado';
 
     final progress = _moduleProgressValue();
 
@@ -125,10 +111,7 @@ class CalculusOneDetailScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Cálculo I',
-                style: AppTypography.headingMedium,
-              ),
+              Text('Cálculo I', style: AppTypography.headingMedium),
               const SizedBox(height: AppSpacing.xs),
               Text(
                 'Estude limites, continuidade e derivadas passo a passo.',
@@ -137,14 +120,10 @@ class CalculusOneDetailScreen extends StatelessWidget {
               const SizedBox(height: AppSpacing.lg),
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.all(
-                  AppSpacing.cardPaddingLarge,
-                ),
+                padding: const EdgeInsets.all(AppSpacing.cardPaddingLarge),
                 decoration: BoxDecoration(
                   color: AppColors.primary,
-                  borderRadius: BorderRadius.circular(
-                    AppSpacing.radiusXLarge,
-                  ),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusXLarge),
                   boxShadow: const [
                     BoxShadow(
                       color: AppColors.shadow,
@@ -189,21 +168,15 @@ class CalculusOneDetailScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: AppSpacing.lg),
-              Text(
-                'Aulas',
-                style: AppTypography.titleLarge,
-              ),
+              Text('Aulas', style: AppTypography.titleLarge),
               const SizedBox(height: AppSpacing.sm),
               Expanded(
                 child: ListView(
-                  padding: const EdgeInsets.only(
-                    bottom: AppSpacing.lg,
-                  ),
+                  padding: const EdgeInsets.only(bottom: AppSpacing.lg),
                   children: [
                     MathCard(
                       title: 'Aula 1 — Limites',
-                      subtitle:
-                          'Ideia intuitiva, notação e cálculo inicial',
+                      subtitle: 'Ideia intuitiva, notação e cálculo inicial',
                       symbol: 'lim',
                       status: limitsStatus,
                       statusColor: limitsCompleted
@@ -219,8 +192,7 @@ class CalculusOneDetailScreen extends StatelessWidget {
                     const SizedBox(height: AppSpacing.md),
                     MathCard(
                       title: 'Aula 2 — Continuidade',
-                      subtitle:
-                          'Funções contínuas e pontos de descontinuidade',
+                      subtitle: 'Funções contínuas e pontos de descontinuidade',
                       symbol: 'C',
                       status: continuityStatus,
                       statusColor: limitsCompleted
@@ -238,8 +210,7 @@ class CalculusOneDetailScreen extends StatelessWidget {
                     const SizedBox(height: AppSpacing.md),
                     const MathCard(
                       title: 'Aula 3 — Derivadas',
-                      subtitle:
-                          'Taxa de variação e reta tangente',
+                      subtitle: 'Taxa de variação e reta tangente',
                       symbol: "f'",
                       status: 'Bloqueado',
                       statusColor: AppColors.locked,

@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import 'package:calcquest/shared/state/app_progress.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
@@ -23,25 +23,19 @@ class DashboardScreen extends StatelessWidget {
 
     if (index == 1) {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (_) => const LearningPathScreen(),
-        ),
+        MaterialPageRoute(builder: (_) => const LearningPathScreen()),
       );
     }
 
     if (index == 2) {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (_) => const StatisticsScreen(),
-        ),
+        MaterialPageRoute(builder: (_) => const StatisticsScreen()),
       );
     }
 
     if (index == 3) {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (_) => const ProfileScreen(),
-        ),
+        MaterialPageRoute(builder: (_) => const ProfileScreen()),
       );
     }
   }
@@ -53,17 +47,11 @@ class DashboardScreen extends StatelessWidget {
   }) {
     return Expanded(
       child: Container(
-        padding: const EdgeInsets.all(
-          AppSpacing.cardPadding,
-        ),
+        padding: const EdgeInsets.all(AppSpacing.cardPadding),
         decoration: BoxDecoration(
           color: AppColors.surface,
-          borderRadius: BorderRadius.circular(
-            AppSpacing.radiusLarge,
-          ),
-          border: Border.all(
-            color: AppColors.border,
-          ),
+          borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
+          border: Border.all(color: AppColors.border),
           boxShadow: const [
             BoxShadow(
               color: AppColors.shadow,
@@ -80,10 +68,7 @@ class DashboardScreen extends StatelessWidget {
               color: AppColors.primary,
             ),
             const SizedBox(height: AppSpacing.xs),
-            Text(
-              value,
-              style: AppTypography.titleLarge,
-            ),
+            Text(value, style: AppTypography.titleLarge),
             const SizedBox(height: AppSpacing.xxs),
             Text(
               title,
@@ -212,10 +197,7 @@ class DashboardScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Olá, Lucas',
-                style: AppTypography.headingMedium,
-              ),
+              Text('Olá, Lucas', style: AppTypography.headingMedium),
               const SizedBox(height: AppSpacing.xs),
               Text(
                 'Continue sua jornada no Cálculo.',
@@ -224,14 +206,10 @@ class DashboardScreen extends StatelessWidget {
               const SizedBox(height: AppSpacing.lg),
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.all(
-                  AppSpacing.cardPaddingLarge,
-                ),
+                padding: const EdgeInsets.all(AppSpacing.cardPaddingLarge),
                 decoration: BoxDecoration(
                   color: AppColors.primary,
-                  borderRadius: BorderRadius.circular(
-                    AppSpacing.radiusXLarge,
-                  ),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusXLarge),
                   boxShadow: const [
                     BoxShadow(
                       color: AppColors.shadow,
@@ -299,17 +277,11 @@ class DashboardScreen extends StatelessWidget {
               const SizedBox(height: AppSpacing.lg),
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.all(
-                  AppSpacing.cardPaddingLarge,
-                ),
+                padding: const EdgeInsets.all(AppSpacing.cardPaddingLarge),
                 decoration: BoxDecoration(
                   color: AppColors.surface,
-                  borderRadius: BorderRadius.circular(
-                    AppSpacing.radiusLarge,
-                  ),
-                  border: Border.all(
-                    color: AppColors.border,
-                  ),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
+                  border: Border.all(color: AppColors.border),
                   boxShadow: const [
                     BoxShadow(
                       color: AppColors.shadow,
@@ -348,10 +320,7 @@ class DashboardScreen extends StatelessWidget {
                             style: AppTypography.titleMedium,
                           ),
                           const SizedBox(height: AppSpacing.xxs),
-                          Text(
-                            _nextMission(),
-                            style: AppTypography.bodySmall,
-                          ),
+                          Text(_nextMission(), style: AppTypography.bodySmall),
                         ],
                       ),
                     ),

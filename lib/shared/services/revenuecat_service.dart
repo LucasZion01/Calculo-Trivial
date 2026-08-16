@@ -16,7 +16,7 @@ class RevenueCatService {
 
   static bool get isPremium => premiumAccess.value;
 
-  static Future<void> initialize() async {
+  static Future<void> initialize({String? appUserId}) async {
     if (_isConfigured) {
       return;
     }
@@ -35,15 +35,84 @@ class RevenueCatService {
 
     final configuration = PurchasesConfiguration(_apiKey);
 
+    final normalizedAppUserId = appUserId?.trim();
+
+    if (normalizedAppUserId != null && normalizedAppUserId.isNotEmpty) {
+      configuration.appUserID = normalizedAppUserId;
+    }
+
     await Purchases.configure(configuration);
 
     _isConfigured = true;
 
     Purchases.addCustomerInfoUpdateListener(_handleCustomerInfoUpdate);
 
-    debugPrint('RevenueCat SDK inicializado.');
+    debugPrint(
+      normalizedAppUserId != null && normalizedAppUserId.isNotEmpty
+          ? 'RevenueCat SDK inicializado com usuário autenticado.'
+          : 'RevenueCat SDK inicializado com usuário anônimo.',
+    );
 
     await refreshPremiumStatus();
+  }
+
+  static Future<CustomerInfo?> identifyUser(String appUserId) async {
+    if (!_isConfigured) {
+      premiumAccess.value = false;
+      return null;
+    }
+
+    final normalizedAppUserId = appUserId.trim();
+
+    if (normalizedAppUserId.isEmpty) {
+      throw ArgumentError('O App User ID do RevenueCat não pode estar vazio.');
+    }
+
+    try {
+      final result = await Purchases.logIn(normalizedAppUserId);
+
+      _updatePremiumStatus(result.customerInfo);
+
+      debugPrint('RevenueCat: usuário identificado com Firebase UID.');
+
+      return result.customerInfo;
+    } catch (error) {
+      premiumAccess.value = false;
+
+      debugPrint('RevenueCat: erro ao identificar usuário: $error');
+
+      rethrow;
+    }
+  }
+
+  static Future<CustomerInfo?> logOutUser() async {
+    if (!_isConfigured) {
+      premiumAccess.value = false;
+      return null;
+    }
+
+    try {
+      final isAnonymous = await Purchases.isAnonymous;
+
+      if (isAnonymous) {
+        premiumAccess.value = false;
+        return Purchases.getCustomerInfo();
+      }
+
+      final customerInfo = await Purchases.logOut();
+
+      _updatePremiumStatus(customerInfo);
+
+      debugPrint('RevenueCat: usuário desconectado.');
+
+      return customerInfo;
+    } catch (error) {
+      premiumAccess.value = false;
+
+      debugPrint('RevenueCat: erro ao desconectar usuário: $error');
+
+      rethrow;
+    }
   }
 
   static void _handleCustomerInfoUpdate(CustomerInfo customerInfo) {

@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import 'package:calcquest/shared/data/mock_learning_data.dart';
 import 'package:calcquest/shared/state/app_progress.dart';
@@ -23,9 +23,7 @@ class ModuleDetailScreen extends StatelessWidget {
   void _onMenuTap(BuildContext context, int index) {
     if (index == 0) {
       Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(
-          builder: (_) => const DashboardScreen(),
-        ),
+        MaterialPageRoute(builder: (_) => const DashboardScreen()),
         (route) => false,
       );
       return;
@@ -33,9 +31,7 @@ class ModuleDetailScreen extends StatelessWidget {
 
     if (index == 1) {
       Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(
-          builder: (_) => const LearningPathScreen(),
-        ),
+        MaterialPageRoute(builder: (_) => const LearningPathScreen()),
         (route) => false,
       );
       return;
@@ -43,9 +39,7 @@ class ModuleDetailScreen extends StatelessWidget {
 
     if (index == 2) {
       Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(
-          builder: (_) => const StatisticsScreen(),
-        ),
+        MaterialPageRoute(builder: (_) => const StatisticsScreen()),
         (route) => false,
       );
       return;
@@ -53,36 +47,28 @@ class ModuleDetailScreen extends StatelessWidget {
 
     if (index == 3) {
       Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(
-          builder: (_) => const ProfileScreen(),
-        ),
+        MaterialPageRoute(builder: (_) => const ProfileScreen()),
         (route) => false,
       );
     }
   }
 
   void _goToLesson(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => const LessonScreen(),
-      ),
-    );
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (_) => const LessonScreen()));
   }
 
   void _goToEquationsLesson(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => const EquationsLessonScreen(),
-      ),
-    );
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (_) => const EquationsLessonScreen()));
   }
 
   void _goToFunctionsLesson(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => const FunctionsLessonScreen(),
-      ),
-    );
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (_) => const FunctionsLessonScreen()));
   }
 
   int _completedLessons() {
@@ -171,8 +157,7 @@ class ModuleDetailScreen extends StatelessWidget {
       return 'Desbloqueada';
     }
 
-    if (lesson.id == 'funcoes' &&
-        AppProgress.functionsCompleted) {
+    if (lesson.id == 'funcoes' && AppProgress.functionsCompleted) {
       return 'Concluída';
     }
 
@@ -242,10 +227,7 @@ class ModuleDetailScreen extends StatelessWidget {
     return MathCardState.locked;
   }
 
-  void _handleLessonTap(
-    BuildContext context,
-    LessonData lesson,
-  ) {
+  void _handleLessonTap(BuildContext context, LessonData lesson) {
     if (lesson.id == 'algebra-fundamental') {
       _goToLesson(context);
       return;
@@ -283,10 +265,7 @@ class ModuleDetailScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                module.title,
-                style: AppTypography.headingMedium,
-              ),
+              Text(module.title, style: AppTypography.headingMedium),
               const SizedBox(height: AppSpacing.xs),
               Text(
                 'Construa a base necessária para estudar Cálculo.',
@@ -295,14 +274,10 @@ class ModuleDetailScreen extends StatelessWidget {
               const SizedBox(height: AppSpacing.lg),
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.all(
-                  AppSpacing.cardPaddingLarge,
-                ),
+                padding: const EdgeInsets.all(AppSpacing.cardPaddingLarge),
                 decoration: BoxDecoration(
                   color: AppColors.primary,
-                  borderRadius: BorderRadius.circular(
-                    AppSpacing.radiusXLarge,
-                  ),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusXLarge),
                   boxShadow: const [
                     BoxShadow(
                       color: AppColors.shadow,
@@ -347,40 +322,28 @@ class ModuleDetailScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: AppSpacing.lg),
-              Text(
-                'Aulas',
-                style: AppTypography.titleLarge,
-              ),
+              Text('Aulas', style: AppTypography.titleLarge),
               const SizedBox(height: AppSpacing.sm),
               Expanded(
                 child: ListView.separated(
-                  padding: const EdgeInsets.only(
-                    bottom: AppSpacing.lg,
-                  ),
+                  padding: const EdgeInsets.only(bottom: AppSpacing.lg),
                   itemCount: module.lessons.length,
                   separatorBuilder: (context, index) =>
-                      const SizedBox(
-                    height: AppSpacing.md,
-                  ),
+                      const SizedBox(height: AppSpacing.md),
                   itemBuilder: (context, index) {
                     final lesson = module.lessons[index];
-                    final isUnlocked =
-                        _isLessonUnlocked(lesson);
+                    final isUnlocked = _isLessonUnlocked(lesson);
 
                     return MathCard(
                       title: lesson.title,
                       subtitle: lesson.subtitle,
                       symbol: lesson.symbol,
                       status: _getLessonStatus(lesson),
-                      statusColor:
-                          _getLessonStatusColor(lesson),
+                      statusColor: _getLessonStatusColor(lesson),
                       state: _getLessonCardState(lesson),
                       onTap: isUnlocked
                           ? () {
-                              _handleLessonTap(
-                                context,
-                                lesson,
-                              );
+                              _handleLessonTap(context, lesson);
                             }
                           : null,
                     );

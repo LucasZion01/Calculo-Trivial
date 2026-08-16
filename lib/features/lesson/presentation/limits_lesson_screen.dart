@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import 'package:calcquest/shared/theme/app_colors.dart';
 import 'package:calcquest/shared/theme/app_spacing.dart';
@@ -18,9 +18,7 @@ class LimitsLessonScreen extends StatelessWidget {
   void _onMenuTap(BuildContext context, int index) {
     if (index == 0) {
       Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(
-          builder: (_) => const DashboardScreen(),
-        ),
+        MaterialPageRoute(builder: (_) => const DashboardScreen()),
         (route) => false,
       );
       return;
@@ -28,9 +26,7 @@ class LimitsLessonScreen extends StatelessWidget {
 
     if (index == 1) {
       Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(
-          builder: (_) => const LearningPathScreen(),
-        ),
+        MaterialPageRoute(builder: (_) => const LearningPathScreen()),
         (route) => false,
       );
       return;
@@ -38,9 +34,7 @@ class LimitsLessonScreen extends StatelessWidget {
 
     if (index == 2) {
       Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(
-          builder: (_) => const StatisticsScreen(),
-        ),
+        MaterialPageRoute(builder: (_) => const StatisticsScreen()),
         (route) => false,
       );
       return;
@@ -48,20 +42,16 @@ class LimitsLessonScreen extends StatelessWidget {
 
     if (index == 3) {
       Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(
-          builder: (_) => const ProfileScreen(),
-        ),
+        MaterialPageRoute(builder: (_) => const ProfileScreen()),
         (route) => false,
       );
     }
   }
 
   void _goToExercises(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => const LimitsExercisesScreen(),
-      ),
-    );
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (_) => const LimitsExercisesScreen()));
   }
 
   Widget _buildConceptCard({
@@ -71,17 +61,11 @@ class LimitsLessonScreen extends StatelessWidget {
   }) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(
-        AppSpacing.cardPaddingLarge,
-      ),
+      padding: const EdgeInsets.all(AppSpacing.cardPaddingLarge),
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(
-          AppSpacing.radiusLarge,
-        ),
-        border: Border.all(
-          color: AppColors.border,
-        ),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
+        border: Border.all(color: AppColors.border),
         boxShadow: const [
           BoxShadow(
             color: AppColors.shadow,
@@ -99,9 +83,7 @@ class LimitsLessonScreen extends StatelessWidget {
             alignment: Alignment.center,
             decoration: BoxDecoration(
               color: AppColors.selectedBackground,
-              borderRadius: BorderRadius.circular(
-                AppSpacing.radiusMedium,
-              ),
+              borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
             ),
             child: Text(
               symbol,
@@ -117,15 +99,9 @@ class LimitsLessonScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  title,
-                  style: AppTypography.titleMedium,
-                ),
+                Text(title, style: AppTypography.titleMedium),
                 const SizedBox(height: AppSpacing.xs),
-                Text(
-                  content,
-                  style: AppTypography.bodyMedium,
-                ),
+                Text(content, style: AppTypography.bodyMedium),
               ],
             ),
           ),
@@ -137,14 +113,10 @@ class LimitsLessonScreen extends StatelessWidget {
   Widget _buildExampleCard() {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(
-        AppSpacing.cardPaddingLarge,
-      ),
+      padding: const EdgeInsets.all(AppSpacing.cardPaddingLarge),
       decoration: BoxDecoration(
         color: AppColors.primary,
-        borderRadius: BorderRadius.circular(
-          AppSpacing.radiusXLarge,
-        ),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusXLarge),
         boxShadow: const [
           BoxShadow(
             color: AppColors.shadow,
@@ -180,9 +152,7 @@ class LimitsLessonScreen extends StatelessWidget {
           const SizedBox(height: AppSpacing.xs),
           Text(
             'Resultado: 4',
-            style: AppTypography.titleMedium.copyWith(
-              color: AppColors.white,
-            ),
+            style: AppTypography.titleMedium.copyWith(color: AppColors.white),
           ),
         ],
       ),
@@ -204,10 +174,7 @@ class LimitsLessonScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Aula 1 — Limites',
-                style: AppTypography.headingMedium,
-              ),
+              Text('Aula 1 — Limites', style: AppTypography.headingMedium),
               const SizedBox(height: AppSpacing.xs),
               Text(
                 'Entenda limites com substituição, fatoração, racionalização e análise no infinito.',
@@ -216,9 +183,7 @@ class LimitsLessonScreen extends StatelessWidget {
               const SizedBox(height: AppSpacing.lg),
               Expanded(
                 child: ListView(
-                  padding: const EdgeInsets.only(
-                    bottom: AppSpacing.lg,
-                  ),
+                  padding: const EdgeInsets.only(bottom: AppSpacing.lg),
                   children: [
                     _buildConceptCard(
                       title: 'Ideia central',
@@ -259,9 +224,7 @@ class LimitsLessonScreen extends StatelessWidget {
                   _goToExercises(context);
                 },
               ),
-              const SizedBox(
-                height: AppSpacing.screenBottom,
-              ),
+              const SizedBox(height: AppSpacing.screenBottom),
             ],
           ),
         ),

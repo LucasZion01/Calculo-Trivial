@@ -1,14 +1,10 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import 'package:calcquest/shared/theme/app_colors.dart';
 import 'package:calcquest/shared/theme/app_spacing.dart';
 import 'package:calcquest/shared/theme/app_typography.dart';
 
-enum PrimaryButtonVariant {
-  primary,
-  secondary,
-  destructive,
-}
+enum PrimaryButtonVariant { primary, secondary, destructive }
 
 class PrimaryButton extends StatelessWidget {
   final String text;
@@ -78,17 +74,11 @@ class PrimaryButton extends StatelessWidget {
           foregroundColor: _foregroundColor,
           disabledBackgroundColor: AppColors.disabled,
           disabledForegroundColor: AppColors.disabledForeground,
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.md,
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(
-              AppSpacing.radiusMedium,
-            ),
+            borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
             side: BorderSide(
-              color: isDisabled
-                  ? AppColors.disabled
-                  : _borderColor,
+              color: isDisabled ? AppColors.disabled : _borderColor,
             ),
           ),
         ),
@@ -110,10 +100,7 @@ class PrimaryButton extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   if (icon != null) ...[
-                    Icon(
-                      icon,
-                      size: AppSpacing.iconMedium,
-                    ),
+                    Icon(icon, size: AppSpacing.iconMedium),
                     const SizedBox(width: AppSpacing.xs),
                   ],
                   Flexible(

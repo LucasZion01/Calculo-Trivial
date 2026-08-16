@@ -1,4 +1,4 @@
-﻿class LessonData {
+class LessonData {
   final String id;
   final String title;
   final String subtitle;

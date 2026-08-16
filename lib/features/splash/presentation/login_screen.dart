@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import 'package:calcquest/shared/theme/app_colors.dart';
 
@@ -27,10 +27,7 @@ class LoginScreen extends StatelessWidget {
               const Text(
                 'Domine o cálculo. Evolua além.',
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 16,
-                  color: AppColors.textSecondary,
-                ),
+                style: TextStyle(fontSize: 16, color: AppColors.textSecondary),
               ),
               const SizedBox(height: 40),
 
@@ -49,15 +46,11 @@ class LoginScreen extends StatelessWidget {
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(
-                      color: AppColors.inputBorder,
-                    ),
+                    borderSide: const BorderSide(color: AppColors.inputBorder),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(
-                      color: AppColors.primary,
-                    ),
+                    borderSide: const BorderSide(color: AppColors.primary),
                   ),
                 ),
               ),
@@ -80,15 +73,11 @@ class LoginScreen extends StatelessWidget {
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(
-                      color: AppColors.inputBorder,
-                    ),
+                    borderSide: const BorderSide(color: AppColors.inputBorder),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(
-                      color: AppColors.primary,
-                    ),
+                    borderSide: const BorderSide(color: AppColors.primary),
                   ),
                 ),
               ),
@@ -108,12 +97,7 @@ class LoginScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  child: const Text(
-                    'Entrar',
-                    style: TextStyle(
-                      fontSize: 16,
-                    ),
-                  ),
+                  child: const Text('Entrar', style: TextStyle(fontSize: 16)),
                 ),
               ),
 
@@ -121,20 +105,14 @@ class LoginScreen extends StatelessWidget {
 
               const Text(
                 'Ainda não tem conta? Criar conta',
-                style: TextStyle(
-                  fontSize: 13,
-                  color: AppColors.textSecondary,
-                ),
+                style: TextStyle(fontSize: 13, color: AppColors.textSecondary),
               ),
 
               const SizedBox(height: 12),
 
               const Text(
                 'Esqueci minha senha',
-                style: TextStyle(
-                  fontSize: 13,
-                  color: AppColors.primary,
-                ),
+                style: TextStyle(fontSize: 13, color: AppColors.primary),
               ),
             ],
           ),

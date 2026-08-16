@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import 'package:calcquest/shared/data/mock_exercise_data.dart';
 import 'package:calcquest/shared/data/mock_functions_exercise_data.dart';
@@ -39,9 +39,7 @@ class _FunctionsExercisesScreenState extends State<FunctionsExercisesScreen> {
   void _onMenuTap(BuildContext context, int index) {
     if (index == 0) {
       Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(
-          builder: (_) => const DashboardScreen(),
-        ),
+        MaterialPageRoute(builder: (_) => const DashboardScreen()),
         (route) => false,
       );
       return;
@@ -49,9 +47,7 @@ class _FunctionsExercisesScreenState extends State<FunctionsExercisesScreen> {
 
     if (index == 1) {
       Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(
-          builder: (_) => const LearningPathScreen(),
-        ),
+        MaterialPageRoute(builder: (_) => const LearningPathScreen()),
         (route) => false,
       );
       return;
@@ -59,9 +55,7 @@ class _FunctionsExercisesScreenState extends State<FunctionsExercisesScreen> {
 
     if (index == 2) {
       Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(
-          builder: (_) => const StatisticsScreen(),
-        ),
+        MaterialPageRoute(builder: (_) => const StatisticsScreen()),
         (route) => false,
       );
       return;
@@ -69,9 +63,7 @@ class _FunctionsExercisesScreenState extends State<FunctionsExercisesScreen> {
 
     if (index == 3) {
       Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(
-          builder: (_) => const ProfileScreen(),
-        ),
+        MaterialPageRoute(builder: (_) => const ProfileScreen()),
         (route) => false,
       );
     }
@@ -88,23 +80,14 @@ class _FunctionsExercisesScreenState extends State<FunctionsExercisesScreen> {
         SnackBar(
           behavior: SnackBarBehavior.floating,
           backgroundColor: backgroundColor,
-          margin: const EdgeInsets.all(
-            AppSpacing.md,
-          ),
+          margin: const EdgeInsets.all(AppSpacing.md),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(
-              AppSpacing.radiusMedium,
-            ),
+            borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
           ),
           content: Row(
             children: [
-              Icon(
-                icon,
-                color: AppColors.white,
-              ),
-              const SizedBox(
-                width: AppSpacing.sm,
-              ),
+              Icon(icon, color: AppColors.white),
+              const SizedBox(width: AppSpacing.sm),
               Expanded(
                 child: Text(
                   message,
@@ -145,24 +128,21 @@ class _FunctionsExercisesScreenState extends State<FunctionsExercisesScreen> {
     );
 
     if (isLastExercise) {
-      Future.delayed(
-        const Duration(milliseconds: 700),
-        () {
-          if (!mounted) return;
+      Future.delayed(const Duration(milliseconds: 700), () {
+        if (!mounted) return;
 
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (_) => ResultScreen(
-                completedLessonId: 'funcoes',
-                totalQuestions: mockFunctionsExercises.length,
-                correctAnswers: mockFunctionsExercises.length,
-                xpEarned: 80,
-                goldEarned: 35,
-              ),
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => ResultScreen(
+              completedLessonId: 'funcoes',
+              totalQuestions: mockFunctionsExercises.length,
+              correctAnswers: mockFunctionsExercises.length,
+              xpEarned: 80,
+              goldEarned: 35,
             ),
-          );
-        },
-      );
+          ),
+        );
+      });
 
       return;
     }
@@ -186,37 +166,25 @@ class _FunctionsExercisesScreenState extends State<FunctionsExercisesScreen> {
 
     return Material(
       color: Colors.transparent,
-      borderRadius: BorderRadius.circular(
-        AppSpacing.radiusLarge,
-      ),
+      borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
       child: InkWell(
         onTap: () {
           setState(() {
             selectedOptionId = option.id;
           });
         },
-        borderRadius: BorderRadius.circular(
-          AppSpacing.radiusLarge,
-        ),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
         child: AnimatedContainer(
-          duration: const Duration(
-            milliseconds: 160,
-          ),
+          duration: const Duration(milliseconds: 160),
           width: double.infinity,
-          padding: const EdgeInsets.all(
-            AppSpacing.cardPadding,
-          ),
+          padding: const EdgeInsets.all(AppSpacing.cardPadding),
           decoration: BoxDecoration(
             color: isSelected
                 ? AppColors.selectedBackground
                 : AppColors.surface,
-            borderRadius: BorderRadius.circular(
-              AppSpacing.radiusLarge,
-            ),
+            borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
             border: Border.all(
-              color: isSelected
-                  ? AppColors.primary
-                  : AppColors.border,
+              color: isSelected ? AppColors.primary : AppColors.border,
               width: isSelected ? 2 : 1,
             ),
           ),
@@ -230,9 +198,7 @@ class _FunctionsExercisesScreenState extends State<FunctionsExercisesScreen> {
                   color: isSelected
                       ? AppColors.primary
                       : AppColors.surfaceSecondary,
-                  borderRadius: BorderRadius.circular(
-                    AppSpacing.radiusMedium,
-                  ),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
                 ),
                 child: Text(
                   _letterForIndex(index),
@@ -243,9 +209,7 @@ class _FunctionsExercisesScreenState extends State<FunctionsExercisesScreen> {
                   ),
                 ),
               ),
-              const SizedBox(
-                width: AppSpacing.sm,
-              ),
+              const SizedBox(width: AppSpacing.sm),
               Expanded(
                 child: Text(
                   option.text,
@@ -255,9 +219,7 @@ class _FunctionsExercisesScreenState extends State<FunctionsExercisesScreen> {
                 ),
               ),
               if (isSelected) ...[
-                const SizedBox(
-                  width: AppSpacing.xs,
-                ),
+                const SizedBox(width: AppSpacing.xs),
                 const Icon(
                   Icons.check_circle_rounded,
                   color: AppColors.primary,
@@ -292,35 +254,21 @@ class _FunctionsExercisesScreenState extends State<FunctionsExercisesScreen> {
                 'Questão ${currentExerciseIndex + 1} de ${mockFunctionsExercises.length}',
                 style: AppTypography.headingSmall,
               ),
-              const SizedBox(
-                height: AppSpacing.xs,
-              ),
+              const SizedBox(height: AppSpacing.xs),
               Text(
                 'Resolva a questão sobre funções.',
                 style: AppTypography.bodyMedium,
               ),
-              const SizedBox(
-                height: AppSpacing.md,
-              ),
-              AppProgressBar(
-                value: progress,
-              ),
-              const SizedBox(
-                height: AppSpacing.lg,
-              ),
+              const SizedBox(height: AppSpacing.md),
+              AppProgressBar(value: progress),
+              const SizedBox(height: AppSpacing.lg),
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.all(
-                  AppSpacing.cardPaddingLarge,
-                ),
+                padding: const EdgeInsets.all(AppSpacing.cardPaddingLarge),
                 decoration: BoxDecoration(
                   color: AppColors.surface,
-                  borderRadius: BorderRadius.circular(
-                    AppSpacing.radiusLarge,
-                  ),
-                  border: Border.all(
-                    color: AppColors.border,
-                  ),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
+                  border: Border.all(color: AppColors.border),
                   boxShadow: const [
                     BoxShadow(
                       color: AppColors.shadow,
@@ -336,32 +284,21 @@ class _FunctionsExercisesScreenState extends State<FunctionsExercisesScreen> {
                   ),
                 ),
               ),
-              const SizedBox(
-                height: AppSpacing.lg,
-              ),
+              const SizedBox(height: AppSpacing.lg),
               Expanded(
                 child: ListView.separated(
-                  padding: const EdgeInsets.only(
-                    bottom: AppSpacing.md,
-                  ),
+                  padding: const EdgeInsets.only(bottom: AppSpacing.md),
                   itemCount: exercise.options.length,
                   separatorBuilder: (context, index) =>
-                      const SizedBox(
-                    height: AppSpacing.sm,
-                  ),
+                      const SizedBox(height: AppSpacing.sm),
                   itemBuilder: (context, index) {
                     final option = exercise.options[index];
 
-                    return _buildOption(
-                      option: option,
-                      index: index,
-                    );
+                    return _buildOption(option: option, index: index);
                   },
                 ),
               ),
-              const SizedBox(
-                height: AppSpacing.sm,
-              ),
+              const SizedBox(height: AppSpacing.sm),
               PrimaryButton(
                 text: isLastExercise
                     ? 'Finalizar exercícios'
@@ -371,9 +308,7 @@ class _FunctionsExercisesScreenState extends State<FunctionsExercisesScreen> {
                     : Icons.arrow_forward_rounded,
                 onPressed: _confirmAnswer,
               ),
-              const SizedBox(
-                height: AppSpacing.screenBottom,
-              ),
+              const SizedBox(height: AppSpacing.screenBottom),
             ],
           ),
         ),

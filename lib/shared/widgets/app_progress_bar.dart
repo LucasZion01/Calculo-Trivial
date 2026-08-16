@@ -3,11 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
 import 'package:calcquest/shared/theme/app_spacing.dart';
 
-enum AppProgressBarState {
-  normal,
-  success,
-  locked,
-}
+enum AppProgressBarState { normal, success, locked }
 
 class AppProgressBar extends StatelessWidget {
   final double value;
@@ -41,16 +37,12 @@ class AppProgressBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(
-        AppSpacing.radiusSmall,
-      ),
+      borderRadius: BorderRadius.circular(AppSpacing.radiusSmall),
       child: LinearProgressIndicator(
         value: _safeValue,
         minHeight: height,
         backgroundColor: AppColors.progressTrack,
-        valueColor: AlwaysStoppedAnimation<Color>(
-          _progressColor,
-        ),
+        valueColor: AlwaysStoppedAnimation<Color>(_progressColor),
       ),
     );
   }

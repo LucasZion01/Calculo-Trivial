@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import 'package:calcquest/shared/theme/app_colors.dart';
 import 'package:calcquest/shared/theme/app_spacing.dart';
@@ -19,11 +19,7 @@ class AppBottomNavigationBar extends StatelessWidget {
     return Container(
       decoration: const BoxDecoration(
         color: AppColors.navigationBackground,
-        border: Border(
-          top: BorderSide(
-            color: AppColors.border,
-          ),
-        ),
+        border: Border(top: BorderSide(color: AppColors.border)),
       ),
       child: SafeArea(
         top: false,
@@ -44,25 +40,13 @@ class AppBottomNavigationBar extends StatelessWidget {
           onTap: onTap,
           items: const [
             BottomNavigationBarItem(
-              icon: Icon(
-                Icons.home_outlined,
-                semanticLabel: 'Início',
-              ),
-              activeIcon: Icon(
-                Icons.home_rounded,
-                semanticLabel: 'Início',
-              ),
+              icon: Icon(Icons.home_outlined, semanticLabel: 'Início'),
+              activeIcon: Icon(Icons.home_rounded, semanticLabel: 'Início'),
               label: 'Início',
             ),
             BottomNavigationBarItem(
-              icon: Icon(
-                Icons.map_outlined,
-                semanticLabel: 'Trilha',
-              ),
-              activeIcon: Icon(
-                Icons.map_rounded,
-                semanticLabel: 'Trilha',
-              ),
+              icon: Icon(Icons.map_outlined, semanticLabel: 'Trilha'),
+              activeIcon: Icon(Icons.map_rounded, semanticLabel: 'Trilha'),
               label: 'Trilha',
             ),
             BottomNavigationBarItem(
@@ -77,14 +61,8 @@ class AppBottomNavigationBar extends StatelessWidget {
               label: 'Estatísticas',
             ),
             BottomNavigationBarItem(
-              icon: Icon(
-                Icons.person_outline_rounded,
-                semanticLabel: 'Perfil',
-              ),
-              activeIcon: Icon(
-                Icons.person_rounded,
-                semanticLabel: 'Perfil',
-              ),
+              icon: Icon(Icons.person_outline_rounded, semanticLabel: 'Perfil'),
+              activeIcon: Icon(Icons.person_rounded, semanticLabel: 'Perfil'),
               label: 'Perfil',
             ),
           ],

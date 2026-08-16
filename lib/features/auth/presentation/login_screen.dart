@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import 'package:calcquest/features/dashboard/presentation/dashboard_screen.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
@@ -29,9 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _login() {
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute<void>(
-        builder: (_) => const DashboardScreen(),
-      ),
+      MaterialPageRoute<void>(builder: (_) => const DashboardScreen()),
     );
   }
 
@@ -47,9 +45,7 @@ class _LoginScreenState extends State<LoginScreen> {
               vertical: AppSpacing.xxl,
             ),
             child: ConstrainedBox(
-              constraints: const BoxConstraints(
-                maxWidth: 420,
-              ),
+              constraints: const BoxConstraints(maxWidth: 420),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -65,9 +61,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     'Cálculo Trivial',
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                          color: AppColors.textPrimary,
-                          fontWeight: FontWeight.w700,
-                        ),
+                      color: AppColors.textPrimary,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                   const SizedBox(height: AppSpacing.sm),
                   Text(
@@ -106,10 +102,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   const SizedBox(height: AppSpacing.xl),
-                  PrimaryButton(
-                    text: 'Entrar',
-                    onPressed: _login,
-                  ),
+                  PrimaryButton(text: 'Entrar', onPressed: _login),
                   const SizedBox(height: AppSpacing.md),
                   TextButton(
                     onPressed: () {},

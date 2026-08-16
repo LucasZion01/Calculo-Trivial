@@ -6,13 +6,7 @@ import 'package:calcquest/shared/theme/app_typography.dart';
 import 'package:calcquest/shared/widgets/app_icon.dart';
 import 'package:calcquest/shared/widgets/primary_button.dart';
 
-enum AppStateType {
-  loading,
-  empty,
-  locked,
-  offline,
-  error,
-}
+enum AppStateType { loading, empty, locked, offline, error }
 
 class AppStateView extends StatelessWidget {
   final AppStateType type;
@@ -109,13 +103,9 @@ class AppStateView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(
-          AppSpacing.lg,
-        ),
+        padding: const EdgeInsets.all(AppSpacing.lg),
         child: ConstrainedBox(
-          constraints: const BoxConstraints(
-            maxWidth: 360,
-          ),
+          constraints: const BoxConstraints(maxWidth: 360),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -147,30 +137,21 @@ class AppStateView extends StatelessWidget {
                     color: _iconColor,
                   ),
                 ),
-              const SizedBox(
-                height: AppSpacing.lg,
-              ),
+              const SizedBox(height: AppSpacing.lg),
               Text(
                 title ?? _defaultTitle,
                 textAlign: TextAlign.center,
                 style: AppTypography.headingSmall,
               ),
-              const SizedBox(
-                height: AppSpacing.xs,
-              ),
+              const SizedBox(height: AppSpacing.xs),
               Text(
                 message ?? _defaultMessage,
                 textAlign: TextAlign.center,
                 style: AppTypography.bodyMedium,
               ),
               if (actionText != null && onAction != null) ...[
-                const SizedBox(
-                  height: AppSpacing.lg,
-                ),
-                PrimaryButton(
-                  text: actionText!,
-                  onPressed: onAction,
-                ),
+                const SizedBox(height: AppSpacing.lg),
+                PrimaryButton(text: actionText!, onPressed: onAction),
               ],
             ],
           ),

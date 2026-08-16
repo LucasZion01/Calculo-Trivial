@@ -1,4 +1,4 @@
-﻿import 'dart:async';
+import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:calcquest/features/auth/presentation/login_screen.dart';
@@ -20,9 +20,7 @@ class _SplashScreenState extends State<SplashScreen> {
       if (!mounted) return;
 
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute<void>(
-          builder: (_) => const LoginScreen(),
-        ),
+        MaterialPageRoute<void>(builder: (_) => const LoginScreen()),
       );
     });
   }
@@ -34,9 +32,7 @@ class _SplashScreenState extends State<SplashScreen> {
       body: SafeArea(
         child: Center(
           child: Image(
-            image: AssetImage(
-              'assets/branding/calculo_trivial_icon_1024.png',
-            ),
+            image: AssetImage('assets/branding/calculo_trivial_icon_1024.png'),
             width: 160,
             height: 160,
           ),

@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import 'package:calcquest/shared/data/mock_learning_data.dart';
 import 'package:calcquest/shared/state/app_progress.dart';
@@ -20,9 +20,7 @@ class LearningPathScreen extends StatelessWidget {
   void _onMenuTap(BuildContext context, int index) {
     if (index == 0) {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (_) => const DashboardScreen(),
-        ),
+        MaterialPageRoute(builder: (_) => const DashboardScreen()),
       );
       return;
     }
@@ -33,36 +31,28 @@ class LearningPathScreen extends StatelessWidget {
 
     if (index == 2) {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (_) => const StatisticsScreen(),
-        ),
+        MaterialPageRoute(builder: (_) => const StatisticsScreen()),
       );
       return;
     }
 
     if (index == 3) {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (_) => const ProfileScreen(),
-        ),
+        MaterialPageRoute(builder: (_) => const ProfileScreen()),
       );
     }
   }
 
   void _goToModuleDetail(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => const ModuleDetailScreen(),
-      ),
-    );
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (_) => const ModuleDetailScreen()));
   }
 
   void _goToCalculusOne(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => const CalculusOneDetailScreen(),
-      ),
-    );
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (_) => const CalculusOneDetailScreen()));
   }
 
   int _completedFundamentalsLessons() {
@@ -153,18 +143,14 @@ class LearningPathScreen extends StatelessWidget {
     return MathCardState.locked;
   }
 
-  VoidCallback? _getModuleTap(
-    BuildContext context,
-    ModuleData module,
-  ) {
+  VoidCallback? _getModuleTap(BuildContext context, ModuleData module) {
     if (module.id == 'fundamentos') {
       return () {
         _goToModuleDetail(context);
       };
     }
 
-    if (module.id == 'calculo-1' &&
-        AppProgress.functionsCompleted) {
+    if (module.id == 'calculo-1' && AppProgress.functionsCompleted) {
       return () {
         _goToCalculusOne(context);
       };
@@ -200,14 +186,10 @@ class LearningPathScreen extends StatelessWidget {
               const SizedBox(height: AppSpacing.lg),
               Expanded(
                 child: ListView.separated(
-                  padding: const EdgeInsets.only(
-                    bottom: AppSpacing.lg,
-                  ),
+                  padding: const EdgeInsets.only(bottom: AppSpacing.lg),
                   itemCount: mockModules.length,
                   separatorBuilder: (context, index) =>
-                      const SizedBox(
-                    height: AppSpacing.md,
-                  ),
+                      const SizedBox(height: AppSpacing.md),
                   itemBuilder: (context, index) {
                     final module = mockModules[index];
 
@@ -218,10 +200,7 @@ class LearningPathScreen extends StatelessWidget {
                       status: _getModuleStatus(module),
                       statusColor: _getModuleStatusColor(module),
                       state: _getModuleCardState(module),
-                      onTap: _getModuleTap(
-                        context,
-                        module,
-                      ),
+                      onTap: _getModuleTap(context, module),
                     );
                   },
                 ),

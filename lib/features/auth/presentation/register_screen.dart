@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import 'package:calcquest/features/dashboard/presentation/dashboard_screen.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
@@ -53,19 +53,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
 
     Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute<void>(
-        builder: (_) => const DashboardScreen(),
-      ),
+      MaterialPageRoute<void>(builder: (_) => const DashboardScreen()),
       (route) => false,
     );
   }
 
   void _showMessage(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-      ),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 
   @override
@@ -80,9 +76,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               vertical: AppSpacing.xxl,
             ),
             child: ConstrainedBox(
-              constraints: const BoxConstraints(
-                maxWidth: 420,
-              ),
+              constraints: const BoxConstraints(maxWidth: 420),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -92,9 +86,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
-                      icon: const Icon(
-                        Icons.arrow_back_rounded,
-                      ),
+                      icon: const Icon(Icons.arrow_back_rounded),
                       color: AppColors.textPrimary,
                       tooltip: 'Voltar',
                     ),
@@ -112,9 +104,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     'Cálculo Trivial',
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                          color: AppColors.textPrimary,
-                          fontWeight: FontWeight.w700,
-                        ),
+                      color: AppColors.textPrimary,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                   const SizedBox(height: AppSpacing.sm),
                   Text(
@@ -128,9 +120,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   Text(
                     'Crie sua conta',
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          color: AppColors.textPrimary,
-                          fontWeight: FontWeight.w700,
-                        ),
+                      color: AppColors.textPrimary,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                   const SizedBox(height: AppSpacing.sm),
                   Text(
@@ -197,10 +189,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                   ),
                   const SizedBox(height: AppSpacing.xl),
-                  PrimaryButton(
-                    text: 'Criar conta',
-                    onPressed: _register,
-                  ),
+                  PrimaryButton(text: 'Criar conta', onPressed: _register),
                   const SizedBox(height: AppSpacing.lg),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,

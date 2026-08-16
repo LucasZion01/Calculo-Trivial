@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import 'package:calcquest/shared/theme/app_colors.dart';
 import 'package:calcquest/shared/theme/app_spacing.dart';
@@ -48,9 +48,7 @@ class AppTextField extends StatelessWidget {
       onChanged: onChanged,
       onTap: onTap,
       style: AppTypography.bodyMedium.copyWith(
-        color: enabled
-            ? AppColors.textPrimary
-            : AppColors.textDisabled,
+        color: enabled ? AppColors.textPrimary : AppColors.textDisabled,
       ),
       decoration: InputDecoration(
         labelText: labelText,
@@ -58,18 +56,14 @@ class AppTextField extends StatelessWidget {
         errorText: errorText,
 
         labelStyle: AppTypography.bodyMedium.copyWith(
-          color: hasError
-              ? AppColors.error
-              : AppColors.textSecondary,
+          color: hasError ? AppColors.error : AppColors.textSecondary,
         ),
 
         hintStyle: AppTypography.bodyMedium.copyWith(
           color: AppColors.textMuted,
         ),
 
-        errorStyle: AppTypography.caption.copyWith(
-          color: AppColors.error,
-        ),
+        errorStyle: AppTypography.caption.copyWith(color: AppColors.error),
 
         filled: true,
         fillColor: enabled
@@ -80,9 +74,7 @@ class AppTextField extends StatelessWidget {
             ? Icon(
                 prefixIcon,
                 size: AppSpacing.iconMedium,
-                color: hasError
-                    ? AppColors.error
-                    : AppColors.textMuted,
+                color: hasError ? AppColors.error : AppColors.textMuted,
               )
             : null,
 
@@ -94,9 +86,7 @@ class AppTextField extends StatelessWidget {
         ),
 
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(
-            AppSpacing.radiusMedium,
-          ),
+          borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
           borderSide: BorderSide(
             color: hasError
                 ? AppColors.inputErrorBorder
@@ -105,9 +95,7 @@ class AppTextField extends StatelessWidget {
         ),
 
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(
-            AppSpacing.radiusMedium,
-          ),
+          borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
           borderSide: BorderSide(
             color: hasError
                 ? AppColors.inputErrorBorder
@@ -117,18 +105,12 @@ class AppTextField extends StatelessWidget {
         ),
 
         errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(
-            AppSpacing.radiusMedium,
-          ),
-          borderSide: const BorderSide(
-            color: AppColors.inputErrorBorder,
-          ),
+          borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
+          borderSide: const BorderSide(color: AppColors.inputErrorBorder),
         ),
 
         focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(
-            AppSpacing.radiusMedium,
-          ),
+          borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
           borderSide: const BorderSide(
             color: AppColors.inputErrorBorder,
             width: 2,
@@ -136,12 +118,8 @@ class AppTextField extends StatelessWidget {
         ),
 
         disabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(
-            AppSpacing.radiusMedium,
-          ),
-          borderSide: const BorderSide(
-            color: AppColors.border,
-          ),
+          borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
+          borderSide: const BorderSide(color: AppColors.border),
         ),
       ),
     );

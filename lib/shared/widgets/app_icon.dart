@@ -3,12 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
 import 'package:calcquest/shared/theme/app_spacing.dart';
 
-enum AppIconSize {
-  small,
-  medium,
-  large,
-  extraLarge,
-}
+enum AppIconSize { small, medium, large, extraLarge }
 
 class AppIcon extends StatelessWidget {
   final IconData icon;
