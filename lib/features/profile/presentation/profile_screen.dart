@@ -42,43 +42,10 @@ class ProfileScreen extends StatelessWidget {
     }
   }
 
-  Future<void> _restorePurchases(BuildContext context) async {
-    if (!RevenueCatService.isConfigured) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('O sistema Premium está indisponível no momento.'),
-        ),
-      );
-      return;
-    }
-
-    try {
-      await RevenueCatService.restorePurchases();
-
-      if (!context.mounted) {
-        return;
-      }
-
-      final message = RevenueCatService.isPremium
-          ? 'Compras restauradas. Premium ativo.'
-          : 'Nenhuma compra Premium encontrada.';
-
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(message)));
-    } catch (error) {
-      debugPrint('Perfil: erro ao restaurar compras: $error');
-
-      if (!context.mounted) {
-        return;
-      }
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Não foi possível restaurar suas compras.'),
-        ),
-      );
-    }
+  void _openSettings(BuildContext context) {
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (_) => const SettingsScreen()));
   }
 
   Widget _buildInfoCard({
@@ -138,6 +105,77 @@ class ProfileScreen extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildPremiumCard(BuildContext context, bool isPremium) {
+    final statusColor = isPremium ? AppColors.success : const Color(0xFFFFB300);
+
+    return Material(
+      color: Colors.transparent,
+      borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
+      child: InkWell(
+        onTap: () {
+          _openSettings(context);
+        },
+        borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
+        child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(AppSpacing.cardPaddingLarge),
+          decoration: BoxDecoration(
+            color: AppColors.surface,
+            borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
+            border: Border.all(color: statusColor.withValues(alpha: 0.45)),
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 44,
+                height: 44,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: statusColor.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
+                ),
+                child: AppIcon(
+                  icon: isPremium
+                      ? Icons.workspace_premium_rounded
+                      : Icons.lock_outline_rounded,
+                  size: AppIconSize.large,
+                  color: statusColor,
+                ),
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      isPremium ? 'Premium ativo' : 'Plano gratuito',
+                      style: AppTypography.titleMedium.copyWith(
+                        color: statusColor,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(height: AppSpacing.xxs),
+                    Text(
+                      isPremium
+                          ? 'Gerencie sua assinatura e suas compras.'
+                          : 'Conheça os recursos do Cálculo Trivial Premium.',
+                      style: AppTypography.bodySmall,
+                    ),
+                  ],
+                ),
+              ),
+              const AppIcon(
+                icon: Icons.chevron_right_rounded,
+                size: AppIconSize.large,
+                color: AppColors.textMuted,
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -235,68 +273,11 @@ class ProfileScreen extends StatelessWidget {
               const SizedBox(height: AppSpacing.lg),
               Text('Premium', style: AppTypography.titleLarge),
               const SizedBox(height: AppSpacing.sm),
-              Material(
-                color: Colors.transparent,
-                borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
-                  onTap: () {
-                    _restorePurchases(context);
-                  },
-                  child: Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(AppSpacing.cardPaddingLarge),
-                    decoration: BoxDecoration(
-                      color: AppColors.surface,
-                      borderRadius: BorderRadius.circular(
-                        AppSpacing.radiusLarge,
-                      ),
-                      border: Border.all(color: AppColors.border),
-                    ),
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 44,
-                          height: 44,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            color: AppColors.selectedBackground,
-                            borderRadius: BorderRadius.circular(
-                              AppSpacing.radiusMedium,
-                            ),
-                          ),
-                          child: const AppIcon(
-                            icon: Icons.restore_rounded,
-                            size: AppIconSize.large,
-                            color: AppColors.primary,
-                          ),
-                        ),
-                        const SizedBox(width: AppSpacing.sm),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Restaurar compras',
-                                style: AppTypography.titleMedium,
-                              ),
-                              const SizedBox(height: AppSpacing.xxs),
-                              Text(
-                                'Recupere seu acesso Premium.',
-                                style: AppTypography.bodySmall,
-                              ),
-                            ],
-                          ),
-                        ),
-                        const AppIcon(
-                          icon: Icons.chevron_right_rounded,
-                          size: AppIconSize.large,
-                          color: AppColors.textMuted,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+              ValueListenableBuilder<bool>(
+                valueListenable: RevenueCatService.premiumAccess,
+                builder: (context, isPremium, child) {
+                  return _buildPremiumCard(context, isPremium);
+                },
               ),
               const SizedBox(height: AppSpacing.md),
               Material(
@@ -305,9 +286,7 @@ class ProfileScreen extends StatelessWidget {
                 child: InkWell(
                   borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
                   onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(builder: (_) => const SettingsScreen()),
-                    );
+                    _openSettings(context);
                   },
                   child: Container(
                     width: double.infinity,
