@@ -1,6 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:calcquest/features/dashboard/presentation/dashboard_screen.dart';
+import 'package:calcquest/features/auth/presentation/register_screen.dart';
+import 'package:calcquest/shared/services/revenuecat_service.dart';
+import 'package:calcquest/shared/state/app_progress.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
 import 'package:calcquest/shared/theme/app_spacing.dart';
 import 'package:calcquest/shared/theme/app_typography.dart';
@@ -19,6 +23,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
 
   bool _isPasswordVisible = false;
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -27,10 +32,127 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  void _login() {
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute<void>(builder: (_) => const DashboardScreen()),
-    );
+  void _showMessage(String message) {
+    if (!mounted) {
+      return;
+    }
+
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  String _firebaseErrorMessage(FirebaseAuthException error) {
+    switch (error.code) {
+      case 'invalid-email':
+        return 'Digite um endereço de e-mail válido.';
+      case 'user-disabled':
+        return 'Esta conta foi desativada.';
+      case 'user-not-found':
+      case 'wrong-password':
+      case 'invalid-credential':
+        return 'E-mail ou senha incorretos.';
+      case 'too-many-requests':
+        return 'Muitas tentativas. Aguarde um pouco e tente novamente.';
+      case 'network-request-failed':
+        return 'Verifique sua conexão com a internet.';
+      default:
+        return 'Não foi possível entrar. Tente novamente.';
+    }
+  }
+
+  Future<void> _identifyRevenueCatUser(String userId) async {
+    if (!RevenueCatService.isConfigured) {
+      return;
+    }
+
+    try {
+      await RevenueCatService.identifyUser(userId);
+    } catch (error) {
+      debugPrint(
+        'Login: não foi possível identificar o usuário no RevenueCat: $error',
+      );
+    }
+  }
+
+  Future<void> _login() async {
+    if (_isLoading) {
+      return;
+    }
+
+    final email = _emailController.text.trim();
+    final password = _passwordController.text;
+
+    if (email.isEmpty || password.isEmpty) {
+      _showMessage('Preencha o e-mail e a senha.');
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      final user = credential.user;
+
+      if (user == null) {
+        throw StateError('Firebase não retornou o usuário autenticado.');
+      }
+
+      await AppProgress.loadProgress();
+      await _identifyRevenueCatUser(user.uid);
+
+      if (!mounted) {
+        return;
+      }
+
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute<void>(builder: (_) => const DashboardScreen()),
+        (route) => false,
+      );
+    } on FirebaseAuthException catch (error) {
+      _showMessage(_firebaseErrorMessage(error));
+    } catch (error) {
+      debugPrint('Login: erro inesperado: $error');
+      _showMessage('Ocorreu um erro inesperado ao entrar.');
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
+  Future<void> _resetPassword() async {
+    final email = _emailController.text.trim();
+
+    if (email.isEmpty) {
+      _showMessage('Digite seu e-mail para receber a recuperação de senha.');
+      return;
+    }
+
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+
+      _showMessage('Enviamos as instruções de recuperação para o seu e-mail.');
+    } on FirebaseAuthException catch (error) {
+      _showMessage(_firebaseErrorMessage(error));
+    } catch (error) {
+      debugPrint('Recuperação de senha: erro inesperado: $error');
+      _showMessage('Não foi possível enviar a recuperação de senha.');
+    }
+  }
+
+  void _openRegister() {
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute<void>(builder: (_) => const RegisterScreen()));
   }
 
   @override
@@ -80,6 +202,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     hintText: 'Digite seu e-mail',
                     keyboardType: TextInputType.emailAddress,
                     prefixIcon: Icons.email_outlined,
+                    enabled: !_isLoading,
                   ),
                   const SizedBox(height: AppSpacing.md),
                   AppTextField(
@@ -88,12 +211,15 @@ class _LoginScreenState extends State<LoginScreen> {
                     hintText: 'Digite sua senha',
                     obscureText: !_isPasswordVisible,
                     prefixIcon: Icons.lock_outline,
+                    enabled: !_isLoading,
                     suffixIcon: IconButton(
-                      onPressed: () {
-                        setState(() {
-                          _isPasswordVisible = !_isPasswordVisible;
-                        });
-                      },
+                      onPressed: _isLoading
+                          ? null
+                          : () {
+                              setState(() {
+                                _isPasswordVisible = !_isPasswordVisible;
+                              });
+                            },
                       icon: Icon(
                         _isPasswordVisible
                             ? Icons.visibility_off_outlined
@@ -102,10 +228,14 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   const SizedBox(height: AppSpacing.xl),
-                  PrimaryButton(text: 'Entrar', onPressed: _login),
+                  PrimaryButton(
+                    text: 'Entrar',
+                    onPressed: _login,
+                    isLoading: _isLoading,
+                  ),
                   const SizedBox(height: AppSpacing.md),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: _isLoading ? null : _resetPassword,
                     child: const Text('Esqueci minha senha'),
                   ),
                   const SizedBox(height: AppSpacing.sm),
@@ -119,7 +249,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                       TextButton(
-                        onPressed: () {},
+                        onPressed: _isLoading ? null : _openRegister,
                         child: const Text('Criar conta'),
                       ),
                     ],

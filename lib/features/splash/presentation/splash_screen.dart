@@ -1,7 +1,10 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
 import 'package:calcquest/features/auth/presentation/login_screen.dart';
+import 'package:calcquest/features/dashboard/presentation/dashboard_screen.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -15,14 +18,25 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+    _openNextScreen();
+  }
 
-    Timer(const Duration(seconds: 2), () {
-      if (!mounted) return;
+  Future<void> _openNextScreen() async {
+    await Future<void>.delayed(const Duration(seconds: 2));
 
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute<void>(builder: (_) => const LoginScreen()),
-      );
-    });
+    if (!mounted) {
+      return;
+    }
+
+    final currentUser = FirebaseAuth.instance.currentUser;
+
+    final destination = currentUser == null
+        ? const LoginScreen()
+        : const DashboardScreen();
+
+    Navigator.of(
+      context,
+    ).pushReplacement(MaterialPageRoute<void>(builder: (_) => destination));
   }
 
   @override

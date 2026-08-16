@@ -1,6 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:calcquest/features/dashboard/presentation/dashboard_screen.dart';
+import 'package:calcquest/shared/services/revenuecat_service.dart';
+import 'package:calcquest/shared/state/app_progress.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
 import 'package:calcquest/shared/theme/app_spacing.dart';
 import 'package:calcquest/shared/theme/app_typography.dart';
@@ -23,6 +26,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   bool _isPasswordVisible = false;
   bool _isConfirmPasswordVisible = false;
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -33,7 +37,54 @@ class _RegisterScreenState extends State<RegisterScreen> {
     super.dispose();
   }
 
-  void _register() {
+  void _showMessage(String message) {
+    if (!mounted) {
+      return;
+    }
+
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  String _firebaseErrorMessage(FirebaseAuthException error) {
+    switch (error.code) {
+      case 'email-already-in-use':
+        return 'Já existe uma conta cadastrada com este e-mail.';
+      case 'invalid-email':
+        return 'Digite um endereço de e-mail válido.';
+      case 'weak-password':
+        return 'Crie uma senha mais forte, com pelo menos 6 caracteres.';
+      case 'operation-not-allowed':
+        return 'O cadastro por e-mail não está disponível.';
+      case 'too-many-requests':
+        return 'Muitas tentativas. Aguarde um pouco e tente novamente.';
+      case 'network-request-failed':
+        return 'Verifique sua conexão com a internet.';
+      default:
+        return 'Não foi possível criar sua conta.';
+    }
+  }
+
+  Future<void> _identifyRevenueCatUser(String userId) async {
+    if (!RevenueCatService.isConfigured) {
+      return;
+    }
+
+    try {
+      await RevenueCatService.identifyUser(userId);
+    } catch (error) {
+      debugPrint(
+        'Cadastro: não foi possível identificar o usuário no RevenueCat: $error',
+      );
+    }
+  }
+
+  Future<void> _register() async {
+    if (_isLoading) {
+      return;
+    }
+
     final name = _nameController.text.trim();
     final email = _emailController.text.trim();
     final password = _passwordController.text;
@@ -47,21 +98,61 @@ class _RegisterScreenState extends State<RegisterScreen> {
       return;
     }
 
+    if (name.length < 2) {
+      _showMessage('Digite seu nome.');
+      return;
+    }
+
+    if (password.length < 6) {
+      _showMessage('A senha precisa ter pelo menos 6 caracteres.');
+      return;
+    }
+
     if (password != confirmPassword) {
       _showMessage('As senhas não coincidem.');
       return;
     }
 
-    Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute<void>(builder: (_) => const DashboardScreen()),
-      (route) => false,
-    );
-  }
+    setState(() {
+      _isLoading = true;
+    });
 
-  void _showMessage(String message) {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(message)));
+    try {
+      final credential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email, password: password);
+
+      final user = credential.user;
+
+      if (user == null) {
+        throw StateError('Firebase não retornou o usuário criado.');
+      }
+
+      await user.updateDisplayName(name);
+      await user.reload();
+
+      await AppProgress.resetProgress();
+      await _identifyRevenueCatUser(user.uid);
+
+      if (!mounted) {
+        return;
+      }
+
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute<void>(builder: (_) => const DashboardScreen()),
+        (route) => false,
+      );
+    } on FirebaseAuthException catch (error) {
+      _showMessage(_firebaseErrorMessage(error));
+    } catch (error) {
+      debugPrint('Cadastro: erro inesperado: $error');
+      _showMessage('Ocorreu um erro inesperado ao criar sua conta.');
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
   }
 
   @override
@@ -83,9 +174,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   Align(
                     alignment: Alignment.centerLeft,
                     child: IconButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
+                      onPressed: _isLoading
+                          ? null
+                          : () {
+                              Navigator.of(context).pop();
+                            },
                       icon: const Icon(Icons.arrow_back_rounded),
                       color: AppColors.textPrimary,
                       tooltip: 'Voltar',
@@ -138,6 +231,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     hintText: 'Digite seu nome',
                     keyboardType: TextInputType.name,
                     prefixIcon: Icons.person_outline,
+                    enabled: !_isLoading,
                   ),
                   const SizedBox(height: AppSpacing.md),
                   AppTextField(
@@ -146,6 +240,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     hintText: 'Digite seu e-mail',
                     keyboardType: TextInputType.emailAddress,
                     prefixIcon: Icons.email_outlined,
+                    enabled: !_isLoading,
                   ),
                   const SizedBox(height: AppSpacing.md),
                   AppTextField(
@@ -154,12 +249,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     hintText: 'Crie uma senha',
                     obscureText: !_isPasswordVisible,
                     prefixIcon: Icons.lock_outline,
+                    enabled: !_isLoading,
                     suffixIcon: IconButton(
-                      onPressed: () {
-                        setState(() {
-                          _isPasswordVisible = !_isPasswordVisible;
-                        });
-                      },
+                      onPressed: _isLoading
+                          ? null
+                          : () {
+                              setState(() {
+                                _isPasswordVisible = !_isPasswordVisible;
+                              });
+                            },
                       icon: Icon(
                         _isPasswordVisible
                             ? Icons.visibility_off_outlined
@@ -174,13 +272,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     hintText: 'Digite sua senha novamente',
                     obscureText: !_isConfirmPasswordVisible,
                     prefixIcon: Icons.lock_outline,
+                    enabled: !_isLoading,
                     suffixIcon: IconButton(
-                      onPressed: () {
-                        setState(() {
-                          _isConfirmPasswordVisible =
-                              !_isConfirmPasswordVisible;
-                        });
-                      },
+                      onPressed: _isLoading
+                          ? null
+                          : () {
+                              setState(() {
+                                _isConfirmPasswordVisible =
+                                    !_isConfirmPasswordVisible;
+                              });
+                            },
                       icon: Icon(
                         _isConfirmPasswordVisible
                             ? Icons.visibility_off_outlined
@@ -189,7 +290,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                   ),
                   const SizedBox(height: AppSpacing.xl),
-                  PrimaryButton(text: 'Criar conta', onPressed: _register),
+                  PrimaryButton(
+                    text: 'Criar conta',
+                    onPressed: _register,
+                    isLoading: _isLoading,
+                  ),
                   const SizedBox(height: AppSpacing.lg),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -201,9 +306,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                       ),
                       TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
+                        onPressed: _isLoading
+                            ? null
+                            : () {
+                                Navigator.of(context).pop();
+                              },
                         child: const Text('Entrar'),
                       ),
                     ],
