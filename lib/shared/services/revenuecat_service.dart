@@ -10,7 +10,11 @@ class RevenueCatService {
 
   static bool _isConfigured = false;
 
+  static final ValueNotifier<bool> premiumAccess = ValueNotifier<bool>(false);
+
   static bool get isConfigured => _isConfigured;
+
+  static bool get isPremium => premiumAccess.value;
 
   static Future<void> initialize() async {
     if (_isConfigured) {
@@ -35,27 +39,52 @@ class RevenueCatService {
 
     _isConfigured = true;
 
+    Purchases.addCustomerInfoUpdateListener(_handleCustomerInfoUpdate);
+
     debugPrint('RevenueCat SDK inicializado.');
+
+    await refreshPremiumStatus();
   }
 
-  static Future<bool> hasPremiumAccess() async {
-    if (!_isConfigured) {
-      return false;
-    }
+  static void _handleCustomerInfoUpdate(CustomerInfo customerInfo) {
+    _updatePremiumStatus(customerInfo);
+  }
 
-    final customerInfo = await Purchases.getCustomerInfo();
-
+  static void _updatePremiumStatus(CustomerInfo customerInfo) {
     final hasPremium = customerInfo.entitlements.active.containsKey(
       entitlementPremium,
     );
+
+    premiumAccess.value = hasPremium;
 
     debugPrint(
       hasPremium
           ? 'RevenueCat: acesso Premium ATIVO.'
           : 'RevenueCat: acesso Premium INATIVO.',
     );
+  }
 
-    return hasPremium;
+  static Future<bool> refreshPremiumStatus() async {
+    if (!_isConfigured) {
+      premiumAccess.value = false;
+      return false;
+    }
+
+    try {
+      final customerInfo = await Purchases.getCustomerInfo();
+
+      _updatePremiumStatus(customerInfo);
+
+      return premiumAccess.value;
+    } catch (error) {
+      debugPrint('RevenueCat: erro ao verificar Premium: $error');
+
+      return premiumAccess.value;
+    }
+  }
+
+  static Future<bool> hasPremiumAccess() async {
+    return refreshPremiumStatus();
   }
 
   static Future<CustomerInfo?> getCustomerInfo() async {
@@ -71,6 +100,16 @@ class RevenueCatService {
       return null;
     }
 
-    return Purchases.restorePurchases();
+    try {
+      final customerInfo = await Purchases.restorePurchases();
+
+      _updatePremiumStatus(customerInfo);
+
+      return customerInfo;
+    } catch (error) {
+      debugPrint('RevenueCat: erro ao restaurar compras: $error');
+
+      rethrow;
+    }
   }
 }

@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
-import 'package:calcquest/shared/services/premium_access_guard.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
 import 'package:calcquest/shared/theme/app_spacing.dart';
 import 'package:calcquest/shared/theme/app_typography.dart';
@@ -12,56 +11,24 @@ import '../../dashboard/presentation/dashboard_screen.dart';
 import '../../learning_path/presentation/learning_path_screen.dart';
 import '../../profile/presentation/profile_screen.dart';
 
-class StatisticsScreen extends StatefulWidget {
+class StatisticsScreen extends StatelessWidget {
   const StatisticsScreen({super.key});
-
-  @override
-  State<StatisticsScreen> createState() => _StatisticsScreenState();
-}
-
-class _StatisticsScreenState extends State<StatisticsScreen> {
-  bool _checkingPremiumAccess = true;
-
-  @override
-  void initState() {
-    super.initState();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _verifyPremiumAccess();
-    });
-  }
-
-  Future<void> _verifyPremiumAccess() async {
-    final hasAccess = await PremiumAccessGuard.ensureAccess(context);
-
-    if (!mounted) {
-      return;
-    }
-
-    if (!hasAccess) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const DashboardScreen()),
-      );
-
-      return;
-    }
-
-    setState(() {
-      _checkingPremiumAccess = false;
-    });
-  }
 
   void _onMenuTap(BuildContext context, int index) {
     if (index == 0) {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const DashboardScreen()),
+        MaterialPageRoute(
+          builder: (_) => const DashboardScreen(),
+        ),
       );
       return;
     }
 
     if (index == 1) {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const LearningPathScreen()),
+        MaterialPageRoute(
+          builder: (_) => const LearningPathScreen(),
+        ),
       );
       return;
     }
@@ -72,7 +39,9 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
 
     if (index == 3) {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const ProfileScreen()),
+        MaterialPageRoute(
+          builder: (_) => const ProfileScreen(),
+        ),
       );
     }
   }
@@ -86,11 +55,17 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
   }) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(AppSpacing.cardPadding),
+      padding: const EdgeInsets.all(
+        AppSpacing.cardPadding,
+      ),
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
-        border: Border.all(color: AppColors.border),
+        borderRadius: BorderRadius.circular(
+          AppSpacing.radiusLarge,
+        ),
+        border: Border.all(
+          color: AppColors.border,
+        ),
         boxShadow: const [
           BoxShadow(
             color: AppColors.shadow,
@@ -109,7 +84,9 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
             alignment: Alignment.center,
             decoration: BoxDecoration(
               color: iconBackground,
-              borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
+              borderRadius: BorderRadius.circular(
+                AppSpacing.radiusMedium,
+              ),
             ),
             child: AppIcon(
               icon: icon,
@@ -118,9 +95,15 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
             ),
           ),
           const SizedBox(height: AppSpacing.sm),
-          Text(value, style: AppTypography.headingSmall),
+          Text(
+            value,
+            style: AppTypography.headingSmall,
+          ),
           const SizedBox(height: AppSpacing.xxs),
-          Text(label, style: AppTypography.bodySmall),
+          Text(
+            label,
+            style: AppTypography.bodySmall,
+          ),
         ],
       ),
     );
@@ -128,31 +111,6 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (_checkingPremiumAccess) {
-      return Scaffold(
-        backgroundColor: AppColors.background,
-        body: SafeArea(
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.all(AppSpacing.screenHorizontal),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const CircularProgressIndicator(),
-                  const SizedBox(height: AppSpacing.md),
-                  Text(
-                    'Verificando acesso Premium...',
-                    textAlign: TextAlign.center,
-                    style: AppTypography.bodyMedium,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      );
-    }
-
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
@@ -173,20 +131,30 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                 ),
               ),
               const SizedBox(height: AppSpacing.xs),
-              Text('Seu progresso', style: AppTypography.headingMedium),
+              Text(
+                'Seu progresso',
+                style: AppTypography.headingMedium,
+              ),
               const SizedBox(height: AppSpacing.xs),
               Text(
                 'Acompanhe sua evolução nos estudos.',
                 style: AppTypography.bodyMedium,
               ),
               const SizedBox(height: AppSpacing.lg),
+
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.all(AppSpacing.cardPaddingLarge),
+                padding: const EdgeInsets.all(
+                  AppSpacing.cardPaddingLarge,
+                ),
                 decoration: BoxDecoration(
                   color: AppColors.surface,
-                  borderRadius: BorderRadius.circular(AppSpacing.radiusXLarge),
-                  border: Border.all(color: AppColors.border),
+                  borderRadius: BorderRadius.circular(
+                    AppSpacing.radiusXLarge,
+                  ),
+                  border: Border.all(
+                    color: AppColors.border,
+                  ),
                   boxShadow: const [
                     BoxShadow(
                       color: AppColors.shadow,
@@ -218,11 +186,17 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                           ),
                         ),
                         const SizedBox(width: AppSpacing.sm),
-                        Text('XP total', style: AppTypography.titleMedium),
+                        Text(
+                          'XP total',
+                          style: AppTypography.titleMedium,
+                        ),
                       ],
                     ),
                     const SizedBox(height: AppSpacing.md),
-                    Text('120 XP', style: AppTypography.headingLarge),
+                    Text(
+                      '120 XP',
+                      style: AppTypography.headingLarge,
+                    ),
                     const SizedBox(height: AppSpacing.xs),
                     Text(
                       'Continue acumulando XP para subir de nível.',
@@ -231,7 +205,9 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                   ],
                 ),
               ),
+
               const SizedBox(height: AppSpacing.md),
+
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -256,16 +232,28 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                   ),
                 ],
               ),
+
               const SizedBox(height: AppSpacing.lg),
-              Text('Desempenho', style: AppTypography.titleLarge),
+
+              Text(
+                'Desempenho',
+                style: AppTypography.titleLarge,
+              ),
               const SizedBox(height: AppSpacing.sm),
+
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.all(AppSpacing.cardPaddingLarge),
+                padding: const EdgeInsets.all(
+                  AppSpacing.cardPaddingLarge,
+                ),
                 decoration: BoxDecoration(
                   color: AppColors.surface,
-                  borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
-                  border: Border.all(color: AppColors.border),
+                  borderRadius: BorderRadius.circular(
+                    AppSpacing.radiusLarge,
+                  ),
+                  border: Border.all(
+                    color: AppColors.border,
+                  ),
                   boxShadow: const [
                     BoxShadow(
                       color: AppColors.shadow,
@@ -304,7 +292,10 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                       ],
                     ),
                     const SizedBox(height: AppSpacing.md),
-                    Text('80%', style: AppTypography.headingLarge),
+                    Text(
+                      '80%',
+                      style: AppTypography.headingLarge,
+                    ),
                     const SizedBox(height: AppSpacing.sm),
                     const AppProgressBar(
                       value: 0.8,
