@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
-import 'package:calcquest/shared/services/revenuecat_service.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
 import 'package:calcquest/shared/theme/app_spacing.dart';
 import 'package:calcquest/shared/theme/app_typography.dart';
@@ -18,66 +17,33 @@ class ProfileScreen extends StatelessWidget {
   void _onMenuTap(BuildContext context, int index) {
     if (index == 0) {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const DashboardScreen()),
+        MaterialPageRoute(
+          builder: (_) => const DashboardScreen(),
+        ),
       );
       return;
     }
 
     if (index == 1) {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const LearningPathScreen()),
+        MaterialPageRoute(
+          builder: (_) => const LearningPathScreen(),
+        ),
       );
       return;
     }
 
     if (index == 2) {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const StatisticsScreen()),
+        MaterialPageRoute(
+          builder: (_) => const StatisticsScreen(),
+        ),
       );
       return;
     }
 
     if (index == 3) {
       return;
-    }
-  }
-
-  Future<void> _restorePurchases(BuildContext context) async {
-    if (!RevenueCatService.isConfigured) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('O sistema Premium está indisponível no momento.'),
-        ),
-      );
-      return;
-    }
-
-    try {
-      await RevenueCatService.restorePurchases();
-
-      if (!context.mounted) {
-        return;
-      }
-
-      final message = RevenueCatService.isPremium
-          ? 'Compras restauradas. Premium ativo.'
-          : 'Nenhuma compra Premium encontrada.';
-
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(message)));
-    } catch (error) {
-      debugPrint('Perfil: erro ao restaurar compras: $error');
-
-      if (!context.mounted) {
-        return;
-      }
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Não foi possível restaurar suas compras.'),
-        ),
-      );
     }
   }
 
@@ -91,11 +57,17 @@ class ProfileScreen extends StatelessWidget {
   }) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(AppSpacing.cardPaddingLarge),
+      padding: const EdgeInsets.all(
+        AppSpacing.cardPaddingLarge,
+      ),
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(AppSpacing.radiusXLarge),
-        border: Border.all(color: AppColors.border),
+        borderRadius: BorderRadius.circular(
+          AppSpacing.radiusXLarge,
+        ),
+        border: Border.all(
+          color: AppColors.border,
+        ),
         boxShadow: const [
           BoxShadow(
             color: AppColors.shadow,
@@ -113,7 +85,9 @@ class ProfileScreen extends StatelessWidget {
             alignment: Alignment.center,
             decoration: BoxDecoration(
               color: iconBackground,
-              borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
+              borderRadius: BorderRadius.circular(
+                AppSpacing.radiusMedium,
+              ),
             ),
             child: AppIcon(
               icon: icon,
@@ -128,12 +102,20 @@ class ProfileScreen extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: AppTypography.labelMedium.copyWith(color: iconColor),
+                  style: AppTypography.labelMedium.copyWith(
+                    color: iconColor,
+                  ),
                 ),
                 const SizedBox(height: AppSpacing.xs),
-                Text(value, style: AppTypography.headingSmall),
+                Text(
+                  value,
+                  style: AppTypography.headingSmall,
+                ),
                 const SizedBox(height: AppSpacing.xs),
-                Text(description, style: AppTypography.bodySmall),
+                Text(
+                  description,
+                  style: AppTypography.bodySmall,
+                ),
               ],
             ),
           ),
@@ -164,9 +146,15 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: AppSpacing.xs),
-              Text('Lucas', style: AppTypography.headingMedium),
+              Text(
+                'Lucas',
+                style: AppTypography.headingMedium,
+              ),
               const SizedBox(height: AppSpacing.xs),
-              Text('Estudante de Engenharia', style: AppTypography.bodyMedium),
+              Text(
+                'Estudante de Engenharia',
+                style: AppTypography.bodyMedium,
+              ),
               const SizedBox(height: AppSpacing.lg),
               _buildInfoCard(
                 icon: Icons.military_tech_outlined,
@@ -174,18 +162,28 @@ class ProfileScreen extends StatelessWidget {
                 iconBackground: AppColors.selectedBackground,
                 title: 'Nível 1',
                 value: '120 XP acumulados',
-                description: 'Continue estudando para evoluir seu perfil.',
+                description:
+                    'Continue estudando para evoluir seu perfil.',
               ),
               const SizedBox(height: AppSpacing.lg),
-              Text('Conquistas', style: AppTypography.titleLarge),
+              Text(
+                'Conquistas',
+                style: AppTypography.titleLarge,
+              ),
               const SizedBox(height: AppSpacing.sm),
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.all(AppSpacing.cardPaddingLarge),
+                padding: const EdgeInsets.all(
+                  AppSpacing.cardPaddingLarge,
+                ),
                 decoration: BoxDecoration(
                   color: AppColors.surface,
-                  borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
-                  border: Border.all(color: AppColors.border),
+                  borderRadius: BorderRadius.circular(
+                    AppSpacing.radiusLarge,
+                  ),
+                  border: Border.all(
+                    color: AppColors.border,
+                  ),
                   boxShadow: const [
                     BoxShadow(
                       color: AppColors.shadow,
@@ -232,92 +230,36 @@ class ProfileScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              const SizedBox(height: AppSpacing.lg),
-              Text('Premium', style: AppTypography.titleLarge),
-              const SizedBox(height: AppSpacing.sm),
-              Material(
-                color: Colors.transparent,
-                borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
-                  onTap: () {
-                    _restorePurchases(context);
-                  },
-                  child: Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(AppSpacing.cardPaddingLarge),
-                    decoration: BoxDecoration(
-                      color: AppColors.surface,
-                      borderRadius: BorderRadius.circular(
-                        AppSpacing.radiusLarge,
-                      ),
-                      border: Border.all(color: AppColors.border),
-                    ),
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 44,
-                          height: 44,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            color: AppColors.selectedBackground,
-                            borderRadius: BorderRadius.circular(
-                              AppSpacing.radiusMedium,
-                            ),
-                          ),
-                          child: const AppIcon(
-                            icon: Icons.restore_rounded,
-                            size: AppIconSize.large,
-                            color: AppColors.primary,
-                          ),
-                        ),
-                        const SizedBox(width: AppSpacing.sm),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Restaurar compras',
-                                style: AppTypography.titleMedium,
-                              ),
-                              const SizedBox(height: AppSpacing.xxs),
-                              Text(
-                                'Recupere seu acesso Premium.',
-                                style: AppTypography.bodySmall,
-                              ),
-                            ],
-                          ),
-                        ),
-                        const AppIcon(
-                          icon: Icons.chevron_right_rounded,
-                          size: AppIconSize.large,
-                          color: AppColors.textMuted,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
               const SizedBox(height: AppSpacing.md),
               Material(
                 color: Colors.transparent,
-                borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
+                borderRadius: BorderRadius.circular(
+                  AppSpacing.radiusLarge,
+                ),
                 child: InkWell(
-                  borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
+                  borderRadius: BorderRadius.circular(
+                    AppSpacing.radiusLarge,
+                  ),
                   onTap: () {
                     Navigator.of(context).push(
-                      MaterialPageRoute(builder: (_) => const SettingsScreen()),
+                      MaterialPageRoute(
+                        builder: (_) => const SettingsScreen(),
+                      ),
                     );
                   },
                   child: Container(
                     width: double.infinity,
-                    padding: const EdgeInsets.all(AppSpacing.cardPaddingLarge),
+                    padding: const EdgeInsets.all(
+                      AppSpacing.cardPaddingLarge,
+                    ),
                     decoration: BoxDecoration(
                       color: AppColors.surface,
                       borderRadius: BorderRadius.circular(
                         AppSpacing.radiusLarge,
                       ),
-                      border: Border.all(color: AppColors.border),
+                      border: Border.all(
+                        color: AppColors.border,
+                      ),
                     ),
                     child: Row(
                       children: [
