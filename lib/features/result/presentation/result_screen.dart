@@ -14,6 +14,8 @@ import '../../reward/presentation/reward_screen.dart';
 import '../../statistics/presentation/statistics_screen.dart';
 
 class ResultScreen extends StatelessWidget {
+  static const double minimumPassingScore = 0.8;
+
   final String completedLessonId;
   final int totalQuestions;
   final int correctAnswers;
@@ -71,6 +73,13 @@ class ResultScreen extends StatelessWidget {
           goldEarned: goldEarned,
         ),
       ),
+    );
+  }
+
+  void _backToLearningPath(BuildContext context) {
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (_) => const LearningPathScreen()),
+      (route) => false,
     );
   }
 
@@ -133,6 +142,11 @@ class ResultScreen extends StatelessWidget {
         : correctAnswers / totalQuestions;
     final accuracyPercentage = (accuracy * 100).round();
     final performanceText = '$accuracyPercentage% de precisão';
+    final isApproved = accuracy >= minimumPassingScore;
+    final statusColor = isApproved ? AppColors.success : AppColors.error;
+    final statusBackground = isApproved
+        ? AppColors.successLight
+        : AppColors.errorLight;
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -157,28 +171,32 @@ class ResultScreen extends StatelessWidget {
                         height: 88,
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
-                          color: AppColors.successLight,
+                          color: statusBackground,
                           borderRadius: BorderRadius.circular(
                             AppSpacing.radiusXLarge,
                           ),
                         ),
-                        child: const AppIcon(
-                          icon: Icons.check_rounded,
+                        child: AppIcon(
+                          icon: isApproved
+                              ? Icons.check_rounded
+                              : Icons.refresh_rounded,
                           size: AppIconSize.extraLarge,
-                          color: AppColors.success,
+                          color: statusColor,
                           semanticLabel: 'Exercícios concluídos',
                         ),
                       ),
                     ),
                     const SizedBox(height: AppSpacing.lg),
                     Text(
-                      'Exercícios concluídos',
+                      isApproved ? 'Objetivo atingido!' : 'Continue praticando',
                       textAlign: TextAlign.center,
                       style: AppTypography.headingLarge,
                     ),
                     const SizedBox(height: AppSpacing.xs),
                     Text(
-                      'Você concluiu a sequência de exercícios.',
+                      isApproved
+                          ? 'Você alcançou o rendimento necessário para avançar.'
+                          : 'Você precisa de pelo menos 80% para desbloquear a próxima aula.',
                       textAlign: TextAlign.center,
                       style: AppTypography.bodyMedium,
                     ),
@@ -187,7 +205,7 @@ class ResultScreen extends StatelessWidget {
                       performanceText,
                       textAlign: TextAlign.center,
                       style: AppTypography.labelMedium.copyWith(
-                        color: AppColors.success,
+                        color: statusColor,
                       ),
                     ),
                     const SizedBox(height: AppSpacing.xl),
@@ -213,29 +231,40 @@ class ResultScreen extends StatelessWidget {
                       value: '$accuracyPercentage%',
                     ),
                     const SizedBox(height: AppSpacing.sm),
-                    _buildResultCard(
-                      icon: Icons.bolt_outlined,
-                      title: 'XP ganho',
-                      value: '+$xpEarned XP',
-                      iconColor: AppColors.xp,
-                      iconBackground: AppColors.xpLight,
-                    ),
-                    const SizedBox(height: AppSpacing.sm),
-                    _buildResultCard(
-                      icon: Icons.monetization_on_outlined,
-                      title: 'Ouro ganho',
-                      value: '+$goldEarned',
-                      iconColor: AppColors.gold,
-                      iconBackground: AppColors.goldLight,
-                    ),
+                    if (isApproved) ...[
+                      _buildResultCard(
+                        icon: Icons.bolt_outlined,
+                        title: 'XP ganho',
+                        value: '+$xpEarned XP',
+                        iconColor: AppColors.xp,
+                        iconBackground: AppColors.xpLight,
+                      ),
+                      const SizedBox(height: AppSpacing.sm),
+                      _buildResultCard(
+                        icon: Icons.monetization_on_outlined,
+                        title: 'Ouro ganho',
+                        value: '+$goldEarned',
+                        iconColor: AppColors.gold,
+                        iconBackground: AppColors.goldLight,
+                      ),
+                    ],
                   ],
                 ),
               ),
               PrimaryButton(
-                text: 'Continuar',
-                icon: Icons.arrow_forward_rounded,
+                text: isApproved
+                    ? 'Receber recompensa'
+                    : 'Revisar e tentar novamente',
+                icon: isApproved
+                    ? Icons.arrow_forward_rounded
+                    : Icons.refresh_rounded,
                 onPressed: () {
-                  _goToReward(context);
+                  if (isApproved) {
+                    _goToReward(context);
+                    return;
+                  }
+
+                  _backToLearningPath(context);
                 },
               ),
               const SizedBox(height: AppSpacing.screenBottom),

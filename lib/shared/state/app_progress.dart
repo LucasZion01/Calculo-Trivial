@@ -28,6 +28,14 @@ class AppProgress {
   static const String _lastStudyDateKey = 'last_study_date';
   static const String _dailyAnsweredQuestionsKey = 'daily_answered_questions';
   static const String _dailyActivityDateKey = 'daily_activity_date';
+  static const String _lastQuestionSessionKey = 'last_question_session';
+
+  static const List<String> _lessonIds = <String>[
+    algebraFundamentalId,
+    equationsAndInequationsId,
+    functionsId,
+    limitsId,
+  ];
 
   static bool algebraFundamentalCompleted = false;
   static bool equationsAndInequationsCompleted = false;
@@ -47,6 +55,8 @@ class AppProgress {
   static String? _activeUserId;
 
   static final Set<String> _completedLessonIds = <String>{};
+  static final Map<String, Set<String>> _lastQuestionSessionIds =
+      <String, Set<String>>{};
 
   static Future<void> _saveQueue = Future<void>.value();
 
@@ -109,6 +119,7 @@ class AppProgress {
 
   static void _resetInMemory() {
     _completedLessonIds.clear();
+    _lastQuestionSessionIds.clear();
 
     algebraFundamentalCompleted = false;
     equationsAndInequationsCompleted = false;
@@ -227,6 +238,16 @@ class AppProgress {
     dailyActivityDate = preferences.getString(
       _scopedKey(_dailyActivityDateKey, userId),
     );
+
+    for (final lessonId in _lessonIds) {
+      final questionIds = preferences.getStringList(
+        _scopedKey('${_lastQuestionSessionKey}_$lessonId', userId),
+      );
+
+      if (questionIds != null && questionIds.isNotEmpty) {
+        _lastQuestionSessionIds[lessonId] = questionIds.toSet();
+      }
+    }
   }
 
   static void _mergeRemoteProgress(Map<String, dynamic> data) {
@@ -272,6 +293,27 @@ class AppProgress {
 
     _mergeStudyStreak(data);
     _mergeDailyActivity(data);
+    _mergeQuestionSessions(data);
+  }
+
+  static void _mergeQuestionSessions(Map<String, dynamic> data) {
+    final remoteSessions = data['lastQuestionSessionIds'];
+
+    if (remoteSessions is! Map) {
+      return;
+    }
+
+    for (final lessonId in _lessonIds) {
+      final remoteQuestionIds = remoteSessions[lessonId];
+
+      if (remoteQuestionIds is Iterable) {
+        final questionIds = remoteQuestionIds.whereType<String>().toSet();
+
+        if (questionIds.isNotEmpty) {
+          _lastQuestionSessionIds[lessonId] = questionIds;
+        }
+      }
+    }
   }
 
   static void _mergeStudyStreak(Map<String, dynamic> data) {
@@ -441,6 +483,16 @@ class AppProgress {
         dailyActivityDate!,
       );
     }
+
+    for (final lessonId in _lessonIds) {
+      final questionIds =
+          _lastQuestionSessionIds[lessonId]?.toList() ?? <String>[];
+
+      await preferences.setStringList(
+        _scopedKey('${_lastQuestionSessionKey}_$lessonId', _activeUserId),
+        questionIds,
+      );
+    }
   }
 
   static Future<void> _saveRemoteProgress() async {
@@ -469,6 +521,10 @@ class AppProgress {
       'dailyAnsweredQuestions': dailyAnsweredQuestions,
       'dailyQuestionGoal': dailyQuestionGoal,
       'dailyActivityDate': dailyActivityDate,
+      'lastQuestionSessionIds': <String, List<String>>{
+        for (final entry in _lastQuestionSessionIds.entries)
+          entry.key: entry.value.toList(),
+      },
       'updatedAt': FieldValue.serverTimestamp(),
     }, SetOptions(merge: true));
   }
@@ -488,6 +544,41 @@ class AppProgress {
 
   static void _queueProgressSave() {
     _saveQueue = _saveQueue.then((_) => _persistProgress());
+  }
+
+  static List<String> selectExerciseQuestionIds({
+    required String lessonId,
+    required Iterable<String> availableQuestionIds,
+    int questionCount = 10,
+  }) {
+    _activeUserId ??= FirebaseAuth.instance.currentUser?.uid;
+
+    final allQuestionIds = availableQuestionIds.toSet().toList();
+
+    if (allQuestionIds.isEmpty || questionCount <= 0) {
+      return <String>[];
+    }
+
+    final previousSessionIds = _lastQuestionSessionIds[lessonId] ?? <String>{};
+
+    var candidates = allQuestionIds
+        .where((questionId) => !previousSessionIds.contains(questionId))
+        .toList();
+
+    if (candidates.length < questionCount) {
+      candidates = List<String>.from(allQuestionIds);
+    }
+
+    candidates.shuffle(Random());
+
+    final selectedQuestionIds = candidates
+        .take(min(questionCount, candidates.length))
+        .toList();
+
+    _lastQuestionSessionIds[lessonId] = selectedQuestionIds.toSet();
+    _queueProgressSave();
+
+    return selectedQuestionIds;
   }
 
   static void recordExerciseAnswer({required bool isCorrect}) {
@@ -569,6 +660,7 @@ class AppProgress {
       'dailyAnsweredQuestions': 0,
       'dailyQuestionGoal': dailyQuestionGoal,
       'dailyActivityDate': dailyActivityDate,
+      'lastQuestionSessionIds': <String, List<String>>{},
       'updatedAt': FieldValue.serverTimestamp(),
     });
   }

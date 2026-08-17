@@ -164,4 +164,143 @@ const List<ExerciseData> mockExercises = [
       ExerciseOptionData(id: 'd', text: '4xy²'),
     ],
   ),
+  ExerciseData(
+    id: 'fator-comum-1',
+    title: 'Questão 11 de 20',
+    statement: 'Fatore a expressão:\n6x + 9',
+    correctOptionId: 'a',
+    explanation:
+        'O máximo fator comum entre 6x e 9 é 3. Colocando-o em evidência, obtemos 3(2x + 3).',
+    options: [
+      ExerciseOptionData(id: 'a', text: '3(2x + 3)'),
+      ExerciseOptionData(id: 'b', text: '6(x + 3)'),
+      ExerciseOptionData(id: 'c', text: '3(2x + 9)'),
+      ExerciseOptionData(id: 'd', text: '9(6x + 1)'),
+    ],
+  ),
+  ExerciseData(
+    id: 'quociente-potencias-1',
+    title: 'Questão 12 de 20',
+    statement: 'Simplifique, considerando x ≠ 0:\nx⁵ / x²',
+    correctOptionId: 'c',
+    explanation:
+        'Na divisão de potências de mesma base, subtraímos os expoentes: x⁵/x² = x⁵⁻² = x³.',
+    options: [
+      ExerciseOptionData(id: 'a', text: 'x²'),
+      ExerciseOptionData(id: 'b', text: 'x⁷'),
+      ExerciseOptionData(id: 'c', text: 'x³'),
+      ExerciseOptionData(id: 'd', text: '3x'),
+    ],
+  ),
+  ExerciseData(
+    id: 'potencia-potencia-1',
+    title: 'Questão 13 de 20',
+    statement: 'Simplifique a expressão:\n(2x²)³',
+    correctOptionId: 'd',
+    explanation:
+        'Elevamos o coeficiente e multiplicamos os expoentes: 2³ = 8 e (x²)³ = x⁶. Logo, 8x⁶.',
+    options: [
+      ExerciseOptionData(id: 'a', text: '6x⁵'),
+      ExerciseOptionData(id: 'b', text: '8x⁵'),
+      ExerciseOptionData(id: 'c', text: '6x⁶'),
+      ExerciseOptionData(id: 'd', text: '8x⁶'),
+    ],
+  ),
+  ExerciseData(
+    id: 'distributiva-3',
+    title: 'Questão 14 de 20',
+    statement: 'Simplifique a expressão:\n3(x + 2) - 2(x - 1)',
+    correctOptionId: 'b',
+    explanation:
+        'Aplicando a distributiva: 3x + 6 - 2x + 2. Reduzindo os termos, obtemos x + 8.',
+    options: [
+      ExerciseOptionData(id: 'a', text: 'x + 4'),
+      ExerciseOptionData(id: 'b', text: 'x + 8'),
+      ExerciseOptionData(id: 'c', text: '5x + 4'),
+      ExerciseOptionData(id: 'd', text: 'x - 8'),
+    ],
+  ),
+  ExerciseData(
+    id: 'valor-numerico-1',
+    title: 'Questão 15 de 20',
+    statement: 'Calcule 2a² - 3a para a = -2.',
+    correctOptionId: 'c',
+    explanation: 'Substituindo a por -2: 2(-2)² - 3(-2) = 2 · 4 + 6 = 14.',
+    options: [
+      ExerciseOptionData(id: 'a', text: '2'),
+      ExerciseOptionData(id: 'b', text: '8'),
+      ExerciseOptionData(id: 'c', text: '14'),
+      ExerciseOptionData(id: 'd', text: '-14'),
+    ],
+  ),
+  ExerciseData(
+    id: 'quadrado-soma-1',
+    title: 'Questão 16 de 20',
+    statement: 'Desenvolva o produto notável:\n(x + 4)²',
+    correctOptionId: 'a',
+    explanation:
+        'Usamos (a + b)² = a² + 2ab + b². Assim, (x + 4)² = x² + 8x + 16.',
+    options: [
+      ExerciseOptionData(id: 'a', text: 'x² + 8x + 16'),
+      ExerciseOptionData(id: 'b', text: 'x² + 4x + 16'),
+      ExerciseOptionData(id: 'c', text: 'x² + 16'),
+      ExerciseOptionData(id: 'd', text: 'x² - 8x + 16'),
+    ],
+  ),
+  ExerciseData(
+    id: 'diferenca-quadrados-1',
+    title: 'Questão 17 de 20',
+    statement: 'Fatore a expressão:\nx² - 9',
+    correctOptionId: 'd',
+    explanation:
+        'Trata-se de uma diferença de quadrados: x² - 3² = (x - 3)(x + 3).',
+    options: [
+      ExerciseOptionData(id: 'a', text: '(x - 9)(x + 1)'),
+      ExerciseOptionData(id: 'b', text: '(x - 3)²'),
+      ExerciseOptionData(id: 'c', text: '(x + 3)²'),
+      ExerciseOptionData(id: 'd', text: '(x - 3)(x + 3)'),
+    ],
+  ),
+  ExerciseData(
+    id: 'soma-fracoes-algebricas-1',
+    title: 'Questão 18 de 20',
+    statement: 'Simplifique a expressão:\nx/2 + x/3',
+    correctOptionId: 'b',
+    explanation:
+        'O mínimo múltiplo comum de 2 e 3 é 6. Assim, 3x/6 + 2x/6 = 5x/6.',
+    options: [
+      ExerciseOptionData(id: 'a', text: '2x/5'),
+      ExerciseOptionData(id: 'b', text: '5x/6'),
+      ExerciseOptionData(id: 'c', text: 'x/5'),
+      ExerciseOptionData(id: 'd', text: '2x/6'),
+    ],
+  ),
+  ExerciseData(
+    id: 'termos-semelhantes-1',
+    title: 'Questão 19 de 20',
+    statement: 'Simplifique:\n4x²y - 7x²y + 2x²y',
+    correctOptionId: 'c',
+    explanation:
+        'Somamos os coeficientes dos termos semelhantes: 4 - 7 + 2 = -1. Logo, o resultado é -x²y.',
+    options: [
+      ExerciseOptionData(id: 'a', text: 'x²y'),
+      ExerciseOptionData(id: 'b', text: '-3x²y'),
+      ExerciseOptionData(id: 'c', text: '-x²y'),
+      ExerciseOptionData(id: 'd', text: '9x²y'),
+    ],
+  ),
+  ExerciseData(
+    id: 'grau-polinomio-1',
+    title: 'Questão 20 de 20',
+    statement: 'Qual é o grau do polinômio 5x⁴ - 2x² + x - 7?',
+    correctOptionId: 'a',
+    explanation:
+        'O grau de um polinômio é o maior expoente da variável com coeficiente não nulo. Nesse caso, é 4.',
+    options: [
+      ExerciseOptionData(id: 'a', text: '4'),
+      ExerciseOptionData(id: 'b', text: '3'),
+      ExerciseOptionData(id: 'c', text: '2'),
+      ExerciseOptionData(id: 'd', text: '5'),
+    ],
+  ),
 ];

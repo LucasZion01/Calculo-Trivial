@@ -141,4 +141,141 @@ const List<ExerciseData> mockEquationsExercises = [
       ExerciseOptionData(id: 'd', text: 'x < 4'),
     ],
   ),
+  ExerciseData(
+    id: 'equacao-termos-dois-lados',
+    title: 'Questão 11 de 20',
+    statement: 'Resolva a equação:\n2x + 5 = x - 3',
+    correctOptionId: 'c',
+    explanation:
+        'Subtraímos x dos dois lados e depois 5: x = -3 - 5. Portanto, x = -8.',
+    options: [
+      ExerciseOptionData(id: 'a', text: '8'),
+      ExerciseOptionData(id: 'b', text: '-2'),
+      ExerciseOptionData(id: 'c', text: '-8'),
+      ExerciseOptionData(id: 'd', text: '2'),
+    ],
+  ),
+  ExerciseData(
+    id: 'equacao-distributiva-dois-lados',
+    title: 'Questão 12 de 20',
+    statement: 'Resolva a equação:\n3(x + 1) = 2x + 7',
+    correctOptionId: 'b',
+    explanation:
+        'Distribuindo: 3x + 3 = 2x + 7. Subtraindo 2x e 3 dos dois lados, obtemos x = 4.',
+    options: [
+      ExerciseOptionData(id: 'a', text: '3'),
+      ExerciseOptionData(id: 'b', text: '4'),
+      ExerciseOptionData(id: 'c', text: '7'),
+      ExerciseOptionData(id: 'd', text: '10'),
+    ],
+  ),
+  ExerciseData(
+    id: 'equacao-fracionaria-2',
+    title: 'Questão 13 de 20',
+    statement: 'Resolva a equação:\n(x - 2) / 4 = 3',
+    correctOptionId: 'd',
+    explanation:
+        'Multiplicando os dois lados por 4: x - 2 = 12. Somando 2, encontramos x = 14.',
+    options: [
+      ExerciseOptionData(id: 'a', text: '5'),
+      ExerciseOptionData(id: 'b', text: '10'),
+      ExerciseOptionData(id: 'c', text: '12'),
+      ExerciseOptionData(id: 'd', text: '14'),
+    ],
+  ),
+  ExerciseData(
+    id: 'sistema-linear-1',
+    title: 'Questão 14 de 20',
+    statement: 'Resolva o sistema:\nx + y = 7\nx - y = 1',
+    correctOptionId: 'a',
+    explanation:
+        'Somando as equações, temos 2x = 8, então x = 4. Substituindo em x + y = 7, obtemos y = 3.',
+    options: [
+      ExerciseOptionData(id: 'a', text: 'x = 4 e y = 3'),
+      ExerciseOptionData(id: 'b', text: 'x = 3 e y = 4'),
+      ExerciseOptionData(id: 'c', text: 'x = 7 e y = 1'),
+      ExerciseOptionData(id: 'd', text: 'x = 2 e y = 5'),
+    ],
+  ),
+  ExerciseData(
+    id: 'equacao-quadratica-1',
+    title: 'Questão 15 de 20',
+    statement: 'Resolva a equação:\nx² - 9 = 0',
+    correctOptionId: 'c',
+    explanation: 'Temos x² = 9. Portanto, x pode ser 3 ou -3.',
+    options: [
+      ExerciseOptionData(id: 'a', text: 'x = 3'),
+      ExerciseOptionData(id: 'b', text: 'x = -3'),
+      ExerciseOptionData(id: 'c', text: 'x = -3 ou x = 3'),
+      ExerciseOptionData(id: 'd', text: 'x = 9'),
+    ],
+  ),
+  ExerciseData(
+    id: 'equacao-quadratica-2',
+    title: 'Questão 16 de 20',
+    statement: 'Resolva a equação:\nx² - 5x + 6 = 0',
+    correctOptionId: 'b',
+    explanation: 'Fatorando: (x - 2)(x - 3) = 0. Logo, x = 2 ou x = 3.',
+    options: [
+      ExerciseOptionData(id: 'a', text: 'x = -2 ou x = -3'),
+      ExerciseOptionData(id: 'b', text: 'x = 2 ou x = 3'),
+      ExerciseOptionData(id: 'c', text: 'x = 1 ou x = 6'),
+      ExerciseOptionData(id: 'd', text: 'x = -1 ou x = -6'),
+    ],
+  ),
+  ExerciseData(
+    id: 'inequacao-3',
+    title: 'Questão 17 de 20',
+    statement: 'Resolva a inequação:\n5 - 2x < 9',
+    correctOptionId: 'd',
+    explanation:
+        'Subtraindo 5: -2x < 4. Ao dividir por -2, invertemos o sinal, obtendo x > -2.',
+    options: [
+      ExerciseOptionData(id: 'a', text: 'x < -2'),
+      ExerciseOptionData(id: 'b', text: 'x < 2'),
+      ExerciseOptionData(id: 'c', text: 'x > 2'),
+      ExerciseOptionData(id: 'd', text: 'x > -2'),
+    ],
+  ),
+  ExerciseData(
+    id: 'inequacao-distributiva',
+    title: 'Questão 18 de 20',
+    statement: 'Resolva a inequação:\n3(x - 1) ≥ 2x + 4',
+    correctOptionId: 'a',
+    explanation:
+        'Distribuindo: 3x - 3 ≥ 2x + 4. Subtraindo 2x e somando 3, obtemos x ≥ 7.',
+    options: [
+      ExerciseOptionData(id: 'a', text: 'x ≥ 7'),
+      ExerciseOptionData(id: 'b', text: 'x ≤ 7'),
+      ExerciseOptionData(id: 'c', text: 'x ≥ 1'),
+      ExerciseOptionData(id: 'd', text: 'x ≤ 1'),
+    ],
+  ),
+  ExerciseData(
+    id: 'equacao-modular-1',
+    title: 'Questão 19 de 20',
+    statement: 'Resolva a equação:\n|x| = 5',
+    correctOptionId: 'c',
+    explanation: 'A distância de x até zero é 5. Portanto, x pode ser 5 ou -5.',
+    options: [
+      ExerciseOptionData(id: 'a', text: 'x = 5'),
+      ExerciseOptionData(id: 'b', text: 'x = -5'),
+      ExerciseOptionData(id: 'c', text: 'x = -5 ou x = 5'),
+      ExerciseOptionData(id: 'd', text: 'x = 0'),
+    ],
+  ),
+  ExerciseData(
+    id: 'equacao-sem-solucao',
+    title: 'Questão 20 de 20',
+    statement: 'Resolva a equação:\n2(x + 1) = 2x + 5',
+    correctOptionId: 'b',
+    explanation:
+        'Distribuindo, obtemos 2x + 2 = 2x + 5. Subtraindo 2x, sobra 2 = 5, uma contradição. Não há solução.',
+    options: [
+      ExerciseOptionData(id: 'a', text: 'x = 3/2'),
+      ExerciseOptionData(id: 'b', text: 'Não possui solução'),
+      ExerciseOptionData(id: 'c', text: 'Todos os números reais'),
+      ExerciseOptionData(id: 'd', text: 'x = 0'),
+    ],
+  ),
 ];

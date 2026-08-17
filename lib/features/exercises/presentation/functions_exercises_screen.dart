@@ -25,18 +25,47 @@ class FunctionsExercisesScreen extends StatefulWidget {
 }
 
 class _FunctionsExercisesScreenState extends State<FunctionsExercisesScreen> {
+  late final List<ExerciseData> sessionExercises;
+
   int currentExerciseIndex = 0;
   int correctAnswers = 0;
   String? selectedOptionId;
 
-  ExerciseData get currentExercise =>
-      mockFunctionsExercises[currentExerciseIndex];
+  @override
+  void initState() {
+    super.initState();
+
+    sessionExercises = _createSession(
+      lessonId: AppProgress.functionsId,
+      questionBank: mockFunctionsExercises,
+    );
+  }
+
+  List<ExerciseData> _createSession({
+    required String lessonId,
+    required List<ExerciseData> questionBank,
+  }) {
+    final selectedIds = AppProgress.selectExerciseQuestionIds(
+      lessonId: lessonId,
+      availableQuestionIds: questionBank.map((exercise) => exercise.id),
+    );
+
+    final exercisesById = <String, ExerciseData>{
+      for (final exercise in questionBank) exercise.id: exercise,
+    };
+
+    return selectedIds
+        .map((questionId) => exercisesById[questionId])
+        .whereType<ExerciseData>()
+        .toList();
+  }
+
+  ExerciseData get currentExercise => sessionExercises[currentExerciseIndex];
 
   bool get isLastExercise =>
-      currentExerciseIndex == mockFunctionsExercises.length - 1;
+      currentExerciseIndex == sessionExercises.length - 1;
 
-  double get progress =>
-      (currentExerciseIndex + 1) / mockFunctionsExercises.length;
+  double get progress => (currentExerciseIndex + 1) / sessionExercises.length;
 
   void _onMenuTap(BuildContext context, int index) {
     if (index == 0) {
@@ -141,7 +170,7 @@ class _FunctionsExercisesScreenState extends State<FunctionsExercisesScreen> {
           MaterialPageRoute(
             builder: (_) => ResultScreen(
               completedLessonId: 'funcoes',
-              totalQuestions: mockFunctionsExercises.length,
+              totalQuestions: sessionExercises.length,
               correctAnswers: correctAnswers,
               xpEarned: 80,
               goldEarned: 35,
@@ -257,7 +286,7 @@ class _FunctionsExercisesScreenState extends State<FunctionsExercisesScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Questão ${currentExerciseIndex + 1} de ${mockFunctionsExercises.length}',
+                'Questão ${currentExerciseIndex + 1} de ${sessionExercises.length}',
                 style: AppTypography.headingSmall,
               ),
               const SizedBox(height: AppSpacing.xs),

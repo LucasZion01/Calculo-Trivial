@@ -141,4 +141,144 @@ const List<ExerciseData> mockLimitsExercises = [
       ExerciseOptionData(id: 'd', text: '1'),
     ],
   ),
+  ExerciseData(
+    id: 'limite-polinomial-negativo',
+    title: 'Questão 11 de 20',
+    statement: 'Calcule o limite:\n\nlim x → -1  (x³ + 2x)',
+    correctOptionId: 'b',
+    explanation:
+        'A função é polinomial e contínua. Substituindo x = -1: (-1)³ + 2(-1) = -1 - 2 = -3.',
+    options: [
+      ExerciseOptionData(id: 'a', text: '3'),
+      ExerciseOptionData(id: 'b', text: '-3'),
+      ExerciseOptionData(id: 'c', text: '-1'),
+      ExerciseOptionData(id: 'd', text: '1'),
+    ],
+  ),
+  ExerciseData(
+    id: 'limite-fatoracao-terceiro',
+    title: 'Questão 12 de 20',
+    statement: 'Calcule o limite:\n\nlim x → 3  (x² - 9) / (x - 3)',
+    correctOptionId: 'd',
+    explanation:
+        'Fatoramos x² - 9 = (x - 3)(x + 3). Cancelando x - 3, resta x + 3, cujo limite é 6.',
+    options: [
+      ExerciseOptionData(id: 'a', text: '0'),
+      ExerciseOptionData(id: 'b', text: '3'),
+      ExerciseOptionData(id: 'c', text: '9'),
+      ExerciseOptionData(id: 'd', text: '6'),
+    ],
+  ),
+  ExerciseData(
+    id: 'limite-racionalizacao-2',
+    title: 'Questão 13 de 20',
+    statement: 'Calcule o limite:\n\nlim x → 4  (√x - 2) / (x - 4)',
+    correctOptionId: 'c',
+    explanation:
+        'Racionalizando, obtemos 1/(√x + 2). Substituindo x = 4, resulta 1/(2 + 2) = 1/4.',
+    options: [
+      ExerciseOptionData(id: 'a', text: '1/2'),
+      ExerciseOptionData(id: 'b', text: '2'),
+      ExerciseOptionData(id: 'c', text: '1/4'),
+      ExerciseOptionData(id: 'd', text: '4'),
+    ],
+  ),
+  ExerciseData(
+    id: 'limite-trigonometrico-2',
+    title: 'Questão 14 de 20',
+    statement: 'Calcule o limite:\n\nlim x → 0  sen(2x) / x',
+    correctOptionId: 'a',
+    explanation:
+        'Escrevemos sen(2x)/x = 2 · sen(2x)/(2x). O limite fundamental vale 1, então o resultado é 2.',
+    options: [
+      ExerciseOptionData(id: 'a', text: '2'),
+      ExerciseOptionData(id: 'b', text: '1'),
+      ExerciseOptionData(id: 'c', text: '0'),
+      ExerciseOptionData(id: 'd', text: 'Não existe'),
+    ],
+  ),
+  ExerciseData(
+    id: 'limite-cosseno',
+    title: 'Questão 15 de 20',
+    statement: 'Calcule o limite:\n\nlim x → 0  (1 - cos x) / x',
+    correctOptionId: 'b',
+    explanation:
+        'Como 1 - cos x se aproxima de zero mais rapidamente que x, o quociente tende a 0.',
+    options: [
+      ExerciseOptionData(id: 'a', text: '1'),
+      ExerciseOptionData(id: 'b', text: '0'),
+      ExerciseOptionData(id: 'c', text: '1/2'),
+      ExerciseOptionData(id: 'd', text: '∞'),
+    ],
+  ),
+  ExerciseData(
+    id: 'limite-infinito-cubico',
+    title: 'Questão 16 de 20',
+    statement: 'Calcule o limite:\n\nlim x → ∞  (5x³ + x) / (2x³ - 1)',
+    correctOptionId: 'c',
+    explanation:
+        'Numerador e denominador têm grau 3. O limite é a razão entre os coeficientes líderes: 5/2.',
+    options: [
+      ExerciseOptionData(id: 'a', text: '0'),
+      ExerciseOptionData(id: 'b', text: '2/5'),
+      ExerciseOptionData(id: 'c', text: '5/2'),
+      ExerciseOptionData(id: 'd', text: '∞'),
+    ],
+  ),
+  ExerciseData(
+    id: 'limite-infinito-grau-maior',
+    title: 'Questão 17 de 20',
+    statement: 'Calcule o limite:\n\nlim x → ∞  x² / (x + 1)',
+    correctOptionId: 'd',
+    explanation:
+        'O numerador cresce como x² e o denominador como x. O quociente cresce sem limite positivo, portanto tende a +∞.',
+    options: [
+      ExerciseOptionData(id: 'a', text: '0'),
+      ExerciseOptionData(id: 'b', text: '1'),
+      ExerciseOptionData(id: 'c', text: '-∞'),
+      ExerciseOptionData(id: 'd', text: '+∞'),
+    ],
+  ),
+  ExerciseData(
+    id: 'limite-lateral-reciproco-direita',
+    title: 'Questão 18 de 20',
+    statement: 'Calcule o limite lateral:\n\nlim x → 0⁺  1/x',
+    correctOptionId: 'a',
+    explanation:
+        'Pela direita, x assume valores positivos cada vez menores. Assim, 1/x cresce sem limite e tende a +∞.',
+    options: [
+      ExerciseOptionData(id: 'a', text: '+∞'),
+      ExerciseOptionData(id: 'b', text: '-∞'),
+      ExerciseOptionData(id: 'c', text: '0'),
+      ExerciseOptionData(id: 'd', text: '1'),
+    ],
+  ),
+  ExerciseData(
+    id: 'limite-lateral-reciproco-esquerda',
+    title: 'Questão 19 de 20',
+    statement: 'Calcule o limite lateral:\n\nlim x → 0⁻  1/x',
+    correctOptionId: 'b',
+    explanation:
+        'Pela esquerda, x assume valores negativos cada vez mais próximos de zero. Assim, 1/x tende a -∞.',
+    options: [
+      ExerciseOptionData(id: 'a', text: '+∞'),
+      ExerciseOptionData(id: 'b', text: '-∞'),
+      ExerciseOptionData(id: 'c', text: '0'),
+      ExerciseOptionData(id: 'd', text: '-1'),
+    ],
+  ),
+  ExerciseData(
+    id: 'limite-bilateral-reciproco',
+    title: 'Questão 20 de 20',
+    statement: 'Calcule o limite:\n\nlim x → 0  1/x',
+    correctOptionId: 'c',
+    explanation:
+        'Pela direita, 1/x tende a +∞; pela esquerda, tende a -∞. Como os limites laterais são diferentes, o limite bilateral não existe.',
+    options: [
+      ExerciseOptionData(id: 'a', text: '+∞'),
+      ExerciseOptionData(id: 'b', text: '-∞'),
+      ExerciseOptionData(id: 'c', text: 'Não existe'),
+      ExerciseOptionData(id: 'd', text: '0'),
+    ],
+  ),
 ];
