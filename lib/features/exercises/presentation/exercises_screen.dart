@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:calcquest/shared/data/mock_exercise_data.dart';
+import 'package:calcquest/shared/state/app_progress.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
 import 'package:calcquest/shared/theme/app_spacing.dart';
 import 'package:calcquest/shared/theme/app_typography.dart';
@@ -23,7 +24,9 @@ class ExercisesScreen extends StatefulWidget {
 
 class _ExercisesScreenState extends State<ExercisesScreen> {
   int currentExerciseIndex = 0;
+  int correctAnswers = 0;
   String? selectedOptionId;
+  bool currentExerciseHadError = false;
 
   ExerciseData get currentExercise => mockExercises[currentExerciseIndex];
 
@@ -107,13 +110,22 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
       return;
     }
 
-    if (selectedOptionId != currentExercise.correctOptionId) {
+    final isCorrect = selectedOptionId == currentExercise.correctOptionId;
+
+    AppProgress.recordExerciseAnswer(isCorrect: isCorrect);
+
+    if (!isCorrect) {
+      currentExerciseHadError = true;
       _showFeedback(
         message: 'Resposta incorreta. Tente novamente.',
         backgroundColor: AppColors.error,
         icon: Icons.close_rounded,
       );
       return;
+    }
+
+    if (!currentExerciseHadError) {
+      correctAnswers++;
     }
 
     _showFeedback(
@@ -128,10 +140,10 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
 
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (_) => const ResultScreen(
+            builder: (_) => ResultScreen(
               completedLessonId: 'algebra-fundamental',
-              totalQuestions: 5,
-              correctAnswers: 5,
+              totalQuestions: mockExercises.length,
+              correctAnswers: correctAnswers,
               xpEarned: 60,
               goldEarned: 25,
             ),
@@ -145,6 +157,7 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
     setState(() {
       currentExerciseIndex++;
       selectedOptionId = null;
+      currentExerciseHadError = false;
     });
   }
 

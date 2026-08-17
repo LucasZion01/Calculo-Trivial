@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:calcquest/shared/data/mock_exercise_data.dart';
 import 'package:calcquest/shared/data/mock_limits_exercise_data.dart';
+import 'package:calcquest/shared/state/app_progress.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
 import 'package:calcquest/shared/theme/app_spacing.dart';
 import 'package:calcquest/shared/theme/app_typography.dart';
@@ -24,7 +25,9 @@ class LimitsExercisesScreen extends StatefulWidget {
 
 class _LimitsExercisesScreenState extends State<LimitsExercisesScreen> {
   int currentExerciseIndex = 0;
+  int correctAnswers = 0;
   String? selectedOptionId;
+  bool currentExerciseHadError = false;
 
   ExerciseData get currentExercise => mockLimitsExercises[currentExerciseIndex];
 
@@ -110,13 +113,22 @@ class _LimitsExercisesScreenState extends State<LimitsExercisesScreen> {
       return;
     }
 
-    if (selectedOptionId != currentExercise.correctOptionId) {
+    final isCorrect = selectedOptionId == currentExercise.correctOptionId;
+
+    AppProgress.recordExerciseAnswer(isCorrect: isCorrect);
+
+    if (!isCorrect) {
+      currentExerciseHadError = true;
       _showFeedback(
         message: 'Resposta incorreta. Tente novamente.',
         backgroundColor: AppColors.error,
         icon: Icons.close_rounded,
       );
       return;
+    }
+
+    if (!currentExerciseHadError) {
+      correctAnswers++;
     }
 
     _showFeedback(
@@ -134,7 +146,7 @@ class _LimitsExercisesScreenState extends State<LimitsExercisesScreen> {
             builder: (_) => ResultScreen(
               completedLessonId: 'limites',
               totalQuestions: mockLimitsExercises.length,
-              correctAnswers: mockLimitsExercises.length,
+              correctAnswers: correctAnswers,
               xpEarned: 90,
               goldEarned: 40,
             ),
@@ -148,6 +160,7 @@ class _LimitsExercisesScreenState extends State<LimitsExercisesScreen> {
     setState(() {
       currentExerciseIndex++;
       selectedOptionId = null;
+      currentExerciseHadError = false;
     });
   }
 

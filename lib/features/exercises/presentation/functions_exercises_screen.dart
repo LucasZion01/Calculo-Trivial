@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:calcquest/shared/data/mock_exercise_data.dart';
 import 'package:calcquest/shared/data/mock_functions_exercise_data.dart';
+import 'package:calcquest/shared/state/app_progress.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
 import 'package:calcquest/shared/theme/app_spacing.dart';
 import 'package:calcquest/shared/theme/app_typography.dart';
@@ -25,7 +26,9 @@ class FunctionsExercisesScreen extends StatefulWidget {
 
 class _FunctionsExercisesScreenState extends State<FunctionsExercisesScreen> {
   int currentExerciseIndex = 0;
+  int correctAnswers = 0;
   String? selectedOptionId;
+  bool currentExerciseHadError = false;
 
   ExerciseData get currentExercise =>
       mockFunctionsExercises[currentExerciseIndex];
@@ -112,13 +115,22 @@ class _FunctionsExercisesScreenState extends State<FunctionsExercisesScreen> {
       return;
     }
 
-    if (selectedOptionId != currentExercise.correctOptionId) {
+    final isCorrect = selectedOptionId == currentExercise.correctOptionId;
+
+    AppProgress.recordExerciseAnswer(isCorrect: isCorrect);
+
+    if (!isCorrect) {
+      currentExerciseHadError = true;
       _showFeedback(
         message: 'Resposta incorreta. Tente novamente.',
         backgroundColor: AppColors.error,
         icon: Icons.close_rounded,
       );
       return;
+    }
+
+    if (!currentExerciseHadError) {
+      correctAnswers++;
     }
 
     _showFeedback(
@@ -136,7 +148,7 @@ class _FunctionsExercisesScreenState extends State<FunctionsExercisesScreen> {
             builder: (_) => ResultScreen(
               completedLessonId: 'funcoes',
               totalQuestions: mockFunctionsExercises.length,
-              correctAnswers: mockFunctionsExercises.length,
+              correctAnswers: correctAnswers,
               xpEarned: 80,
               goldEarned: 35,
             ),
@@ -150,6 +162,7 @@ class _FunctionsExercisesScreenState extends State<FunctionsExercisesScreen> {
     setState(() {
       currentExerciseIndex++;
       selectedOptionId = null;
+      currentExerciseHadError = false;
     });
   }
 
