@@ -200,6 +200,15 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
         final completedLessons = _completedLessons();
         final progress = _progressValue();
         final progressPercentage = (progress * 100).round();
+        final correctAnswers = AppProgress.correctAnswerAttempts;
+        final incorrectAnswers = AppProgress.incorrectAnswerAttempts;
+        final accuracyPercentage = (AppProgress.accuracy * 100).round();
+        final studyStreak = AppProgress.studyStreak;
+        final dailyAnswers = AppProgress.dailyAnsweredQuestions;
+        final dailyGoal = AppProgress.dailyQuestionGoal;
+        final dailyGoalProgress = AppProgress.dailyGoalProgress;
+        final dailyGoalCompleted = dailyAnswers >= dailyGoal;
+        final streakLabel = studyStreak == 1 ? 'dia seguido' : 'dias seguidos';
 
         return Scaffold(
           backgroundColor: AppColors.background,
@@ -307,7 +316,185 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                     ],
                   ),
                   const SizedBox(height: AppSpacing.lg),
+                  Text('Atividade de hoje', style: AppTypography.titleLarge),
+                  const SizedBox(height: AppSpacing.sm),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(AppSpacing.cardPaddingLarge),
+                    decoration: BoxDecoration(
+                      color: AppColors.surface,
+                      borderRadius: BorderRadius.circular(
+                        AppSpacing.radiusLarge,
+                      ),
+                      border: Border.all(color: AppColors.border),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: AppColors.shadow,
+                          blurRadius: 12,
+                          offset: Offset(0, 6),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              width: 44,
+                              height: 44,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: dailyGoalCompleted
+                                    ? AppColors.successLight
+                                    : AppColors.selectedBackground,
+                                borderRadius: BorderRadius.circular(
+                                  AppSpacing.radiusMedium,
+                                ),
+                              ),
+                              child: AppIcon(
+                                icon: dailyGoalCompleted
+                                    ? Icons.task_alt_rounded
+                                    : Icons.flag_outlined,
+                                size: AppIconSize.large,
+                                color: dailyGoalCompleted
+                                    ? AppColors.success
+                                    : AppColors.primary,
+                              ),
+                            ),
+                            const SizedBox(width: AppSpacing.sm),
+                            Expanded(
+                              child: Text(
+                                'Meta diária',
+                                style: AppTypography.titleMedium,
+                              ),
+                            ),
+                            Text(
+                              '$dailyAnswers/$dailyGoal',
+                              style: AppTypography.titleLarge,
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: AppSpacing.md),
+                        AppProgressBar(
+                          value: dailyGoalProgress,
+                          state: dailyGoalCompleted
+                              ? AppProgressBarState.success
+                              : AppProgressBarState.normal,
+                        ),
+                        const SizedBox(height: AppSpacing.xs),
+                        Text(
+                          dailyGoalCompleted
+                              ? 'Meta concluída! Você respondeu $dailyAnswers questões hoje.'
+                              : 'Responda ${dailyGoal - dailyAnswers} questões para concluir a meta.',
+                          style: AppTypography.bodySmall,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.sm),
+                  _buildSmallStatCard(
+                    icon: Icons.local_fire_department_outlined,
+                    value: '$studyStreak',
+                    label: streakLabel,
+                    iconColor: AppColors.warning,
+                    iconBackground: AppColors.warningLight,
+                  ),
+                  const SizedBox(height: AppSpacing.lg),
                   Text('Desempenho', style: AppTypography.titleLarge),
+                  const SizedBox(height: AppSpacing.sm),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: _buildSmallStatCard(
+                          icon: Icons.check_circle_outline_rounded,
+                          value: '$correctAnswers',
+                          label: 'Acertos',
+                          iconColor: AppColors.success,
+                          iconBackground: AppColors.successLight,
+                        ),
+                      ),
+                      const SizedBox(width: AppSpacing.sm),
+                      Expanded(
+                        child: _buildSmallStatCard(
+                          icon: Icons.cancel_outlined,
+                          value: '$incorrectAnswers',
+                          label: 'Erros',
+                          iconColor: AppColors.error,
+                          iconBackground: AppColors.errorLight,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: AppSpacing.sm),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(AppSpacing.cardPaddingLarge),
+                    decoration: BoxDecoration(
+                      color: AppColors.surface,
+                      borderRadius: BorderRadius.circular(
+                        AppSpacing.radiusLarge,
+                      ),
+                      border: Border.all(color: AppColors.border),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: AppColors.shadow,
+                          blurRadius: 12,
+                          offset: Offset(0, 6),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              width: 44,
+                              height: 44,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: AppColors.selectedBackground,
+                                borderRadius: BorderRadius.circular(
+                                  AppSpacing.radiusMedium,
+                                ),
+                              ),
+                              child: const AppIcon(
+                                icon: Icons.analytics_outlined,
+                                size: AppIconSize.large,
+                                color: AppColors.primary,
+                              ),
+                            ),
+                            const SizedBox(width: AppSpacing.sm),
+                            Expanded(
+                              child: Text(
+                                'Precisão geral',
+                                style: AppTypography.titleMedium,
+                              ),
+                            ),
+                            Text(
+                              '$accuracyPercentage%',
+                              style: AppTypography.headingSmall,
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: AppSpacing.md),
+                        AppProgressBar(value: AppProgress.accuracy),
+                        const SizedBox(height: AppSpacing.xs),
+                        Text(
+                          correctAnswers + incorrectAnswers == 0
+                              ? 'Responda exercícios para calcular sua precisão.'
+                              : 'Calculada com todas as respostas registradas.',
+                          style: AppTypography.bodySmall,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.lg),
+                  Text('Conteúdo', style: AppTypography.titleLarge),
                   const SizedBox(height: AppSpacing.sm),
                   Container(
                     width: double.infinity,
