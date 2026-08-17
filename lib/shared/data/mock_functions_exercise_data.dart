@@ -3,7 +3,7 @@ import 'package:calcquest/shared/data/mock_exercise_data.dart';
 const List<ExerciseData> mockFunctionsExercises = [
   ExerciseData(
     id: 'funcoes-dominio',
-    title: 'Questão 1 de 5',
+    title: 'Questão 1 de 10',
     statement:
         'Considere a função:\n\nf(x) = √(x - 2)\n\nQual é o domínio de f?',
     correctOptionId: 'c',
@@ -18,7 +18,7 @@ const List<ExerciseData> mockFunctionsExercises = [
   ),
   ExerciseData(
     id: 'funcoes-composicao',
-    title: 'Questão 2 de 5',
+    title: 'Questão 2 de 10',
     statement: 'Sejam:\n\nf(x) = 2x + 1\ng(x) = x²\n\nDetermine (f ∘ g)(x).',
     correctOptionId: 'b',
     explanation:
@@ -32,7 +32,7 @@ const List<ExerciseData> mockFunctionsExercises = [
   ),
   ExerciseData(
     id: 'funcoes-inversa',
-    title: 'Questão 3 de 5',
+    title: 'Questão 3 de 10',
     statement:
         'Considere a função:\n\nf(x) = 3x - 6\n\nQual é a função inversa f⁻¹(x)?',
     correctOptionId: 'a',
@@ -47,7 +47,7 @@ const List<ExerciseData> mockFunctionsExercises = [
   ),
   ExerciseData(
     id: 'funcoes-paridade',
-    title: 'Questão 4 de 5',
+    title: 'Questão 4 de 10',
     statement:
         'Considere a função:\n\nf(x) = x² + 4\n\nComo essa função pode ser classificada quanto à paridade?',
     correctOptionId: 'a',
@@ -62,7 +62,7 @@ const List<ExerciseData> mockFunctionsExercises = [
   ),
   ExerciseData(
     id: 'funcoes-imagem-quadratica',
-    title: 'Questão 5 de 5',
+    title: 'Questão 5 de 10',
     statement:
         'Considere a função:\n\nf(x) = x² - 4x + 3\n\nQual é o menor valor assumido por f(x)?',
     correctOptionId: 'd',
@@ -73,6 +73,79 @@ const List<ExerciseData> mockFunctionsExercises = [
       ExerciseOptionData(id: 'b', text: '1'),
       ExerciseOptionData(id: 'c', text: '0'),
       ExerciseOptionData(id: 'd', text: '-1'),
+    ],
+  ),
+  ExerciseData(
+    id: 'funcoes-valor-numerico',
+    title: 'Questão 6 de 10',
+    statement:
+        'Considere a função:\n\nf(x) = 2x² - x + 1\n\nQual é o valor de f(3)?',
+    correctOptionId: 'b',
+    explanation:
+        'Substituímos x por 3: f(3) = 2(3²) - 3 + 1 = 18 - 3 + 1 = 16.',
+    options: [
+      ExerciseOptionData(id: 'a', text: '14'),
+      ExerciseOptionData(id: 'b', text: '16'),
+      ExerciseOptionData(id: 'c', text: '18'),
+      ExerciseOptionData(id: 'd', text: '20'),
+    ],
+  ),
+  ExerciseData(
+    id: 'funcoes-raizes',
+    title: 'Questão 7 de 10',
+    statement:
+        'Considere a função:\n\nf(x) = x² - 5x + 6\n\nQuais são os zeros de f?',
+    correctOptionId: 'd',
+    explanation:
+        'Fatoramos o polinômio: x² - 5x + 6 = (x - 2)(x - 3). Portanto, os zeros são x = 2 e x = 3.',
+    options: [
+      ExerciseOptionData(id: 'a', text: 'x = -2 e x = -3'),
+      ExerciseOptionData(id: 'b', text: 'x = 1 e x = 6'),
+      ExerciseOptionData(id: 'c', text: 'x = -1 e x = -6'),
+      ExerciseOptionData(id: 'd', text: 'x = 2 e x = 3'),
+    ],
+  ),
+  ExerciseData(
+    id: 'funcoes-coeficiente-angular',
+    title: 'Questão 8 de 10',
+    statement:
+        'Considere a função afim:\n\nf(x) = -3x + 4\n\nQual é o coeficiente angular?',
+    correctOptionId: 'a',
+    explanation:
+        'Na forma f(x) = ax + b, o coeficiente angular é a. Nesse caso, a = -3.',
+    options: [
+      ExerciseOptionData(id: 'a', text: '-3'),
+      ExerciseOptionData(id: 'b', text: '3'),
+      ExerciseOptionData(id: 'c', text: '4'),
+      ExerciseOptionData(id: 'd', text: '-4'),
+    ],
+  ),
+  ExerciseData(
+    id: 'funcoes-composicao-inversa',
+    title: 'Questão 9 de 10',
+    statement: 'Sejam:\n\nf(x) = x + 2\ng(x) = 3x\n\nDetermine (g ∘ f)(x).',
+    correctOptionId: 'c',
+    explanation:
+        'Calculamos g(f(x)). Como f(x) = x + 2, substituímos em g: g(x + 2) = 3(x + 2) = 3x + 6.',
+    options: [
+      ExerciseOptionData(id: 'a', text: '3x + 2'),
+      ExerciseOptionData(id: 'b', text: 'x + 6'),
+      ExerciseOptionData(id: 'c', text: '3x + 6'),
+      ExerciseOptionData(id: 'd', text: '3x² + 6'),
+    ],
+  ),
+  ExerciseData(
+    id: 'funcoes-imagem-modulo',
+    title: 'Questão 10 de 10',
+    statement: 'Considere a função:\n\nf(x) = |x|\n\nQual é a imagem de f?',
+    correctOptionId: 'b',
+    explanation:
+        'O valor absoluto nunca é negativo. A função pode assumir zero e qualquer valor positivo, portanto sua imagem é [0, ∞).',
+    options: [
+      ExerciseOptionData(id: 'a', text: '(-∞, 0]'),
+      ExerciseOptionData(id: 'b', text: '[0, ∞)'),
+      ExerciseOptionData(id: 'c', text: '(0, ∞)'),
+      ExerciseOptionData(id: 'd', text: 'ℝ'),
     ],
   ),
 ];

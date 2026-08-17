@@ -26,7 +26,6 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
   int currentExerciseIndex = 0;
   int correctAnswers = 0;
   String? selectedOptionId;
-  bool currentExerciseHadError = false;
 
   ExerciseData get currentExercise => mockExercises[currentExerciseIndex];
 
@@ -114,25 +113,20 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
 
     AppProgress.recordExerciseAnswer(isCorrect: isCorrect);
 
-    if (!isCorrect) {
-      currentExerciseHadError = true;
+    if (isCorrect) {
+      correctAnswers++;
       _showFeedback(
-        message: 'Resposta incorreta. Tente novamente.',
+        message: currentExercise.explanation,
+        backgroundColor: AppColors.success,
+        icon: Icons.check_rounded,
+      );
+    } else {
+      _showFeedback(
+        message: 'Resposta incorreta. ${currentExercise.explanation}',
         backgroundColor: AppColors.error,
         icon: Icons.close_rounded,
       );
-      return;
     }
-
-    if (!currentExerciseHadError) {
-      correctAnswers++;
-    }
-
-    _showFeedback(
-      message: currentExercise.explanation,
-      backgroundColor: AppColors.success,
-      icon: Icons.check_rounded,
-    );
 
     if (isLastExercise) {
       Future.delayed(const Duration(milliseconds: 700), () {
@@ -157,7 +151,6 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
     setState(() {
       currentExerciseIndex++;
       selectedOptionId = null;
-      currentExerciseHadError = false;
     });
   }
 

@@ -27,7 +27,6 @@ class _LimitsExercisesScreenState extends State<LimitsExercisesScreen> {
   int currentExerciseIndex = 0;
   int correctAnswers = 0;
   String? selectedOptionId;
-  bool currentExerciseHadError = false;
 
   ExerciseData get currentExercise => mockLimitsExercises[currentExerciseIndex];
 
@@ -117,25 +116,20 @@ class _LimitsExercisesScreenState extends State<LimitsExercisesScreen> {
 
     AppProgress.recordExerciseAnswer(isCorrect: isCorrect);
 
-    if (!isCorrect) {
-      currentExerciseHadError = true;
+    if (isCorrect) {
+      correctAnswers++;
       _showFeedback(
-        message: 'Resposta incorreta. Tente novamente.',
+        message: currentExercise.explanation,
+        backgroundColor: AppColors.success,
+        icon: Icons.check_rounded,
+      );
+    } else {
+      _showFeedback(
+        message: 'Resposta incorreta. ${currentExercise.explanation}',
         backgroundColor: AppColors.error,
         icon: Icons.close_rounded,
       );
-      return;
     }
-
-    if (!currentExerciseHadError) {
-      correctAnswers++;
-    }
-
-    _showFeedback(
-      message: currentExercise.explanation,
-      backgroundColor: AppColors.success,
-      icon: Icons.check_rounded,
-    );
 
     if (isLastExercise) {
       Future.delayed(const Duration(milliseconds: 700), () {
@@ -160,7 +154,6 @@ class _LimitsExercisesScreenState extends State<LimitsExercisesScreen> {
     setState(() {
       currentExerciseIndex++;
       selectedOptionId = null;
-      currentExerciseHadError = false;
     });
   }
 

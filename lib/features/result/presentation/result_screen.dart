@@ -127,11 +127,12 @@ class ResultScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final performance = totalQuestions == 0
-        ? 0
+    final incorrectAnswers = totalQuestions - correctAnswers;
+    final accuracy = totalQuestions == 0
+        ? 0.0
         : correctAnswers / totalQuestions;
-
-    final performanceText = '${(performance * 100).round()}% de aproveitamento';
+    final accuracyPercentage = (accuracy * 100).round();
+    final performanceText = '$accuracyPercentage% de precisão';
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -144,69 +145,92 @@ class ResultScreen extends StatelessWidget {
             0,
           ),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(height: AppSpacing.sm),
-              Container(
-                width: 88,
-                height: 88,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: AppColors.successLight,
-                  borderRadius: BorderRadius.circular(AppSpacing.radiusXLarge),
+              Expanded(
+                child: ListView(
+                  padding: const EdgeInsets.only(bottom: AppSpacing.lg),
+                  children: [
+                    const SizedBox(height: AppSpacing.sm),
+                    Center(
+                      child: Container(
+                        width: 88,
+                        height: 88,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: AppColors.successLight,
+                          borderRadius: BorderRadius.circular(
+                            AppSpacing.radiusXLarge,
+                          ),
+                        ),
+                        child: const AppIcon(
+                          icon: Icons.check_rounded,
+                          size: AppIconSize.extraLarge,
+                          color: AppColors.success,
+                          semanticLabel: 'Exercícios concluídos',
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: AppSpacing.lg),
+                    Text(
+                      'Exercícios concluídos',
+                      textAlign: TextAlign.center,
+                      style: AppTypography.headingLarge,
+                    ),
+                    const SizedBox(height: AppSpacing.xs),
+                    Text(
+                      'Você concluiu a sequência de exercícios.',
+                      textAlign: TextAlign.center,
+                      style: AppTypography.bodyMedium,
+                    ),
+                    const SizedBox(height: AppSpacing.xs),
+                    Text(
+                      performanceText,
+                      textAlign: TextAlign.center,
+                      style: AppTypography.labelMedium.copyWith(
+                        color: AppColors.success,
+                      ),
+                    ),
+                    const SizedBox(height: AppSpacing.xl),
+                    _buildResultCard(
+                      icon: Icons.check_circle_outline_rounded,
+                      title: 'Acertos',
+                      value: '$correctAnswers',
+                      iconColor: AppColors.success,
+                      iconBackground: AppColors.successLight,
+                    ),
+                    const SizedBox(height: AppSpacing.sm),
+                    _buildResultCard(
+                      icon: Icons.cancel_outlined,
+                      title: 'Erros',
+                      value: '$incorrectAnswers',
+                      iconColor: AppColors.error,
+                      iconBackground: AppColors.errorLight,
+                    ),
+                    const SizedBox(height: AppSpacing.sm),
+                    _buildResultCard(
+                      icon: Icons.analytics_outlined,
+                      title: 'Precisão',
+                      value: '$accuracyPercentage%',
+                    ),
+                    const SizedBox(height: AppSpacing.sm),
+                    _buildResultCard(
+                      icon: Icons.bolt_outlined,
+                      title: 'XP ganho',
+                      value: '+$xpEarned XP',
+                      iconColor: AppColors.xp,
+                      iconBackground: AppColors.xpLight,
+                    ),
+                    const SizedBox(height: AppSpacing.sm),
+                    _buildResultCard(
+                      icon: Icons.monetization_on_outlined,
+                      title: 'Ouro ganho',
+                      value: '+$goldEarned',
+                      iconColor: AppColors.gold,
+                      iconBackground: AppColors.goldLight,
+                    ),
+                  ],
                 ),
-                child: const AppIcon(
-                  icon: Icons.check_rounded,
-                  size: AppIconSize.extraLarge,
-                  color: AppColors.success,
-                  semanticLabel: 'Exercícios concluídos',
-                ),
               ),
-              const SizedBox(height: AppSpacing.lg),
-              Text(
-                'Exercícios concluídos',
-                textAlign: TextAlign.center,
-                style: AppTypography.headingLarge,
-              ),
-              const SizedBox(height: AppSpacing.xs),
-              Text(
-                'Você concluiu a sequência de exercícios com ótimo desempenho.',
-                textAlign: TextAlign.center,
-                style: AppTypography.bodyMedium,
-              ),
-              const SizedBox(height: AppSpacing.xs),
-              Text(
-                performanceText,
-                textAlign: TextAlign.center,
-                style: AppTypography.labelMedium.copyWith(
-                  color: AppColors.success,
-                ),
-              ),
-              const SizedBox(height: AppSpacing.xl),
-              _buildResultCard(
-                icon: Icons.check_circle_outline_rounded,
-                title: 'Acertos',
-                value: '$correctAnswers de $totalQuestions',
-                iconColor: AppColors.success,
-                iconBackground: AppColors.successLight,
-              ),
-              const SizedBox(height: AppSpacing.sm),
-              _buildResultCard(
-                icon: Icons.bolt_outlined,
-                title: 'XP ganho',
-                value: '+$xpEarned XP',
-                iconColor: AppColors.xp,
-                iconBackground: AppColors.xpLight,
-              ),
-              const SizedBox(height: AppSpacing.sm),
-              _buildResultCard(
-                icon: Icons.monetization_on_outlined,
-                title: 'Ouro ganho',
-                value: '+$goldEarned',
-                iconColor: AppColors.gold,
-                iconBackground: AppColors.goldLight,
-              ),
-              const Spacer(),
               PrimaryButton(
                 text: 'Continuar',
                 icon: Icons.arrow_forward_rounded,

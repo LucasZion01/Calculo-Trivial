@@ -3,7 +3,7 @@ import 'package:calcquest/shared/data/mock_exercise_data.dart';
 const List<ExerciseData> mockLimitsExercises = [
   ExerciseData(
     id: 'limite-substituicao-direta',
-    title: 'Questão 1 de 5',
+    title: 'Questão 1 de 10',
     statement: 'Calcule o limite:\n\nlim x → 3  (2x² - x + 1)',
     correctOptionId: 'd',
     explanation:
@@ -17,7 +17,7 @@ const List<ExerciseData> mockLimitsExercises = [
   ),
   ExerciseData(
     id: 'limite-fatoracao',
-    title: 'Questão 2 de 5',
+    title: 'Questão 2 de 10',
     statement: 'Calcule o limite:\n\nlim x → 2  (x² - 4) / (x - 2)',
     correctOptionId: 'c',
     explanation:
@@ -31,7 +31,7 @@ const List<ExerciseData> mockLimitsExercises = [
   ),
   ExerciseData(
     id: 'limite-racionalizacao',
-    title: 'Questão 3 de 5',
+    title: 'Questão 3 de 10',
     statement: 'Calcule o limite:\n\nlim x → 0  (√(x + 9) - 3) / x',
     correctOptionId: 'b',
     explanation:
@@ -45,7 +45,7 @@ const List<ExerciseData> mockLimitsExercises = [
   ),
   ExerciseData(
     id: 'limite-trigonometrico-fundamental',
-    title: 'Questão 4 de 5',
+    title: 'Questão 4 de 10',
     statement: 'Calcule o limite:\n\nlim x → 0  sen(x) / x',
     correctOptionId: 'a',
     explanation:
@@ -59,7 +59,7 @@ const List<ExerciseData> mockLimitsExercises = [
   ),
   ExerciseData(
     id: 'limite-no-infinito',
-    title: 'Questão 5 de 5',
+    title: 'Questão 5 de 10',
     statement: 'Calcule o limite:\n\nlim x → ∞  (3x² - 2x + 1) / (x² + 5)',
     correctOptionId: 'c',
     explanation:
@@ -69,6 +69,76 @@ const List<ExerciseData> mockLimitsExercises = [
       ExerciseOptionData(id: 'b', text: '1'),
       ExerciseOptionData(id: 'c', text: '3'),
       ExerciseOptionData(id: 'd', text: '∞'),
+    ],
+  ),
+  ExerciseData(
+    id: 'limite-racional-direto',
+    title: 'Questão 6 de 10',
+    statement: 'Calcule o limite:\n\nlim x → 1  (x² + 2) / (x + 1)',
+    correctOptionId: 'b',
+    explanation:
+        'O denominador não é zero em x = 1, então podemos substituir diretamente: (1² + 2)/(1 + 1) = 3/2.',
+    options: [
+      ExerciseOptionData(id: 'a', text: '1'),
+      ExerciseOptionData(id: 'b', text: '3/2'),
+      ExerciseOptionData(id: 'c', text: '2'),
+      ExerciseOptionData(id: 'd', text: '3'),
+    ],
+  ),
+  ExerciseData(
+    id: 'limite-fatoracao-segundo',
+    title: 'Questão 7 de 10',
+    statement: 'Calcule o limite:\n\nlim x → 1  (x² - 1) / (x - 1)',
+    correctOptionId: 'c',
+    explanation:
+        'Fatoramos x² - 1 = (x - 1)(x + 1). Cancelando x - 1, resta x + 1. Quando x tende a 1, o limite é 2.',
+    options: [
+      ExerciseOptionData(id: 'a', text: '0'),
+      ExerciseOptionData(id: 'b', text: '1'),
+      ExerciseOptionData(id: 'c', text: '2'),
+      ExerciseOptionData(id: 'd', text: 'Não existe'),
+    ],
+  ),
+  ExerciseData(
+    id: 'limite-infinito-grau-menor',
+    title: 'Questão 8 de 10',
+    statement: 'Calcule o limite:\n\nlim x → ∞  (2x + 1) / (x² + 3)',
+    correctOptionId: 'a',
+    explanation:
+        'O grau do numerador é menor que o grau do denominador. Assim, o denominador cresce mais rapidamente e o limite é 0.',
+    options: [
+      ExerciseOptionData(id: 'a', text: '0'),
+      ExerciseOptionData(id: 'b', text: '1'),
+      ExerciseOptionData(id: 'c', text: '2'),
+      ExerciseOptionData(id: 'd', text: '∞'),
+    ],
+  ),
+  ExerciseData(
+    id: 'limite-lateral-modulo',
+    title: 'Questão 9 de 10',
+    statement: 'Calcule o limite lateral:\n\nlim x → 0⁺  |x| / x',
+    correctOptionId: 'd',
+    explanation:
+        'Quando x se aproxima de zero pela direita, x é positivo e |x| = x. Portanto, |x|/x = 1.',
+    options: [
+      ExerciseOptionData(id: 'a', text: '-1'),
+      ExerciseOptionData(id: 'b', text: '0'),
+      ExerciseOptionData(id: 'c', text: 'Não existe'),
+      ExerciseOptionData(id: 'd', text: '1'),
+    ],
+  ),
+  ExerciseData(
+    id: 'limite-bilateral-modulo',
+    title: 'Questão 10 de 10',
+    statement: 'Calcule o limite:\n\nlim x → 0  |x| / x',
+    correctOptionId: 'c',
+    explanation:
+        'Pela direita, |x|/x tende a 1; pela esquerda, tende a -1. Como os limites laterais são diferentes, o limite bilateral não existe.',
+    options: [
+      ExerciseOptionData(id: 'a', text: '-1'),
+      ExerciseOptionData(id: 'b', text: '0'),
+      ExerciseOptionData(id: 'c', text: 'Não existe'),
+      ExerciseOptionData(id: 'd', text: '1'),
     ],
   ),
 ];
