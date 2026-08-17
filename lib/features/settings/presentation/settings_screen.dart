@@ -1,7 +1,9 @@
+﻿import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:purchases_ui_flutter/purchases_ui_flutter.dart';
 
 import 'package:calcquest/shared/services/revenuecat_service.dart';
+import 'package:calcquest/shared/state/app_progress.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
 import 'package:calcquest/shared/theme/app_spacing.dart';
 import 'package:calcquest/shared/theme/app_typography.dart';
@@ -9,6 +11,7 @@ import 'package:calcquest/shared/widgets/app_bottom_navigation_bar.dart';
 import 'package:calcquest/shared/widgets/app_icon.dart';
 import 'package:calcquest/shared/widgets/primary_button.dart';
 
+import '../../auth/presentation/login_screen.dart';
 import '../../dashboard/presentation/dashboard_screen.dart';
 import '../../learning_path/presentation/learning_path_screen.dart';
 import '../../profile/presentation/profile_screen.dart';
@@ -23,32 +26,48 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   bool _processingSubscriptionAction = false;
+  bool _isSigningOut = false;
+
+  bool get _isBusy =>
+      _processingSubscriptionAction || _isSigningOut;
 
   void _onMenuTap(BuildContext context, int index) {
+    if (_isBusy) {
+      return;
+    }
+
     if (index == 0) {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const DashboardScreen()),
+        MaterialPageRoute(
+          builder: (_) => const DashboardScreen(),
+        ),
       );
       return;
     }
 
     if (index == 1) {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const LearningPathScreen()),
+        MaterialPageRoute(
+          builder: (_) => const LearningPathScreen(),
+        ),
       );
       return;
     }
 
     if (index == 2) {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const StatisticsScreen()),
+        MaterialPageRoute(
+          builder: (_) => const StatisticsScreen(),
+        ),
       );
       return;
     }
 
     if (index == 3) {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const ProfileScreen()),
+        MaterialPageRoute(
+          builder: (_) => const ProfileScreen(),
+        ),
       );
     }
   }
@@ -58,18 +77,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
       return;
     }
 
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(content: Text(message)),
+      );
   }
 
   Future<void> _restorePurchases() async {
-    if (_processingSubscriptionAction) {
+    if (_isBusy) {
       return;
     }
 
     if (!RevenueCatService.isConfigured) {
-      _showMessage('O sistema Premium está indisponível no momento.');
+      _showMessage(
+        'O sistema Premium está indisponível no momento.',
+      );
       return;
     }
 
@@ -85,14 +108,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
       }
 
       if (RevenueCatService.isPremium) {
-        _showMessage('Compras restauradas. Seu acesso Premium está ativo.');
+        _showMessage(
+          'Compras restauradas. Seu acesso Premium está ativo.',
+        );
       } else {
-        _showMessage('Nenhuma compra Premium foi encontrada para esta conta.');
+        _showMessage(
+          'Nenhuma compra Premium foi encontrada para esta conta.',
+        );
       }
     } catch (error) {
-      debugPrint('Configurações: erro ao restaurar compras: $error');
+      debugPrint(
+        'Configurações: erro ao restaurar compras: $error',
+      );
 
-      _showMessage('Não foi possível restaurar suas compras.');
+      _showMessage(
+        'Não foi possível restaurar suas compras.',
+      );
     } finally {
       if (mounted) {
         setState(() {
@@ -103,12 +134,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Future<void> _openCustomerCenter() async {
-    if (_processingSubscriptionAction) {
+    if (_isBusy) {
       return;
     }
 
     if (!RevenueCatService.isConfigured) {
-      _showMessage('O sistema Premium está indisponível no momento.');
+      _showMessage(
+        'O sistema Premium está indisponível no momento.',
+      );
       return;
     }
 
@@ -121,10 +154,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
       await RevenueCatService.refreshPremiumStatus();
     } catch (error) {
       debugPrint(
-        'Configurações: erro ao abrir a central de assinatura: $error',
+        'Configurações: erro ao abrir '
+        'a central de assinatura: $error',
       );
 
-      _showMessage('Não foi possível abrir o gerenciamento da assinatura.');
+      _showMessage(
+        'Não foi possível abrir o gerenciamento da assinatura.',
+      );
     } finally {
       if (mounted) {
         setState(() {
@@ -134,18 +170,126 @@ class _SettingsScreenState extends State<SettingsScreen> {
     }
   }
 
-  Widget _buildSubscriptionStatus(bool isPremium) {
-    final statusColor = isPremium ? AppColors.success : const Color(0xFFFFB300);
+  Future<void> _confirmSignOut() async {
+    if (_isBusy) {
+      return;
+    }
 
-    final statusBackground = statusColor.withValues(alpha: 0.12);
+    final shouldSignOut = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: const Text('Sair da conta?'),
+          content: const Text(
+            'Seu progresso permanecerá salvo e poderá ser '
+            'recuperado quando você entrar novamente.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(dialogContext).pop(false);
+              },
+              child: const Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(dialogContext).pop(true);
+              },
+              style: TextButton.styleFrom(
+                foregroundColor: AppColors.error,
+              ),
+              child: const Text('Sair'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (shouldSignOut != true || !mounted) {
+      return;
+    }
+
+    await _signOut();
+  }
+
+  Future<void> _signOut() async {
+    setState(() {
+      _isSigningOut = true;
+    });
+
+    try {
+      if (RevenueCatService.isConfigured) {
+        try {
+          await RevenueCatService.logOutUser();
+        } catch (error) {
+          debugPrint(
+            'Configurações: não foi possível desconectar '
+            'o RevenueCat: $error',
+          );
+        }
+      }
+
+      await FirebaseAuth.instance.signOut();
+
+      AppProgress.clearSession();
+
+      if (!mounted) {
+        return;
+      }
+
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute<void>(
+          builder: (_) => const LoginScreen(),
+        ),
+        (route) => false,
+      );
+    } on FirebaseAuthException catch (error) {
+      debugPrint(
+        'Configurações: erro do Firebase ao sair: '
+        '${error.code} - ${error.message}',
+      );
+
+      _showMessage(
+        'Não foi possível sair da conta. Tente novamente.',
+      );
+    } catch (error) {
+      debugPrint(
+        'Configurações: erro inesperado ao sair: $error',
+      );
+
+      _showMessage(
+        'Ocorreu um erro inesperado ao sair da conta.',
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isSigningOut = false;
+        });
+      }
+    }
+  }
+
+  Widget _buildSubscriptionStatus(bool isPremium) {
+    final statusColor = isPremium
+        ? AppColors.success
+        : const Color(0xFFFFB300);
+
+    final statusBackground =
+        statusColor.withValues(alpha: 0.12);
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(AppSpacing.cardPaddingLarge),
+      padding: const EdgeInsets.all(
+        AppSpacing.cardPaddingLarge,
+      ),
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(AppSpacing.radiusXLarge),
-        border: Border.all(color: statusColor.withValues(alpha: 0.45)),
+        borderRadius: BorderRadius.circular(
+          AppSpacing.radiusXLarge,
+        ),
+        border: Border.all(
+          color: statusColor.withValues(alpha: 0.45),
+        ),
         boxShadow: const [
           BoxShadow(
             color: AppColors.shadow,
@@ -162,7 +306,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
             alignment: Alignment.center,
             decoration: BoxDecoration(
               color: statusBackground,
-              borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
+              borderRadius: BorderRadius.circular(
+                AppSpacing.radiusMedium,
+              ),
             ),
             child: AppIcon(
               icon: isPremium
@@ -178,7 +324,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  isPremium ? 'Premium ativo' : 'Plano gratuito',
+                  isPremium
+                      ? 'Premium ativo'
+                      : 'Plano gratuito',
                   style: AppTypography.titleMedium.copyWith(
                     color: statusColor,
                     fontWeight: FontWeight.w700,
@@ -207,6 +355,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final currentUser = FirebaseAuth.instance.currentUser;
+    final userEmail =
+        currentUser?.email ?? 'Conta não identificada';
+
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
@@ -227,17 +379,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
               ),
               const SizedBox(height: AppSpacing.xs),
-              Text('Ajustes da conta', style: AppTypography.headingMedium),
+              Text(
+                'Ajustes da conta',
+                style: AppTypography.headingMedium,
+              ),
               const SizedBox(height: AppSpacing.xs),
               Text(
                 'Gerencie sua conta, preferências e assinatura.',
                 style: AppTypography.bodyMedium,
               ),
               const SizedBox(height: AppSpacing.lg),
-              const _SettingsCard(
+              _SettingsCard(
                 icon: Icons.person_outline_rounded,
                 title: 'Conta',
-                subtitle: 'Editar nome, e-mail e senha',
+                subtitle: userEmail,
               ),
               const SizedBox(height: AppSpacing.md),
               const _SettingsCard(
@@ -252,10 +407,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 subtitle: 'Modo claro ativado',
               ),
               const SizedBox(height: AppSpacing.lg),
-              Text('Assinatura', style: AppTypography.titleLarge),
+              Text(
+                'Assinatura',
+                style: AppTypography.titleLarge,
+              ),
               const SizedBox(height: AppSpacing.sm),
               ValueListenableBuilder<bool>(
-                valueListenable: RevenueCatService.premiumAccess,
+                valueListenable:
+                    RevenueCatService.premiumAccess,
                 builder: (context, isPremium, child) {
                   return _buildSubscriptionStatus(isPremium);
                 },
@@ -264,13 +423,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
               _SettingsCard(
                 icon: Icons.restore_rounded,
                 title: 'Restaurar compras',
-                subtitle: 'Recupere uma assinatura comprada anteriormente',
-                onTap: _processingSubscriptionAction ? null : _restorePurchases,
+                subtitle:
+                    'Recupere uma assinatura comprada anteriormente',
+                onTap: _isBusy ? null : _restorePurchases,
                 trailing: _processingSubscriptionAction
                     ? const SizedBox(
                         width: 22,
                         height: 22,
-                        child: CircularProgressIndicator(strokeWidth: 2),
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                        ),
                       )
                     : null,
               ),
@@ -278,17 +440,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
               _SettingsCard(
                 icon: Icons.manage_accounts_outlined,
                 title: 'Gerenciar assinatura',
-                subtitle: 'Consulte, altere ou cancele seu plano',
-                onTap: _processingSubscriptionAction
-                    ? null
-                    : _openCustomerCenter,
+                subtitle:
+                    'Consulte, altere ou cancele seu plano',
+                onTap: _isBusy ? null : _openCustomerCenter,
               ),
               const SizedBox(height: AppSpacing.lg),
               PrimaryButton(
                 text: 'Sair da conta',
                 icon: Icons.logout_rounded,
                 variant: PrimaryButtonVariant.destructive,
-                onPressed: () {},
+                onPressed:
+                    _isBusy ? null : _confirmSignOut,
+                isLoading: _isSigningOut,
               ),
             ],
           ),
@@ -323,16 +486,24 @@ class _SettingsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       color: Colors.transparent,
-      borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
+      borderRadius: BorderRadius.circular(
+        AppSpacing.radiusLarge,
+      ),
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
+        borderRadius: BorderRadius.circular(
+          AppSpacing.radiusLarge,
+        ),
         child: Container(
           width: double.infinity,
-          padding: const EdgeInsets.all(AppSpacing.cardPaddingLarge),
+          padding: const EdgeInsets.all(
+            AppSpacing.cardPaddingLarge,
+          ),
           decoration: BoxDecoration(
             color: AppColors.surface,
-            borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
+            borderRadius: BorderRadius.circular(
+              AppSpacing.radiusLarge,
+            ),
             border: Border.all(color: AppColors.border),
           ),
           child: Row(
@@ -343,7 +514,9 @@ class _SettingsCard extends StatelessWidget {
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   color: AppColors.surfaceSecondary,
-                  borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
+                  borderRadius: BorderRadius.circular(
+                    AppSpacing.radiusMedium,
+                  ),
                 ),
                 child: AppIcon(
                   icon: icon,
@@ -356,9 +529,15 @@ class _SettingsCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(title, style: AppTypography.titleMedium),
+                    Text(
+                      title,
+                      style: AppTypography.titleMedium,
+                    ),
                     const SizedBox(height: AppSpacing.xxs),
-                    Text(subtitle, style: AppTypography.bodySmall),
+                    Text(
+                      subtitle,
+                      style: AppTypography.bodySmall,
+                    ),
                   ],
                 ),
               ),
