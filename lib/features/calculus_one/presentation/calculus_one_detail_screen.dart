@@ -11,6 +11,7 @@ import 'package:calcquest/shared/widgets/math_card.dart';
 import '../../dashboard/presentation/dashboard_screen.dart';
 import '../../learning_path/presentation/learning_path_screen.dart';
 import '../../lesson/presentation/continuity_lesson_screen.dart';
+import '../../lesson/presentation/derivatives_lesson_screen.dart';
 import '../../lesson/presentation/limits_lesson_screen.dart';
 import '../../profile/presentation/profile_screen.dart';
 import '../../statistics/presentation/statistics_screen.dart';
@@ -63,15 +64,17 @@ class CalculusOneDetailScreen extends StatelessWidget {
     ).push(MaterialPageRoute(builder: (_) => const ContinuityLessonScreen()));
   }
 
-  void _showDerivativesMessage(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Aula de Derivadas será criada na próxima etapa.'),
-      ),
-    );
+  void _goToDerivativesLesson(BuildContext context) {
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (_) => const DerivativesLessonScreen()));
   }
 
   String _moduleProgressText() {
+    if (AppProgress.derivativesCompleted) {
+      return '100%';
+    }
+
     if (AppProgress.continuityCompleted) {
       return '66%';
     }
@@ -84,6 +87,10 @@ class CalculusOneDetailScreen extends StatelessWidget {
   }
 
   double _moduleProgressValue() {
+    if (AppProgress.derivativesCompleted) {
+      return 1;
+    }
+
     if (AppProgress.continuityCompleted) {
       return 0.66;
     }
@@ -96,6 +103,10 @@ class CalculusOneDetailScreen extends StatelessWidget {
   }
 
   String _moduleProgressDescription() {
+    if (AppProgress.derivativesCompleted) {
+      return 'Módulo Cálculo I concluído';
+    }
+
     if (AppProgress.continuityCompleted) {
       return 'Aulas 1 e 2 concluídas';
     }
@@ -111,6 +122,7 @@ class CalculusOneDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final limitsCompleted = AppProgress.limitsCompleted;
     final continuityCompleted = AppProgress.continuityCompleted;
+    final derivativesCompleted = AppProgress.derivativesCompleted;
 
     final limitsStatus = limitsCompleted ? 'Concluída' : 'Comece aqui';
 
@@ -120,7 +132,9 @@ class CalculusOneDetailScreen extends StatelessWidget {
         ? 'Desbloqueada'
         : 'Bloqueado';
 
-    final derivativesStatus = continuityCompleted
+    final derivativesStatus = derivativesCompleted
+        ? 'Concluída'
+        : continuityCompleted
         ? 'Desbloqueada'
         : 'Bloqueado';
 
@@ -246,14 +260,18 @@ class CalculusOneDetailScreen extends StatelessWidget {
                       symbol: "f'",
                       status: derivativesStatus,
                       statusColor: continuityCompleted
-                          ? AppColors.primary
+                          ? derivativesCompleted
+                                ? AppColors.success
+                                : AppColors.primary
                           : AppColors.locked,
                       state: continuityCompleted
-                          ? MathCardState.normal
+                          ? derivativesCompleted
+                                ? MathCardState.completed
+                                : MathCardState.normal
                           : MathCardState.locked,
                       onTap: continuityCompleted
                           ? () {
-                              _showDerivativesMessage(context);
+                              _goToDerivativesLesson(context);
                             }
                           : null,
                     ),

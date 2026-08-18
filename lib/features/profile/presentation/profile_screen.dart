@@ -78,6 +78,14 @@ class ProfileScreen extends StatelessWidget {
   }
 
   ({String title, String description, bool unlocked}) _achievementData() {
+    if (AppProgress.derivativesCompleted) {
+      return (
+        title: 'Cálculo I dominado',
+        description: 'Você concluiu Limites, Continuidade e Derivadas.',
+        unlocked: true,
+      );
+    }
+
     if (AppProgress.continuityCompleted) {
       return (
         title: 'Funções sem interrupções',

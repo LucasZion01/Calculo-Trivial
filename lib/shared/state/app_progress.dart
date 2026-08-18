@@ -12,6 +12,7 @@ class AppProgress {
   static const String functionsId = 'funcoes';
   static const String limitsId = 'limites';
   static const String continuityId = 'continuidade';
+  static const String derivativesId = 'derivadas';
 
   static const int dailyQuestionGoal = 5;
 
@@ -37,6 +38,7 @@ class AppProgress {
     functionsId,
     limitsId,
     continuityId,
+    derivativesId,
   ];
 
   static bool algebraFundamentalCompleted = false;
@@ -44,6 +46,7 @@ class AppProgress {
   static bool functionsCompleted = false;
   static bool limitsCompleted = false;
   static bool continuityCompleted = false;
+  static bool derivativesCompleted = false;
 
   static int totalXp = 0;
   static int totalGold = 0;
@@ -129,6 +132,7 @@ class AppProgress {
     functionsCompleted = false;
     limitsCompleted = false;
     continuityCompleted = false;
+    derivativesCompleted = false;
 
     totalXp = 0;
     totalGold = 0;
@@ -279,6 +283,10 @@ class AppProgress {
       if (data['continuityCompleted'] == true) {
         _completedLessonIds.add(continuityId);
       }
+
+      if (data['derivativesCompleted'] == true) {
+        _completedLessonIds.add(derivativesId);
+      }
     }
 
     final remoteTotalAnswers = data['totalAnswerAttempts'];
@@ -406,6 +414,8 @@ class AppProgress {
 
     continuityCompleted = _completedLessonIds.contains(continuityId);
 
+    derivativesCompleted = _completedLessonIds.contains(derivativesId);
+
     totalXp = 0;
     totalGold = 0;
 
@@ -432,6 +442,11 @@ class AppProgress {
     if (continuityCompleted) {
       totalXp += 100;
       totalGold += 45;
+    }
+
+    if (derivativesCompleted) {
+      totalXp += 110;
+      totalGold += 50;
     }
 
     revision.value++;
@@ -526,6 +541,7 @@ class AppProgress {
       'functionsCompleted': functionsCompleted,
       'limitsCompleted': limitsCompleted,
       'continuityCompleted': continuityCompleted,
+      'derivativesCompleted': derivativesCompleted,
       'totalXp': totalXp,
       'totalGold': totalGold,
       'totalAnswerAttempts': totalAnswerAttempts,
@@ -647,6 +663,10 @@ class AppProgress {
     return _completeLesson(continuityId);
   }
 
+  static Future<void> completeDerivatives() {
+    return _completeLesson(derivativesId);
+  }
+
   static Future<void> resetProgress() async {
     final user = FirebaseAuth.instance.currentUser;
 
@@ -670,6 +690,7 @@ class AppProgress {
       'functionsCompleted': false,
       'limitsCompleted': false,
       'continuityCompleted': false,
+      'derivativesCompleted': false,
       'totalXp': 0,
       'totalGold': 0,
       'totalAnswerAttempts': 0,

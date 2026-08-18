@@ -102,6 +102,10 @@ class LearningPathScreen extends StatelessWidget {
     }
 
     if (module.id == 'calculo-1') {
+      if (AppProgress.derivativesCompleted) {
+        return '100%';
+      }
+
       if (AppProgress.continuityCompleted) {
         return '66%';
       }
@@ -137,8 +141,12 @@ class LearningPathScreen extends StatelessWidget {
     }
 
     if (module.id == 'calculo-1' && AppProgress.functionsCompleted) {
-      if (isPremiumUser) {
+      if (AppProgress.derivativesCompleted) {
         return AppColors.success;
+      }
+
+      if (isPremiumUser) {
+        return AppColors.primary;
       }
 
       return const Color(0xFFFFB300);
@@ -157,6 +165,10 @@ class LearningPathScreen extends StatelessWidget {
     }
 
     if (module.id == 'calculo-1') {
+      if (AppProgress.derivativesCompleted) {
+        return MathCardState.completed;
+      }
+
       if (AppProgress.functionsCompleted) {
         return MathCardState.normal;
       }

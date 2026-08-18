@@ -17,7 +17,7 @@ import '../../statistics/presentation/statistics_screen.dart';
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
 
-  static const int _availableLessonCount = 5;
+  static const int _availableLessonCount = 6;
 
   void _onMenuTap(BuildContext context, int index) {
     if (index == 0) {
@@ -79,6 +79,10 @@ class DashboardScreen extends StatelessWidget {
   }
 
   String _lastLesson() {
+    if (AppProgress.derivativesCompleted) {
+      return 'Cálculo I concluído';
+    }
+
     if (AppProgress.continuityCompleted) {
       return 'Continuidade concluída';
     }
@@ -103,6 +107,10 @@ class DashboardScreen extends StatelessWidget {
   }
 
   String _nextMission() {
+    if (AppProgress.derivativesCompleted) {
+      return 'Módulo concluído! Continue praticando para fixar o conteúdo.';
+    }
+
     if (AppProgress.continuityCompleted) {
       return 'Próxima etapa: estudar Derivadas.';
     }

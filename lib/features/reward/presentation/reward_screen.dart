@@ -37,6 +37,11 @@ class _RewardScreenState extends State<RewardScreen> {
   }
 
   Future<void> _saveProgress() async {
+    if (widget.completedLessonId == 'derivadas') {
+      await AppProgress.completeDerivatives();
+      return;
+    }
+
     if (widget.completedLessonId == 'continuidade') {
       await AppProgress.completeContinuity();
       return;
@@ -101,6 +106,10 @@ class _RewardScreenState extends State<RewardScreen> {
   }
 
   String get _rewardDescription {
+    if (widget.completedLessonId == 'derivadas') {
+      return 'Você concluiu Derivadas e finalizou o módulo Cálculo I.';
+    }
+
     if (widget.completedLessonId == 'continuidade') {
       return 'Você concluiu a sequência de Continuidade em Cálculo I.';
     }
@@ -121,7 +130,8 @@ class _RewardScreenState extends State<RewardScreen> {
   }
 
   String get _progressText {
-    if (widget.completedLessonId == 'funcoes') {
+    if (widget.completedLessonId == 'funcoes' ||
+        widget.completedLessonId == 'derivadas') {
       return 'Módulo concluído';
     }
 

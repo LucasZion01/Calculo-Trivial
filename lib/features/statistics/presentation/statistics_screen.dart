@@ -21,7 +21,7 @@ class StatisticsScreen extends StatefulWidget {
 }
 
 class _StatisticsScreenState extends State<StatisticsScreen> {
-  static const int _availableLessonCount = 5;
+  static const int _availableLessonCount = 6;
 
   bool _checkingPremiumAccess = true;
 
