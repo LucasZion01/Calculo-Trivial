@@ -10,6 +10,7 @@ import 'package:calcquest/shared/widgets/math_card.dart';
 
 import '../../dashboard/presentation/dashboard_screen.dart';
 import '../../learning_path/presentation/learning_path_screen.dart';
+import '../../lesson/presentation/continuity_lesson_screen.dart';
 import '../../lesson/presentation/limits_lesson_screen.dart';
 import '../../profile/presentation/profile_screen.dart';
 import '../../statistics/presentation/statistics_screen.dart';
@@ -56,15 +57,25 @@ class CalculusOneDetailScreen extends StatelessWidget {
     ).push(MaterialPageRoute(builder: (_) => const LimitsLessonScreen()));
   }
 
-  void _showContinuityMessage(BuildContext context) {
+  void _goToContinuityLesson(BuildContext context) {
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (_) => const ContinuityLessonScreen()));
+  }
+
+  void _showDerivativesMessage(BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text('Aula de Continuidade será criada na próxima etapa.'),
+        content: Text('Aula de Derivadas será criada na próxima etapa.'),
       ),
     );
   }
 
   String _moduleProgressText() {
+    if (AppProgress.continuityCompleted) {
+      return '66%';
+    }
+
     if (AppProgress.limitsCompleted) {
       return '33%';
     }
@@ -73,6 +84,10 @@ class CalculusOneDetailScreen extends StatelessWidget {
   }
 
   double _moduleProgressValue() {
+    if (AppProgress.continuityCompleted) {
+      return 0.66;
+    }
+
     if (AppProgress.limitsCompleted) {
       return 0.33;
     }
@@ -81,6 +96,10 @@ class CalculusOneDetailScreen extends StatelessWidget {
   }
 
   String _moduleProgressDescription() {
+    if (AppProgress.continuityCompleted) {
+      return 'Aulas 1 e 2 concluídas';
+    }
+
     if (AppProgress.limitsCompleted) {
       return 'Aula 1 concluída';
     }
@@ -91,10 +110,19 @@ class CalculusOneDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final limitsCompleted = AppProgress.limitsCompleted;
+    final continuityCompleted = AppProgress.continuityCompleted;
 
     final limitsStatus = limitsCompleted ? 'Concluída' : 'Comece aqui';
 
-    final continuityStatus = limitsCompleted ? 'Desbloqueada' : 'Bloqueado';
+    final continuityStatus = continuityCompleted
+        ? 'Concluída'
+        : limitsCompleted
+        ? 'Desbloqueada'
+        : 'Bloqueado';
+
+    final derivativesStatus = continuityCompleted
+        ? 'Desbloqueada'
+        : 'Bloqueado';
 
     final progress = _moduleProgressValue();
 
@@ -196,26 +224,38 @@ class CalculusOneDetailScreen extends StatelessWidget {
                       symbol: 'C',
                       status: continuityStatus,
                       statusColor: limitsCompleted
-                          ? AppColors.primary
+                          ? continuityCompleted
+                                ? AppColors.success
+                                : AppColors.primary
                           : AppColors.locked,
                       state: limitsCompleted
-                          ? MathCardState.normal
+                          ? continuityCompleted
+                                ? MathCardState.completed
+                                : MathCardState.normal
                           : MathCardState.locked,
                       onTap: limitsCompleted
                           ? () {
-                              _showContinuityMessage(context);
+                              _goToContinuityLesson(context);
                             }
                           : null,
                     ),
                     const SizedBox(height: AppSpacing.md),
-                    const MathCard(
+                    MathCard(
                       title: 'Aula 3 — Derivadas',
                       subtitle: 'Taxa de variação e reta tangente',
                       symbol: "f'",
-                      status: 'Bloqueado',
-                      statusColor: AppColors.locked,
-                      state: MathCardState.locked,
-                      onTap: null,
+                      status: derivativesStatus,
+                      statusColor: continuityCompleted
+                          ? AppColors.primary
+                          : AppColors.locked,
+                      state: continuityCompleted
+                          ? MathCardState.normal
+                          : MathCardState.locked,
+                      onTap: continuityCompleted
+                          ? () {
+                              _showDerivativesMessage(context);
+                            }
+                          : null,
                     ),
                   ],
                 ),

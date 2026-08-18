@@ -11,6 +11,7 @@ class AppProgress {
   static const String equationsAndInequationsId = 'equacoes-inequacoes';
   static const String functionsId = 'funcoes';
   static const String limitsId = 'limites';
+  static const String continuityId = 'continuidade';
 
   static const int dailyQuestionGoal = 5;
 
@@ -35,12 +36,14 @@ class AppProgress {
     equationsAndInequationsId,
     functionsId,
     limitsId,
+    continuityId,
   ];
 
   static bool algebraFundamentalCompleted = false;
   static bool equationsAndInequationsCompleted = false;
   static bool functionsCompleted = false;
   static bool limitsCompleted = false;
+  static bool continuityCompleted = false;
 
   static int totalXp = 0;
   static int totalGold = 0;
@@ -125,6 +128,7 @@ class AppProgress {
     equationsAndInequationsCompleted = false;
     functionsCompleted = false;
     limitsCompleted = false;
+    continuityCompleted = false;
 
     totalXp = 0;
     totalGold = 0;
@@ -271,6 +275,10 @@ class AppProgress {
       if (data['limitsCompleted'] == true) {
         _completedLessonIds.add(limitsId);
       }
+
+      if (data['continuityCompleted'] == true) {
+        _completedLessonIds.add(continuityId);
+      }
     }
 
     final remoteTotalAnswers = data['totalAnswerAttempts'];
@@ -396,6 +404,8 @@ class AppProgress {
 
     limitsCompleted = _completedLessonIds.contains(limitsId);
 
+    continuityCompleted = _completedLessonIds.contains(continuityId);
+
     totalXp = 0;
     totalGold = 0;
 
@@ -417,6 +427,11 @@ class AppProgress {
     if (limitsCompleted) {
       totalXp += 90;
       totalGold += 40;
+    }
+
+    if (continuityCompleted) {
+      totalXp += 100;
+      totalGold += 45;
     }
 
     revision.value++;
@@ -510,6 +525,7 @@ class AppProgress {
       'equationsAndInequationsCompleted': equationsAndInequationsCompleted,
       'functionsCompleted': functionsCompleted,
       'limitsCompleted': limitsCompleted,
+      'continuityCompleted': continuityCompleted,
       'totalXp': totalXp,
       'totalGold': totalGold,
       'totalAnswerAttempts': totalAnswerAttempts,
@@ -627,6 +643,10 @@ class AppProgress {
     return _completeLesson(limitsId);
   }
 
+  static Future<void> completeContinuity() {
+    return _completeLesson(continuityId);
+  }
+
   static Future<void> resetProgress() async {
     final user = FirebaseAuth.instance.currentUser;
 
@@ -649,6 +669,7 @@ class AppProgress {
       'equationsAndInequationsCompleted': false,
       'functionsCompleted': false,
       'limitsCompleted': false,
+      'continuityCompleted': false,
       'totalXp': 0,
       'totalGold': 0,
       'totalAnswerAttempts': 0,
