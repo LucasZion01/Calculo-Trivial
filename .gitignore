@@ -230,3 +230,4 @@ app.*.map.json
 *.orig
 
 ~$*
+.firebase/
