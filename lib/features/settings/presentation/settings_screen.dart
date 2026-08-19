@@ -27,8 +27,10 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   bool _processingSubscriptionAction = false;
   bool _isSigningOut = false;
+  bool _isDeletingAccount = false;
 
-  bool get _isBusy => _processingSubscriptionAction || _isSigningOut;
+  bool get _isBusy =>
+      _processingSubscriptionAction || _isSigningOut || _isDeletingAccount;
 
   void _onMenuTap(BuildContext context, int index) {
     if (_isBusy) {
@@ -234,6 +236,158 @@ class _SettingsScreenState extends State<SettingsScreen> {
     }
   }
 
+  Future<void> _confirmDeleteAccount() async {
+    if (_isBusy) {
+      return;
+    }
+
+    final passwordController = TextEditingController();
+
+    final password = await showDialog<String>(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: const Text('Excluir conta permanentemente?'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Seu progresso, XP, moedas e conta serão apagados. '
+                'Essa ação não poderá ser desfeita.',
+              ),
+              const SizedBox(height: AppSpacing.sm),
+              const Text(
+                'A exclusão não cancela uma assinatura ativa. '
+                'Cancele-a em “Gerenciar assinatura” antes de continuar.',
+              ),
+              const SizedBox(height: AppSpacing.md),
+              TextField(
+                controller: passwordController,
+                obscureText: true,
+                autofocus: true,
+                textInputAction: TextInputAction.done,
+                decoration: const InputDecoration(
+                  labelText: 'Confirme sua senha',
+                  border: OutlineInputBorder(),
+                ),
+                onSubmitted: (value) {
+                  if (value.isNotEmpty) {
+                    Navigator.of(dialogContext).pop(value);
+                  }
+                },
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(dialogContext).pop();
+              },
+              child: const Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () {
+                final password = passwordController.text;
+
+                if (password.isNotEmpty) {
+                  Navigator.of(dialogContext).pop(password);
+                }
+              },
+              style: TextButton.styleFrom(foregroundColor: AppColors.error),
+              child: const Text('Excluir permanentemente'),
+            ),
+          ],
+        );
+      },
+    );
+
+    passwordController.dispose();
+
+    if (password == null || password.isEmpty || !mounted) {
+      return;
+    }
+
+    await _deleteAccount(password);
+  }
+
+  Future<void> _deleteAccount(String password) async {
+    final user = FirebaseAuth.instance.currentUser;
+    final email = user?.email;
+
+    if (user == null || email == null || email.isEmpty) {
+      _showMessage('Não foi possível identificar a conta atual.');
+      return;
+    }
+
+    setState(() {
+      _isDeletingAccount = true;
+    });
+
+    try {
+      final credential = EmailAuthProvider.credential(
+        email: email,
+        password: password,
+      );
+
+      await user.reauthenticateWithCredential(credential);
+      await AppProgress.deleteCurrentUserData();
+
+      if (RevenueCatService.isConfigured) {
+        try {
+          await RevenueCatService.logOutUser();
+        } catch (error) {
+          debugPrint(
+            'Configurações: não foi possível desconectar '
+            'o RevenueCat durante a exclusão: $error',
+          );
+        }
+      }
+
+      await user.delete();
+      AppProgress.clearSession();
+
+      if (!mounted) {
+        return;
+      }
+
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute<void>(builder: (_) => const LoginScreen()),
+        (route) => false,
+      );
+    } on FirebaseAuthException catch (error) {
+      debugPrint(
+        'Configurações: erro do Firebase ao excluir conta: '
+        '${error.code} - ${error.message}',
+      );
+
+      final message = switch (error.code) {
+        'invalid-credential' ||
+        'wrong-password' => 'Senha incorreta. A conta não foi excluída.',
+        'too-many-requests' =>
+          'Muitas tentativas. Aguarde um pouco e tente novamente.',
+        'network-request-failed' =>
+          'Verifique sua conexão com a internet e tente novamente.',
+        'requires-recent-login' =>
+          'Entre novamente na conta antes de tentar excluí-la.',
+        _ => 'Não foi possível excluir a conta. Tente novamente.',
+      };
+
+      _showMessage(message);
+    } catch (error) {
+      debugPrint('Configurações: erro inesperado ao excluir conta: $error');
+
+      _showMessage('Não foi possível excluir a conta. Tente novamente.');
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isDeletingAccount = false;
+        });
+      }
+    }
+  }
+
   Widget _buildSubscriptionStatus(bool isPremium) {
     final statusColor = isPremium ? AppColors.success : const Color(0xFFFFB300);
 
@@ -391,6 +545,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 variant: PrimaryButtonVariant.destructive,
                 onPressed: _isBusy ? null : _confirmSignOut,
                 isLoading: _isSigningOut,
+              ),
+              const SizedBox(height: AppSpacing.md),
+              _SettingsCard(
+                icon: Icons.delete_forever_outlined,
+                title: 'Excluir minha conta',
+                subtitle: 'Apague permanentemente sua conta e seu progresso',
+                onTap: _isBusy ? null : _confirmDeleteAccount,
+                trailing: _isDeletingAccount
+                    ? const SizedBox(
+                        width: 22,
+                        height: 22,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : null,
               ),
             ],
           ),

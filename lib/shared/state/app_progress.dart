@@ -707,6 +707,57 @@ class AppProgress {
     });
   }
 
+  static Future<void> deleteCurrentUserData() async {
+    final user = FirebaseAuth.instance.currentUser;
+    final userId = user?.uid ?? _activeUserId;
+
+    if (userId == null || userId.trim().isEmpty) {
+      throw StateError('Nenhum usuário autenticado para excluir os dados.');
+    }
+
+    await _saveQueue;
+
+    final userDocument = FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId);
+
+    await userDocument.collection('progress').doc('current').delete();
+    await userDocument.delete();
+
+    final preferences = await SharedPreferences.getInstance();
+
+    final scopedKeys = <String>[
+      _completedLessonsKey,
+      _totalAnswersKey,
+      _correctAnswersKey,
+      _studyStreakKey,
+      _lastStudyDateKey,
+      _dailyAnsweredQuestionsKey,
+      _dailyActivityDateKey,
+    ];
+
+    for (final key in scopedKeys) {
+      await preferences.remove(_scopedKey(key, userId));
+    }
+
+    for (final lessonId in _lessonIds) {
+      await preferences.remove(
+        _scopedKey('${_lastQuestionSessionKey}_$lessonId', userId),
+      );
+    }
+
+    await preferences.remove(_algebraFundamentalLegacyKey);
+    await preferences.remove(_equationsAndInequationsLegacyKey);
+    await preferences.remove(_functionsLegacyKey);
+    await preferences.remove(_limitsLegacyKey);
+
+    _activeUserId = null;
+    _saveQueue = Future<void>.value();
+    _resetInMemory();
+
+    revision.value++;
+  }
+
   static void clearSession() {
     _activeUserId = null;
     _saveQueue = Future<void>.value();
