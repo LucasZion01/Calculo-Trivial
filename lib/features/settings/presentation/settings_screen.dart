@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:purchases_ui_flutter/purchases_ui_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'package:calcquest/shared/services/revenuecat_service.dart';
 import 'package:calcquest/shared/state/app_progress.dart';
@@ -25,6 +26,10 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
+  static final Uri _privacyPolicyUri = Uri.parse(
+    'https://calculo-trivial-app-646bb.web.app',
+  );
+
   bool _processingSubscriptionAction = false;
   bool _isSigningOut = false;
   bool _isDeletingAccount = false;
@@ -73,6 +78,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  Future<void> _openPrivacyPolicy() async {
+    try {
+      final opened = await launchUrl(
+        _privacyPolicyUri,
+        mode: LaunchMode.externalApplication,
+      );
+
+      if (!opened) {
+        _showMessage('Não foi possível abrir a página de privacidade.');
+      }
+    } catch (error) {
+      debugPrint(
+        'Configurações: erro ao abrir política de privacidade: $error',
+      );
+
+      _showMessage('Não foi possível abrir a página de privacidade.');
+    }
   }
 
   Future<void> _restorePurchases() async {
@@ -495,6 +519,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 icon: Icons.person_outline_rounded,
                 title: 'Conta',
                 subtitle: userEmail,
+              ),
+              const SizedBox(height: AppSpacing.md),
+              _SettingsCard(
+                icon: Icons.privacy_tip_outlined,
+                title: 'Privacidade e dados',
+                subtitle: 'Política de privacidade e exclusão de conta',
+                onTap: _openPrivacyPolicy,
               ),
               const SizedBox(height: AppSpacing.md),
               const _SettingsCard(
