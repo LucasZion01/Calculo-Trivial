@@ -155,27 +155,18 @@ firebase-adminsdk-*.json
 
 # ------------------------------------------------------------
 # Firebase client configuration
-#
-# Estes arquivos normalmente contêm configurações de cliente,
-# não credenciais administrativas. Para este repositório,
-# ficam privados por segurança e controle de ambiente.
 # ------------------------------------------------------------
 
-google-services.json
-**/google-services.json
-
-GoogleService-Info.plist
-**/GoogleService-Info.plist
-
-firebase_options.dart
+# firebase_options.dart, google-services.json and
+# GoogleService-Info.plist are client configuration files required
+# to build the public project. They are intentionally versioned.
+# Access control must be enforced by Firebase Security Rules,
+# App Check and restricted Firebase API keys.
 
 
 # ------------------------------------------------------------
 # Firebase App Check / debug tokens
 # ------------------------------------------------------------
-
-*app-check*
-*app_check*
 
 appcheck-debug-token*
 app_check_debug_token*
@@ -186,9 +177,6 @@ firebase-debug.*
 
 # ------------------------------------------------------------
 # RevenueCat
-#
-# Arquivos locais usados futuramente para armazenar chaves
-# ou configurações privadas não devem entrar no Git.
 # ------------------------------------------------------------
 
 revenuecat.env

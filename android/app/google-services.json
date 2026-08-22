@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "617140538662",
+    "project_id": "calculo-trivial-app-646bb",
+    "storage_bucket": "calculo-trivial-app-646bb.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:617140538662:android:665a235fb59046509245e7",
+        "android_client_info": {
+          "package_name": "com.lucaszion01.calculotrivial"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAqfXxGbwJ5XB7rwSzq9mrbzewm0k3vjbc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
