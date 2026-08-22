@@ -1,121 +1,197 @@
 # Cálculo Trivial
 
-**Aprender Cálculo como uma jornada, não como uma sequência de fórmulas.**
+> Learn calculus as a journey, not as a sequence of formulas.
 
-Cálculo Trivial é um aplicativo educacional desenvolvido em Flutter para tornar o estudo de Cálculo mais progressivo, organizado e envolvente.
+Cálculo Trivial is an Android-first educational app built with Flutter. It helps students strengthen their mathematical foundations, study calculus progressively, practice with focused exercise sessions, and track their learning in one continuous experience.
 
-O projeto combina conteúdos de aprendizagem, exercícios, progressão por módulos e elementos de gamificação em uma experiência pensada especialmente para estudantes que estão construindo sua base matemática para disciplinas de Cálculo.
+The app is currently in active development and was created for the RevenueCat Shipaton 2026. Its interface is presently available in Brazilian Portuguese.
 
-> O Cálculo Trivial está em desenvolvimento ativo. Este repositório representa a evolução técnica do projeto e ainda não corresponde a uma versão final de produção.
+## Why it exists
 
----
+Calculus is often one of the first major barriers faced by students in science, technology, engineering, and mathematics. Many learners reach the subject with gaps in algebra, equations, or functions, making a formula-first approach frustrating and ineffective.
 
-## Sobre o projeto
+Cálculo Trivial turns that process into a structured learning journey by combining:
 
-Cálculo costuma representar uma das primeiras grandes dificuldades na formação de estudantes das áreas de ciência, tecnologia e engenharia.
+- progressive lessons;
+- focused practice and challenges;
+- measurable progress;
+- rewards and content unlocking;
+- a foundation that can later support adaptive learning and AI-assisted explanations.
 
-O Cálculo Trivial nasceu da ideia de transformar esse processo em uma jornada de aprendizagem estruturada: o estudante avança por fundamentos matemáticos, conteúdos de Cálculo, exercícios e desafios enquanto acompanha sua própria evolução.
+## Current experience
 
-Em vez de funcionar apenas como uma coleção de questões, o aplicativo busca conectar três elementos:
+The project currently includes:
 
-- aprendizagem progressiva;
-- prática por meio de exercícios e desafios;
-- acompanhamento do progresso do estudante.
+- email and password authentication;
+- an initial diagnostic flow;
+- a student dashboard;
+- a progressive learning path;
+- lessons covering mathematical foundations and introductory calculus;
+- multiple-choice exercise sessions;
+- result, reward, and content-unlocking flows;
+- XP and virtual gold;
+- cloud-synchronized user progress;
+- performance statistics;
+- profile and account settings;
+- Premium access control powered by RevenueCat;
+- account deletion and password recovery;
+- offline-friendly access to already available core content.
 
-O objetivo é construir uma experiência na qual estudar, praticar e evoluir façam parte do mesmo fluxo.
+Current learning areas include fundamental algebra, equations and inequalities, functions, limits, and derivatives. The content and question bank continue to be reviewed and expanded.
 
----
+## Exercise and progression rules
 
-## Funcionalidades em desenvolvimento
+Exercise sessions are designed to measure understanding instead of repeated guessing:
 
-A estrutura atual do aplicativo já contempla áreas para:
+- each session contains 10 questions selected from a larger topic pool;
+- an incorrect answer is recorded and the student advances to the next question;
+- the passing score is 80% or higher;
+- XP, gold, and new content are granted only after passing;
+- a failed attempt does not unlock the next lesson;
+- retries use different questions whenever the available pool allows it;
+- the result screen reports correct and incorrect answers separately.
 
-- autenticação;
-- dashboard do estudante;
-- trilha de aprendizagem;
-- módulos educacionais;
-- aulas;
-- exercícios de múltipla escolha;
-- mini desafios;
-- sistema de resultados;
-- recompensas;
-- acompanhamento de progresso;
-- estatísticas;
-- perfil;
-- configurações;
-- conteúdos introdutórios de Cálculo.
+## Free and Premium experience
 
-A arquitetura foi organizada para permitir a expansão gradual dessas funcionalidades conforme o projeto evolui.
+The free experience is intended to provide a useful path through essential foundations and introductory content. Premium access is designed for expanded learning paths, advanced practice, detailed statistics, and future adaptive-learning features.
 
----
+RevenueCat manages entitlement checks, paywall presentation, purchase restoration, and Premium state. During development, purchases use the RevenueCat Test Store. Production builds must use the public Android SDK key from a real Google Play configuration.
 
-## Trilha de aprendizagem
+## Technology stack
 
-O Cálculo Trivial utiliza uma estrutura progressiva de conteúdos.
+- **Flutter and Dart** — cross-platform application development;
+- **Material 3** — interface foundation;
+- **Firebase Authentication** — account creation, login, password recovery, and account deletion;
+- **Cloud Firestore** — per-user progress synchronization;
+- **Firebase App Check** — backend abuse protection with Play Integrity on Android;
+- **Shared Preferences** — local persistence and offline-friendly state;
+- **RevenueCat** — Premium entitlements, paywalls, and purchase restoration.
 
-Entre os conteúdos atualmente representados no projeto estão fundamentos necessários para avançar em Cálculo, como:
+## Project structure
 
-- Álgebra Fundamental;
-- Equações e Inequações;
-- Funções;
-- Limites.
+```text
+lib/
+├── features/          Feature-oriented screens and flows
+├── shared/data/       Learning and exercise data
+├── shared/services/   Firebase and RevenueCat integrations
+├── shared/state/      Application progress and shared state
+├── shared/theme/      Colors, typography, and spacing
+└── shared/widgets/    Reusable interface components
+```
 
-A proposta é expandir progressivamente a trilha para outros conteúdos de Cálculo.
+## Getting started
 
----
+### Requirements
 
-## Gamificação
+- Flutter SDK compatible with the project's `pubspec.yaml`;
+- Android Studio and the Android SDK;
+- an Android device or emulator;
+- a Firebase project if you want to run your own backend configuration.
 
-O projeto incorpora elementos de gamificação para tornar a progressão mais perceptível e incentivar a continuidade dos estudos.
+### Install and analyze
 
-A estrutura atual inclui conceitos como:
+```bash
+git clone https://github.com/LucasZion01/Calcivium.git
+cd Calcivium
+flutter pub get
+flutter analyze
+```
 
-- XP;
-- ouro;
-- recompensas;
-- progressão;
-- desbloqueio de conteúdos;
-- desafios;
-- acompanhamento de desempenho.
+### Run without purchases
 
-Esses sistemas ainda estão sendo desenvolvidos e refinados.
+```bash
+flutter run
+```
 
----
+When no RevenueCat key is provided, the free experience remains available and Premium features stay locked.
 
-## Design System
+### Run with the RevenueCat Test Store
 
-O Cálculo Trivial possui um Design System próprio para manter consistência visual e facilitar a evolução da interface.
+```bash
+flutter run --dart-define=REVENUECAT_API_KEY=YOUR_PUBLIC_TEST_STORE_KEY
+```
 
-A estrutura compartilhada inclui componentes e definições para:
+Use only a public RevenueCat SDK key in the client. Never commit secret keys, service-account credentials, passwords, or signing files. A Test Store key is for development builds only and must not be included in a production release.
 
-- cores;
-- tipografia;
-- espaçamentos;
-- botões;
-- campos de texto;
-- cards;
-- barras de progresso;
-- ícones;
-- navegação inferior;
-- estados globais da interface.
+## Firebase configuration
 
-Entre os estados previstos estão carregamento, conteúdo vazio, conteúdo bloqueado, ausência de conexão e erro.
+The repository contains the client-side Firebase configuration required by FlutterFire. Contributors who want to connect a separate Firebase project can generate their own configuration with:
 
----
+```bash
+dart pub global activate flutterfire_cli
+flutterfire configure
+```
 
-## Tecnologias
+Firestore access is restricted to the authenticated user's own document tree. App Check is integrated to support Play Integrity in Android production builds and a debug provider during local development.
 
-O projeto utiliza atualmente:
+## Android release signing
 
-- **Flutter** — desenvolvimento multiplataforma;
-- **Dart** — linguagem principal;
-- **Shared Preferences** — persistência local;
-- **RevenueCat SDK** — infraestrutura preparada para recursos de monetização;
-- **Material Design** — base para componentes de interface.
+Release credentials are intentionally excluded from the repository. Create your own upload keystore and local `android/key.properties` file before producing a signed release. Both the keystore and properties file must remain private and are ignored by Git.
 
-### Dependências principais
+Build commands:
 
-```yaml
-shared_preferences: ^2.5.5
-purchases_flutter: ^10.9.0
-purchases_ui_flutter: ^10.9.0
+```bash
+flutter build apk --release
+flutter build appbundle --release
+```
+
+A production build that enables purchases must be built with the public Android RevenueCat SDK key associated with the Google Play app configuration.
+
+## Quality checks
+
+Before opening a pull request or preparing a release, run:
+
+```bash
+dart format lib
+flutter analyze
+flutter test
+```
+
+The Android release target is API level 36.
+
+## Privacy and security
+
+The project follows several baseline protections:
+
+- authenticated users can access only their own Firestore data;
+- App Check supports validation of requests to Firebase resources;
+- account deletion is available from the app;
+- release signing material is kept outside version control;
+- RevenueCat secret keys are never stored in the client;
+- the public privacy policy is available at [calculo-trivial-app-646bb.web.app](https://calculo-trivial-app-646bb.web.app).
+
+Security issues should be reported privately to [support.calculotrivial@gmail.com](mailto:support.calculotrivial@gmail.com). Please do not publish sensitive vulnerability details in a public issue before a fix is available.
+
+## Roadmap
+
+Planned expansions include:
+
+- Calculus II and multivariable calculus;
+- linear algebra and vectors;
+- vector-valued functions;
+- probability and statistics;
+- numerical methods;
+- ordinary differential equations;
+- solid mechanics and fluid mechanics;
+- richer lessons with videos and selected reading material;
+- adaptive review and AI-assisted tutoring;
+- accessibility, localization, and broader platform support.
+
+## Shipaton 2026
+
+Cálculo Trivial is being prepared for the RevenueCat Shipaton 2026. The project emphasizes a working educational experience, meaningful RevenueCat integration, transparent open-source development, and a clear path from mathematical foundations to advanced study.
+
+## Contributing
+
+Issues and pull requests are welcome. Before contributing, please run the quality checks above and avoid committing generated build artifacts, credentials, API secrets, keystores, or local configuration files.
+
+## License
+
+The source code is licensed under the [Apache License 2.0](LICENSE).
+
+The license does not grant permission to use the Cálculo Trivial name, logo, or other brand assets as an endorsement of a derived product.
+
+## Contact
+
+- Support and security: [support.calculotrivial@gmail.com](mailto:support.calculotrivial@gmail.com)
+- Privacy policy: [https://calculo-trivial-app-646bb.web.app](https://calculo-trivial-app-646bb.web.app)
