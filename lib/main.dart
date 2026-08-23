@@ -30,7 +30,9 @@ Future<void> main() async {
 }
 
 class CalcQuestApp extends StatelessWidget {
-  const CalcQuestApp({super.key});
+  final Widget? home;
+
+  const CalcQuestApp({super.key, this.home});
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +44,7 @@ class CalcQuestApp extends StatelessWidget {
         fontFamily: 'Roboto',
         useMaterial3: true,
       ),
-      home: const SplashScreen(),
+      home: home ?? const SplashScreen(),
     );
   }
 }
