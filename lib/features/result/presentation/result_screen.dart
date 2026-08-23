@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:calcquest/shared/domain/exercise_session_result.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
 import 'package:calcquest/shared/theme/app_spacing.dart';
 import 'package:calcquest/shared/theme/app_typography.dart';
@@ -14,8 +15,6 @@ import '../../reward/presentation/reward_screen.dart';
 import '../../statistics/presentation/statistics_screen.dart';
 
 class ResultScreen extends StatelessWidget {
-  static const double minimumPassingScore = 0.8;
-
   final String completedLessonId;
   final int totalQuestions;
   final int correctAnswers;
@@ -64,13 +63,13 @@ class ResultScreen extends StatelessWidget {
     }
   }
 
-  void _goToReward(BuildContext context) {
+  void _goToReward(BuildContext context, ExerciseSessionResult result) {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => RewardScreen(
           completedLessonId: completedLessonId,
-          xpEarned: xpEarned,
-          goldEarned: goldEarned,
+          xpEarned: result.earnedXp,
+          goldEarned: result.earnedGold,
         ),
       ),
     );
@@ -136,13 +135,17 @@ class ResultScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final incorrectAnswers = totalQuestions - correctAnswers;
-    final accuracy = totalQuestions == 0
-        ? 0.0
-        : correctAnswers / totalQuestions;
-    final accuracyPercentage = (accuracy * 100).round();
+    final result = ExerciseSessionResult(
+      totalQuestions: totalQuestions,
+      correctAnswers: correctAnswers,
+      configuredXp: xpEarned,
+      configuredGold: goldEarned,
+    );
+
+    final incorrectAnswers = result.incorrectAnswers;
+    final accuracyPercentage = result.accuracyPercentage;
     final performanceText = '$accuracyPercentage% de precisão';
-    final isApproved = accuracy >= minimumPassingScore;
+    final isApproved = result.isApproved;
     final statusColor = isApproved ? AppColors.success : AppColors.error;
     final statusBackground = isApproved
         ? AppColors.successLight
@@ -235,7 +238,7 @@ class ResultScreen extends StatelessWidget {
                       _buildResultCard(
                         icon: Icons.bolt_outlined,
                         title: 'XP ganho',
-                        value: '+$xpEarned XP',
+                        value: '+${result.earnedXp} XP',
                         iconColor: AppColors.xp,
                         iconBackground: AppColors.xpLight,
                       ),
@@ -243,7 +246,7 @@ class ResultScreen extends StatelessWidget {
                       _buildResultCard(
                         icon: Icons.monetization_on_outlined,
                         title: 'Ouro ganho',
-                        value: '+$goldEarned',
+                        value: '+${result.earnedGold}',
                         iconColor: AppColors.gold,
                         iconBackground: AppColors.goldLight,
                       ),
@@ -260,7 +263,7 @@ class ResultScreen extends StatelessWidget {
                     : Icons.refresh_rounded,
                 onPressed: () {
                   if (isApproved) {
-                    _goToReward(context);
+                    _goToReward(context, result);
                     return;
                   }
 

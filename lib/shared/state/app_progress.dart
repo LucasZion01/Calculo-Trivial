@@ -6,6 +6,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:calcquest/shared/domain/exercise_question_selector.dart';
+
 class AppProgress {
   static const String algebraFundamentalId = 'algebra-fundamental';
   static const String equationsAndInequationsId = 'equacoes-inequacoes';
@@ -585,27 +587,17 @@ class AppProgress {
   }) {
     _activeUserId ??= FirebaseAuth.instance.currentUser?.uid;
 
-    final allQuestionIds = availableQuestionIds.toSet().toList();
-
-    if (allQuestionIds.isEmpty || questionCount <= 0) {
-      return <String>[];
-    }
-
     final previousSessionIds = _lastQuestionSessionIds[lessonId] ?? <String>{};
 
-    var candidates = allQuestionIds
-        .where((questionId) => !previousSessionIds.contains(questionId))
-        .toList();
+    final selectedQuestionIds = ExerciseQuestionSelector.select(
+      availableQuestionIds: availableQuestionIds,
+      previousSessionIds: previousSessionIds,
+      questionCount: questionCount,
+    );
 
-    if (candidates.length < questionCount) {
-      candidates = List<String>.from(allQuestionIds);
+    if (selectedQuestionIds.isEmpty) {
+      return <String>[];
     }
-
-    candidates.shuffle(Random());
-
-    final selectedQuestionIds = candidates
-        .take(min(questionCount, candidates.length))
-        .toList();
 
     _lastQuestionSessionIds[lessonId] = selectedQuestionIds.toSet();
     _queueProgressSave();
