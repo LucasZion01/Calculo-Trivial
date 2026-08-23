@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:calcquest/shared/domain/exercise_review_item.dart';
 import 'package:calcquest/shared/domain/exercise_session_result.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
 import 'package:calcquest/shared/theme/app_spacing.dart';
@@ -9,6 +10,7 @@ import 'package:calcquest/shared/widgets/app_icon.dart';
 import 'package:calcquest/shared/widgets/primary_button.dart';
 
 import '../../dashboard/presentation/dashboard_screen.dart';
+import '../../exercise_review/presentation/exercise_review_screen.dart';
 import '../../learning_path/presentation/learning_path_screen.dart';
 import '../../profile/presentation/profile_screen.dart';
 import '../../reward/presentation/reward_screen.dart';
@@ -20,6 +22,7 @@ class ResultScreen extends StatelessWidget {
   final int correctAnswers;
   final int xpEarned;
   final int goldEarned;
+  final List<ExerciseReviewItem> reviewItems;
 
   const ResultScreen({
     super.key,
@@ -28,6 +31,7 @@ class ResultScreen extends StatelessWidget {
     this.correctAnswers = 5,
     this.xpEarned = 60,
     this.goldEarned = 25,
+    this.reviewItems = const <ExerciseReviewItem>[],
   });
 
   void _onMenuTap(BuildContext context, int index) {
@@ -79,6 +83,18 @@ class ResultScreen extends StatelessWidget {
     Navigator.of(context).pushAndRemoveUntil(
       MaterialPageRoute(builder: (_) => const LearningPathScreen()),
       (route) => false,
+    );
+  }
+
+  void _goToReview(BuildContext context, ExerciseSessionResult result) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => ExerciseReviewScreen(
+          reviewItems: reviewItems,
+          completedLessonId: completedLessonId,
+          result: result,
+        ),
+      ),
     );
   }
 
@@ -255,13 +271,24 @@ class ResultScreen extends StatelessWidget {
                 ),
               ),
               PrimaryButton(
-                text: isApproved
+                text: reviewItems.isNotEmpty
+                    ? reviewItems.length == 1
+                          ? 'Revisar 1 erro'
+                          : 'Revisar ${reviewItems.length} erros'
+                    : isApproved
                     ? 'Receber recompensa'
-                    : 'Revisar e tentar novamente',
-                icon: isApproved
+                    : 'Voltar para a trilha',
+                icon: reviewItems.isNotEmpty
+                    ? Icons.fact_check_outlined
+                    : isApproved
                     ? Icons.arrow_forward_rounded
                     : Icons.refresh_rounded,
                 onPressed: () {
+                  if (reviewItems.isNotEmpty) {
+                    _goToReview(context, result);
+                    return;
+                  }
+
                   if (isApproved) {
                     _goToReward(context, result);
                     return;

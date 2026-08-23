@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:calcquest/shared/data/mock_exercise_data.dart';
 import 'package:calcquest/shared/data/mock_derivatives_exercise_data.dart';
+import 'package:calcquest/shared/domain/exercise_review_item.dart';
 import 'package:calcquest/shared/state/app_progress.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
 import 'package:calcquest/shared/theme/app_spacing.dart';
@@ -27,6 +28,7 @@ class DerivativesExercisesScreen extends StatefulWidget {
 class _DerivativesExercisesScreenState
     extends State<DerivativesExercisesScreen> {
   late final List<ExerciseData> sessionExercises;
+  final List<ExerciseReviewItem> reviewItems = <ExerciseReviewItem>[];
 
   int currentExerciseIndex = 0;
   int correctAnswers = 0;
@@ -156,6 +158,23 @@ class _DerivativesExercisesScreenState
         icon: Icons.check_rounded,
       );
     } else {
+      final selectedOption = currentExercise.options.firstWhere(
+        (option) => option.id == selectedOptionId,
+      );
+      final correctOption = currentExercise.options.firstWhere(
+        (option) => option.id == currentExercise.correctOptionId,
+      );
+
+      reviewItems.add(
+        ExerciseReviewItem(
+          questionId: currentExercise.id,
+          statement: currentExercise.statement,
+          selectedAnswer: selectedOption.text,
+          correctAnswer: correctOption.text,
+          explanation: currentExercise.explanation,
+        ),
+      );
+
       _showFeedback(
         message: 'Resposta incorreta. ${currentExercise.explanation}',
         backgroundColor: AppColors.error,
@@ -175,6 +194,7 @@ class _DerivativesExercisesScreenState
               correctAnswers: correctAnswers,
               xpEarned: 110,
               goldEarned: 50,
+              reviewItems: List<ExerciseReviewItem>.unmodifiable(reviewItems),
             ),
           ),
         );
