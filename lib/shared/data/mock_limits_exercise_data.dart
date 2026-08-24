@@ -203,7 +203,9 @@ const List<ExerciseData> mockLimitsExercises = [
     statement: 'Calcule o limite:\n\nlim x → 0  (1 - cos x) / x',
     correctOptionId: 'b',
     explanation:
-        'Como 1 - cos x se aproxima de zero mais rapidamente que x, o quociente tende a 0.',
+        'Racionalizando, (1 - cos x)/x = sen²(x) / [x(1 + cos x)]. '
+        'Reescrevendo como [sen(x)/x] · [sen(x)/(1 + cos x)], os fatores '
+        'tendem a 1 e 0, respectivamente. Portanto, o limite é 0.',
     options: [
       ExerciseOptionData(id: 'a', text: '1'),
       ExerciseOptionData(id: 'b', text: '0'),
