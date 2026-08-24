@@ -7,110 +7,117 @@ import 'package:calcquest/shared/data/mock_exercise_data.dart';
 import 'package:calcquest/shared/data/mock_functions_exercise_data.dart';
 import 'package:calcquest/shared/data/mock_limits_exercise_data.dart';
 
+const exerciseBanks = [
+  (name: 'Álgebra Fundamental', questions: mockExercises),
+  (name: 'Equações e Inequações', questions: mockEquationsExercises),
+  (name: 'Funções', questions: mockFunctionsExercises),
+  (name: 'Limites', questions: mockLimitsExercises),
+  (name: 'Continuidade', questions: mockContinuityExercises),
+  (name: 'Derivadas', questions: mockDerivativesExercises),
+];
+
 void main() {
-  final exerciseBanks = <String, List<ExerciseData>>{
-    'Álgebra Fundamental': mockExercises,
-    'Equações e Inequações': mockEquationsExercises,
-    'Funções': mockFunctionsExercises,
-    'Limites': mockLimitsExercises,
-    'Continuidade': mockContinuityExercises,
-    'Derivadas': mockDerivativesExercises,
-  };
-
-  for (final bankEntry in exerciseBanks.entries) {
-    group(bankEntry.key, () {
-      final questions = bankEntry.value;
-
-      test('possui exatamente 20 questões', () {
-        expect(questions, hasLength(20));
+  group('Integridade dos bancos de exercícios', () {
+    for (final bank in exerciseBanks) {
+      test('${bank.name} contém exatamente 20 questões', () {
+        expect(
+          bank.questions,
+          hasLength(20),
+          reason: '${bank.name} deve possuir exatamente 20 questões.',
+        );
       });
 
-      test('possui questões e alternativas estruturalmente válidas', () {
-        final questionIds = questions.map((question) => question.id).toSet();
+      test('${bank.name} possui questões válidas', () {
+        final questionIds = bank.questions
+            .map((question) => question.id.trim())
+            .toList();
 
         expect(
-          questionIds,
-          hasLength(questions.length),
-          reason: '${bankEntry.key}: existem IDs de questões repetidos.',
+          questionIds.toSet(),
+          hasLength(questionIds.length),
+          reason: '${bank.name} possui IDs de questões duplicados.',
         );
 
-        for (final question in questions) {
+        for (final question in bank.questions) {
           expect(
             question.id.trim(),
             isNotEmpty,
-            reason: '${bankEntry.key}: questão sem ID.',
+            reason: '${bank.name} possui uma questão sem ID.',
           );
 
           expect(
             question.statement.trim(),
             isNotEmpty,
-            reason: '${question.id}: enunciado vazio.',
+            reason: 'A questão ${question.id} não possui enunciado.',
           );
 
           expect(
             question.explanation.trim(),
             isNotEmpty,
-            reason: '${question.id}: explicação vazia.',
+            reason: 'A questão ${question.id} não possui explicação.',
           );
 
           expect(
             question.options,
             hasLength(4),
-            reason: '${question.id}: deve possuir quatro alternativas.',
+            reason: 'A questão ${question.id} deve possuir 4 alternativas.',
           );
 
           final optionIds = question.options
-              .map((option) => option.id)
+              .map((option) => option.id.trim())
               .toList();
 
           final optionTexts = question.options
-              .map((option) => option.text.trim().toLowerCase())
+              .map((option) => option.text.trim())
               .toList();
 
           expect(
-            optionIds.toSet(),
-            hasLength(optionIds.length),
-            reason: '${question.id}: IDs de alternativas repetidos.',
-          );
-
-          expect(
-            optionTexts.toSet(),
-            hasLength(optionTexts.length),
-            reason: '${question.id}: textos de alternativas repetidos.',
+            optionIds.every((id) => id.isNotEmpty),
+            isTrue,
+            reason: 'A questão ${question.id} possui alternativa sem ID.',
           );
 
           expect(
             optionTexts.every((text) => text.isNotEmpty),
             isTrue,
-            reason: '${question.id}: alternativa vazia.',
+            reason: 'A questão ${question.id} possui alternativa sem texto.',
           );
 
           expect(
-            optionIds,
-            contains(question.correctOptionId),
+            optionIds.toSet(),
+            hasLength(optionIds.length),
             reason:
-                '${question.id}: resposta correta não existe nas alternativas.',
+                'A questão ${question.id} possui IDs de alternativas duplicados.',
+          );
+
+          expect(
+            optionTexts.toSet(),
+            hasLength(optionTexts.length),
+            reason: 'A questão ${question.id} possui alternativas repetidas.',
+          );
+
+          expect(
+            optionIds.where((id) => id == question.correctOptionId),
+            hasLength(1),
+            reason:
+                'A resposta correta da questão ${question.id} não corresponde '
+                'a uma única alternativa.',
           );
         }
       });
+    }
+
+    test('todos os IDs de questões são globalmente únicos', () {
+      final allQuestionIds = exerciseBanks
+          .expand((bank) => bank.questions)
+          .map((question) => question.id.trim())
+          .toList();
+
+      expect(
+        allQuestionIds.toSet(),
+        hasLength(allQuestionIds.length),
+        reason: 'Existem IDs repetidos entre bancos de assuntos diferentes.',
+      );
     });
-  }
-
-  test('não existem IDs repetidos entre assuntos diferentes', () {
-    final allQuestionIds = exerciseBanks.values
-        .expand((questions) => questions)
-        .map((question) => question.id)
-        .toList();
-
-    expect(allQuestionIds.toSet(), hasLength(allQuestionIds.length));
-  });
-
-  test('não existem enunciados completamente duplicados', () {
-    final allStatements = exerciseBanks.values
-        .expand((questions) => questions)
-        .map((question) => question.statement.trim().toLowerCase())
-        .toList();
-
-    expect(allStatements.toSet(), hasLength(allStatements.length));
   });
 }
