@@ -23,7 +23,7 @@ Cálculo Trivial turns that process into a structured learning journey by combin
 The project currently includes:
 
 - email and password authentication;
-- an initial diagnostic flow;
+- a personalized first-access welcome;
 - a student dashboard;
 - a progressive learning path;
 - lessons covering mathematical foundations and introductory calculus;
@@ -91,8 +91,8 @@ lib/
 ### Install and analyze
 
 ```bash
-git clone https://github.com/LucasZion01/Calcivium.git
-cd Calcivium
+git clone https://github.com/LucasZion01/Calculo-Trivial.git
+cd Calculo-Trivial
 flutter pub get
 flutter analyze
 ```
