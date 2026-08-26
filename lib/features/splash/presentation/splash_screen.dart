@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +21,7 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen>
     with TickerProviderStateMixin {
   late final AnimationController _entranceController;
-  late final AnimationController _pulseController;
+  late final AnimationController _motionController;
 
   late final Animation<double> _fadeAnimation;
   late final Animation<double> _iconScaleAnimation;
@@ -32,37 +33,40 @@ class _SplashScreenState extends State<SplashScreen>
 
     _entranceController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 900),
+      duration: const Duration(milliseconds: 1200),
+      animationBehavior: AnimationBehavior.preserve,
     );
 
-    _pulseController = AnimationController(
+    _motionController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1300),
+      duration: const Duration(milliseconds: 1800),
+      animationBehavior: AnimationBehavior.preserve,
     );
 
     _fadeAnimation = CurvedAnimation(
       parent: _entranceController,
-      curve: const Interval(0, 0.75, curve: Curves.easeOut),
+      curve: const Interval(0, 0.85, curve: Curves.easeOut),
     );
 
-    _iconScaleAnimation = Tween<double>(begin: 0.82, end: 1).animate(
+    _iconScaleAnimation = Tween<double>(begin: 0.65, end: 1).animate(
       CurvedAnimation(parent: _entranceController, curve: Curves.easeOutBack),
     );
 
     _slideAnimation =
-        Tween<Offset>(begin: const Offset(0, 0.08), end: Offset.zero).animate(
+        Tween<Offset>(begin: const Offset(0, 0.12), end: Offset.zero).animate(
           CurvedAnimation(
             parent: _entranceController,
             curve: Curves.easeOutCubic,
           ),
         );
 
-    _entranceController.forward();
-
-    Future<void>.delayed(const Duration(milliseconds: 650), () {
-      if (mounted) {
-        _pulseController.repeat(reverse: true);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) {
+        return;
       }
+
+      _entranceController.forward();
+      _motionController.repeat();
     });
 
     _openNextScreen();
@@ -71,13 +75,13 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   void dispose() {
     _entranceController.dispose();
-    _pulseController.dispose();
+    _motionController.dispose();
     super.dispose();
   }
 
   Future<void> _openNextScreen() async {
     await Future.wait<void>([
-      Future<void>.delayed(const Duration(seconds: 2)),
+      Future<void>.delayed(const Duration(milliseconds: 2400)),
       _initializeServices(),
     ]);
 
@@ -90,9 +94,15 @@ class _SplashScreenState extends State<SplashScreen>
         ? const LoginScreen()
         : const DashboardScreen();
 
-    Navigator.of(
-      context,
-    ).pushReplacement(MaterialPageRoute<void>(builder: (_) => destination));
+    Navigator.of(context).pushReplacement(
+      PageRouteBuilder<void>(
+        pageBuilder: (_, animation, secondaryAnimation) => destination,
+        transitionDuration: const Duration(milliseconds: 500),
+        transitionsBuilder: (_, animation, secondaryAnimation, child) {
+          return FadeTransition(opacity: animation, child: child);
+        },
+      ),
+    );
   }
 
   Future<void> _initializeServices() async {
@@ -115,7 +125,7 @@ class _SplashScreenState extends State<SplashScreen>
       await operation.timeout(const Duration(seconds: 6));
     } catch (error) {
       debugPrint(
-        'SplashScreen: $serviceName indisponível durante a inicialização: '
+        'SplashScreen: $serviceName indispon\u00edvel durante a inicializa\u00e7\u00e3o: '
         '$error',
       );
     }
@@ -125,82 +135,96 @@ class _SplashScreenState extends State<SplashScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.navy,
-      body: SafeArea(
-        child: Center(
-          child: FadeTransition(
-            opacity: _fadeAnimation,
-            child: SlideTransition(
-              position: _slideAnimation,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ScaleTransition(
-                    scale: _iconScaleAnimation,
-                    child: AnimatedBuilder(
-                      animation: _pulseController,
-                      builder: (context, child) {
-                        final pulse = _pulseController.value;
+      body: DecoratedBox(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [AppColors.navy, Color(0xFF07172E), Color(0xFF0A2140)],
+          ),
+        ),
+        child: SafeArea(
+          child: Center(
+            child: FadeTransition(
+              opacity: _fadeAnimation,
+              child: SlideTransition(
+                position: _slideAnimation,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ScaleTransition(
+                      scale: _iconScaleAnimation,
+                      child: AnimatedBuilder(
+                        animation: _motionController,
+                        builder: (context, child) {
+                          final phase = _motionController.value * math.pi * 2;
+                          final wave = math.sin(phase);
 
-                        return Transform.scale(
-                          scale: 1 + (pulse * 0.025),
-                          child: Container(
-                            width: 144,
-                            height: 144,
-                            padding: const EdgeInsets.all(6),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(34),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Color.lerp(
-                                    const Color(0x3306B6D4),
-                                    const Color(0x8006B6D4),
-                                    pulse,
-                                  )!,
-                                  blurRadius: 24 + (pulse * 16),
-                                  spreadRadius: 1 + (pulse * 3),
+                          return Transform.translate(
+                            offset: Offset(0, wave * 9),
+                            child: Transform.scale(
+                              scale: 1 + (wave * 0.045),
+                              child: Container(
+                                width: 144,
+                                height: 144,
+                                padding: const EdgeInsets.all(6),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(34),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Color.lerp(
+                                        const Color(0x4006B6D4),
+                                        const Color(0xA006B6D4),
+                                        (wave + 1) / 2,
+                                      )!,
+                                      blurRadius: 30 + ((wave + 1) * 10),
+                                      spreadRadius: 2 + ((wave + 1) * 2),
+                                    ),
+                                  ],
                                 ),
-                              ],
+                                child: child,
+                              ),
                             ),
-                            child: child,
+                          );
+                        },
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(28),
+                          child: Image.asset(
+                            'assets/branding/calculo_trivial_icon_1024.png',
+                            fit: BoxFit.cover,
+                            semanticLabel:
+                                'S\u00edmbolo do C\u00e1lculo Trivial',
                           ),
-                        );
-                      },
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(28),
-                        child: Image.asset(
-                          'assets/branding/calculo_trivial_icon_1024.png',
-                          fit: BoxFit.cover,
-                          semanticLabel: 'Símbolo do Cálculo Trivial',
                         ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 28),
-                  Text(
-                    'Cálculo Trivial',
-                    style: AppTypography.headingLarge.copyWith(
-                      color: AppColors.white,
-                      fontWeight: FontWeight.w800,
+                    const SizedBox(height: 28),
+                    Text(
+                      'C\u00e1lculo Trivial',
+                      style: AppTypography.headingLarge.copyWith(
+                        color: AppColors.white,
+                        fontWeight: FontWeight.w800,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    'Domine o cálculo. Evolua além.',
-                    style: AppTypography.bodyMedium.copyWith(
-                      color: AppColors.primaryLight,
+                    const SizedBox(height: 10),
+                    Text(
+                      'Domine o c\u00e1lculo. Evolua al\u00e9m.',
+                      style: AppTypography.bodyMedium.copyWith(
+                        color: AppColors.primaryLight,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 36),
-                  const SizedBox(
-                    width: 24,
-                    height: 24,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2.5,
-                      color: AppColors.secondary,
-                      semanticsLabel: 'Carregando',
+                    const SizedBox(height: 36),
+                    const SizedBox(
+                      width: 24,
+                      height: 24,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2.5,
+                        color: AppColors.secondary,
+                        semanticsLabel: 'Carregando',
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
