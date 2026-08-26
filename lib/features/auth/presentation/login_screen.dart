@@ -359,12 +359,12 @@ class _LoginScreenState extends State<LoginScreen>
                                           CrossAxisAlignment.stretch,
                                       children: [
                                         Text(
-                                          'Bem-vindo de volta',
+                                          'Acesse sua conta',
                                           style: AppTypography.titleLarge,
                                         ),
                                         const SizedBox(height: AppSpacing.xs),
                                         Text(
-                                          'Entre para continuar sua jornada.',
+                                          'Entre para iniciar ou continuar sua jornada.',
                                           style: AppTypography.bodyMedium,
                                         ),
                                         const SizedBox(height: AppSpacing.lg),

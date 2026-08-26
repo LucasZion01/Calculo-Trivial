@@ -138,7 +138,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
       }
 
       Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute<void>(builder: (_) => const DashboardScreen()),
+        MaterialPageRoute<void>(
+          builder: (_) => const DashboardScreen(isFirstAccess: true),
+        ),
         (route) => false,
       );
     } on FirebaseAuthException catch (error) {

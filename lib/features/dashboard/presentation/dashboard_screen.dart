@@ -15,7 +15,9 @@ import '../../profile/presentation/profile_screen.dart';
 import '../../statistics/presentation/statistics_screen.dart';
 
 class DashboardScreen extends StatelessWidget {
-  const DashboardScreen({super.key});
+  final bool isFirstAccess;
+
+  const DashboardScreen({super.key, this.isFirstAccess = false});
 
   static const int _availableLessonCount = 6;
 
@@ -200,12 +202,16 @@ class DashboardScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Olá, ${_firstName()}',
+                    isFirstAccess
+                        ? 'Bem-vindo, futuro engenheiro!'
+                        : 'Bem-vindo de volta, ${_firstName()}!',
                     style: AppTypography.headingMedium,
                   ),
                   const SizedBox(height: AppSpacing.xs),
                   Text(
-                    'Continue sua jornada no Cálculo.',
+                    isFirstAccess
+                        ? 'Sua jornada no C\u00e1lculo come\u00e7a agora.'
+                        : 'Continue sua jornada no C\u00e1lculo.',
                     style: AppTypography.bodyMedium,
                   ),
                   const SizedBox(height: AppSpacing.lg),
