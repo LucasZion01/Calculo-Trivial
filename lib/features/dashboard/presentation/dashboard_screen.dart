@@ -10,6 +10,7 @@ import 'package:calcquest/shared/widgets/app_icon.dart';
 import 'package:calcquest/shared/widgets/app_progress_bar.dart';
 import 'package:calcquest/shared/widgets/primary_button.dart';
 
+import '../domain/dashboard_welcome.dart';
 import '../../learning_path/presentation/learning_path_screen.dart';
 import '../../profile/presentation/profile_screen.dart';
 import '../../statistics/presentation/statistics_screen.dart';
@@ -187,6 +188,7 @@ class DashboardScreen extends StatelessWidget {
         final level = _levelFromXp(xp);
         final progress = _progressValue();
         final progressCompleted = progress >= 1;
+        final firstName = isFirstAccess ? null : _firstName();
 
         return Scaffold(
           backgroundColor: AppColors.background,
@@ -202,16 +204,15 @@ class DashboardScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    isFirstAccess
-                        ? 'Bem-vindo, futuro engenheiro!'
-                        : 'Bem-vindo de volta, ${_firstName()}!',
+                    DashboardWelcome.title(
+                      isFirstAccess: isFirstAccess,
+                      firstName: firstName,
+                    ),
                     style: AppTypography.headingMedium,
                   ),
                   const SizedBox(height: AppSpacing.xs),
                   Text(
-                    isFirstAccess
-                        ? 'Sua jornada no C\u00e1lculo come\u00e7a agora.'
-                        : 'Continue sua jornada no C\u00e1lculo.',
+                    DashboardWelcome.subtitle(isFirstAccess: isFirstAccess),
                     style: AppTypography.bodyMedium,
                   ),
                   const SizedBox(height: AppSpacing.lg),
