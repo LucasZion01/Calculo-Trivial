@@ -1,16 +1,34 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import 'debug/tutor_callable_probe.dart';
 import 'features/splash/presentation/splash_screen.dart';
 import 'firebase_options.dart';
 import 'shared/theme/app_colors.dart';
+
+const bool _useFirebaseEmulators = bool.fromEnvironment(
+  'USE_FIREBASE_EMULATORS',
+  defaultValue: false,
+);
+
+const bool _runTutorProbe = bool.fromEnvironment(
+  'RUN_TUTOR_PROBE',
+  defaultValue: false,
+);
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  if (_useFirebaseEmulators) {
+    await _configureFirebaseEmulators();
+  }
 
   try {
     await FirebaseAppCheck.instance
@@ -23,10 +41,41 @@ Future<void> main() async {
 
     debugPrint('Firebase App Check inicializado.');
   } catch (error) {
-    debugPrint('Firebase App Check não pôde ser inicializado: $error');
+    debugPrint('Firebase App Check nÃƒÂ£o pÃƒÂ´de ser inicializado: $error');
+  }
+
+  if (_runTutorProbe) {
+    await runTutorCallableProbe();
   }
 
   runApp(const CalcQuestApp());
+}
+
+Future<void> _configureFirebaseEmulators() async {
+  final host = _firebaseEmulatorHost();
+
+  await FirebaseAuth.instance.useAuthEmulator(host, 9099);
+
+  FirebaseFirestore.instance.useFirestoreEmulator(host, 8080);
+
+  FirebaseFunctions.instanceFor(
+    region: 'us-central1',
+  ).useFunctionsEmulator(host, 5001);
+
+  debugPrint('Firebase Emulators configurados em $host.');
+}
+
+String _firebaseEmulatorHost() {
+  if (kIsWeb) {
+    return '127.0.0.1';
+  }
+
+  if (defaultTargetPlatform == TargetPlatform.android) {
+    // Celular fÃƒÂ­sico via USB + adb reverse.
+    return '127.0.0.2';
+  }
+
+  return '127.0.0.1';
 }
 
 class CalcQuestApp extends StatelessWidget {
@@ -37,7 +86,7 @@ class CalcQuestApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Cálculo Trivial',
+      title: 'CÃƒÂ¡lculo Trivial',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         scaffoldBackgroundColor: AppColors.background,

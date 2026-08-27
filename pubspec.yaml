@@ -21,6 +21,7 @@ dependencies:
   cloud_firestore: ^6.8.0
   firebase_app_check: ^0.4.6
   url_launcher: ^6.3.2
+  cloud_functions: ^6.4.0
 
 dev_dependencies:
   flutter_test:
