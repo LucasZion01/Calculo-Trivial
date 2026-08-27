@@ -36,7 +36,7 @@ export class TutorSessionService {
   ) {}
 
   /**
-   * Creates a new tutor session.
+   * Creates a new tutor session without consuming a hint.
    *
    * @param {string} uid Authenticated Firebase uid.
    * @param {SessionContext} context Backend-owned context.
@@ -48,21 +48,36 @@ export class TutorSessionService {
     context: SessionContext,
     now: Date = new Date(),
   ): Promise<TutorSession> {
-    const session: TutorSession = {
-      sessionId: createSessionId(),
+    return this.createWithHintLevel(
       uid,
       context,
-      createdAt: now,
-      lastInteractionAt: now,
-      expiresAt: new Date(
-        now.getTime() + SESSION_IDLE_TIMEOUT_MS,
-      ),
-      hintLevel: 0,
-    };
+      0,
+      now,
+    );
+  }
 
-    await this.store.create(session);
-
-    return session;
+  /**
+   * Creates the first request_hint session atomically at hint level one.
+   *
+   * This avoids creating level zero and then requiring a second write
+   * merely to consume the first hint.
+   *
+   * @param {string} uid Authenticated Firebase uid.
+   * @param {SessionContext} context Backend-owned question context.
+   * @param {Date} now Current backend time.
+   * @return {Promise<TutorSession>} New first-hint session.
+   */
+  async createSessionForFirstHint(
+    uid: string,
+    context: SessionContext,
+    now: Date = new Date(),
+  ): Promise<TutorSession> {
+    return this.createWithHintLevel(
+      uid,
+      context,
+      1,
+      now,
+    );
   }
 
   /**
@@ -86,6 +101,65 @@ export class TutorSessionService {
       context,
       now,
     );
+  }
+
+  /**
+   * Validates and refreshes a non-hint session use atomically.
+   *
+   * The hint level is preserved while lastInteractionAt and expiresAt
+   * are renewed.
+   *
+   * @param {string} sessionId Opaque session identifier.
+   * @param {string} uid Authenticated Firebase uid.
+   * @param {SessionContext} context Expected backend context.
+   * @param {Date} now Current backend time.
+   * @return {Promise<SessionMutationResult>} Mutation result.
+   */
+  async touchSession(
+    sessionId: string,
+    uid: string,
+    context: SessionContext,
+    now: Date = new Date(),
+  ): Promise<SessionMutationResult> {
+    return this.store.touchAtomically(
+      sessionId,
+      uid,
+      context,
+      now,
+    );
+  }
+
+  /**
+   * Creates one persisted session at an explicit backend hint level.
+   *
+   * @param {string} uid Authenticated Firebase uid.
+   * @param {SessionContext} context Backend-owned context.
+   * @param {number} hintLevel Initial hint level.
+   * @param {Date} now Current backend time.
+   * @return {Promise<TutorSession>} Persisted session.
+   */
+  private async createWithHintLevel(
+    uid: string,
+    context: SessionContext,
+    hintLevel: number,
+    now: Date,
+  ): Promise<TutorSession> {
+    const session: TutorSession = {
+      sessionId: createSessionId(),
+      uid,
+      context,
+      createdAt: now,
+      lastInteractionAt: now,
+      expiresAt: new Date(
+        now.getTime() +
+        SESSION_IDLE_TIMEOUT_MS,
+      ),
+      hintLevel,
+    };
+
+    await this.store.create(session);
+
+    return session;
   }
 }
 

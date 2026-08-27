@@ -34,8 +34,6 @@ interface IdempotencyDocument {
 /**
  * Builds a deterministic opaque record id.
  *
- * The raw uid and clientRequestId are not used as a Firestore path.
- *
  * @param {IdempotencyKey} key Logical idempotency key.
  * @return {string} SHA-256 record id.
  */
@@ -56,7 +54,8 @@ function createRecordId(
  * @return {string} New claim token.
  */
 function createClaimToken(): string {
-  return randomBytes(24).toString("base64url");
+  return randomBytes(24)
+    .toString("base64url");
 }
 
 /**
@@ -84,85 +83,101 @@ implements IdempotencyStore {
     key: IdempotencyKey,
     now: Date,
   ): Promise<IdempotencyClaimResult> {
-    const recordId = createRecordId(key);
+    const recordId =
+      createRecordId(key);
 
-    const reference = this.firestore
-      .collection("tutorIdempotency")
-      .doc(recordId);
+    const reference =
+      this.firestore
+        .collection(
+          "tutorIdempotency",
+        )
+        .doc(recordId);
 
-    return this.firestore.runTransaction(
-      async (transaction) => {
-        const snapshot =
-          await transaction.get(reference);
+    return this.firestore
+      .runTransaction(
+        async (transaction) => {
+          const snapshot =
+            await transaction.get(
+              reference,
+            );
 
-        if (snapshot.exists) {
-          const data =
-            snapshot.data() as
-            IdempotencyDocument;
+          if (snapshot.exists) {
+            const data =
+              snapshot.data() as
+              IdempotencyDocument;
 
-          const expired =
-            data.expiresAt.toMillis() <=
-            now.getTime();
+            const expired =
+              data.expiresAt
+                .toMillis() <=
+              now.getTime();
 
-          if (!expired) {
-            if (
-              data.status === "completed" &&
-              data.response
-            ) {
-              const response =
-                tutorBackendResponseSchema
-                  .parse(data.response);
+            if (!expired) {
+              if (
+                data.status ===
+                  "completed" &&
+                data.response
+              ) {
+                const response =
+                  tutorBackendResponseSchema
+                    .parse(
+                      data.response,
+                    );
+
+                return {
+                  status: "completed",
+                  response,
+                };
+              }
 
               return {
-                status: "completed",
-                response,
+                status:
+                  "processing",
               };
             }
-
-            return {
-              status: "processing",
-            };
           }
-        }
 
-        const claimToken =
-          createClaimToken();
+          const claimToken =
+            createClaimToken();
 
-        const expiresAt =
-          new Date(
-            now.getTime() +
-            IDEMPOTENCY_TTL_MS,
+          const expiresAt =
+            new Date(
+              now.getTime() +
+              IDEMPOTENCY_TTL_MS,
+            );
+
+          const document:
+          IdempotencyDocument = {
+            status: "processing",
+            claimToken,
+            createdAt:
+              Timestamp.fromDate(
+                now,
+              ),
+            updatedAt:
+              Timestamp.fromDate(
+                now,
+              ),
+            expiresAt:
+              Timestamp.fromDate(
+                expiresAt,
+              ),
+          };
+
+          transaction.set(
+            reference,
+            document,
           );
 
-        const document:
-        IdempotencyDocument = {
-          status: "processing",
-          claimToken,
-          createdAt:
-            Timestamp.fromDate(now),
-          updatedAt:
-            Timestamp.fromDate(now),
-          expiresAt:
-            Timestamp.fromDate(
+          return {
+            status: "acquired",
+            claim: {
+              recordId,
+              claimToken,
               expiresAt,
-            ),
-        };
-
-        transaction.set(
-          reference,
-          document,
-        );
-
-        return {
-          status: "acquired",
-          claim: {
-            recordId,
-            claimToken,
-            expiresAt,
-          },
-        };
-      },
-    );
+            },
+          };
+        },
+      );
   }
 
   /**
@@ -179,50 +194,117 @@ implements IdempotencyStore {
     now: Date,
   ): Promise<void> {
     const validatedResponse =
-      tutorBackendResponseSchema.parse(
-        response,
+      tutorBackendResponseSchema
+        .parse(response);
+
+    const reference =
+      this.firestore
+        .collection(
+          "tutorIdempotency",
+        )
+        .doc(claim.recordId);
+
+    await this.firestore
+      .runTransaction(
+        async (transaction) => {
+          const snapshot =
+            await transaction.get(
+              reference,
+            );
+
+          if (!snapshot.exists) {
+            throw new Error(
+              "Idempotency record not found",
+            );
+          }
+
+          const data =
+            snapshot.data() as
+            IdempotencyDocument;
+
+          if (
+            data.status !==
+              "processing" ||
+            data.claimToken !==
+              claim.claimToken
+          ) {
+            throw new Error(
+              "Idempotency claim is not valid",
+            );
+          }
+
+          transaction.update(
+            reference,
+            {
+              status:
+                "completed",
+              response:
+                validatedResponse,
+              updatedAt:
+                Timestamp.fromDate(
+                  now,
+                ),
+            },
+          );
+        },
       );
+  }
 
-    const reference = this.firestore
-      .collection("tutorIdempotency")
-      .doc(claim.recordId);
+  /**
+   * Releases a processing claim after a failed request.
+   *
+   * A completed response is never deleted. An old claim token can never
+   * delete a newer replacement record.
+   *
+   * @param {IdempotencyClaim} claim Claim ownership.
+   * @return {Promise<void>} Completion promise.
+   */
+  async abandon(
+    claim: IdempotencyClaim,
+  ): Promise<void> {
+    const reference =
+      this.firestore
+        .collection(
+          "tutorIdempotency",
+        )
+        .doc(claim.recordId);
 
-    await this.firestore.runTransaction(
-      async (transaction) => {
-        const snapshot =
-          await transaction.get(reference);
+    await this.firestore
+      .runTransaction(
+        async (transaction) => {
+          const snapshot =
+            await transaction.get(
+              reference,
+            );
 
-        if (!snapshot.exists) {
-          throw new Error(
-            "Idempotency record not found",
+          if (!snapshot.exists) {
+            return;
+          }
+
+          const data =
+            snapshot.data() as
+            IdempotencyDocument;
+
+          if (
+            data.status ===
+            "completed"
+          ) {
+            return;
+          }
+
+          if (
+            data.claimToken !==
+            claim.claimToken
+          ) {
+            throw new Error(
+              "Idempotency claim is not valid",
+            );
+          }
+
+          transaction.delete(
+            reference,
           );
-        }
-
-        const data =
-          snapshot.data() as
-          IdempotencyDocument;
-
-        if (
-          data.status !== "processing" ||
-          data.claimToken !==
-          claim.claimToken
-        ) {
-          throw new Error(
-            "Idempotency claim is not valid",
-          );
-        }
-
-        transaction.update(
-          reference,
-          {
-            status: "completed",
-            response:
-              validatedResponse,
-            updatedAt:
-              Timestamp.fromDate(now),
-          },
-        );
-      },
-    );
+        },
+      );
   }
 }

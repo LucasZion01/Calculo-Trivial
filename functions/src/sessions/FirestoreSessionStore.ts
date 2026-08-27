@@ -100,35 +100,19 @@ implements SessionStore {
         }
 
         const data =
-          snapshot.data() as TutorSessionDocument;
+          snapshot.data() as
+          TutorSessionDocument;
 
-        if (data.uid !== uid) {
-          return {
-            ok: false,
-            code: "SESSION_FORBIDDEN",
-          };
-        }
-
-        if (
-          !sameContext(
-            data.context,
+        const validation =
+          validateStoredSession(
+            data,
+            uid,
             expectedContext,
-          )
-        ) {
-          return {
-            ok: false,
-            code: "SESSION_CONTEXT_MISMATCH",
-          };
-        }
+            now,
+          );
 
-        if (
-          data.expiresAt.toMillis() <=
-          now.getTime()
-        ) {
-          return {
-            ok: false,
-            code: "SESSION_EXPIRED",
-          };
+        if (validation) {
+          return validation;
         }
 
         if (
@@ -144,10 +128,8 @@ implements SessionStore {
         const nextLevel =
           data.hintLevel + 1;
 
-        const expiresAt = new Date(
-          now.getTime() +
-          SESSION_IDLE_TIMEOUT_MS,
-        );
+        const expiresAt =
+          buildExpiresAt(now);
 
         transaction.update(
           reference,
@@ -164,20 +146,186 @@ implements SessionStore {
 
         return {
           ok: true,
-          session: {
-            sessionId,
-            uid,
-            context: data.context,
-            createdAt:
-              data.createdAt.toDate(),
-            lastInteractionAt: now,
-            expiresAt,
-            hintLevel: nextLevel,
-          },
+          session:
+            buildDomainSession(
+              sessionId,
+              data,
+              now,
+              expiresAt,
+              nextLevel,
+            ),
         };
       },
     );
   }
+
+  /**
+   * Atomically validates and refreshes a non-hint session use.
+   *
+   * @param {string} sessionId Session identifier.
+   * @param {string} uid Authenticated uid.
+   * @param {SessionContext} expectedContext Expected context.
+   * @param {Date} now Backend time.
+   * @return {Promise<SessionMutationResult>} Mutation result.
+   */
+  async touchAtomically(
+    sessionId: string,
+    uid: string,
+    expectedContext: SessionContext,
+    now: Date,
+  ): Promise<SessionMutationResult> {
+    const reference = this.firestore
+      .collection("tutorSessions")
+      .doc(sessionId);
+
+    return this.firestore.runTransaction(
+      async (transaction) => {
+        const snapshot =
+          await transaction.get(reference);
+
+        if (!snapshot.exists) {
+          return {
+            ok: false,
+            code: "SESSION_NOT_FOUND",
+          };
+        }
+
+        const data =
+          snapshot.data() as
+          TutorSessionDocument;
+
+        const validation =
+          validateStoredSession(
+            data,
+            uid,
+            expectedContext,
+            now,
+          );
+
+        if (validation) {
+          return validation;
+        }
+
+        const expiresAt =
+          buildExpiresAt(now);
+
+        transaction.update(
+          reference,
+          {
+            lastInteractionAt:
+              Timestamp.fromDate(now),
+            expiresAt:
+              Timestamp.fromDate(
+                expiresAt,
+              ),
+          },
+        );
+
+        return {
+          ok: true,
+          session:
+            buildDomainSession(
+              sessionId,
+              data,
+              now,
+              expiresAt,
+              data.hintLevel,
+            ),
+        };
+      },
+    );
+  }
+}
+
+/**
+ * Validates ownership, context and expiration.
+ *
+ * @param {TutorSessionDocument} data Stored document.
+ * @param {string} uid Authenticated uid.
+ * @param {SessionContext} expectedContext Expected context.
+ * @param {Date} now Backend time.
+ * @return {SessionMutationResult|null} Failure or null.
+ */
+function validateStoredSession(
+  data: TutorSessionDocument,
+  uid: string,
+  expectedContext: SessionContext,
+  now: Date,
+): SessionMutationResult | null {
+  if (data.uid !== uid) {
+    return {
+      ok: false,
+      code: "SESSION_FORBIDDEN",
+    };
+  }
+
+  if (
+    !sameContext(
+      data.context,
+      expectedContext,
+    )
+  ) {
+    return {
+      ok: false,
+      code: "SESSION_CONTEXT_MISMATCH",
+    };
+  }
+
+  if (
+    data.expiresAt.toMillis() <=
+    now.getTime()
+  ) {
+    return {
+      ok: false,
+      code: "SESSION_EXPIRED",
+    };
+  }
+
+  return null;
+}
+
+/**
+ * Creates the refreshed inactivity deadline.
+ *
+ * @param {Date} now Current backend time.
+ * @return {Date} New expiration.
+ */
+function buildExpiresAt(
+  now: Date,
+): Date {
+  return new Date(
+    now.getTime() +
+    SESSION_IDLE_TIMEOUT_MS,
+  );
+}
+
+/**
+ * Reconstructs the domain session after an atomic mutation.
+ *
+ * @param {string} sessionId Session identifier.
+ * @param {TutorSessionDocument} data Stored document.
+ * @param {Date} now Last interaction.
+ * @param {Date} expiresAt New expiration.
+ * @param {number} hintLevel Current hint level.
+ * @return {TutorSession} Updated domain session.
+ */
+function buildDomainSession(
+  sessionId: string,
+  data: TutorSessionDocument,
+  now: Date,
+  expiresAt: Date,
+  hintLevel: number,
+): TutorSession {
+  return {
+    sessionId,
+    uid: data.uid,
+    context: data.context,
+    createdAt:
+      data.createdAt.toDate(),
+    lastInteractionAt: now,
+    expiresAt,
+    hintLevel,
+  };
 }
 
 /**
@@ -212,7 +360,10 @@ function sameContext(
     left.contextType === "attempt" &&
     right.contextType === "attempt"
   ) {
-    return left.attemptId === right.attemptId;
+    return (
+      left.attemptId ===
+      right.attemptId
+    );
   }
 
   return false;

@@ -66,16 +66,19 @@ implements IdempotencyStore {
       this.recordId(key);
 
     const existing =
-      this.records.get(recordId);
+      this.records.get(
+        recordId,
+      );
 
     if (
       existing &&
-      existing.expiresAt.getTime() >
-      now.getTime()
+      existing.expiresAt
+        .getTime() >
+        now.getTime()
     ) {
       if (
         existing.status ===
-        "completed" &&
+          "completed" &&
         existing.response
       ) {
         return {
@@ -141,9 +144,10 @@ implements IdempotencyStore {
 
     if (
       !record ||
-      record.status !== "processing" ||
+      record.status !==
+        "processing" ||
       record.claimToken !==
-      claim.claimToken
+        claim.claimToken
     ) {
       throw new Error(
         "Invalid claim",
@@ -157,6 +161,45 @@ implements IdempotencyStore {
         status: "completed",
         response,
       },
+    );
+  }
+
+  /**
+   * Releases one processing claim.
+   *
+   * @param {IdempotencyClaim} claim Claim.
+   * @return {Promise<void>} Completion promise.
+   */
+  async abandon(
+    claim: IdempotencyClaim,
+  ): Promise<void> {
+    const record =
+      this.records.get(
+        claim.recordId,
+      );
+
+    if (!record) {
+      return;
+    }
+
+    if (
+      record.status ===
+      "completed"
+    ) {
+      return;
+    }
+
+    if (
+      record.claimToken !==
+      claim.claimToken
+    ) {
+      throw new Error(
+        "Invalid claim",
+      );
+    }
+
+    this.records.delete(
+      claim.recordId,
     );
   }
 }
@@ -176,11 +219,13 @@ TutorBackendResponse = {
   contentFormat: "plain_text",
   responseType: "hint",
   title: "Pista",
-  message: "Observe a fatoração.",
+  message:
+    "Observe a fatoração.",
   steps: [],
   checkQuestion: "",
   references: [],
-  suggestedAction: "continue",
+  suggestedAction:
+    "continue",
   error: null,
 };
 
@@ -194,7 +239,7 @@ test("first request acquires the key", async () => {
     await service.claim(
       key,
       new Date(
-        "2026-08-26T12:00:00Z",
+        "2026-08-27T00:00:00Z",
       ),
     );
 
@@ -212,7 +257,7 @@ test("concurrent duplicate stays processing", async () => {
 
   const now =
     new Date(
-      "2026-08-26T12:00:00Z",
+      "2026-08-27T00:00:00Z",
     );
 
   const first =
@@ -248,7 +293,7 @@ test("completed duplicate returns previous response", async () => {
 
   const now =
     new Date(
-      "2026-08-26T12:00:00Z",
+      "2026-08-27T00:00:00Z",
     );
 
   const first =
@@ -307,7 +352,7 @@ test("same request id for another uid is independent", async () => {
 
   const now =
     new Date(
-      "2026-08-26T12:00:00Z",
+      "2026-08-27T00:00:00Z",
     );
 
   const first =
@@ -345,7 +390,7 @@ test("expired records can be claimed again", async () => {
 
   const now =
     new Date(
-      "2026-08-26T12:00:00Z",
+      "2026-08-27T00:00:00Z",
     );
 
   const first =
@@ -374,27 +419,28 @@ test("expired records can be claimed again", async () => {
   );
 
   if (
-    first.status === "acquired" &&
+    first.status ===
+      "acquired" &&
     afterExpiry.status ===
-    "acquired"
+      "acquired"
   ) {
     assert.notEqual(
       first.claim.claimToken,
-      afterExpiry.claim.claimToken,
+      afterExpiry
+        .claim.claimToken,
     );
   }
 });
 
 test("wrong claim token cannot complete a request", async () => {
-  const store =
-    new MemoryIdempotencyStore();
-
   const service =
-    new IdempotencyService(store);
+    new IdempotencyService(
+      new MemoryIdempotencyStore(),
+    );
 
   const now =
     new Date(
-      "2026-08-26T12:00:00Z",
+      "2026-08-27T00:00:00Z",
     );
 
   const first =
@@ -434,5 +480,152 @@ test("idempotency lifetime is exactly 24 hours", () => {
   assert.equal(
     IDEMPOTENCY_TTL_MS,
     24 * 60 * 60 * 1000,
+  );
+});
+
+test("abandoned request can be claimed again immediately", async () => {
+  const service =
+    new IdempotencyService(
+      new MemoryIdempotencyStore(),
+    );
+
+  const now =
+    new Date(
+      "2026-08-27T00:00:00Z",
+    );
+
+  const first =
+    await service.claim(
+      key,
+      now,
+    );
+
+  assert.equal(
+    first.status,
+    "acquired",
+  );
+
+  if (
+    first.status !==
+    "acquired"
+  ) {
+    return;
+  }
+
+  await service.abandon(
+    first.claim,
+  );
+
+  const retry =
+    await service.claim(
+      key,
+      new Date(
+        now.getTime() + 1,
+      ),
+    );
+
+  assert.equal(
+    retry.status,
+    "acquired",
+  );
+
+  if (
+    retry.status ===
+    "acquired"
+  ) {
+    assert.notEqual(
+      retry.claim.claimToken,
+      first.claim.claimToken,
+    );
+  }
+});
+
+test("wrong token cannot abandon a processing claim", async () => {
+  const service =
+    new IdempotencyService(
+      new MemoryIdempotencyStore(),
+    );
+
+  const first =
+    await service.claim(
+      key,
+      new Date(
+        "2026-08-27T00:00:00Z",
+      ),
+    );
+
+  assert.equal(
+    first.status,
+    "acquired",
+  );
+
+  if (
+    first.status !==
+    "acquired"
+  ) {
+    return;
+  }
+
+  await assert.rejects(
+    () =>
+      service.abandon({
+        ...first.claim,
+        claimToken:
+          "invalid-token",
+      }),
+    /Invalid claim/,
+  );
+});
+
+test("abandon never deletes a completed response", async () => {
+  const service =
+    new IdempotencyService(
+      new MemoryIdempotencyStore(),
+    );
+
+  const now =
+    new Date(
+      "2026-08-27T00:00:00Z",
+    );
+
+  const first =
+    await service.claim(
+      key,
+      now,
+    );
+
+  assert.equal(
+    first.status,
+    "acquired",
+  );
+
+  if (
+    first.status !==
+    "acquired"
+  ) {
+    return;
+  }
+
+  await service.complete(
+    first.claim,
+    successResponse,
+    now,
+  );
+
+  await service.abandon(
+    first.claim,
+  );
+
+  const repeated =
+    await service.claim(
+      key,
+      new Date(
+        now.getTime() + 1000,
+      ),
+    );
+
+  assert.equal(
+    repeated.status,
+    "completed",
   );
 });

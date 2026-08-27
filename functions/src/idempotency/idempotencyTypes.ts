@@ -40,4 +40,8 @@ export interface IdempotencyStore {
     response: TutorBackendResponse,
     now: Date,
   ): Promise<void>;
+
+  abandon(
+    claim: IdempotencyClaim,
+  ): Promise<void>;
 }

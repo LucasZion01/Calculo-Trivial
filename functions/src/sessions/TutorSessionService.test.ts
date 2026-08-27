@@ -5,18 +5,18 @@ import {
   SessionStore,
 } from "./SessionStore";
 import {
-  TutorSessionService,
-} from "./TutorSessionService";
-import {
   MAX_HINT_LEVEL,
   SESSION_IDLE_TIMEOUT_MS,
   SessionContext,
   SessionMutationResult,
   TutorSession,
 } from "./sessionTypes";
+import {
+  TutorSessionService,
+} from "./TutorSessionService";
 
 /**
- * In-memory atomic store used only by unit tests.
+ * In-memory atomic session store for unit tests.
  */
 class MemorySessionStore
 implements SessionStore {
@@ -24,7 +24,7 @@ implements SessionStore {
     new Map<string, TutorSession>();
 
   /**
-   * Stores a session.
+   * Persists one session.
    *
    * @param {TutorSession} session Session.
    * @return {Promise<void>} Completion promise.
@@ -44,27 +44,79 @@ implements SessionStore {
 
     this.sessions.set(
       session.sessionId,
-      structuredClone(session),
+      session,
     );
   }
 
   /**
-   * Atomically advances a session for unit tests.
+   * Advances one hint atomically.
    *
    * @param {string} sessionId Session id.
    * @param {string} uid Authenticated uid.
-   * @param {SessionContext} context Expected context.
+   * @param {SessionContext} expectedContext Expected context.
    * @param {Date} now Backend time.
    * @return {Promise<SessionMutationResult>} Result.
    */
   async advanceHintAtomically(
     sessionId: string,
     uid: string,
-    context: SessionContext,
+    expectedContext: SessionContext,
     now: Date,
   ): Promise<SessionMutationResult> {
+    return this.mutate(
+      sessionId,
+      uid,
+      expectedContext,
+      now,
+      true,
+    );
+  }
+
+  /**
+   * Refreshes one session without advancing its hint.
+   *
+   * @param {string} sessionId Session id.
+   * @param {string} uid Authenticated uid.
+   * @param {SessionContext} expectedContext Expected context.
+   * @param {Date} now Backend time.
+   * @return {Promise<SessionMutationResult>} Result.
+   */
+  async touchAtomically(
+    sessionId: string,
+    uid: string,
+    expectedContext: SessionContext,
+    now: Date,
+  ): Promise<SessionMutationResult> {
+    return this.mutate(
+      sessionId,
+      uid,
+      expectedContext,
+      now,
+      false,
+    );
+  }
+
+  /**
+   * Applies one in-memory atomic mutation.
+   *
+   * @param {string} sessionId Session id.
+   * @param {string} uid Authenticated uid.
+   * @param {SessionContext} expectedContext Expected context.
+   * @param {Date} now Backend time.
+   * @param {boolean} advanceHint Whether to consume a hint.
+   * @return {Promise<SessionMutationResult>} Result.
+   */
+  private async mutate(
+    sessionId: string,
+    uid: string,
+    expectedContext: SessionContext,
+    now: Date,
+    advanceHint: boolean,
+  ): Promise<SessionMutationResult> {
     const session =
-      this.sessions.get(sessionId);
+      this.sessions.get(
+        sessionId,
+      );
 
     if (!session) {
       return {
@@ -81,8 +133,10 @@ implements SessionStore {
     }
 
     if (
-      JSON.stringify(session.context) !==
-      JSON.stringify(context)
+      !sameContext(
+        session.context,
+        expectedContext,
+      )
     ) {
       return {
         ok: false,
@@ -101,6 +155,7 @@ implements SessionStore {
     }
 
     if (
+      advanceHint &&
       session.hintLevel >=
       MAX_HINT_LEVEL
     ) {
@@ -110,10 +165,15 @@ implements SessionStore {
       };
     }
 
-    const updated: TutorSession = {
+    const hintLevel =
+      advanceHint ?
+        session.hintLevel + 1 :
+        session.hintLevel;
+
+    const updated:
+    TutorSession = {
       ...session,
-      hintLevel:
-        session.hintLevel + 1,
+      hintLevel,
       lastInteractionAt: now,
       expiresAt: new Date(
         now.getTime() +
@@ -133,24 +193,58 @@ implements SessionStore {
   }
 }
 
+/**
+ * Compares test session contexts.
+ *
+ * @param {SessionContext} left First context.
+ * @param {SessionContext} right Second context.
+ * @return {boolean} Whether contexts match.
+ */
+function sameContext(
+  left: SessionContext,
+  right: SessionContext,
+): boolean {
+  if (
+    left.contextType === "question" &&
+    right.contextType === "question"
+  ) {
+    return (
+      left.lessonId === right.lessonId &&
+      left.questionId === right.questionId
+    );
+  }
+
+  if (
+    left.contextType === "attempt" &&
+    right.contextType === "attempt"
+  ) {
+    return (
+      left.attemptId ===
+      right.attemptId
+    );
+  }
+
+  return false;
+}
+
 const questionContext:
 SessionContext = {
   contextType: "question",
   lessonId:
     "limites_indeterminacao_01",
-  questionId:
-    "limites_q_014",
+  questionId: "q014",
 };
 
 test("creates opaque unpredictable session ids", async () => {
-  const store =
-    new MemorySessionStore();
-
   const service =
-    new TutorSessionService(store);
+    new TutorSessionService(
+      new MemorySessionStore(),
+    );
 
   const now =
-    new Date("2026-08-26T12:00:00Z");
+    new Date(
+      "2026-08-27T00:00:00Z",
+    );
 
   const first =
     await service.createSession(
@@ -184,7 +278,9 @@ test("new sessions expire after 30 minutes", async () => {
     );
 
   const now =
-    new Date("2026-08-26T12:00:00Z");
+    new Date(
+      "2026-08-27T00:00:00Z",
+    );
 
   const session =
     await service.createSession(
@@ -195,8 +291,35 @@ test("new sessions expire after 30 minutes", async () => {
 
   assert.equal(
     session.expiresAt.getTime() -
-    session.lastInteractionAt.getTime(),
+      now.getTime(),
     SESSION_IDLE_TIMEOUT_MS,
+  );
+
+  assert.equal(
+    session.hintLevel,
+    0,
+  );
+});
+
+test("first hint session starts directly at level one", async () => {
+  const service =
+    new TutorSessionService(
+      new MemorySessionStore(),
+    );
+
+  const session =
+    await service
+      .createSessionForFirstHint(
+        "uid_a",
+        questionContext,
+        new Date(
+          "2026-08-27T00:00:00Z",
+        ),
+      );
+
+  assert.equal(
+    session.hintLevel,
+    1,
   );
 });
 
@@ -207,30 +330,31 @@ test("rejects a session from another user", async () => {
     );
 
   const now =
-    new Date("2026-08-26T12:00:00Z");
+    new Date(
+      "2026-08-27T00:00:00Z",
+    );
 
   const session =
     await service.createSession(
-      "uid_owner",
+      "uid_a",
       questionContext,
       now,
     );
 
   const result =
-    await service.requestNextHint(
+    await service.touchSession(
       session.sessionId,
-      "uid_other",
+      "uid_b",
       questionContext,
-      new Date(
-        now.getTime() + 1000,
-      ),
+      now,
     );
 
   assert.deepEqual(
     result,
     {
       ok: false,
-      code: "SESSION_FORBIDDEN",
+      code:
+        "SESSION_FORBIDDEN",
     },
   );
 });
@@ -242,7 +366,9 @@ test("rejects an expired session", async () => {
     );
 
   const now =
-    new Date("2026-08-26T12:00:00Z");
+    new Date(
+      "2026-08-27T00:00:00Z",
+    );
 
   const session =
     await service.createSession(
@@ -252,7 +378,7 @@ test("rejects an expired session", async () => {
     );
 
   const result =
-    await service.requestNextHint(
+    await service.touchSession(
       session.sessionId,
       "uid_a",
       questionContext,
@@ -266,7 +392,8 @@ test("rejects an expired session", async () => {
     result,
     {
       ok: false,
-      code: "SESSION_EXPIRED",
+      code:
+        "SESSION_EXPIRED",
     },
   );
 });
@@ -278,7 +405,9 @@ test("rejects a mismatched question context", async () => {
     );
 
   const now =
-    new Date("2026-08-26T12:00:00Z");
+    new Date(
+      "2026-08-27T00:00:00Z",
+    );
 
   const session =
     await service.createSession(
@@ -288,26 +417,25 @@ test("rejects a mismatched question context", async () => {
     );
 
   const result =
-    await service.requestNextHint(
+    await service.touchSession(
       session.sessionId,
       "uid_a",
       {
-        contextType: "question",
+        contextType:
+          "question",
         lessonId:
           "limites_indeterminacao_01",
-        questionId:
-          "limites_q_015",
+        questionId: "q015",
       },
-      new Date(
-        now.getTime() + 1000,
-      ),
+      now,
     );
 
   assert.deepEqual(
     result,
     {
       ok: false,
-      code: "SESSION_CONTEXT_MISMATCH",
+      code:
+        "SESSION_CONTEXT_MISMATCH",
     },
   );
 });
@@ -318,14 +446,16 @@ test("supports attempt-bound sessions", async () => {
       new MemorySessionStore(),
     );
 
-  const now =
-    new Date("2026-08-26T12:00:00Z");
-
   const context:
   SessionContext = {
     contextType: "attempt",
     attemptId: "attempt_123",
   };
+
+  const now =
+    new Date(
+      "2026-08-27T00:00:00Z",
+    );
 
   const session =
     await service.createSession(
@@ -334,9 +464,19 @@ test("supports attempt-bound sessions", async () => {
       now,
     );
 
-  assert.deepEqual(
-    session.context,
-    context,
+  const result =
+    await service.touchSession(
+      session.sessionId,
+      "uid_a",
+      context,
+      new Date(
+        now.getTime() + 1000,
+      ),
+    );
+
+  assert.equal(
+    result.ok,
+    true,
   );
 });
 
@@ -346,44 +486,48 @@ test("progresses through exactly three hints", async () => {
       new MemorySessionStore(),
     );
 
-  const start =
-    new Date("2026-08-26T12:00:00Z");
+  const now =
+    new Date(
+      "2026-08-27T00:00:00Z",
+    );
 
   const session =
-    await service.createSession(
-      "uid_a",
-      questionContext,
-      start,
-    );
-
-  for (
-    let expectedLevel = 1;
-    expectedLevel <= 3;
-    expectedLevel += 1
-  ) {
-    const result =
-      await service.requestNextHint(
-        session.sessionId,
+    await service
+      .createSessionForFirstHint(
         "uid_a",
         questionContext,
-        new Date(
-          start.getTime() +
-          expectedLevel * 1000,
-        ),
+        now,
       );
 
-    assert.equal(
-      result.ok,
-      true,
+  const second =
+    await service.requestNextHint(
+      session.sessionId,
+      "uid_a",
+      questionContext,
+      new Date(
+        now.getTime() + 1000,
+      ),
     );
 
-    if (result.ok) {
-      assert.equal(
-        result.session.hintLevel,
-        expectedLevel,
-      );
-    }
-  }
+  assert.equal(
+    second.ok,
+    true,
+  );
+
+  const third =
+    await service.requestNextHint(
+      session.sessionId,
+      "uid_a",
+      questionContext,
+      new Date(
+        now.getTime() + 2000,
+      ),
+    );
+
+  assert.equal(
+    third.ok,
+    true,
+  );
 
   const fourth =
     await service.requestNextHint(
@@ -391,7 +535,7 @@ test("progresses through exactly three hints", async () => {
       "uid_a",
       questionContext,
       new Date(
-        start.getTime() + 4000,
+        now.getTime() + 3000,
       ),
     );
 
@@ -399,7 +543,8 @@ test("progresses through exactly three hints", async () => {
     fourth,
     {
       ok: false,
-      code: "HINT_LIMIT_REACHED",
+      code:
+        "HINT_LIMIT_REACHED",
     },
   );
 });
@@ -410,19 +555,23 @@ test("each hint refreshes session expiration", async () => {
       new MemorySessionStore(),
     );
 
-  const start =
-    new Date("2026-08-26T12:00:00Z");
+  const now =
+    new Date(
+      "2026-08-27T00:00:00Z",
+    );
 
   const session =
-    await service.createSession(
-      "uid_a",
-      questionContext,
-      start,
-    );
+    await service
+      .createSessionForFirstHint(
+        "uid_a",
+        questionContext,
+        now,
+      );
 
   const interaction =
     new Date(
-      start.getTime() + 60_000,
+      now.getTime() +
+      10_000,
     );
 
   const result =
@@ -433,13 +582,79 @@ test("each hint refreshes session expiration", async () => {
       interaction,
     );
 
-  assert.equal(result.ok, true);
+  assert.equal(
+    result.ok,
+    true,
+  );
 
   if (result.ok) {
     assert.equal(
-      result.session.expiresAt.getTime(),
+      result.session
+        .expiresAt
+        .getTime(),
       interaction.getTime() +
-      SESSION_IDLE_TIMEOUT_MS,
+        SESSION_IDLE_TIMEOUT_MS,
+    );
+  }
+});
+
+test("non-hint use refreshes expiration without consuming a hint", async () => {
+  const service =
+    new TutorSessionService(
+      new MemorySessionStore(),
+    );
+
+  const now =
+    new Date(
+      "2026-08-27T00:00:00Z",
+    );
+
+  const session =
+    await service
+      .createSessionForFirstHint(
+        "uid_a",
+        questionContext,
+        now,
+      );
+
+  const interaction =
+    new Date(
+      now.getTime() +
+      20_000,
+    );
+
+  const result =
+    await service.touchSession(
+      session.sessionId,
+      "uid_a",
+      questionContext,
+      interaction,
+    );
+
+  assert.equal(
+    result.ok,
+    true,
+  );
+
+  if (result.ok) {
+    assert.equal(
+      result.session.hintLevel,
+      1,
+    );
+
+    assert.equal(
+      result.session
+        .lastInteractionAt
+        .getTime(),
+      interaction.getTime(),
+    );
+
+    assert.equal(
+      result.session
+        .expiresAt
+        .getTime(),
+      interaction.getTime() +
+        SESSION_IDLE_TIMEOUT_MS,
     );
   }
 });

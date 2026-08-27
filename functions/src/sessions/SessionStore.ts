@@ -14,4 +14,11 @@ export interface SessionStore {
     expectedContext: TutorSession["context"],
     now: Date,
   ): Promise<SessionMutationResult>;
+
+  touchAtomically(
+    sessionId: string,
+    uid: string,
+    expectedContext: TutorSession["context"],
+    now: Date,
+  ): Promise<SessionMutationResult>;
 }

@@ -7,6 +7,9 @@ import {
   tutorBackendResponseSchema,
 } from "../contracts/responseSchemas";
 import {
+  ContentReferenceKey,
+} from "../content/contentTypes";
+import {
   ResolvedReference,
   resolveReferences,
 } from "../data/referenceResolver";
@@ -104,7 +107,8 @@ function hasDisallowedText(
 
   if (Array.isArray(value)) {
     return value.some(
-      (item) => hasDisallowedText(item),
+      (item) =>
+        hasDisallowedText(item),
     );
   }
 
@@ -113,7 +117,8 @@ function hasDisallowedText(
     value !== null
   ) {
     return Object.values(value).some(
-      (item) => hasDisallowedText(item),
+      (item) =>
+        hasDisallowedText(item),
     );
   }
 
@@ -121,18 +126,73 @@ function hasDisallowedText(
 }
 
 /**
- * Validates one raw Gemini response in the required order.
+ * Builds a stable comparison key for one bibliography reference.
+ *
+ * @param {ContentReferenceKey} reference Reference key.
+ * @return {string} Stable key.
+ */
+function buildReferenceKey(
+  reference: ContentReferenceKey,
+): string {
+  return [
+    reference.sourceId,
+    reference.sectionId,
+  ].join("\u0000");
+}
+
+/**
+ * Checks whether every model reference was explicitly authorized by
+ * the backend context.
+ *
+ * @param {ContentReferenceKey[]} modelReferences Model keys.
+ * @param {ContentReferenceKey[]} allowedReferences Allowed keys.
+ * @return {boolean} True only when every model key is allowed.
+ */
+function referencesAreAuthorized(
+  modelReferences:
+    readonly ContentReferenceKey[],
+  allowedReferences:
+    readonly ContentReferenceKey[],
+): boolean {
+  const allowed =
+    new Set(
+      allowedReferences.map(
+        buildReferenceKey,
+      ),
+    );
+
+  return modelReferences.every(
+    (reference) =>
+      allowed.has(
+        buildReferenceKey(
+          reference,
+        ),
+      ),
+  );
+}
+
+/**
+ * Performs the common v1.0 validation pipeline.
+ *
+ * When allowedReferences is null, validation is catalog-only.
+ * The production tutor path must use the context-aware exported
+ * validator instead.
  *
  * @param {string} rawResponse Raw provider response.
+ * @param {ContentReferenceKey[]|null} allowedReferences Context.
  * @return {ModelResponseValidationResult} Validation result.
  */
-export function validateGeminiRawResponse(
+function validateInternal(
   rawResponse: string,
+  allowedReferences:
+    readonly ContentReferenceKey[] |
+    null,
 ): ModelResponseValidationResult {
-  const byteLength = Buffer.byteLength(
-    rawResponse,
-    "utf8",
-  );
+  const byteLength =
+    Buffer.byteLength(
+      rawResponse,
+      "utf8",
+    );
 
   if (
     byteLength >
@@ -140,14 +200,16 @@ export function validateGeminiRawResponse(
   ) {
     return {
       ok: false,
-      code: "RAW_RESPONSE_TOO_LARGE",
+      code:
+        "RAW_RESPONSE_TOO_LARGE",
     };
   }
 
   let parsed: unknown;
 
   try {
-    parsed = JSON.parse(rawResponse);
+    parsed =
+      JSON.parse(rawResponse);
   } catch {
     return {
       ok: false,
@@ -156,44 +218,103 @@ export function validateGeminiRawResponse(
   }
 
   const schemaResult =
-    geminiInternalResponseSchema.safeParse(
-      parsed,
-    );
+    geminiInternalResponseSchema
+      .safeParse(parsed);
 
   if (!schemaResult.success) {
     return {
       ok: false,
-      code: "INVALID_MODEL_SCHEMA",
+      code:
+        "INVALID_MODEL_SCHEMA",
     };
   }
 
   if (
-    hasDisallowedText(schemaResult.data)
+    hasDisallowedText(
+      schemaResult.data,
+    )
   ) {
     return {
       ok: false,
-      code: "DISALLOWED_MODEL_CONTENT",
+      code:
+        "DISALLOWED_MODEL_CONTENT",
     };
   }
 
-  const references = resolveReferences(
-    schemaResult.data.referenceKeys,
-  );
+  if (
+    allowedReferences !== null &&
+    !referencesAreAuthorized(
+      schemaResult.data
+        .referenceKeys,
+      allowedReferences,
+    )
+  ) {
+    return {
+      ok: false,
+      code:
+        "UNAUTHORIZED_REFERENCE",
+    };
+  }
+
+  const references =
+    resolveReferences(
+      schemaResult.data
+        .referenceKeys,
+    );
 
   if (!references) {
     return {
       ok: false,
-      code: "UNAUTHORIZED_REFERENCE",
+      code:
+        "UNAUTHORIZED_REFERENCE",
     };
   }
 
   return {
     ok: true,
     value: {
-      model: schemaResult.data,
+      model:
+        schemaResult.data,
       references,
     },
   };
+}
+
+/**
+ * Validates a raw Gemini response against the bibliography catalog.
+ *
+ * This function is retained for low-level validation tests. Production
+ * tutor orchestration must use validateGeminiRawResponseForContext.
+ *
+ * @param {string} rawResponse Raw provider response.
+ * @return {ModelResponseValidationResult} Validation result.
+ */
+export function validateGeminiRawResponse(
+  rawResponse: string,
+): ModelResponseValidationResult {
+  return validateInternal(
+    rawResponse,
+    null,
+  );
+}
+
+/**
+ * Validates a raw Gemini response against both the schema and the exact
+ * bibliography keys authorized by the trusted backend context.
+ *
+ * @param {string} rawResponse Raw provider response.
+ * @param {ContentReferenceKey[]} allowedReferences Allowed keys.
+ * @return {ModelResponseValidationResult} Validation result.
+ */
+export function validateGeminiRawResponseForContext(
+  rawResponse: string,
+  allowedReferences:
+    readonly ContentReferenceKey[],
+): ModelResponseValidationResult {
+  return validateInternal(
+    rawResponse,
+    allowedReferences,
+  );
 }
 
 /**
@@ -208,24 +329,36 @@ export function buildTutorSuccessResponse(
   validated: ValidatedModelResponse,
 ): TutorBackendResponse {
   const response = {
-    schemaVersion: "1.0" as const,
-    status: "ok" as const,
-    interactionId: context.interactionId,
-    tutorSessionId: context.tutorSessionId,
-    contentFormat: "plain_text" as const,
-    responseType: validated.model.responseType,
-    title: validated.model.title,
-    message: validated.model.message,
-    steps: validated.model.steps,
+    schemaVersion:
+      "1.0" as const,
+    status:
+      "ok" as const,
+    interactionId:
+      context.interactionId,
+    tutorSessionId:
+      context.tutorSessionId,
+    contentFormat:
+      "plain_text" as const,
+    responseType:
+      validated.model
+        .responseType,
+    title:
+      validated.model.title,
+    message:
+      validated.model.message,
+    steps:
+      validated.model.steps,
     checkQuestion:
-      validated.model.checkQuestion,
-    references: validated.references,
+      validated.model
+        .checkQuestion,
+    references:
+      validated.references,
     suggestedAction:
-      validated.model.suggestedAction,
+      validated.model
+        .suggestedAction,
     error: null,
   };
 
-  return tutorBackendResponseSchema.parse(
-    response,
-  );
+  return tutorBackendResponseSchema
+    .parse(response);
 }

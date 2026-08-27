@@ -1,12 +1,12 @@
 import {
+  TutorBackendResponse,
+} from "../contracts/types";
+import {
   IdempotencyClaim,
   IdempotencyClaimResult,
   IdempotencyKey,
   IdempotencyStore,
 } from "./idempotencyTypes";
-import {
-  TutorBackendResponse,
-} from "../contracts/types";
 
 /**
  * Coordinates idempotent tutor requests.
@@ -55,6 +55,22 @@ export class IdempotencyService {
       claim,
       response,
       now,
+    );
+  }
+
+  /**
+   * Releases a processing claim after an unsuccessful request.
+   *
+   * Completed responses are never removed by this operation.
+   *
+   * @param {IdempotencyClaim} claim Previously acquired claim.
+   * @return {Promise<void>} Completion promise.
+   */
+  async abandon(
+    claim: IdempotencyClaim,
+  ): Promise<void> {
+    await this.store.abandon(
+      claim,
     );
   }
 }
