@@ -66,16 +66,10 @@ Future<void> _configureFirebaseEmulators() async {
 }
 
 String _firebaseEmulatorHost() {
-  if (kIsWeb) {
-    return '127.0.0.1';
-  }
-
-  if (defaultTargetPlatform == TargetPlatform.android) {
-    // Celular fÃƒÂ­sico via USB + adb reverse.
-    return '127.0.0.2';
-  }
-
-  return '127.0.0.1';
+  return const String.fromEnvironment(
+    'FIREBASE_EMULATOR_HOST',
+    defaultValue: '127.0.0.1',
+  );
 }
 
 class CalcQuestApp extends StatelessWidget {
