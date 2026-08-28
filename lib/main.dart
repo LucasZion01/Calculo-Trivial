@@ -44,7 +44,7 @@ Future<void> main() async {
     debugPrint('Firebase App Check nÃƒÂ£o pÃƒÂ´de ser inicializado: $error');
   }
 
-  if (_runTutorProbe) {
+  if (_useFirebaseEmulators && _runTutorProbe) {
     await runTutorCallableProbe();
   }
 
