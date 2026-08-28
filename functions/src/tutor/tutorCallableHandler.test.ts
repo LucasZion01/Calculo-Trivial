@@ -131,6 +131,54 @@ test("rejects invalid callable payloads", async () => {
   );
 });
 
+test("invalid payload never reaches the tutor executor", async () => {
+  let executeCalls = 0;
+
+  const executor =
+    createExecutor(async () => {
+      executeCalls += 1;
+
+      throw new Error(
+        "executor must not run",
+      );
+    });
+
+  await assert.rejects(
+    () =>
+      handleTutorCallable(
+        {
+          auth: {
+            uid: "uid_a",
+          },
+          data: {
+            ...validRequest,
+            unexpected:
+              "client data",
+          },
+        },
+        executor,
+      ),
+    (error: unknown) => {
+      assert.ok(
+        error instanceof
+          HttpsError,
+      );
+
+      assert.equal(
+        error.code,
+        "invalid-argument",
+      );
+
+      return true;
+    },
+  );
+
+  assert.equal(
+    executeCalls,
+    0,
+  );
+});
+
 test("uses authenticated uid instead of client identity", async () => {
   let receivedUid = "";
 

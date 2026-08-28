@@ -38,6 +38,7 @@ import {
 } from "./tutor/TutorOrchestrator";
 import {
   handleTutorCallable,
+  TutorExecutor,
 } from "./tutor/tutorCallableHandler";
 
 if (getApps().length === 0) {
@@ -105,6 +106,21 @@ TutorOrchestrator {
   return tutorOrchestrator;
 }
 
+const tutorExecutor: TutorExecutor = {
+  execute(
+    uid,
+    request,
+    now,
+  ) {
+    return getTutorOrchestrator()
+      .execute(
+        uid,
+        request,
+        now,
+      );
+  },
+};
+
 export const tutor =
   onCall(
     {
@@ -141,6 +157,6 @@ export const tutor =
               null,
           data: request.data,
         },
-        getTutorOrchestrator(),
+        tutorExecutor,
       ),
   );
