@@ -18,10 +18,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Set up Flutter
-        uses: subosito/flutter-action@v2
+        uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with:
           channel: stable
           flutter-version: '3.44.6'
@@ -107,10 +107,10 @@ jobs:
 
       - name: Verify AAB signature
         run: |
-          jarsigner -verify             build/app/outputs/bundle/release/app-release.aab
+          jarsigner -verify -strict             build/app/outputs/bundle/release/app-release.aab
 
       - name: Upload signed AAB
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: calculo-trivial-play-aab-${{ github.run_number }}
           path: build/app/outputs/bundle/release/app-release.aab
