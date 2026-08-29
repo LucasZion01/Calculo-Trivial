@@ -1,0 +1,124 @@
+name: Build signed Play AAB
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: play-release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build-aab:
+    name: Build and verify signed AAB
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
+        with:
+          channel: stable
+          flutter-version: '3.44.6'
+          cache: true
+
+      - name: Validate release secrets
+        shell: bash
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          REVENUECAT_ANDROID_API_KEY: ${{ secrets.REVENUECAT_ANDROID_API_KEY }}
+        run: |
+          missing=0
+          for variable in             ANDROID_KEYSTORE_BASE64             ANDROID_KEYSTORE_PASSWORD             ANDROID_KEY_ALIAS             ANDROID_KEY_PASSWORD             REVENUECAT_ANDROID_API_KEY
+          do
+            if [ -z "${!variable:-}" ]; then
+              echo "::error::Required GitHub secret is missing: $variable"
+              missing=1
+            fi
+          done
+          exit "$missing"
+
+      - name: Restore Android signing files
+        shell: bash
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          printf '%s' "$ANDROID_KEYSTORE_BASE64"             | base64 --decode             > android/app/upload-keystore.jks
+
+          python3 - <<'PY'
+          import os
+          from pathlib import Path
+
+          def escape_property(value: str) -> str:
+              return (
+                  value.replace("\\", "\\\\")
+                  .replace("\r", "\\r")
+                  .replace("\n", "\\n")
+              )
+
+          properties = {
+              "storePassword": os.environ["ANDROID_KEYSTORE_PASSWORD"],
+              "keyPassword": os.environ["ANDROID_KEY_PASSWORD"],
+              "keyAlias": os.environ["ANDROID_KEY_ALIAS"],
+              "storeFile": "upload-keystore.jks",
+          }
+
+          content = "".join(
+              f"{key}={escape_property(value)}\n"
+              for key, value in properties.items()
+          )
+          Path("android/key.properties").write_text(content, encoding="utf-8")
+          PY
+
+      - name: Verify upload keystore
+        shell: bash
+        env:
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+        run: |
+          keytool -list             -keystore android/app/upload-keystore.jks             -storepass "$ANDROID_KEYSTORE_PASSWORD"             -alias "$ANDROID_KEY_ALIAS"             >/dev/null
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Analyze project
+        run: flutter analyze
+
+      - name: Run automated tests
+        run: flutter test --reporter expanded
+
+      - name: Build signed release bundle
+        shell: bash
+        env:
+          REVENUECAT_ANDROID_API_KEY: ${{ secrets.REVENUECAT_ANDROID_API_KEY }}
+        run: |
+          flutter build appbundle --release             --dart-define=REVENUECAT_ANDROID_API_KEY="$REVENUECAT_ANDROID_API_KEY"
+
+      - name: Verify AAB signature
+        run: |
+          jarsigner -verify -strict             build/app/outputs/bundle/release/app-release.aab
+
+      - name: Upload signed AAB
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: calculo-trivial-play-aab-${{ github.run_number }}
+          path: build/app/outputs/bundle/release/app-release.aab
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Remove restored signing files
+        if: always()
+        run: |
+          rm -f android/key.properties
+          rm -f android/app/upload-keystore.jks
