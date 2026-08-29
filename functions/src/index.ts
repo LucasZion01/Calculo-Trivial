@@ -26,7 +26,7 @@ import {
 } from "./rateLimit/FirestoreRateLimitStore";
 import {
   GEMINI_API_KEY,
-} from "./secrets/geminiSecret";
+} from "./config/geminiSecret";
 import {
   FirestoreSessionStore,
 } from "./sessions/FirestoreSessionStore";
