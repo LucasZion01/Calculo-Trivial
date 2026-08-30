@@ -41,7 +41,7 @@ Future<void> main() async {
 
     debugPrint('Firebase App Check inicializado.');
   } catch (error) {
-    debugPrint('Firebase App Check nÃƒÂ£o pÃƒÂ´de ser inicializado: $error');
+    debugPrint('Firebase App Check não pôde ser inicializado: $error');
   }
 
   if (_useFirebaseEmulators && _runTutorProbe) {
@@ -80,7 +80,7 @@ class CalcQuestApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'CÃƒÂ¡lculo Trivial',
+      title: 'Cálculo Trivial',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         scaffoldBackgroundColor: AppColors.background,
