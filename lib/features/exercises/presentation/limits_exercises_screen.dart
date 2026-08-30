@@ -31,6 +31,7 @@ class _LimitsExercisesScreenState extends State<LimitsExercisesScreen> {
   int currentExerciseIndex = 0;
   int correctAnswers = 0;
   String? selectedOptionId;
+  bool isShowingFeedback = false;
 
   @override
   void initState() {
@@ -134,7 +135,133 @@ class _LimitsExercisesScreenState extends State<LimitsExercisesScreen> {
       );
   }
 
-  void _confirmAnswer() {
+  String _difficultyLabel(ExerciseDifficulty difficulty) {
+    return switch (difficulty) {
+      ExerciseDifficulty.foundation => 'Fundamentos',
+      ExerciseDifficulty.intermediate => 'Intermediária',
+      ExerciseDifficulty.challenge => 'Desafio',
+    };
+  }
+
+  Future<void> _showAnswerFeedback({
+    required ExerciseData exercise,
+    required bool isCorrect,
+    required String selectedAnswer,
+    required String correctAnswer,
+  }) {
+    return showModalBottomSheet<void>(
+      context: context,
+      isDismissible: false,
+      enableDrag: false,
+      isScrollControlled: true,
+      backgroundColor: AppColors.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(AppSpacing.radiusXLarge),
+        ),
+      ),
+      builder: (sheetContext) {
+        final color = isCorrect ? AppColors.success : AppColors.error;
+        final background = isCorrect
+            ? AppColors.successLight
+            : AppColors.errorLight;
+
+        return SafeArea(
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(
+              AppSpacing.screenHorizontal,
+              AppSpacing.lg,
+              AppSpacing.screenHorizontal,
+              MediaQuery.viewInsetsOf(sheetContext).bottom + AppSpacing.lg,
+            ),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 48,
+                    height: 48,
+                    decoration: BoxDecoration(
+                      color: background,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      isCorrect ? Icons.check_rounded : Icons.close_rounded,
+                      color: color,
+                      size: 28,
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                  Text(
+                    isCorrect ? 'Boa análise!' : 'Vamos entender o erro',
+                    style: AppTypography.headingSmall,
+                  ),
+                  const SizedBox(height: AppSpacing.sm),
+                  Text(
+                    'Sua resposta: $selectedAnswer',
+                    style: AppTypography.bodyMedium.copyWith(
+                      color: isCorrect ? AppColors.successDark : AppColors.error,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  if (!isCorrect) ...[
+                    const SizedBox(height: AppSpacing.xs),
+                    Text(
+                      'Resposta correta: $correctAnswer',
+                      style: AppTypography.bodyMedium.copyWith(
+                        color: AppColors.successDark,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                  const SizedBox(height: AppSpacing.md),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(AppSpacing.cardPadding),
+                    decoration: BoxDecoration(
+                      color: AppColors.surfaceSecondary,
+                      borderRadius: BorderRadius.circular(
+                        AppSpacing.radiusMedium,
+                      ),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Explicação passo a passo',
+                          style: AppTypography.labelMedium,
+                        ),
+                        const SizedBox(height: AppSpacing.xs),
+                        Text(
+                          exercise.explanation,
+                          style: AppTypography.bodyMedium,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.lg),
+                  PrimaryButton(
+                    text: isLastExercise
+                        ? 'Ver meu resultado'
+                        : 'Continuar praticando',
+                    icon: isLastExercise
+                        ? Icons.analytics_outlined
+                        : Icons.arrow_forward_rounded,
+                    onPressed: () => Navigator.of(sheetContext).pop(),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> _confirmAnswer() async {
+    if (isShowingFeedback) return;
+
     if (selectedOptionId == null) {
       _showFeedback(
         message: 'Escolha uma alternativa antes de continuar.',
@@ -144,59 +271,55 @@ class _LimitsExercisesScreenState extends State<LimitsExercisesScreen> {
       return;
     }
 
-    final isCorrect = selectedOptionId == currentExercise.correctOptionId;
+    final exercise = currentExercise;
+    final isCorrect = selectedOptionId == exercise.correctOptionId;
+    final selectedOption = exercise.options.firstWhere(
+      (option) => option.id == selectedOptionId,
+    );
+    final correctOption = exercise.options.firstWhere(
+      (option) => option.id == exercise.correctOptionId,
+    );
+
+    setState(() => isShowingFeedback = true);
 
     AppProgress.recordExerciseAnswer(isCorrect: isCorrect);
 
     if (isCorrect) {
       correctAnswers++;
-      _showFeedback(
-        message: currentExercise.explanation,
-        backgroundColor: AppColors.success,
-        icon: Icons.check_rounded,
-      );
     } else {
-      final selectedOption = currentExercise.options.firstWhere(
-        (option) => option.id == selectedOptionId,
-      );
-      final correctOption = currentExercise.options.firstWhere(
-        (option) => option.id == currentExercise.correctOptionId,
-      );
-
       reviewItems.add(
         ExerciseReviewItem(
-          questionId: currentExercise.id,
-          statement: currentExercise.statement,
+          questionId: exercise.id,
+          statement: exercise.statement,
           selectedAnswer: selectedOption.text,
           correctAnswer: correctOption.text,
-          explanation: currentExercise.explanation,
+          explanation: exercise.explanation,
         ),
-      );
-
-      _showFeedback(
-        message: 'Resposta incorreta. ${currentExercise.explanation}',
-        backgroundColor: AppColors.error,
-        icon: Icons.close_rounded,
       );
     }
 
-    if (isLastExercise) {
-      Future.delayed(const Duration(milliseconds: 700), () {
-        if (!mounted) return;
+    await _showAnswerFeedback(
+      exercise: exercise,
+      isCorrect: isCorrect,
+      selectedAnswer: selectedOption.text,
+      correctAnswer: correctOption.text,
+    );
 
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (_) => ResultScreen(
-              completedLessonId: 'limites',
-              totalQuestions: sessionExercises.length,
-              correctAnswers: correctAnswers,
-              xpEarned: 90,
-              goldEarned: 40,
-              reviewItems: List<ExerciseReviewItem>.unmodifiable(reviewItems),
-            ),
+    if (!mounted) return;
+
+    if (isLastExercise) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => ResultScreen(
+            completedLessonId: 'limites',
+            totalQuestions: sessionExercises.length,
+            correctAnswers: correctAnswers,
+            xpEarned: 90,
+            goldEarned: 40,
+            reviewItems: List<ExerciseReviewItem>.unmodifiable(reviewItems),
           ),
-        );
-      });
+        ),
+      );
 
       return;
     }
@@ -204,6 +327,7 @@ class _LimitsExercisesScreenState extends State<LimitsExercisesScreen> {
     setState(() {
       currentExerciseIndex++;
       selectedOptionId = null;
+      isShowingFeedback = false;
     });
   }
 
@@ -313,6 +437,22 @@ class _LimitsExercisesScreenState extends State<LimitsExercisesScreen> {
                 'Resolva o limite usando a estratégia adequada.',
                 style: AppTypography.bodyMedium,
               ),
+              const SizedBox(height: AppSpacing.sm),
+              Wrap(
+                spacing: AppSpacing.xs,
+                runSpacing: AppSpacing.xs,
+                children: [
+                  if (exercise.skill != null)
+                    Chip(
+                      avatar: const Icon(Icons.school_outlined, size: 18),
+                      label: Text(exercise.skill!),
+                    ),
+                  Chip(
+                    avatar: const Icon(Icons.signal_cellular_alt_rounded, size: 18),
+                    label: Text(_difficultyLabel(exercise.difficulty)),
+                  ),
+                ],
+              ),
               const SizedBox(height: AppSpacing.md),
               AppProgressBar(value: progress),
               const SizedBox(height: AppSpacing.lg),
@@ -360,7 +500,8 @@ class _LimitsExercisesScreenState extends State<LimitsExercisesScreen> {
                 icon: isLastExercise
                     ? Icons.flag_rounded
                     : Icons.arrow_forward_rounded,
-                onPressed: _confirmAnswer,
+                onPressed: isShowingFeedback ? null : _confirmAnswer,
+                isLoading: isShowingFeedback,
               ),
               const SizedBox(height: AppSpacing.screenBottom),
             ],
