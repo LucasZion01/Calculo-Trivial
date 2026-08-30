@@ -485,8 +485,7 @@ class LessonCheckCard extends StatefulWidget {
     required this.choices,
     required this.correctIndex,
     required this.explanation,
-  }) : assert(choices.length >= 2),
-       assert(correctIndex >= 0 && correctIndex < choices.length);
+  });
 
   @override
   State<LessonCheckCard> createState() => _LessonCheckCardState();
@@ -649,8 +648,7 @@ class _LessonCheckCardState extends State<LessonCheckCard> {
 class LessonTakeawaysCard extends StatelessWidget {
   final List<String> items;
 
-  const LessonTakeawaysCard({super.key, required this.items})
-    : assert(items.length > 0);
+  const LessonTakeawaysCard({super.key, required this.items});
 
   @override
   Widget build(BuildContext context) {
