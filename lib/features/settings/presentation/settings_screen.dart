@@ -1,3 +1,4 @@
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:purchases_ui_flutter/purchases_ui_flutter.dart';
@@ -240,6 +241,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
         MaterialPageRoute<void>(builder: (_) => const LoginScreen()),
         (route) => false,
       );
+    } on FirebaseFunctionsException catch (error) {
+      debugPrint(
+        'Configurações: falha pública na exclusão: ${error.code}',
+      );
+
+      _showMessage(
+        'Não foi possível concluir a exclusão. Tente novamente.',
+      );
     } on FirebaseAuthException catch (error) {
       debugPrint(
         'Configurações: erro do Firebase ao sair: '
@@ -356,7 +365,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
       );
 
       await user.reauthenticateWithCredential(credential);
-      await AppProgress.deleteCurrentUserData();
+
+      final callable = FirebaseFunctions.instanceFor(
+        region: 'us-central1',
+      ).httpsCallable(
+        'deleteAccount',
+        options: HttpsCallableOptions(
+          timeout: const Duration(seconds: 30),
+        ),
+      );
+
+      await callable.call<void>(const <String, dynamic>{});
 
       if (RevenueCatService.isConfigured) {
         try {
@@ -364,12 +383,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
         } catch (error) {
           debugPrint(
             'Configurações: não foi possível desconectar '
-            'o RevenueCat durante a exclusão: $error',
+            'o RevenueCat após a exclusão: $error',
           );
         }
       }
 
-      await user.delete();
+      await FirebaseAuth.instance.signOut();
       AppProgress.clearSession();
 
       if (!mounted) {
