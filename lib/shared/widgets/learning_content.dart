@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+export 'package:calcquest/shared/domain/course_lesson_data.dart'
+    show LearningCardTone;
+
 import 'package:calcquest/shared/domain/course_lesson_data.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
 import 'package:calcquest/shared/theme/app_spacing.dart';
