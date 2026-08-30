@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
+import 'package:calcquest/shared/domain/course_lesson_data.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
 import 'package:calcquest/shared/theme/app_spacing.dart';
 import 'package:calcquest/shared/theme/app_typography.dart';
 
-enum LearningCardTone { neutral, information, success, warning }
 
 class LessonHeroCard extends StatelessWidget {
   final String eyebrow;
