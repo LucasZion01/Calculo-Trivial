@@ -26,6 +26,8 @@ class AppProgress {
   static const String _limitsLegacyKey = 'limits_completed';
 
   static const String _completedLessonsKey = 'completed_lesson_ids';
+  static const String _completedContentLessonsKey =
+      'completed_content_lesson_ids';
   static const String _totalAnswersKey = 'total_answer_attempts';
   static const String _correctAnswersKey = 'correct_answer_attempts';
   static const String _studyStreakKey = 'study_streak';
@@ -63,6 +65,7 @@ class AppProgress {
   static String? _activeUserId;
 
   static final Set<String> _completedLessonIds = <String>{};
+  static final Set<String> _completedContentLessonIds = <String>{};
   static final Map<String, Set<String>> _lastQuestionSessionIds =
       <String, Set<String>>{};
 
@@ -72,6 +75,9 @@ class AppProgress {
 
   static Set<String> get completedLessonIds =>
       Set<String>.unmodifiable(_completedLessonIds);
+
+  static Set<String> get completedContentLessonIds =>
+      Set<String>.unmodifiable(_completedContentLessonIds);
 
   static int get incorrectAnswerAttempts =>
       max(0, totalAnswerAttempts - correctAnswerAttempts);
@@ -127,6 +133,7 @@ class AppProgress {
 
   static void _resetInMemory() {
     _completedLessonIds.clear();
+    _completedContentLessonIds.clear();
     _lastQuestionSessionIds.clear();
 
     algebraFundamentalCompleted = false;
@@ -230,6 +237,14 @@ class AppProgress {
       }
     }
 
+    final completedContentLessons = preferences.getStringList(
+      _scopedKey(_completedContentLessonsKey, userId),
+    );
+
+    if (completedContentLessons != null) {
+      _completedContentLessonIds.addAll(completedContentLessons);
+    }
+
     totalAnswerAttempts =
         preferences.getInt(_scopedKey(_totalAnswersKey, userId)) ?? 0;
 
@@ -306,6 +321,14 @@ class AppProgress {
       correctAnswerAttempts = max(
         correctAnswerAttempts,
         remoteCorrectAnswers.toInt(),
+      );
+    }
+
+    final remoteContentLessons = data['completedContentLessonIds'];
+
+    if (remoteContentLessons is Iterable) {
+      _completedContentLessonIds.addAll(
+        remoteContentLessons.whereType<String>(),
       );
     }
 
@@ -482,6 +505,13 @@ class AppProgress {
       sortedLessons,
     );
 
+    final sortedContentLessons = _completedContentLessonIds.toList()..sort();
+
+    await preferences.setStringList(
+      _scopedKey(_completedContentLessonsKey, _activeUserId),
+      sortedContentLessons,
+    );
+
     await preferences.setInt(
       _scopedKey(_totalAnswersKey, _activeUserId),
       totalAnswerAttempts,
@@ -538,6 +568,8 @@ class AppProgress {
 
     await document.set(<String, dynamic>{
       'completedLessonIds': sortedLessons,
+      'completedContentLessonIds':
+          (_completedContentLessonIds.toList()..sort()),
       'algebraFundamentalCompleted': algebraFundamentalCompleted,
       'equationsAndInequationsCompleted': equationsAndInequationsCompleted,
       'functionsCompleted': functionsCompleted,
@@ -635,6 +667,21 @@ class AppProgress {
     await _saveQueue;
   }
 
+  static bool isContentLessonCompleted(String lessonId) {
+    return _completedContentLessonIds.contains(lessonId);
+  }
+
+  static Future<void> completeContentLesson(String lessonId) async {
+    _activeUserId ??= FirebaseAuth.instance.currentUser?.uid;
+
+    _completedContentLessonIds.add(lessonId);
+    _registerStudyDay();
+    revision.value++;
+
+    _queueProgressSave();
+    await _saveQueue;
+  }
+
   static Future<void> completeAlgebraFundamental() {
     return _completeLesson(algebraFundamentalId);
   }
@@ -677,6 +724,7 @@ class AppProgress {
 
     await document.set(<String, dynamic>{
       'completedLessonIds': <String>[],
+      'completedContentLessonIds': <String>[],
       'algebraFundamentalCompleted': false,
       'equationsAndInequationsCompleted': false,
       'functionsCompleted': false,
@@ -720,6 +768,7 @@ class AppProgress {
 
     final scopedKeys = <String>[
       _completedLessonsKey,
+      _completedContentLessonsKey,
       _totalAnswersKey,
       _correctAnswersKey,
       _studyStreakKey,
