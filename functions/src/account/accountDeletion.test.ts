@@ -11,11 +11,20 @@ import {
   handleDeleteAccount,
 } from "./accountDeletion";
 
+/**
+ * Captures account deletion calls without touching Firebase.
+ */
 class FakeDeletionExecutor
 implements AccountDeletionExecutor {
   deletedUids: string[] = [];
   shouldFail = false;
 
+  /**
+   * Records one requested uid or simulates a backend failure.
+   *
+   * @param {string} uid Authenticated user id.
+   * @return {Promise<void>} Completion promise.
+   */
   async delete(
     uid: string,
   ): Promise<void> {
