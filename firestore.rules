@@ -34,7 +34,7 @@ service cloud.firestore {
 
     function validContentLessonIds(values) {
       return values is list
-        && values.size() <= 15
+        && values.size() <= 23
         && values.hasOnly([
           'limites-01-intuicao',
           'limites-02-laterais',
@@ -50,7 +50,15 @@ service cloud.firestore {
           'continuidade-04-partes',
           'continuidade-05-parametros',
           'continuidade-06-valor-intermediario',
-          'continuidade-07-sintese'
+          'continuidade-07-sintese',
+          'derivadas-01-significado',
+          'derivadas-02-regras-basicas',
+          'derivadas-03-produto-quociente',
+          'derivadas-04-cadeia',
+          'derivadas-05-elementares',
+          'derivadas-06-tangente',
+          'derivadas-07-derivabilidade',
+          'derivadas-08-aplicacoes'
         ]);
     }
 

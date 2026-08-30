@@ -11,7 +11,7 @@ import 'package:calcquest/shared/widgets/math_card.dart';
 import '../../dashboard/presentation/dashboard_screen.dart';
 import '../../learning_path/presentation/learning_path_screen.dart';
 import '../../lesson/presentation/continuity_course_screen.dart';
-import '../../lesson/presentation/derivatives_lesson_screen.dart';
+import '../../lesson/presentation/derivatives_course_screen.dart';
 import '../../lesson/presentation/limits_course_screen.dart';
 import '../../profile/presentation/profile_screen.dart';
 import '../../statistics/presentation/statistics_screen.dart';
@@ -67,7 +67,7 @@ class CalculusOneDetailScreen extends StatelessWidget {
   void _goToDerivativesLesson(BuildContext context) {
     Navigator.of(
       context,
-    ).push(MaterialPageRoute(builder: (_) => const DerivativesLessonScreen()));
+    ).push(MaterialPageRoute(builder: (_) => const DerivativesCourseScreen()));
   }
 
   String _moduleProgressText() {
@@ -255,8 +255,8 @@ class CalculusOneDetailScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: AppSpacing.md),
                     MathCard(
-                      title: 'Aula 3 — Derivadas',
-                      subtitle: 'Taxa de variação e reta tangente',
+                      title: 'Unidade 3 — Derivadas',
+                      subtitle: '8 aulas • regras, interpretação e aplicações',
                       symbol: "f'",
                       status: derivativesStatus,
                       statusColor: continuityCompleted
