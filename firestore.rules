@@ -34,7 +34,7 @@ service cloud.firestore {
 
     function validContentLessonIds(values) {
       return values is list
-        && values.size() <= 7
+        && values.size() <= 8
         && values.hasOnly([
           'limites-01-intuicao',
           'limites-02-laterais',
@@ -42,7 +42,8 @@ service cloud.firestore {
           'limites-04-fatoracao',
           'limites-05-racionalizacao',
           'limites-06-infinito',
-          'limites-07-sintese'
+          'limites-07-trigonometricos',
+          'limites-08-sintese'
         ]);
     }
 
