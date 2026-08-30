@@ -34,8 +34,16 @@ service cloud.firestore {
 
     function validContentLessonIds(values) {
       return values is list
-        && values.size() <= 23
+        && values.size() <= 31
         && values.hasOnly([
+          'algebra-01-linguagem',
+          'algebra-02-termos-semelhantes',
+          'algebra-03-distributiva',
+          'algebra-04-potencias',
+          'algebra-05-produtos-notaveis',
+          'algebra-06-fatoracao',
+          'algebra-07-fracoes-algebricas',
+          'algebra-08-sintese',
           'limites-01-intuicao',
           'limites-02-laterais',
           'limites-03-propriedades',

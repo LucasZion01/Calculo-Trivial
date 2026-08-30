@@ -13,7 +13,7 @@ import '../../dashboard/presentation/dashboard_screen.dart';
 import '../../learning_path/presentation/learning_path_screen.dart';
 import '../../lesson/presentation/equations_lesson_screen.dart';
 import '../../lesson/presentation/functions_lesson_screen.dart';
-import '../../lesson/presentation/lesson_screen.dart';
+import '../../lesson/presentation/algebra_course_screen.dart';
 import '../../profile/presentation/profile_screen.dart';
 import '../../statistics/presentation/statistics_screen.dart';
 
@@ -56,7 +56,7 @@ class ModuleDetailScreen extends StatelessWidget {
   void _goToLesson(BuildContext context) {
     Navigator.of(
       context,
-    ).push(MaterialPageRoute(builder: (_) => const LessonScreen()));
+    ).push(MaterialPageRoute(builder: (_) => const AlgebraCourseScreen()));
   }
 
   void _goToEquationsLesson(BuildContext context) {
