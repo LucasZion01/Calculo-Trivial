@@ -5,7 +5,7 @@ const List<CourseLessonData> limitsCourseLessons = [
     id: 'limites-01-intuicao',
     topicId: 'limites',
     trailTitle: 'Limites • Unidade 1',
-    eyebrow: 'Aula 1 de 7 • Ideia central',
+    eyebrow: 'Aula 1 de 8 • Ideia central',
     title: 'Aproximar antes de calcular',
     description:
         'Construa a intuição de limite e aprenda a ler cada parte da notação.',
@@ -87,7 +87,7 @@ const List<CourseLessonData> limitsCourseLessons = [
     id: 'limites-02-laterais',
     topicId: 'limites',
     trailTitle: 'Limites • Unidade 1',
-    eyebrow: 'Aula 2 de 7 • Duas direções',
+    eyebrow: 'Aula 2 de 8 • Duas direções',
     title: 'Limites laterais, tabelas e gráficos',
     description:
         'Aprenda a investigar um ponto pelos dois lados e a reconhecer quando o limite não existe.',
@@ -170,7 +170,7 @@ const List<CourseLessonData> limitsCourseLessons = [
     id: 'limites-03-propriedades',
     topicId: 'limites',
     trailTitle: 'Limites • Unidade 1',
-    eyebrow: 'Aula 3 de 7 • Regras',
+    eyebrow: 'Aula 3 de 8 • Regras',
     title: 'Propriedades e substituição direta',
     description:
         'Descubra quando basta substituir e como combinar limites conhecidos com segurança.',
@@ -252,7 +252,7 @@ const List<CourseLessonData> limitsCourseLessons = [
     id: 'limites-04-fatoracao',
     topicId: 'limites',
     trailTitle: 'Limites • Unidade 2',
-    eyebrow: 'Aula 4 de 7 • Indeterminação',
+    eyebrow: 'Aula 4 de 8 • Indeterminação',
     title: 'Fatoração revela o limite escondido',
     description:
         'Transforme expressões equivalentes para remover fatores responsáveis pela forma 0/0.',
@@ -350,7 +350,7 @@ const List<CourseLessonData> limitsCourseLessons = [
     id: 'limites-05-racionalizacao',
     topicId: 'limites',
     trailTitle: 'Limites • Unidade 2',
-    eyebrow: 'Aula 5 de 7 • Raízes',
+    eyebrow: 'Aula 5 de 8 • Raízes',
     title: 'Racionalização com expressões conjugadas',
     description:
         'Elimine indeterminações envolvendo raízes sem alterar o valor da expressão.',
@@ -420,7 +420,7 @@ const List<CourseLessonData> limitsCourseLessons = [
     id: 'limites-06-infinito',
     topicId: 'limites',
     trailTitle: 'Limites • Unidade 3',
-    eyebrow: 'Aula 6 de 7 • Longo prazo',
+    eyebrow: 'Aula 6 de 8 • Longo prazo',
     title: 'Limites no infinito e assíntotas',
     description:
         'Compare termos dominantes para prever o comportamento de funções racionais.',
@@ -491,13 +491,96 @@ const List<CourseLessonData> limitsCourseLessons = [
       'Limites finitos no infinito indicam assíntotas horizontais.',
     ],
     closing:
-        'A aula final reúne todas as estratégias em um único roteiro de decisão.',
+        'Na próxima aula, você conhecerá os limites trigonométricos fundamentais.',
   ),
   CourseLessonData(
-    id: 'limites-07-sintese',
+    id: 'limites-07-trigonometricos',
     topicId: 'limites',
     trailTitle: 'Limites • Unidade 3',
-    eyebrow: 'Aula 7 de 7 • Síntese',
+    eyebrow: 'Aula 7 de 8 • Trigonometria',
+    title: 'Limites trigonométricos fundamentais',
+    description:
+        'Entenda por que sen(x)/x tende a 1 e aprenda a adaptar esse padrão.',
+    duration: '18–22 min',
+    objective: 'reconhecer e aplicar limites trigonométricos em radianos',
+    symbol: 'sen',
+    sections: [
+      LessonSectionData(
+        number: '1',
+        title: 'A unidade angular importa',
+        subtitle: 'O limite fundamental exige ângulos medidos em radianos.',
+        blocks: [
+          ConceptBlockData(
+            visual: LessonVisual.idea,
+            title: 'O padrão sen(u)/u',
+            content:
+                'Quando u se aproxima de zero em radianos, sen(u) e u ficam cada vez mais próximos. Por isso, a razão sen(u)/u se aproxima de 1, embora a substituição direta produza 0/0.',
+            emphasis:
+                'lim u→0 sen(u)/u = 1 somente nessa forma compatível e com u em radianos.',
+          ),
+          ConceptBlockData(
+            visual: LessonVisual.graph,
+            title: 'Por que o resultado faz sentido?',
+            content:
+                'Perto de zero, o gráfico de y=sen(x) quase coincide com a reta y=x. A aproximação geométrica explica por que o quociente entre as duas expressões tende a 1.',
+            tone: LearningCardTone.information,
+          ),
+        ],
+      ),
+      LessonSectionData(
+        number: '2',
+        title: 'Construa a forma fundamental',
+        blocks: [
+          WorkedExampleBlockData(
+            title: 'Ajuste de argumento',
+            problem: 'lim x→0 sen(3x)/x',
+            steps: [
+              'O argumento do seno é 3x, mas o denominador é x.',
+              'Multiplique e divida por 3: sen(3x)/x = 3·sen(3x)/(3x).',
+              'Defina u=3x. Quando x→0, também u→0.',
+              'Use lim u→0 sen(u)/u = 1.',
+            ],
+            result: 'Resultado: 3·1 = 3.',
+            interpretation:
+                'O coeficiente que ajusta o denominador permanece multiplicando o limite.',
+          ),
+          WorkedExampleBlockData(
+            title: 'Cosseno e conjugado',
+            problem: 'lim x→0 (1−cos x)/x',
+            steps: [
+              'A substituição gera 0/0. Multiplique pelo conjugado 1+cos x.',
+              'Use (1−cos x)(1+cos x)=1−cos²x=sen²x.',
+              'Reescreva como [sen(x)/x]·[sen(x)/(1+cos x)].',
+              'O primeiro fator tende a 1 e o segundo tende a 0/2=0.',
+            ],
+            result: 'Resultado: 0.',
+            interpretation:
+                'Identidades trigonométricas podem revelar o limite fundamental escondido.',
+          ),
+        ],
+      ),
+    ],
+    check: LessonCheckData(
+      question: 'Qual é lim x→0 sen(5x)/x?',
+      choices: ['1', '5', '0'],
+      correctIndex: 1,
+      explanation:
+          'Escreva sen(5x)/x = 5·sen(5x)/(5x). A razão fundamental tende a 1.',
+    ),
+    takeaways: [
+      'O limite fundamental usa ângulos em radianos.',
+      'Procure construir uma razão do tipo sen(u)/u.',
+      'O ajuste feito no denominador deve ser compensado fora da razão.',
+      'Identidades e conjugados ajudam em expressões com cosseno.',
+    ],
+    closing:
+        'A aula final reunirá técnicas algébricas, laterais, infinito e trigonometria.',
+  ),
+  CourseLessonData(
+    id: 'limites-08-sintese',
+    topicId: 'limites',
+    trailTitle: 'Limites • Unidade 3',
+    eyebrow: 'Aula 8 de 8 • Síntese',
     title: 'Como escolher a técnica certa',
     description:
         'Organize as ideias do módulo em um método de análise confiável.',
@@ -514,7 +597,7 @@ const List<CourseLessonData> limitsCourseLessons = [
             visual: LessonVisual.checklist,
             title: 'Um roteiro em cinco perguntas',
             content:
-                '1) É limite lateral ou bilateral? 2) A substituição direta funciona? 3) Surgiu 0/0? 4) Há polinômios para fatorar ou raízes para racionalizar? 5) x tende ao infinito, exigindo comparação de graus?',
+                '1) É limite lateral ou bilateral? 2) A substituição direta funciona? 3) Surgiu 0/0? 4) Há polinômios para fatorar, raízes para racionalizar ou uma forma trigonométrica fundamental? 5) x tende ao infinito, exigindo comparação de graus?',
             emphasis:
                 'Escolha a técnica pela estrutura encontrada, não por tentativa aleatória.',
           ),
