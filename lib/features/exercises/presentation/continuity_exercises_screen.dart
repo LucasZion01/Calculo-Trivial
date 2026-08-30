@@ -9,6 +9,7 @@ import 'package:calcquest/shared/theme/app_spacing.dart';
 import 'package:calcquest/shared/theme/app_typography.dart';
 import 'package:calcquest/shared/widgets/app_bottom_navigation_bar.dart';
 import 'package:calcquest/shared/widgets/app_progress_bar.dart';
+import 'package:calcquest/shared/widgets/exercise_answer_feedback.dart';
 import 'package:calcquest/shared/widgets/primary_button.dart';
 
 import '../../dashboard/presentation/dashboard_screen.dart';
@@ -32,6 +33,7 @@ class _ContinuityExercisesScreenState extends State<ContinuityExercisesScreen> {
   int currentExerciseIndex = 0;
   int correctAnswers = 0;
   String? selectedOptionId;
+  bool isShowingFeedback = false;
 
   @override
   void initState() {
@@ -135,7 +137,17 @@ class _ContinuityExercisesScreenState extends State<ContinuityExercisesScreen> {
       );
   }
 
-  void _confirmAnswer() {
+  String _difficultyLabel(ExerciseDifficulty difficulty) {
+    return switch (difficulty) {
+      ExerciseDifficulty.foundation => 'Fundamentos',
+      ExerciseDifficulty.intermediate => 'Intermediária',
+      ExerciseDifficulty.challenge => 'Desafio',
+    };
+  }
+
+  Future<void> _confirmAnswer() async {
+    if (isShowingFeedback) return;
+
     if (selectedOptionId == null) {
       _showFeedback(
         message: 'Escolha uma alternativa antes de continuar.',
@@ -145,59 +157,57 @@ class _ContinuityExercisesScreenState extends State<ContinuityExercisesScreen> {
       return;
     }
 
-    final isCorrect = selectedOptionId == currentExercise.correctOptionId;
+    final exercise = currentExercise;
+    final isCorrect = selectedOptionId == exercise.correctOptionId;
+    final selectedOption = exercise.options.firstWhere(
+      (option) => option.id == selectedOptionId,
+    );
+    final correctOption = exercise.options.firstWhere(
+      (option) => option.id == exercise.correctOptionId,
+    );
+
+    setState(() => isShowingFeedback = true);
 
     AppProgress.recordExerciseAnswer(isCorrect: isCorrect);
 
     if (isCorrect) {
       correctAnswers++;
-      _showFeedback(
-        message: currentExercise.explanation,
-        backgroundColor: AppColors.success,
-        icon: Icons.check_rounded,
-      );
     } else {
-      final selectedOption = currentExercise.options.firstWhere(
-        (option) => option.id == selectedOptionId,
-      );
-      final correctOption = currentExercise.options.firstWhere(
-        (option) => option.id == currentExercise.correctOptionId,
-      );
-
       reviewItems.add(
         ExerciseReviewItem(
-          questionId: currentExercise.id,
-          statement: currentExercise.statement,
+          questionId: exercise.id,
+          statement: exercise.statement,
           selectedAnswer: selectedOption.text,
           correctAnswer: correctOption.text,
-          explanation: currentExercise.explanation,
+          explanation: exercise.explanation,
         ),
-      );
-
-      _showFeedback(
-        message: 'Resposta incorreta. ${currentExercise.explanation}',
-        backgroundColor: AppColors.error,
-        icon: Icons.close_rounded,
       );
     }
 
-    if (isLastExercise) {
-      Future.delayed(const Duration(milliseconds: 700), () {
-        if (!mounted) return;
+    await showExerciseAnswerFeedback(
+      context: context,
+      exercise: exercise,
+      isCorrect: isCorrect,
+      selectedAnswer: selectedOption.text,
+      correctAnswer: correctOption.text,
+      isLastExercise: isLastExercise,
+    );
 
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (_) => ResultScreen(
-              completedLessonId: 'continuidade',
-              totalQuestions: sessionExercises.length,
-              correctAnswers: correctAnswers,
-              xpEarned: 100,
-              goldEarned: 45,
-              reviewItems: List<ExerciseReviewItem>.unmodifiable(reviewItems),
-            ),
+    if (!mounted) return;
+
+    if (isLastExercise) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => ResultScreen(
+            completedLessonId: 'continuidade',
+            totalQuestions: sessionExercises.length,
+            correctAnswers: correctAnswers,
+            xpEarned: 100,
+            goldEarned: 45,
+            reviewItems: List<ExerciseReviewItem>.unmodifiable(reviewItems),
           ),
-        );
-      });
+        ),
+      );
 
       return;
     }
@@ -205,6 +215,7 @@ class _ContinuityExercisesScreenState extends State<ContinuityExercisesScreen> {
     setState(() {
       currentExerciseIndex++;
       selectedOptionId = null;
+      isShowingFeedback = false;
     });
   }
 
@@ -314,6 +325,25 @@ class _ContinuityExercisesScreenState extends State<ContinuityExercisesScreen> {
                 'Analise a continuidade e escolha a alternativa correta.',
                 style: AppTypography.bodyMedium,
               ),
+              const SizedBox(height: AppSpacing.sm),
+              Wrap(
+                spacing: AppSpacing.xs,
+                runSpacing: AppSpacing.xs,
+                children: [
+                  if (exercise.skill != null)
+                    Chip(
+                      avatar: const Icon(Icons.school_outlined, size: 18),
+                      label: Text(exercise.skill!),
+                    ),
+                  Chip(
+                    avatar: const Icon(
+                      Icons.signal_cellular_alt_rounded,
+                      size: 18,
+                    ),
+                    label: Text(_difficultyLabel(exercise.difficulty)),
+                  ),
+                ],
+              ),
               const SizedBox(height: AppSpacing.md),
               AppProgressBar(value: progress),
               const SizedBox(height: AppSpacing.lg),
@@ -361,7 +391,8 @@ class _ContinuityExercisesScreenState extends State<ContinuityExercisesScreen> {
                 icon: isLastExercise
                     ? Icons.flag_rounded
                     : Icons.arrow_forward_rounded,
-                onPressed: _confirmAnswer,
+                onPressed: isShowingFeedback ? null : _confirmAnswer,
+                isLoading: isShowingFeedback,
               ),
               const SizedBox(height: AppSpacing.screenBottom),
             ],

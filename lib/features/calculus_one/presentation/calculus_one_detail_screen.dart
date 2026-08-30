@@ -10,7 +10,7 @@ import 'package:calcquest/shared/widgets/math_card.dart';
 
 import '../../dashboard/presentation/dashboard_screen.dart';
 import '../../learning_path/presentation/learning_path_screen.dart';
-import '../../lesson/presentation/continuity_lesson_screen.dart';
+import '../../lesson/presentation/continuity_course_screen.dart';
 import '../../lesson/presentation/derivatives_lesson_screen.dart';
 import '../../lesson/presentation/limits_course_screen.dart';
 import '../../profile/presentation/profile_screen.dart';
@@ -61,7 +61,7 @@ class CalculusOneDetailScreen extends StatelessWidget {
   void _goToContinuityLesson(BuildContext context) {
     Navigator.of(
       context,
-    ).push(MaterialPageRoute(builder: (_) => const ContinuityLessonScreen()));
+    ).push(MaterialPageRoute(builder: (_) => const ContinuityCourseScreen()));
   }
 
   void _goToDerivativesLesson(BuildContext context) {
@@ -233,8 +233,8 @@ class CalculusOneDetailScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: AppSpacing.md),
                     MathCard(
-                      title: 'Aula 2 — Continuidade',
-                      subtitle: 'Funções contínuas e pontos de descontinuidade',
+                      title: 'Unidade 2 — Continuidade',
+                      subtitle: '7 aulas • definição, rupturas e aplicações',
                       symbol: 'C',
                       status: continuityStatus,
                       statusColor: limitsCompleted
