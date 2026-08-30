@@ -11,9 +11,9 @@ import 'package:calcquest/shared/widgets/math_card.dart';
 
 import '../../dashboard/presentation/dashboard_screen.dart';
 import '../../learning_path/presentation/learning_path_screen.dart';
-import '../../lesson/presentation/equations_lesson_screen.dart';
-import '../../lesson/presentation/functions_lesson_screen.dart';
 import '../../lesson/presentation/algebra_course_screen.dart';
+import '../../lesson/presentation/equations_course_screen.dart';
+import '../../lesson/presentation/functions_lesson_screen.dart';
 import '../../profile/presentation/profile_screen.dart';
 import '../../statistics/presentation/statistics_screen.dart';
 
@@ -62,7 +62,7 @@ class ModuleDetailScreen extends StatelessWidget {
   void _goToEquationsLesson(BuildContext context) {
     Navigator.of(
       context,
-    ).push(MaterialPageRoute(builder: (_) => const EquationsLessonScreen()));
+    ).push(MaterialPageRoute(builder: (_) => const EquationsCourseScreen()));
   }
 
   void _goToFunctionsLesson(BuildContext context) {

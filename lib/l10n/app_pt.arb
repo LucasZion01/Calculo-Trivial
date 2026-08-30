@@ -1,0 +1,51 @@
+{
+  "@@locale": "pt",
+
+  "appName": "Cálculo Trivial",
+
+  "home": "Início",
+  "learningPath": "Trilha",
+  "statistics": "Estatísticas",
+  "profile": "Perfil",
+  "settings": "Configurações",
+
+  "language": "Idioma",
+  "portuguese": "Português",
+  "english": "English",
+
+  "back": "Voltar",
+  "continueLabel": "Continuar",
+  "finish": "Concluir",
+  "cancel": "Cancelar",
+
+  "available": "Disponível",
+  "locked": "Bloqueada",
+  "completed": "Concluída",
+
+  "lesson": "Aula",
+  "lessons": "Aulas",
+  "lessonCompleted": "Aula concluída",
+
+  "startExercises": "Iniciar exercícios",
+  "readyToPractice": "Pronto para praticar",
+  "finalPracticeLocked": "Prática final bloqueada",
+
+  "yourJourney": "Sua jornada",
+  "moduleProgress": "Progresso do módulo",
+
+  "equationsAndInequalities": "Equações e Inequações",
+  "fundamentalAlgebra": "Álgebra Fundamental",
+  "functions": "Funções",
+  "limits": "Limites",
+  "continuity": "Continuidade",
+  "derivatives": "Derivadas",
+
+  "approxMinutes": "≈ {minutes} min",
+  "@approxMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  }
+}
