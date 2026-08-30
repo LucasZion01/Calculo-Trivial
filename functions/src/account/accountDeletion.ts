@@ -129,12 +129,15 @@ implements AccountDeletionExecutor {
       const batch =
         this.firestore.batch();
 
+      const batchSnapshots =
+        snapshots.slice(
+          offset,
+          offset + maximumBatchSize,
+        );
+
       for (
         const snapshot of
-          snapshots.slice(
-            offset,
-            offset + maximumBatchSize,
-          )
+        batchSnapshots
       ) {
         batch.delete(
           snapshot.ref as
