@@ -218,7 +218,7 @@ class CalculusOneDetailScreen extends StatelessWidget {
                   children: [
                     MathCard(
                       title: 'Unidade 1 — Limites',
-                      subtitle: '7 aulas • teoria, técnicas e aplicações',
+                      subtitle: '8 aulas • teoria, técnicas e aplicações',
                       symbol: 'lim',
                       status: limitsStatus,
                       statusColor: limitsCompleted
