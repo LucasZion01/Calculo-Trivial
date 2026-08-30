@@ -12,7 +12,7 @@ import '../../dashboard/presentation/dashboard_screen.dart';
 import '../../learning_path/presentation/learning_path_screen.dart';
 import '../../lesson/presentation/continuity_lesson_screen.dart';
 import '../../lesson/presentation/derivatives_lesson_screen.dart';
-import '../../lesson/presentation/limits_lesson_screen.dart';
+import '../../lesson/presentation/limits_course_screen.dart';
 import '../../profile/presentation/profile_screen.dart';
 import '../../statistics/presentation/statistics_screen.dart';
 
@@ -55,7 +55,7 @@ class CalculusOneDetailScreen extends StatelessWidget {
   void _goToLimitsLesson(BuildContext context) {
     Navigator.of(
       context,
-    ).push(MaterialPageRoute(builder: (_) => const LimitsLessonScreen()));
+    ).push(MaterialPageRoute(builder: (_) => const LimitsCourseScreen()));
   }
 
   void _goToContinuityLesson(BuildContext context) {
@@ -217,8 +217,8 @@ class CalculusOneDetailScreen extends StatelessWidget {
                   padding: const EdgeInsets.only(bottom: AppSpacing.lg),
                   children: [
                     MathCard(
-                      title: 'Aula 1 — Limites',
-                      subtitle: 'Ideia intuitiva, notação e cálculo inicial',
+                      title: 'Unidade 1 — Limites',
+                      subtitle: '7 aulas • teoria, técnicas e aplicações',
                       symbol: 'lim',
                       status: limitsStatus,
                       statusColor: limitsCompleted
