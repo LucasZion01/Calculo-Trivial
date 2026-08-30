@@ -4,6 +4,7 @@ import 'package:calcquest/shared/theme/app_colors.dart';
 import 'package:calcquest/shared/theme/app_spacing.dart';
 import 'package:calcquest/shared/theme/app_typography.dart';
 import 'package:calcquest/shared/widgets/app_bottom_navigation_bar.dart';
+import 'package:calcquest/shared/widgets/learning_content.dart';
 import 'package:calcquest/shared/widgets/primary_button.dart';
 
 import '../../dashboard/presentation/dashboard_screen.dart';
@@ -23,7 +24,6 @@ class DerivativesLessonScreen extends StatelessWidget {
       );
       return;
     }
-
     if (index == 1) {
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (_) => const LearningPathScreen()),
@@ -31,7 +31,6 @@ class DerivativesLessonScreen extends StatelessWidget {
       );
       return;
     }
-
     if (index == 2) {
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (_) => const StatisticsScreen()),
@@ -39,7 +38,6 @@ class DerivativesLessonScreen extends StatelessWidget {
       );
       return;
     }
-
     if (index == 3) {
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (_) => const ProfileScreen()),
@@ -54,193 +52,159 @@ class DerivativesLessonScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildConceptCard({
-    required String title,
-    required String content,
-    required String symbol,
-  }) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(AppSpacing.cardPaddingLarge),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
-        border: Border.all(color: AppColors.border),
-        boxShadow: const [
-          BoxShadow(
-            color: AppColors.shadow,
-            blurRadius: 12,
-            offset: Offset(0, 6),
-          ),
-        ],
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            width: 48,
-            height: 48,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: AppColors.selectedBackground,
-              borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
-            ),
-            child: Text(
-              symbol,
-              textAlign: TextAlign.center,
-              style: AppTypography.headingSmall.copyWith(
-                color: AppColors.primary,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ),
-          const SizedBox(width: AppSpacing.sm),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title, style: AppTypography.titleMedium),
-                const SizedBox(height: AppSpacing.xs),
-                Text(content, style: AppTypography.bodyMedium),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildExampleCard() {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(AppSpacing.cardPaddingLarge),
-      decoration: BoxDecoration(
-        color: AppColors.primary,
-        borderRadius: BorderRadius.circular(AppSpacing.radiusXLarge),
-        boxShadow: const [
-          BoxShadow(
-            color: AppColors.shadow,
-            blurRadius: 16,
-            offset: Offset(0, 8),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Exemplo resolvido',
-            style: AppTypography.bodyMedium.copyWith(
-              color: AppColors.primaryLight,
-            ),
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          Text(
-            'f(x) = 3x² - 2x + 1',
-            style: AppTypography.headingSmall.copyWith(
-              color: AppColors.white,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          Text(
-            'Aplicamos a regra da potência em cada termo: (3x²)\' = 6x, (-2x)\' = -2 e a derivada da constante 1 é zero.',
-            style: AppTypography.bodyMedium.copyWith(
-              color: AppColors.primaryLight,
-            ),
-          ),
-          const SizedBox(height: AppSpacing.xs),
-          Text(
-            'f\'(x) = 6x - 2  e  f\'(1) = 4',
-            style: AppTypography.titleMedium.copyWith(color: AppColors.white),
-          ),
-        ],
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(
-            AppSpacing.screenHorizontal,
-            AppSpacing.screenTop,
-            AppSpacing.screenHorizontal,
-            0,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Aula 3 — Derivadas', style: AppTypography.headingMedium),
-              const SizedBox(height: AppSpacing.xs),
-              Text(
-                'Aprenda a medir variações instantâneas e inclinações de curvas.',
-                style: AppTypography.bodyMedium,
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.sm,
+                AppSpacing.xs,
+                AppSpacing.screenHorizontal,
+                0,
               ),
-              const SizedBox(height: AppSpacing.lg),
-              Expanded(
-                child: ListView(
-                  padding: const EdgeInsets.only(bottom: AppSpacing.lg),
-                  children: [
-                    _buildConceptCard(
-                      title: 'O que é derivada?',
-                      symbol: "f'",
-                      content:
-                          'A derivada mede como uma quantidade varia instantaneamente. Geometricamente, ela fornece a inclinação da reta tangente ao gráfico em um ponto.',
+              child: Row(
+                children: [
+                  IconButton(
+                    tooltip: 'Voltar',
+                    onPressed: () => Navigator.of(context).maybePop(),
+                    icon: const Icon(Icons.arrow_back_rounded),
+                  ),
+                  const SizedBox(width: AppSpacing.xs),
+                  Expanded(
+                    child: Text(
+                      'Trilha de Cálculo I',
+                      style: AppTypography.titleMedium,
                     ),
-                    const SizedBox(height: AppSpacing.md),
-                    _buildConceptCard(
-                      title: 'Definição por limite',
-                      symbol: 'lim',
-                      content:
-                          'A derivada em x é definida por f\'(x) = lim h → 0 [f(x + h) - f(x)]/h. O quociente calcula uma variação média que se torna instantânea quando h tende a zero.',
-                    ),
-                    const SizedBox(height: AppSpacing.md),
-                    _buildConceptCard(
-                      title: 'Regras básicas',
-                      symbol: 'xⁿ',
-                      content:
-                          'A derivada de uma constante é zero, (xⁿ)\' = n·xⁿ⁻¹ e podemos derivar somas termo a termo. Essas regras resolvem rapidamente funções polinomiais.',
-                    ),
-                    const SizedBox(height: AppSpacing.md),
-                    _buildExampleCard(),
-                    const SizedBox(height: AppSpacing.md),
-                    _buildConceptCard(
-                      title: 'Produto, quociente e cadeia',
-                      symbol: '×',
-                      content:
-                          'Produtos e quocientes possuem regras próprias. Em funções compostas, usamos a regra da cadeia: derivamos a parte externa e multiplicamos pela derivada da parte interna.',
-                    ),
-                    const SizedBox(height: AppSpacing.md),
-                    _buildConceptCard(
-                      title: 'Aplicações',
-                      symbol: 'v',
-                      content:
-                          'Derivadas calculam velocidade, aceleração, crescimento, pontos de máximo e mínimo e taxas de variação em fenômenos da Engenharia, Física e Economia.',
-                    ),
-                  ],
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: ListView(
+                padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.screenHorizontal,
+                  AppSpacing.md,
+                  AppSpacing.screenHorizontal,
+                  AppSpacing.lg,
                 ),
+                children: const [
+                  LessonHeroCard(
+                    eyebrow: 'Aula 3 • Variação',
+                    title: 'Derivadas: medir mudanças instantâneas',
+                    description: 'Conecte velocidade, inclinação e taxa de variação antes de aplicar as regras algébricas.',
+                    duration: '12–15 min',
+                    objective: 'interpretar uma derivada e aplicar as regras básicas com significado',
+                    symbol: 'f′',
+                  ),
+                  SizedBox(height: AppSpacing.xl),
+                  LessonSectionHeader(
+                    number: '1',
+                    title: 'Comece pelo velocímetro',
+                  ),
+                  SizedBox(height: AppSpacing.md),
+                  LessonConceptCard(
+                    icon: Icons.speed_rounded,
+                    title: 'Da média ao instante',
+                    content: 'A velocidade média usa a distância percorrida durante um intervalo. O velocímetro, porém, mostra a velocidade naquele instante. A derivada nasce quando reduzimos o intervalo até obter uma taxa de variação instantânea.',
+                    emphasis: 'Derivada responde: quão rápido a saída muda quando a entrada sofre uma pequena variação?',
+                  ),
+                  SizedBox(height: AppSpacing.md),
+                  LessonConceptCard(
+                    icon: Icons.show_chart_rounded,
+                    title: 'Inclinação da reta tangente',
+                    content: 'No gráfico, f′(a) representa a inclinação da reta que toca a curva perto de x = a. Valor positivo indica crescimento local; negativo indica decrescimento; zero indica tangente horizontal.',
+                    tone: LearningCardTone.information,
+                  ),
+                  SizedBox(height: AppSpacing.xl),
+                  LessonSectionHeader(
+                    number: '2',
+                    title: 'Entenda a definição',
+                  ),
+                  SizedBox(height: AppSpacing.md),
+                  LessonConceptCard(
+                    icon: Icons.functions_rounded,
+                    title: 'f′(x) = lim h→0 [f(x+h) − f(x)]/h',
+                    content: 'O numerador mede a variação da saída e h mede a variação da entrada. O quociente é uma taxa média; quando h se aproxima de zero, obtemos a taxa instantânea.',
+                    emphasis: 'Não substituímos h = 0 diretamente, pois isso dividiria por zero. Calculamos o limite.',
+                  ),
+                  SizedBox(height: AppSpacing.md),
+                  WorkedExampleCard(
+                    title: 'Derivação termo a termo',
+                    problem: 'f(x) = 3x² − 2x + 1',
+                    steps: [
+                      'Use a regra da potência em 3x²: 2·3x²⁻¹ = 6x.',
+                      'A derivada de −2x é −2.',
+                      'A derivada da constante 1 é zero.',
+                      'Some as derivadas obtidas: f′(x) = 6x − 2.',
+                    ],
+                    result: 'Em x = 1: f′(1) = 6·1 − 2 = 4.',
+                    interpretation: 'Perto de x = 1, a saída cresce aproximadamente 4 unidades para cada unidade adicional de x.',
+                  ),
+                  SizedBox(height: AppSpacing.xl),
+                  LessonSectionHeader(
+                    number: '3',
+                    title: 'Escolha a regra pela estrutura',
+                  ),
+                  SizedBox(height: AppSpacing.md),
+                  LessonConceptCard(
+                    icon: Icons.account_tree_outlined,
+                    title: 'A regra da cadeia acompanha camadas',
+                    content: 'Em uma composição como (x² + 1)³, derive a camada externa e multiplique pela derivada da interna: 3(x² + 1)²·2x.',
+                    emphasis: 'Erro comum: derivar apenas a parte externa e esquecer a derivada da expressão interna.',
+                    tone: LearningCardTone.warning,
+                  ),
+                  SizedBox(height: AppSpacing.md),
+                  LessonCheckCard(
+                    question: 'Se f′(a) < 0, qual é a interpretação local mais adequada?',
+                    choices: [
+                      'A função está decrescendo perto de a.',
+                      'A função é negativa em a.',
+                      'A função obrigatoriamente vale zero em a.',
+                    ],
+                    correctIndex: 0,
+                    explanation: 'O sinal da derivada descreve a direção da variação, não o sinal do valor da própria função.',
+                  ),
+                  SizedBox(height: AppSpacing.md),
+                  LessonTakeawaysCard(
+                    items: [
+                      'Derivada é taxa de variação instantânea.',
+                      'Geometricamente, ela mede a inclinação da tangente.',
+                      'Constantes têm derivada zero e potências seguem n·xⁿ⁻¹.',
+                      'Funções compostas exigem a regra da cadeia.',
+                    ],
+                  ),
+                  SizedBox(height: AppSpacing.lg),
+                  Text(
+                    'A regra encontra a expressão; a interpretação explica o que esse resultado significa no problema.',
+                    textAlign: TextAlign.center,
+                    style: AppTypography.bodyMedium,
+                  ),
+                ],
               ),
-              PrimaryButton(
-                text: 'Iniciar exercícios',
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.screenHorizontal,
+                AppSpacing.xs,
+                AppSpacing.screenHorizontal,
+                AppSpacing.screenBottom,
+              ),
+              child: PrimaryButton(
+                text: 'Praticar derivadas',
                 icon: Icons.play_arrow_rounded,
-                onPressed: () {
-                  _goToExercises(context);
-                },
+                onPressed: () => _goToExercises(context),
               ),
-              const SizedBox(height: AppSpacing.screenBottom),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
       bottomNavigationBar: AppBottomNavigationBar(
         currentIndex: 1,
-        onTap: (index) {
-          _onMenuTap(context, index);
-        },
+        onTap: (index) => _onMenuTap(context, index),
       ),
     );
   }
