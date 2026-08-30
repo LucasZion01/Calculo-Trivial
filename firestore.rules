@@ -32,6 +32,20 @@ service cloud.firestore {
         ]);
     }
 
+    function validContentLessonIds(values) {
+      return values is list
+        && values.size() <= 7
+        && values.hasOnly([
+          'limites-01-intuicao',
+          'limites-02-laterais',
+          'limites-03-propriedades',
+          'limites-04-fatoracao',
+          'limites-05-racionalizacao',
+          'limites-06-infinito',
+          'limites-07-sintese'
+        ]);
+    }
+
     function validDateKey(value) {
       return value == null
         || (
@@ -45,6 +59,7 @@ service cloud.firestore {
 
       return data.keys().hasOnly([
           'completedLessonIds',
+          'completedContentLessonIds',
           'algebraFundamentalCompleted',
           'equationsAndInequationsCompleted',
           'functionsCompleted',
@@ -67,6 +82,7 @@ service cloud.firestore {
         ])
         && data.keys().hasAll([
           'completedLessonIds',
+          'completedContentLessonIds',
           'algebraFundamentalCompleted',
           'equationsAndInequationsCompleted',
           'functionsCompleted',
@@ -86,6 +102,7 @@ service cloud.firestore {
           'updatedAt'
         ])
         && validLessonIds(data.completedLessonIds)
+        && validContentLessonIds(data.completedContentLessonIds)
         && data.algebraFundamentalCompleted is bool
         && data.equationsAndInequationsCompleted is bool
         && data.functionsCompleted is bool
