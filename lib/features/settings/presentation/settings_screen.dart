@@ -241,14 +241,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
         MaterialPageRoute<void>(builder: (_) => const LoginScreen()),
         (route) => false,
       );
-    } on FirebaseFunctionsException catch (error) {
-      debugPrint(
-        'Configurações: falha pública na exclusão: ${error.code}',
-      );
-
-      _showMessage(
-        'Não foi possível concluir a exclusão. Tente novamente.',
-      );
     } on FirebaseAuthException catch (error) {
       debugPrint(
         'Configurações: erro do Firebase ao sair: '
@@ -398,6 +390,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute<void>(builder: (_) => const LoginScreen()),
         (route) => false,
+      );
+    } on FirebaseFunctionsException catch (error) {
+      debugPrint(
+        'Configurações: falha pública na exclusão: ${error.code}',
+      );
+
+      _showMessage(
+        'Não foi possível concluir a exclusão. Tente novamente.',
       );
     } on FirebaseAuthException catch (error) {
       debugPrint(
