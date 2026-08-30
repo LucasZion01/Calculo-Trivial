@@ -3,12 +3,19 @@ import {
   initializeApp,
 } from "firebase-admin/app";
 import {
+  getAuth,
+} from "firebase-admin/auth";
+import {
   getFirestore,
 } from "firebase-admin/firestore";
 import {
   onCall,
 } from "firebase-functions/v2/https";
 
+import {
+  FirebaseAccountDeletionService,
+  handleDeleteAccount,
+} from "./account/accountDeletion";
 import {
   TUTOR_RUNTIME_CONFIG,
 } from "./config/tutorRuntimeConfig";
@@ -47,6 +54,12 @@ if (getApps().length === 0) {
 
 const firestore =
   getFirestore();
+
+const accountDeletion =
+  new FirebaseAccountDeletionService(
+    firestore,
+    getAuth(),
+  );
 
 const idempotency =
   new FirestoreIdempotencyStore(
@@ -158,5 +171,27 @@ export const tutor =
           data: request.data,
         },
         tutorExecutor,
+      ),
+  );
+
+
+export const deleteAccount =
+  onCall(
+    {
+      enforceAppCheck: true,
+      minInstances: 0,
+      maxInstances: 2,
+      concurrency: 10,
+      timeoutSeconds: 30,
+    },
+    async (request) =>
+      handleDeleteAccount(
+        {
+          authUid:
+            request.auth?.uid ??
+            null,
+          data: request.data,
+        },
+        accountDeletion,
       ),
   );
