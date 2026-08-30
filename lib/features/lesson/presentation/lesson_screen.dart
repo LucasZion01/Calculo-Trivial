@@ -4,7 +4,7 @@ import 'package:calcquest/shared/theme/app_colors.dart';
 import 'package:calcquest/shared/theme/app_spacing.dart';
 import 'package:calcquest/shared/theme/app_typography.dart';
 import 'package:calcquest/shared/widgets/app_bottom_navigation_bar.dart';
-import 'package:calcquest/shared/widgets/app_icon.dart';
+import 'package:calcquest/shared/widgets/learning_content.dart';
 import 'package:calcquest/shared/widgets/primary_button.dart';
 
 import '../../dashboard/presentation/dashboard_screen.dart';
@@ -24,7 +24,6 @@ class LessonScreen extends StatelessWidget {
       );
       return;
     }
-
     if (index == 1) {
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (_) => const LearningPathScreen()),
@@ -32,7 +31,6 @@ class LessonScreen extends StatelessWidget {
       );
       return;
     }
-
     if (index == 2) {
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (_) => const StatisticsScreen()),
@@ -40,7 +38,6 @@ class LessonScreen extends StatelessWidget {
       );
       return;
     }
-
     if (index == 3) {
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (_) => const ProfileScreen()),
@@ -55,163 +52,166 @@ class LessonScreen extends StatelessWidget {
     ).push(MaterialPageRoute(builder: (_) => const MiniChallengeScreen()));
   }
 
-  Widget _buildContentCard({
-    required IconData icon,
-    required String title,
-    required String content,
-  }) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(AppSpacing.cardPaddingLarge),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
-        border: Border.all(color: AppColors.border),
-        boxShadow: const [
-          BoxShadow(
-            color: AppColors.shadow,
-            blurRadius: 12,
-            offset: Offset(0, 6),
-          ),
-        ],
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            width: 48,
-            height: 48,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: AppColors.selectedBackground,
-              borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
-            ),
-            child: AppIcon(
-              icon: icon,
-              size: AppIconSize.large,
-              color: AppColors.primary,
-            ),
-          ),
-          const SizedBox(width: AppSpacing.sm),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title, style: AppTypography.titleMedium),
-                const SizedBox(height: AppSpacing.xs),
-                Text(content, style: AppTypography.bodyMedium),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(
-            AppSpacing.screenHorizontal,
-            AppSpacing.screenTop,
-            AppSpacing.screenHorizontal,
-            0,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Aula 1',
-                style: AppTypography.labelMedium.copyWith(
-                  color: AppColors.primary,
-                ),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.sm,
+                AppSpacing.xs,
+                AppSpacing.screenHorizontal,
+                0,
               ),
-              const SizedBox(height: AppSpacing.xs),
-              Text('Álgebra Fundamental', style: AppTypography.headingMedium),
-              const SizedBox(height: AppSpacing.xs),
-              Text(
-                'Entenda a base algébrica necessária para avançar em Cálculo.',
-                style: AppTypography.bodyMedium,
-              ),
-              const SizedBox(height: AppSpacing.lg),
-              Expanded(
-                child: ListView(
-                  padding: const EdgeInsets.only(bottom: AppSpacing.md),
-                  children: [
-                    _buildContentCard(
-                      icon: Icons.school_outlined,
-                      title: 'Motivação',
-                      content:
-                          'Antes de estudar limites, derivadas e integrais, você precisa dominar operações algébricas, simplificação de expressões e manipulação de equações.',
+              child: Row(
+                children: [
+                  IconButton(
+                    tooltip: 'Voltar',
+                    onPressed: () => Navigator.of(context).maybePop(),
+                    icon: const Icon(Icons.arrow_back_rounded),
+                  ),
+                  const SizedBox(width: AppSpacing.xs),
+                  Expanded(
+                    child: Text(
+                      'Trilha de Pré-Cálculo',
+                      style: AppTypography.titleMedium,
                     ),
-                    const SizedBox(height: AppSpacing.md),
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(
-                        AppSpacing.cardPaddingLarge,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.primary,
-                        borderRadius: BorderRadius.circular(
-                          AppSpacing.radiusXLarge,
-                        ),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: AppColors.shadow,
-                            blurRadius: 16,
-                            offset: Offset(0, 8),
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Exemplo rápido',
-                            style: AppTypography.bodyMedium.copyWith(
-                              color: AppColors.primaryLight,
-                            ),
-                          ),
-                          const SizedBox(height: AppSpacing.sm),
-                          Text(
-                            'Simplifique: 2x + 3x',
-                            style: AppTypography.headingSmall.copyWith(
-                              color: AppColors.white,
-                            ),
-                          ),
-                          const SizedBox(height: AppSpacing.xs),
-                          Text(
-                            'Resposta: 5x',
-                            style: AppTypography.bodyMedium.copyWith(
-                              color: AppColors.primaryLight,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: ListView(
+                padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.screenHorizontal,
+                  AppSpacing.md,
+                  AppSpacing.screenHorizontal,
+                  AppSpacing.lg,
                 ),
+                children: const [
+                  LessonHeroCard(
+                    eyebrow: 'Aula 1 • Fundamentos',
+                    title: 'Álgebra: a caixa de ferramentas do Cálculo',
+                    description:
+                        'Aprenda a ler expressões, combinar termos e transformar fórmulas sem alterar seu valor.',
+                    duration: '10–12 min',
+                    objective:
+                        'simplificar expressões e justificar cada transformação algébrica',
+                    symbol: 'x',
+                  ),
+                  SizedBox(height: AppSpacing.xl),
+                  LessonSectionHeader(
+                    number: '1',
+                    title: 'Leia antes de operar',
+                  ),
+                  SizedBox(height: AppSpacing.md),
+                  LessonConceptCard(
+                    icon: Icons.category_outlined,
+                    title: 'Termos semelhantes pertencem à mesma família',
+                    content:
+                        'Em 2x + 3x, os dois termos possuem a mesma parte literal x. Por isso, somamos os coeficientes: 2 + 3 = 5, mantendo x. Já 2x + 3x² não pode ser reduzido, pois x e x² representam partes literais diferentes.',
+                    emphasis:
+                        'Coeficiente é o número que multiplica a parte literal. Em −4x², o coeficiente é −4.',
+                  ),
+                  SizedBox(height: AppSpacing.md),
+                  LessonConceptCard(
+                    icon: Icons.format_list_numbered_rounded,
+                    title: 'A ordem das operações evita ambiguidades',
+                    content:
+                        'Resolva primeiro parênteses, depois potências e raízes, em seguida multiplicações e divisões e, por último, adições e subtrações.',
+                    emphasis:
+                        'Na expressão 2 + 3·4, a multiplicação vem primeiro: 2 + 12 = 14.',
+                    tone: LearningCardTone.information,
+                  ),
+                  SizedBox(height: AppSpacing.xl),
+                  LessonSectionHeader(
+                    number: '2',
+                    title: 'Transforme sem mudar o valor',
+                  ),
+                  SizedBox(height: AppSpacing.md),
+                  LessonConceptCard(
+                    icon: Icons.open_in_full_rounded,
+                    title: 'Distributiva conecta produto e soma',
+                    content:
+                        'Multiplique o fator externo por cada termo interno: a(b + c) = ab + ac. O sinal também deve ser distribuído.',
+                    emphasis:
+                        'Exemplo: −2(x − 3) = −2x + 6. O produto de dois números negativos é positivo.',
+                    tone: LearningCardTone.warning,
+                  ),
+                  SizedBox(height: AppSpacing.md),
+                  WorkedExampleCard(
+                    title: 'Simplificação organizada',
+                    problem: '3(2x − 1) + 4x − 5',
+                    steps: [
+                      'Aplique a distributiva: 6x − 3 + 4x − 5.',
+                      'Agrupe os termos com x: 6x + 4x = 10x.',
+                      'Agrupe as constantes: −3 − 5 = −8.',
+                    ],
+                    result: 'Expressão simplificada: 10x − 8.',
+                    interpretation:
+                        'A expressão mudou de forma, mas conserva o mesmo valor para qualquer x.',
+                  ),
+                  SizedBox(height: AppSpacing.xl),
+                  LessonSectionHeader(
+                    number: '3',
+                    title: 'Confirme a equivalência',
+                  ),
+                  SizedBox(height: AppSpacing.md),
+                  LessonConceptCard(
+                    icon: Icons.fact_check_outlined,
+                    title: 'Teste com um valor simples',
+                    content:
+                        'Quando estiver em dúvida, escolha um valor como x = 1 e calcule a expressão original e a simplificada. Resultados diferentes revelam algum erro, embora um único teste igual não substitua a justificativa algébrica.',
+                    tone: LearningCardTone.success,
+                  ),
+                  SizedBox(height: AppSpacing.md),
+                  LessonCheckCard(
+                    question: 'Qual é a forma simplificada de 2(x + 3) − x?',
+                    choices: ['x + 6', '2x + 3', 'x + 3'],
+                    correctIndex: 0,
+                    explanation:
+                        'A distributiva produz 2x + 6. Depois, 2x − x = x, resultando em x + 6.',
+                  ),
+                  SizedBox(height: AppSpacing.md),
+                  LessonTakeawaysCard(
+                    items: [
+                      'Combine apenas termos com a mesma parte literal.',
+                      'Respeite a ordem das operações.',
+                      'Distribua também os sinais negativos.',
+                      'Uma transformação correta preserva o valor da expressão.',
+                    ],
+                  ),
+                  SizedBox(height: AppSpacing.lg),
+                  Text(
+                    'A álgebra bem organizada reduz erros e libera sua atenção para compreender as ideias do Cálculo.',
+                    textAlign: TextAlign.center,
+                    style: AppTypography.bodyMedium,
+                  ),
+                ],
               ),
-              PrimaryButton(
-                text: 'Continuar',
-                icon: Icons.arrow_forward_rounded,
-                onPressed: () {
-                  _goToMiniChallenge(context);
-                },
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.screenHorizontal,
+                AppSpacing.xs,
+                AppSpacing.screenHorizontal,
+                AppSpacing.screenBottom,
               ),
-              const SizedBox(height: AppSpacing.screenBottom),
-            ],
-          ),
+              child: PrimaryButton(
+                text: 'Fazer desafio rápido',
+                icon: Icons.bolt_rounded,
+                onPressed: () => _goToMiniChallenge(context),
+              ),
+            ),
+          ],
         ),
       ),
       bottomNavigationBar: AppBottomNavigationBar(
         currentIndex: 1,
-        onTap: (index) {
-          _onMenuTap(context, index);
-        },
+        onTap: (index) => _onMenuTap(context, index),
       ),
     );
   }
