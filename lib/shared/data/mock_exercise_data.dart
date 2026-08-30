@@ -5,6 +5,8 @@ class ExerciseOptionData {
   const ExerciseOptionData({required this.id, required this.text});
 }
 
+enum ExerciseDifficulty { foundation, intermediate, challenge }
+
 class ExerciseData {
   final String id;
   final String title;
@@ -12,6 +14,9 @@ class ExerciseData {
   final List<ExerciseOptionData> options;
   final String correctOptionId;
   final String explanation;
+  final String? contentLessonId;
+  final String? skill;
+  final ExerciseDifficulty difficulty;
 
   const ExerciseData({
     required this.id,
@@ -20,6 +25,9 @@ class ExerciseData {
     required this.options,
     required this.correctOptionId,
     required this.explanation,
+    this.contentLessonId,
+    this.skill,
+    this.difficulty = ExerciseDifficulty.foundation,
   });
 }
 
