@@ -228,7 +228,7 @@ class _LimitsCourseScreenState extends State<LimitsCourseScreen> {
                           canPractice
                               ? 'Resolva uma sessão de exercícios e descubra '
                                   'quais pontos ainda precisam de revisão.'
-                              : 'Conclua as sete aulas para liberar os '
+                              : 'Conclua as oito aulas para liberar os '
                                   'exercícios de síntese.',
                           textAlign: TextAlign.center,
                           style: AppTypography.bodyMedium,
