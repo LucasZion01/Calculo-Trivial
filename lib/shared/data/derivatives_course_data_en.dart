@@ -1,0 +1,471 @@
+import 'package:calcquest/shared/domain/course_lesson_data.dart';
+
+const List<CourseLessonData> derivativesCourseLessonsEn = [
+  CourseLessonData(
+    id: 'derivadas-01-significado',
+    topicId: 'derivadas',
+    trailTitle: 'Derivatives • Unit 1',
+    eyebrow: 'Lesson 1 of 8 • Core idea',
+    title: 'Rate of change and tangent line',
+    description: 'Understand the derivative as instantaneous velocity and local slope.',
+    duration: '≈ 5 min',
+    objective: 'interpret the derivative geometrically and in real situations',
+    symbol: "f'",
+    sections: [
+      LessonSectionData(
+        number: '1',
+        title: 'From average to instant',
+        blocks: [
+          ConceptBlockData(
+            visual: LessonVisual.engineering,
+            title: 'Average rate of change',
+            content: 'Between x=a and x=b, the average rate is [f(b)−f(a)]/(b−a). It measures how much the output changes, on average, for each unit added to the input.',
+            emphasis: 'For position versus time, this ratio represents average velocity.',
+          ),
+          ConceptBlockData(
+            visual: LessonVisual.graph,
+            title: 'Approaching the secant line',
+            content: 'As b approaches a, the line crossing the graph at two points approaches the tangent line. The limit of the secant slopes is the derivative f′(a).',
+            tone: LearningCardTone.information,
+          ),
+        ],
+      ),
+      LessonSectionData(
+        number: '2',
+        title: 'Read the limit definition',
+        blocks: [
+          ConceptBlockData(
+            visual: LessonVisual.notation,
+            title: 'f′(a)=lim h→0 [f(a+h)−f(a)]/h',
+            content: 'The increment h separates two points. The numerator measures the change in the function and the denominator measures the change in the input. Letting h→0 produces an instantaneous rate.',
+          ),
+          WorkedExampleBlockData(
+            title: 'Derivative of x² at a point a',
+            problem: 'f(x)=x²',
+            steps: [
+              'Substitute into the definition: [(a+h)²−a²]/h.',
+              'Expand: [a²+2ah+h²−a²]/h.',
+              'Simplify h: 2a+h.',
+              'Let h→0 and obtain 2a.',
+            ],
+            result: 'f′(a)=2a.',
+            interpretation: 'The slope changes with the point: the larger a is, the steeper the parabola becomes.',
+          ),
+        ],
+      ),
+    ],
+    check: LessonCheckData(
+      question: 'Geometrically, what does f′(a) represent?',
+      choices: ['The slope of the tangent at a', 'The area up to a', 'The maximum value of f'],
+      correctIndex: 0,
+      explanation: 'The derivative is the limit of the slopes of secant lines as the points approach each other.',
+    ),
+    takeaways: [
+      'Average rate compares two points; the derivative describes an instant.',
+      'The derivative is defined by a limit.',
+      'Geometrically, f′(a) is the slope of the tangent line.',
+    ],
+    closing: 'In the next lesson, differentiation rules will make these calculations faster.',
+  ),
+  CourseLessonData(
+    id: 'derivadas-02-regras-basicas',
+    topicId: 'derivadas',
+    trailTitle: 'Derivatives • Unit 1',
+    eyebrow: 'Lesson 2 of 8 • Basic rules',
+    title: 'Constants, powers, and polynomials',
+    description: 'Differentiate term by term and work with integer and fractional exponents.',
+    duration: '≈ 5 min',
+    objective: 'apply linearity and the power rule safely',
+    symbol: 'xⁿ',
+    sections: [
+      LessonSectionData(
+        number: '1',
+        title: 'Build the essential toolkit',
+        blocks: [
+          ConceptBlockData(
+            visual: LessonVisual.calculate,
+            title: 'Three fundamental rules',
+            content: 'The derivative of a constant is 0. The derivative of x is 1. For any admissible power, d/dx(xⁿ)=n·xⁿ⁻¹: the exponent comes down as a multiplier and decreases by one.',
+            emphasis: 'A constant does not vary, so its rate of change is zero.',
+          ),
+          ConceptBlockData(
+            visual: LessonVisual.transform,
+            title: 'Rewrite before differentiating',
+            content: 'Roots and fractions can be written as powers: √x=x¹ᐟ² and 1/x=x⁻¹. This transformation lets you use the same power rule.',
+            tone: LearningCardTone.information,
+          ),
+        ],
+      ),
+      LessonSectionData(
+        number: '2',
+        title: 'Differentiate term by term',
+        blocks: [
+          WorkedExampleBlockData(
+            title: 'Complete polynomial',
+            problem: 'f(x)=5x³−2x²+7x−4',
+            steps: ['d/dx(5x³)=15x².', 'd/dx(−2x²)=−4x.', 'd/dx(7x)=7.', 'd/dx(−4)=0.'],
+            result: 'f′(x)=15x²−4x+7.',
+            interpretation: 'The sum of the rates of each term gives the rate of the whole function.',
+          ),
+          WorkedExampleBlockData(
+            title: 'Fractional exponent',
+            problem: 'f(x)=√x=x¹ᐟ², with x>0',
+            steps: ['Bring the exponent 1/2 down.', 'Subtract 1: 1/2−1=−1/2.', 'Write (1/2)x⁻¹ᐟ².'],
+            result: 'f′(x)=1/(2√x).',
+            interpretation: 'The domain of the derivative may be smaller than the domain of the original function.',
+          ),
+        ],
+      ),
+    ],
+    check: LessonCheckData(
+      question: 'What is the derivative of 3x⁴−5?',
+      choices: ['12x³', '12x³−5', '3x³'],
+      correctIndex: 0,
+      explanation: 'The power rule gives 3·4x³=12x³ and the constant disappears.',
+    ),
+    takeaways: [
+      'Constants have derivative zero and d/dx(x)=1.',
+      'In the power rule, multiply by the exponent and reduce it by one.',
+      'Rewrite roots and reciprocals as powers.',
+    ],
+    closing: 'Now you will learn to differentiate products and quotients without expanding everything.',
+  ),
+  CourseLessonData(
+    id: 'derivadas-03-produto-quociente',
+    topicId: 'derivadas',
+    trailTitle: 'Derivatives • Unit 2',
+    eyebrow: 'Lesson 3 of 8 • Combinations',
+    title: 'Product and quotient rules',
+    description: 'Combine functions while preserving every required term.',
+    duration: '≈ 5 min',
+    objective: 'apply and check the product and quotient rules',
+    symbol: 'u·v',
+    sections: [
+      LessonSectionData(
+        number: '1',
+        title: 'Do not differentiate factors independently',
+        blocks: [
+          ConceptBlockData(
+            visual: LessonVisual.notation,
+            title: 'Product: (uv)′=u′v+uv′',
+            content: 'Differentiate the first factor and keep the second; then keep the first and differentiate the second. Add the two results.',
+            emphasis: 'In general, the derivative of a product is not u′v′.',
+          ),
+          ConceptBlockData(
+            visual: LessonVisual.notation,
+            title: 'Quotient: (u/v)′=(u′v−uv′)/v²',
+            content: 'Multiply the derivative of the numerator by the denominator, subtract the numerator times the derivative of the denominator, and divide by the square of the denominator.',
+            tone: LearningCardTone.information,
+          ),
+        ],
+      ),
+      LessonSectionData(
+        number: '2',
+        title: 'Choose between simplifying and applying the rule',
+        blocks: [
+          WorkedExampleBlockData(
+            title: 'Product rule',
+            problem: 'f(x)=x²(x+1)',
+            steps: ['Let u=x² and v=x+1.', 'Compute u′=2x and v′=1.', 'Apply u′v+uv′=2x(x+1)+x².', 'Simplify: 3x²+2x.'],
+            result: 'f′(x)=3x²+2x.',
+            interpretation: 'Expanding first would also work; both strategies must agree.',
+          ),
+          WorkedExampleBlockData(
+            title: 'Simplify a quotient',
+            problem: 'f(x)=(x²+1)/x, x≠0',
+            steps: ['Split the terms: f(x)=x+1/x.', 'Rewrite 1/x=x⁻¹.', 'Differentiate: 1−x⁻².'],
+            result: 'f′(x)=1−1/x².',
+            interpretation: 'Simplifying first can reduce errors, as long as the domain is preserved.',
+          ),
+        ],
+      ),
+    ],
+    check: LessonCheckData(
+      question: 'Which structure starts the derivative of u(x)v(x)?',
+      choices: ['u′v+uv′', 'u′v′', 'u′/v′'],
+      correctIndex: 0,
+      explanation: 'Each term differentiates one factor and keeps the other.',
+    ),
+    takeaways: ['The product rule produces two terms.', 'Order and the subtraction sign matter in the quotient rule.', 'Simplify first when it reduces complexity.'],
+    closing: 'The next lesson deals with functions placed inside other functions.',
+  ),
+  CourseLessonData(
+    id: 'derivadas-04-cadeia',
+    topicId: 'derivadas',
+    trailTitle: 'Derivatives • Unit 2',
+    eyebrow: 'Lesson 4 of 8 • Composition',
+    title: 'The chain rule in layers',
+    description: 'Differentiate composite functions from the outer layer to the inner one.',
+    duration: '≈ 5 min',
+    objective: 'identify outer and inner functions and apply the chain rule',
+    symbol: 'f∘g',
+    sections: [
+      LessonSectionData(
+        number: '1',
+        title: 'See the layers',
+        blocks: [
+          ConceptBlockData(
+            visual: LessonVisual.transform,
+            title: 'The outer function receives the inner one',
+            content: 'For y=[g(x)]ⁿ, the power is the outer layer and g(x) is the inner layer. Differentiate the outer layer while keeping the inner expression and multiply by g′(x).',
+            emphasis: 'Chain rule: d/dx f(g(x))=f′(g(x))·g′(x).',
+          ),
+          ConceptBlockData(
+            visual: LessonVisual.warning,
+            title: 'The factor that is often forgotten',
+            content: 'Differentiating only the outer layer gives an incomplete answer. Always ask: “what is taking the place of x?” and differentiate that expression too.',
+            tone: LearningCardTone.warning,
+          ),
+        ],
+      ),
+      LessonSectionData(
+        number: '2',
+        title: 'Differentiate from the outside in',
+        blocks: [
+          WorkedExampleBlockData(
+            title: 'Power of a linear function',
+            problem: 'f(x)=(2x+1)³',
+            steps: ['Outer layer: u³. Its derivative is 3u².', 'Keep u=2x+1: 3(2x+1)².', 'Differentiate the inner layer: d/dx(2x+1)=2.', 'Multiply the factors.'],
+            result: 'f′(x)=6(2x+1)².',
+            interpretation: 'The factor 2 records how fast the inner expression changes.',
+          ),
+        ],
+      ),
+    ],
+    check: LessonCheckData(
+      question: 'What is the derivative of (3x−2)⁴?',
+      choices: ['12(3x−2)³', '4(3x−2)³', '12(3x−2)⁴'],
+      correctIndex: 0,
+      explanation: 'The outer layer gives 4(3x−2)³ and the inner layer gives the factor 3.',
+    ),
+    takeaways: ['Explicitly identify the outer and inner functions.', 'Differentiate the outer function while keeping the inner expression.', 'Multiply by the derivative of each inner layer.'],
+    closing: 'Next, you will expand your toolkit with trigonometric, exponential, and logarithmic functions.',
+  ),
+  CourseLessonData(
+    id: 'derivadas-05-elementares',
+    topicId: 'derivadas',
+    trailTitle: 'Derivatives • Unit 2',
+    eyebrow: 'Lesson 5 of 8 • Elementary functions',
+    title: 'Sine, cosine, exponential, and logarithm',
+    description: 'Learn the most common elementary derivatives with meaning.',
+    duration: '≈ 5 min',
+    objective: 'differentiate trigonometric, exponential, and logarithmic functions',
+    symbol: 'eˣ',
+    sections: [
+      LessonSectionData(
+        number: '1',
+        title: 'Organize the toolkit',
+        blocks: [
+          ConceptBlockData(
+            visual: LessonVisual.checklist,
+            title: 'Four fundamental pairs',
+            content: 'd/dx[sin(x)]=cos(x); d/dx[cos(x)]=−sin(x); d/dx[eˣ]=eˣ; d/dx[ln(x)]=1/x for x>0.',
+            emphasis: 'The negative sign belongs to the derivative of cosine, not sine.',
+          ),
+          ConceptBlockData(
+            visual: LessonVisual.graph,
+            title: 'Why is eˣ special?',
+            content: 'The base e is chosen so that the instantaneous growth rate of eˣ equals the value of the function itself. This simplifies growth and decay models.',
+            tone: LearningCardTone.information,
+          ),
+        ],
+      ),
+      LessonSectionData(
+        number: '2',
+        title: 'Combine with the chain rule',
+        blocks: [
+          WorkedExampleBlockData(
+            title: 'Sine of a function',
+            problem: 'f(x)=sin(2x)',
+            steps: ['The outer derivative of sin(u) is cos(u).', 'Keep u=2x: cos(2x).', 'Multiply by the inner derivative, which is 2.'],
+            result: 'f′(x)=2cos(2x).',
+            interpretation: 'An inner oscillation that is twice as fast produces a factor 2 in the rate.',
+          ),
+          WorkedExampleBlockData(
+            title: 'Composite logarithm',
+            problem: 'g(x)=ln(x²+1)',
+            steps: ['The outer derivative of ln(u) is 1/u.', 'Use u=x²+1 in the denominator.', 'Multiply by u′=2x.'],
+            result: 'g′(x)=2x/(x²+1).',
+            interpretation: 'The chain rule connects the logarithm rate to the rate of the inner expression.',
+          ),
+        ],
+      ),
+    ],
+    check: LessonCheckData(
+      question: 'What is d/dx[cos(x)]?',
+      choices: ['−sin(x)', 'sin(x)', '−cos(x)'],
+      correctIndex: 0,
+      explanation: 'The rate of cosine follows sine with a negative sign.',
+    ),
+    takeaways: ['The derivative of sin(x) is cos(x).', 'The derivative of cos(x) is −sin(x).', 'eˣ remains unchanged and ln(x) gives 1/x.', 'For composite arguments, also apply the chain rule.'],
+    closing: 'In the next lesson, the derivative will be converted into an equation of the tangent line.',
+  ),
+  CourseLessonData(
+    id: 'derivadas-06-tangente',
+    topicId: 'derivadas',
+    trailTitle: 'Derivatives • Unit 3',
+    eyebrow: 'Lesson 6 of 8 • Local geometry',
+    title: 'Slope and tangent-line equation',
+    description: 'Use f′(a) to build the line that best approximates the graph locally.',
+    duration: '≈ 5 min',
+    objective: 'calculate the slope and equation of a tangent line',
+    symbol: 'y=mx+b',
+    sections: [
+      LessonSectionData(
+        number: '1',
+        title: 'Find the point and slope',
+        blocks: [
+          ConceptBlockData(
+            visual: LessonVisual.graph,
+            title: 'Point-slope form',
+            content: 'At x=a, the slope is m=f′(a) and the point on the graph is (a,f(a)). Substitute into y−f(a)=f′(a)(x−a).',
+            emphasis: 'Computing only f′(a) gives the slope, not the complete line equation.',
+          ),
+          ConceptBlockData(
+            visual: LessonVisual.engineering,
+            title: 'Linear approximation',
+            content: 'Near a, the function can be approximated by L(x)=f(a)+f′(a)(x−a). This linearization simplifies estimates and the analysis of small errors.',
+            tone: LearningCardTone.success,
+          ),
+        ],
+      ),
+      LessonSectionData(
+        number: '2',
+        title: 'Build the line',
+        blocks: [
+          WorkedExampleBlockData(
+            title: 'Tangent to a parabola',
+            problem: 'f(x)=x² at the point (1,1)',
+            steps: ['Differentiate: f′(x)=2x.', 'Evaluate the slope: f′(1)=2.', 'Use y−1=2(x−1).', 'Simplify the equation.'],
+            result: 'y=2x−1.',
+            interpretation: 'The line and the parabola share the point and the instantaneous direction at x=1.',
+          ),
+        ],
+      ),
+    ],
+    check: LessonCheckData(
+      question: 'For f(x)=x², what is the slope at x=3?',
+      choices: ['6', '3', '9'],
+      correctIndex: 0,
+      explanation: 'Since f′(x)=2x, we have f′(3)=6.',
+    ),
+    takeaways: ['f′(a) gives the slope of the tangent.', 'The point of tangency is (a,f(a)).', 'Use y−f(a)=f′(a)(x−a).', 'The tangent line approximates the function locally.'],
+    closing: 'Next, you will study when a derivative exists and what its zeros reveal.',
+  ),
+  CourseLessonData(
+    id: 'derivadas-07-derivabilidade',
+    topicId: 'derivadas',
+    trailTitle: 'Derivatives • Unit 3',
+    eyebrow: 'Lesson 7 of 8 • Existence and analysis',
+    title: 'Differentiability and critical points',
+    description: 'Recognize corners, one-sided derivatives, and candidates for extrema.',
+    duration: '≈ 5 min',
+    objective: 'analyze existence of the derivative and locate critical points',
+    symbol: 'f′=0',
+    sections: [
+      LessonSectionData(
+        number: '1',
+        title: 'Differentiable implies continuous',
+        blocks: [
+          ConceptBlockData(
+            visual: LessonVisual.warning,
+            title: 'The converse is false',
+            content: 'If f is differentiable at a, then it is continuous at a. However, a function may be continuous and not differentiable: corners, cusps, and vertical tangents prevent a unique finite slope.',
+            emphasis: 'Continuity is necessary for differentiability, but it is not sufficient.',
+            tone: LearningCardTone.warning,
+          ),
+          ConceptBlockData(
+            visual: LessonVisual.compare,
+            title: 'One-sided derivatives',
+            content: 'The derivative exists only when the rates from the left and right exist and agree. For |x| at zero, they are −1 and 1, so there is a corner.',
+          ),
+        ],
+      ),
+      LessonSectionData(
+        number: '2',
+        title: 'Find critical points',
+        blocks: [
+          ConceptBlockData(
+            visual: LessonVisual.checklist,
+            title: 'Candidates for change',
+            content: 'A number c in the domain is critical when f′(c)=0 or when f′(c) does not exist. Critical points are candidates for maxima and minima, but they still need analysis.',
+            emphasis: 'A zero derivative does not automatically guarantee a maximum or minimum.',
+          ),
+          WorkedExampleBlockData(
+            title: 'Derivative equal to zero',
+            problem: 'f(x)=x²−4x',
+            steps: ['Differentiate: f′(x)=2x−4.', 'Set f′(x)=0.', 'Solve 2x−4=0.'],
+            result: 'x=2 is a critical point.',
+            interpretation: 'A horizontal tangent indicates a candidate for a change in increasing/decreasing behavior.',
+          ),
+        ],
+      ),
+    ],
+    check: LessonCheckData(
+      question: 'Is a continuous function always differentiable?',
+      choices: ['No', 'Yes', 'Only if f′=0'],
+      correctIndex: 0,
+      explanation: '|x| is continuous at zero, but its one-sided derivatives are different.',
+    ),
+    takeaways: ['Differentiability guarantees continuity at the point.', 'Continuity alone does not guarantee differentiability.', 'Corners can be detected by different one-sided derivatives.', 'Critical points occur when f′=0 or does not exist.'],
+    closing: 'The final lesson applies derivatives to motion and interpretation of units.',
+  ),
+  CourseLessonData(
+    id: 'derivadas-08-aplicacoes',
+    topicId: 'derivadas',
+    trailTitle: 'Derivatives • Unit 3',
+    eyebrow: 'Lesson 8 of 8 • Applications',
+    title: 'Motion, units, and modeling',
+    description: 'Interpret derivatives in physical problems and organize the complete method.',
+    duration: '≈ 5 min',
+    objective: 'model instantaneous rates and interpret their results',
+    symbol: 'v(t)',
+    sections: [
+      LessonSectionData(
+        number: '1',
+        title: 'The derivative carries units',
+        blocks: [
+          ConceptBlockData(
+            visual: LessonVisual.engineering,
+            title: 'Position, velocity, and acceleration',
+            content: 'If s(t) measures position in meters and t is in seconds, v(t)=s′(t) is measured in m/s. Differentiating again gives a(t)=v′(t)=s″(t), in m/s².',
+            emphasis: 'Units help verify whether the answer represents the quantity being asked for.',
+            tone: LearningCardTone.success,
+          ),
+          ConceptBlockData(
+            visual: LessonVisual.checklist,
+            title: 'Modeling workflow',
+            content: '1) Identify input, output, and units. 2) Differentiate the model. 3) Evaluate at the requested instant. 4) Include the unit. 5) Interpret sign and magnitude in context.',
+          ),
+        ],
+      ),
+      LessonSectionData(
+        number: '2',
+        title: 'Calculate and interpret',
+        blocks: [
+          WorkedExampleBlockData(
+            title: 'Instantaneous velocity',
+            problem: 's(t)=t²+3t meters; find v(2)',
+            steps: ['Differentiate position: v(t)=s′(t)=2t+3.', 'Substitute t=2: v(2)=2·2+3.', 'Calculate and attach the velocity unit.'],
+            result: 'v(2)=7 m/s.',
+            interpretation: 'At 2 seconds, the position is increasing at a rate of 7 meters per second.',
+          ),
+          ConceptBlockData(
+            visual: LessonVisual.idea,
+            title: 'Derivative beyond motion',
+            content: 'In Engineering, derivatives describe current as rate of charge, flow as rate of volume, deformation along a component, and sensitivity of an output to input changes.',
+            tone: LearningCardTone.information,
+          ),
+        ],
+      ),
+    ],
+    check: LessonCheckData(
+      question: 'If s is measured in meters and t in seconds, what is the unit of s′(t)?',
+      choices: ['m/s', 'm·s', 'm/s²'],
+      correctIndex: 0,
+      explanation: 'The derivative divides the change in position by the change in time.',
+    ),
+    takeaways: ['A derivative must be interpreted together with its units.', 'Velocity is the derivative of position; acceleration is the derivative of velocity.', 'Evaluating the derivative at a point gives an instantaneous rate.', 'The method ends with interpretation, not just algebra.'],
+    closing: 'You completed the foundations of Derivatives. Now practice recognition, calculation, and interpretation.',
+  ),
+];
