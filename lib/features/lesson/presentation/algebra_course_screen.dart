@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:calcquest/shared/data/algebra_course_data.dart';
+import 'package:calcquest/shared/data/localized_algebra_course_content.dart';
 import 'package:calcquest/shared/domain/course_lesson_data.dart';
 import 'package:calcquest/shared/state/app_progress.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
@@ -21,15 +21,19 @@ class AlgebraCourseScreen extends StatefulWidget {
 }
 
 class _AlgebraCourseScreenState extends State<AlgebraCourseScreen> {
-  int get _completedCount => algebraCourseLessons
+  bool get _isEnglish => Localizations.localeOf(context).languageCode == 'en';
+
+  List<CourseLessonData> get _lessons =>
+      localizedAlgebraCourseLessons(Localizations.localeOf(context));
+
+  int get _completedCount => _lessons
       .where((lesson) => AppProgress.isContentLessonCompleted(lesson.id))
       .length;
 
   bool _isUnlocked(int index) {
+    final lessons = _lessons;
     return index == 0 ||
-        AppProgress.isContentLessonCompleted(
-          algebraCourseLessons[index - 1].id,
-        );
+        AppProgress.isContentLessonCompleted(lessons[index - 1].id);
   }
 
   Future<void> _openLesson(int index) async {
@@ -45,13 +49,16 @@ class _AlgebraCourseScreenState extends State<AlgebraCourseScreen> {
   }
 
   CourseLessonScreen _buildLessonScreen(int index) {
-    final lesson = algebraCourseLessons[index];
-    final isLast = index == algebraCourseLessons.length - 1;
+    final lessons = _lessons;
+    final lesson = lessons[index];
+    final isLast = index == lessons.length - 1;
 
     return CourseLessonScreen(
       lesson: lesson,
       onComplete: () => AppProgress.completeContentLesson(lesson.id),
-      actionLabel: isLast ? 'Concluir aula' : 'Concluir e continuar',
+      actionLabel: isLast
+          ? (_isEnglish ? 'Complete lesson' : 'Concluir aula')
+          : (_isEnglish ? 'Complete and continue' : 'Concluir e continuar'),
       nextDestination: isLast
           ? null
           : (_) => _buildLessonScreen(index + 1),
@@ -66,8 +73,9 @@ class _AlgebraCourseScreenState extends State<AlgebraCourseScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final lessons = _lessons;
     final completedCount = _completedCount;
-    final total = algebraCourseLessons.length;
+    final total = lessons.length;
     final progress = completedCount / total;
     final canPractice = completedCount == total;
 
@@ -86,14 +94,14 @@ class _AlgebraCourseScreenState extends State<AlgebraCourseScreen> {
               child: Row(
                 children: [
                   IconButton(
-                    tooltip: 'Voltar',
+                    tooltip: _isEnglish ? 'Back' : 'Voltar',
                     onPressed: () => Navigator.of(context).maybePop(),
                     icon: const Icon(Icons.arrow_back_rounded),
                   ),
                   const SizedBox(width: AppSpacing.xs),
                   Expanded(
                     child: Text(
-                      'Álgebra Fundamental',
+                      _isEnglish ? 'Fundamental Algebra' : 'Álgebra Fundamental',
                       style: AppTypography.titleMedium,
                     ),
                   ),
@@ -128,22 +136,29 @@ class _AlgebraCourseScreenState extends State<AlgebraCourseScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'BASE PARA TODO O CÁLCULO',
+                          _isEnglish
+                              ? 'FOUNDATION FOR ALL CALCULUS'
+                              : 'BASE PARA TODO O CÁLCULO',
                           style: AppTypography.labelSmall.copyWith(
                             color: AppColors.secondaryLight,
                           ),
                         ),
                         const SizedBox(height: AppSpacing.xs),
                         Text(
-                          'Transforme símbolos em estratégia',
+                          _isEnglish
+                              ? 'Turn symbols into strategy'
+                              : 'Transforme símbolos em estratégia',
                           style: AppTypography.headingMedium.copyWith(
                             color: AppColors.white,
                           ),
                         ),
                         const SizedBox(height: AppSpacing.sm),
                         Text(
-                          'Variáveis, simplificação, distributiva, potências, '
-                          'produtos notáveis, fatoração e frações algébricas.',
+                          _isEnglish
+                              ? 'Variables, simplification, distribution, powers, '
+                                  'special products, factoring, and algebraic fractions.'
+                              : 'Variáveis, simplificação, distributiva, potências, '
+                                  'produtos notáveis, fatoração e frações algébricas.',
                           style: AppTypography.bodyMedium.copyWith(
                             color: AppColors.primaryLight,
                           ),
@@ -158,7 +173,9 @@ class _AlgebraCourseScreenState extends State<AlgebraCourseScreen> {
                         ),
                         const SizedBox(height: AppSpacing.sm),
                         Text(
-                          '$completedCount de $total aulas concluídas',
+                          _isEnglish
+                              ? '$completedCount of $total lessons completed'
+                              : '$completedCount de $total aulas concluídas',
                           style: AppTypography.labelMedium.copyWith(
                             color: AppColors.white,
                           ),
@@ -167,24 +184,29 @@ class _AlgebraCourseScreenState extends State<AlgebraCourseScreen> {
                     ),
                   ),
                   const SizedBox(height: AppSpacing.xl),
-                  Text('Sua jornada', style: AppTypography.titleLarge),
+                  Text(
+                    _isEnglish ? 'Your journey' : 'Sua jornada',
+                    style: AppTypography.titleLarge,
+                  ),
                   const SizedBox(height: AppSpacing.xs),
                   Text(
-                    'A Álgebra é a oficina do Cálculo. Cada aula ensina uma '
-                    'ferramenta que você vai usar em limites, funções e derivadas.',
+                    _isEnglish
+                        ? 'Algebra is the workshop of Calculus. Each lesson teaches '
+                            'a tool you will use in limits, functions, and derivatives.'
+                        : 'A Álgebra é a oficina do Cálculo. Cada aula ensina uma '
+                            'ferramenta que você vai usar em limites, funções e derivadas.',
                     style: AppTypography.bodyMedium,
                   ),
                   const SizedBox(height: AppSpacing.md),
-                  for (var index = 0;
-                      index < algebraCourseLessons.length;
-                      index++) ...[
+                  for (var index = 0; index < lessons.length; index++) ...[
                     _LessonCard(
                       number: index + 1,
-                      lesson: algebraCourseLessons[index],
+                      lesson: lessons[index],
                       isCompleted: AppProgress.isContentLessonCompleted(
-                        algebraCourseLessons[index].id,
+                        lessons[index].id,
                       ),
                       isUnlocked: _isUnlocked(index),
+                      isEnglish: _isEnglish,
                       onTap: () => _openLesson(index),
                     ),
                     const SizedBox(height: AppSpacing.md),
@@ -219,23 +241,35 @@ class _AlgebraCourseScreenState extends State<AlgebraCourseScreen> {
                         const SizedBox(height: AppSpacing.sm),
                         Text(
                           canPractice
-                              ? 'Pronto para praticar'
-                              : 'Prática final bloqueada',
+                              ? (_isEnglish
+                                    ? 'Ready to practice'
+                                    : 'Pronto para praticar')
+                              : (_isEnglish
+                                    ? 'Final practice locked'
+                                    : 'Prática final bloqueada'),
                           style: AppTypography.titleMedium,
                         ),
                         const SizedBox(height: AppSpacing.xs),
                         Text(
                           canPractice
-                              ? 'Resolva uma sessão de exercícios e descubra '
-                                  'quais pontos ainda precisam de revisão.'
-                              : 'Conclua as oito aulas para liberar a prática '
-                                  'final de Álgebra Fundamental.',
+                              ? (_isEnglish
+                                    ? 'Complete an exercise session and identify '
+                                        'which points still need review.'
+                                    : 'Resolva uma sessão de exercícios e descubra '
+                                        'quais pontos ainda precisam de revisão.')
+                              : (_isEnglish
+                                    ? 'Complete all eight lessons to unlock the '
+                                        'final Fundamental Algebra practice.'
+                                    : 'Conclua as oito aulas para liberar a prática '
+                                        'final de Álgebra Fundamental.'),
                           textAlign: TextAlign.center,
                           style: AppTypography.bodyMedium,
                         ),
                         const SizedBox(height: AppSpacing.md),
                         PrimaryButton(
-                          text: 'Iniciar exercícios',
+                          text: _isEnglish
+                              ? 'Start exercises'
+                              : 'Iniciar exercícios',
                           icon: Icons.play_arrow_rounded,
                           onPressed: canPractice ? _openExercises : null,
                         ),
@@ -257,6 +291,7 @@ class _LessonCard extends StatelessWidget {
   final CourseLessonData lesson;
   final bool isCompleted;
   final bool isUnlocked;
+  final bool isEnglish;
   final VoidCallback onTap;
 
   const _LessonCard({
@@ -264,19 +299,22 @@ class _LessonCard extends StatelessWidget {
     required this.lesson,
     required this.isCompleted,
     required this.isUnlocked,
+    required this.isEnglish,
     required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     final status = isCompleted
-        ? 'Concluída'
+        ? (isEnglish ? 'Completed' : 'Concluída')
         : isUnlocked
-        ? 'Disponível'
-        : 'Bloqueada';
+        ? (isEnglish ? 'Available' : 'Disponível')
+        : (isEnglish ? 'Locked' : 'Bloqueada');
 
     return MathCard(
-      title: 'Aula $number — ${lesson.title}',
+      title: isEnglish
+          ? 'Lesson $number — ${lesson.title}'
+          : 'Aula $number — ${lesson.title}',
       subtitle: '${lesson.duration} • ${lesson.description}',
       symbol: lesson.symbol,
       status: status,
