@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:calcquest/l10n/app_localizations.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
 
 import '../../../shared/widgets/app_bottom_navigation_bar.dart';
@@ -57,10 +58,12 @@ class _MiniChallengeScreenState extends State<MiniChallengeScreen> {
   }
 
   void _confirmAnswer() {
+    final l10n = AppLocalizations.of(context)!;
+
     if (selectedAnswer == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Escolha uma alternativa antes de responder.'),
+        SnackBar(
+          content: Text(l10n.miniChallengeChooseAnswer),
         ),
       );
       return;
@@ -74,12 +77,14 @@ class _MiniChallengeScreenState extends State<MiniChallengeScreen> {
     }
 
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Resposta incorreta. Tente novamente.')),
+      SnackBar(content: Text(l10n.miniChallengeIncorrect)),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
@@ -88,27 +93,30 @@ class _MiniChallengeScreenState extends State<MiniChallengeScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Mini Desafio',
-                style: TextStyle(
+              Text(
+                l10n.miniChallengeTitle,
+                style: const TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w500,
                   color: AppColors.primary,
                 ),
               ),
               const SizedBox(height: 10),
-              const Text(
-                'Teste rápido',
-                style: TextStyle(
+              Text(
+                l10n.miniChallengeQuickTest,
+                style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w600,
                   color: AppColors.textPrimary,
                 ),
               ),
               const SizedBox(height: 8),
-              const Text(
-                'Escolha a resposta correta para liberar os próximos exercícios.',
-                style: TextStyle(fontSize: 14, color: AppColors.textSecondary),
+              Text(
+                l10n.miniChallengeSubtitle,
+                style: const TextStyle(
+                  fontSize: 14,
+                  color: AppColors.textSecondary,
+                ),
               ),
               const SizedBox(height: 24),
               Container(
@@ -123,9 +131,9 @@ class _MiniChallengeScreenState extends State<MiniChallengeScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Qual é o resultado de 4x + 2x?',
-                      style: TextStyle(
+                    Text(
+                      l10n.miniChallengeQuestion,
+                      style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
                         color: AppColors.textPrimary,
@@ -159,12 +167,15 @@ class _MiniChallengeScreenState extends State<MiniChallengeScreen> {
                 ),
               ),
               const SizedBox(height: 24),
-              PrimaryButton(text: 'Responder', onPressed: _confirmAnswer),
+              PrimaryButton(
+                text: l10n.miniChallengeRespond,
+                onPressed: _confirmAnswer,
+              ),
               const SizedBox(height: 12),
-              const Center(
+              Center(
                 child: Text(
-                  'Você ganha XP ao acertar o desafio.',
-                  style: TextStyle(
+                  l10n.miniChallengeXpHint,
+                  style: const TextStyle(
                     fontSize: 12,
                     color: AppColors.textSecondary,
                   ),
