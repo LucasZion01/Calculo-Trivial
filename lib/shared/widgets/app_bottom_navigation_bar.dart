@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:calcquest/l10n/app_localizations.dart';
 import 'package:calcquest/shared/services/premium_access_guard.dart';
 import 'package:calcquest/shared/services/revenuecat_service.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
@@ -34,6 +35,8 @@ class AppBottomNavigationBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Container(
       decoration: const BoxDecoration(
         color: AppColors.navigationBackground,
@@ -58,26 +61,41 @@ class AppBottomNavigationBar extends StatelessWidget {
           onTap: (index) {
             _handleTap(context, index);
           },
-          items: const [
+          items: [
             BottomNavigationBarItem(
-              icon: Icon(Icons.home_outlined, semanticLabel: 'Início'),
-              activeIcon: Icon(Icons.home_rounded, semanticLabel: 'Início'),
-              label: 'Início',
+              icon: Icon(Icons.home_outlined, semanticLabel: l10n.home),
+              activeIcon: Icon(Icons.home_rounded, semanticLabel: l10n.home),
+              label: l10n.home,
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.map_outlined, semanticLabel: 'Trilha'),
-              activeIcon: Icon(Icons.map_rounded, semanticLabel: 'Trilha'),
-              label: 'Trilha',
+              icon: Icon(Icons.map_outlined, semanticLabel: l10n.learningPath),
+              activeIcon: Icon(
+                Icons.map_rounded,
+                semanticLabel: l10n.learningPath,
+              ),
+              label: l10n.learningPath,
             ),
             BottomNavigationBarItem(
-              icon: _PremiumStatisticsIcon(isActive: false),
-              activeIcon: _PremiumStatisticsIcon(isActive: true),
-              label: 'Estatísticas',
+              icon: _PremiumStatisticsIcon(
+                isActive: false,
+                semanticLabel: l10n.statistics,
+              ),
+              activeIcon: _PremiumStatisticsIcon(
+                isActive: true,
+                semanticLabel: l10n.statistics,
+              ),
+              label: l10n.statistics,
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.person_outline_rounded, semanticLabel: 'Perfil'),
-              activeIcon: Icon(Icons.person_rounded, semanticLabel: 'Perfil'),
-              label: 'Perfil',
+              icon: Icon(
+                Icons.person_outline_rounded,
+                semanticLabel: l10n.profile,
+              ),
+              activeIcon: Icon(
+                Icons.person_rounded,
+                semanticLabel: l10n.profile,
+              ),
+              label: l10n.profile,
             ),
           ],
         ),
@@ -88,8 +106,12 @@ class AppBottomNavigationBar extends StatelessWidget {
 
 class _PremiumStatisticsIcon extends StatelessWidget {
   final bool isActive;
+  final String semanticLabel;
 
-  const _PremiumStatisticsIcon({required this.isActive});
+  const _PremiumStatisticsIcon({
+    required this.isActive,
+    required this.semanticLabel,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -101,7 +123,7 @@ class _PremiumStatisticsIcon extends StatelessWidget {
           children: [
             Icon(
               isActive ? Icons.bar_chart_rounded : Icons.bar_chart_outlined,
-              semanticLabel: 'Estatísticas Premium',
+              semanticLabel: semanticLabel,
             ),
             if (!isPremiumUser)
               Positioned(

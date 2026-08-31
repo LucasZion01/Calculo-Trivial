@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:calcquest/features/dashboard/presentation/dashboard_screen.dart';
+import 'package:calcquest/l10n/app_localizations.dart';
 import 'package:calcquest/shared/services/revenuecat_service.dart';
 import 'package:calcquest/shared/state/app_progress.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
@@ -47,22 +48,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ..showSnackBar(SnackBar(content: Text(message)));
   }
 
-  String _firebaseErrorMessage(FirebaseAuthException error) {
+  String _firebaseErrorMessage(
+    FirebaseAuthException error,
+    AppLocalizations l10n,
+  ) {
     switch (error.code) {
       case 'email-already-in-use':
-        return 'Já existe uma conta cadastrada com este e-mail.';
+        return l10n.registerEmailAlreadyInUse;
       case 'invalid-email':
-        return 'Digite um endereço de e-mail válido.';
+        return l10n.loginInvalidEmail;
       case 'weak-password':
-        return 'Crie uma senha mais forte, com pelo menos 6 caracteres.';
+        return l10n.registerWeakPassword;
       case 'operation-not-allowed':
-        return 'O cadastro por e-mail não está disponível.';
+        return l10n.registerOperationNotAllowed;
       case 'too-many-requests':
-        return 'Muitas tentativas. Aguarde um pouco e tente novamente.';
+        return l10n.loginTooManyRequests;
       case 'network-request-failed':
-        return 'Verifique sua conexão com a internet.';
+        return l10n.loginNetworkError;
       default:
-        return 'Não foi possível criar sua conta.';
+        return l10n.registerGenericError;
     }
   }
 
@@ -75,7 +79,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
       await RevenueCatService.identifyUser(userId);
     } catch (error) {
       debugPrint(
-        'Cadastro: não foi possível identificar o usuário no RevenueCat: $error',
+        'Cadastro: não foi possível identificar o usuário no RevenueCat: '
+        '$error',
       );
     }
   }
@@ -84,6 +89,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (_isLoading) {
       return;
     }
+
+    final l10n = AppLocalizations.of(context)!;
 
     final name = _nameController.text.trim();
     final email = _emailController.text.trim();
@@ -94,22 +101,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
         email.isEmpty ||
         password.isEmpty ||
         confirmPassword.isEmpty) {
-      _showMessage('Preencha todos os campos.');
+      _showMessage(l10n.registerFillAllFields);
       return;
     }
 
     if (name.length < 2) {
-      _showMessage('Digite seu nome.');
+      _showMessage(l10n.registerEnterName);
       return;
     }
 
     if (password.length < 6) {
-      _showMessage('A senha precisa ter pelo menos 6 caracteres.');
+      _showMessage(l10n.registerPasswordTooShort);
       return;
     }
 
     if (password != confirmPassword) {
-      _showMessage('As senhas não coincidem.');
+      _showMessage(l10n.registerPasswordsDoNotMatch);
       return;
     }
 
@@ -144,10 +151,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
         (route) => false,
       );
     } on FirebaseAuthException catch (error) {
-      _showMessage(_firebaseErrorMessage(error));
+      _showMessage(_firebaseErrorMessage(error, l10n));
     } catch (error) {
       debugPrint('Cadastro: erro inesperado: $error');
-      _showMessage('Ocorreu um erro inesperado ao criar sua conta.');
+
+      _showMessage(l10n.registerUnexpectedError);
     } finally {
       if (mounted) {
         setState(() {
@@ -159,6 +167,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
@@ -183,7 +193,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             },
                       icon: const Icon(Icons.arrow_back_rounded),
                       color: AppColors.textPrimary,
-                      tooltip: 'Voltar',
+                      tooltip: l10n.back,
                     ),
                   ),
                   const SizedBox(height: AppSpacing.sm),
@@ -192,11 +202,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       'assets/branding/calculo_trivial_icon_1024.png',
                       width: 96,
                       height: 96,
+                      semanticLabel: l10n.appSymbolSemanticLabel,
                     ),
                   ),
                   const SizedBox(height: AppSpacing.lg),
                   Text(
-                    'Cálculo Trivial',
+                    l10n.appName,
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                       color: AppColors.textPrimary,
@@ -205,7 +216,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   const SizedBox(height: AppSpacing.sm),
                   Text(
-                    'Domine o cálculo. Evolua além.',
+                    l10n.appTagline,
                     textAlign: TextAlign.center,
                     style: AppTypography.bodyMedium.copyWith(
                       color: AppColors.textSecondary,
@@ -213,7 +224,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   const SizedBox(height: AppSpacing.xxxl),
                   Text(
-                    'Crie sua conta',
+                    l10n.registerCreateAccountTitle,
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       color: AppColors.textPrimary,
                       fontWeight: FontWeight.w700,
@@ -221,7 +232,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   const SizedBox(height: AppSpacing.sm),
                   Text(
-                    'Comece sua jornada de aprendizagem.',
+                    l10n.registerJourneySubtitle,
                     style: AppTypography.bodyMedium.copyWith(
                       color: AppColors.textSecondary,
                     ),
@@ -229,8 +240,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   const SizedBox(height: AppSpacing.xl),
                   AppTextField(
                     controller: _nameController,
-                    labelText: 'Nome',
-                    hintText: 'Digite seu nome',
+                    labelText: l10n.name,
+                    hintText: l10n.registerNameHint,
                     keyboardType: TextInputType.name,
                     prefixIcon: Icons.person_outline,
                     enabled: !_isLoading,
@@ -238,8 +249,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   const SizedBox(height: AppSpacing.md),
                   AppTextField(
                     controller: _emailController,
-                    labelText: 'E-mail',
-                    hintText: 'Digite seu e-mail',
+                    labelText: l10n.email,
+                    hintText: l10n.loginEmailHint,
                     keyboardType: TextInputType.emailAddress,
                     prefixIcon: Icons.email_outlined,
                     enabled: !_isLoading,
@@ -247,8 +258,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   const SizedBox(height: AppSpacing.md),
                   AppTextField(
                     controller: _passwordController,
-                    labelText: 'Senha',
-                    hintText: 'Crie uma senha',
+                    labelText: l10n.password,
+                    hintText: l10n.registerPasswordHint,
                     obscureText: !_isPasswordVisible,
                     prefixIcon: Icons.lock_outline,
                     enabled: !_isLoading,
@@ -270,8 +281,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   const SizedBox(height: AppSpacing.md),
                   AppTextField(
                     controller: _confirmPasswordController,
-                    labelText: 'Confirmar senha',
-                    hintText: 'Digite sua senha novamente',
+                    labelText: l10n.confirmPassword,
+                    hintText: l10n.registerConfirmPasswordHint,
                     obscureText: !_isConfirmPasswordVisible,
                     prefixIcon: Icons.lock_outline,
                     enabled: !_isLoading,
@@ -293,7 +304,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   const SizedBox(height: AppSpacing.xl),
                   PrimaryButton(
-                    text: 'Criar conta',
+                    text: l10n.createAccount,
                     onPressed: _register,
                     isLoading: _isLoading,
                   ),
@@ -301,10 +312,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
-                        'Já possui uma conta?',
-                        style: AppTypography.bodyMedium.copyWith(
-                          color: AppColors.textSecondary,
+                      Flexible(
+                        child: Text(
+                          l10n.registerAlreadyHaveAccount,
+                          style: AppTypography.bodyMedium.copyWith(
+                            color: AppColors.textSecondary,
+                          ),
                         ),
                       ),
                       TextButton(
@@ -313,7 +326,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             : () {
                                 Navigator.of(context).pop();
                               },
-                        child: const Text('Entrar'),
+                        child: Text(l10n.login),
                       ),
                     ],
                   ),

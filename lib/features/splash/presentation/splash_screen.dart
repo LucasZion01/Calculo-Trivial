@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 import 'package:calcquest/features/auth/presentation/login_screen.dart';
 import 'package:calcquest/features/dashboard/presentation/dashboard_screen.dart';
+import 'package:calcquest/l10n/app_localizations.dart';
 import 'package:calcquest/shared/services/revenuecat_service.dart';
 import 'package:calcquest/shared/state/app_progress.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
@@ -50,7 +51,10 @@ class _SplashScreenState extends State<SplashScreen>
     );
 
     _iconScaleAnimation = Tween<double>(begin: 0.65, end: 1).animate(
-      CurvedAnimation(parent: _entranceController, curve: AppMotion.easeOutBack),
+      CurvedAnimation(
+        parent: _entranceController,
+        curve: AppMotion.easeOutBack,
+      ),
     );
 
     _slideAnimation =
@@ -91,13 +95,16 @@ class _SplashScreenState extends State<SplashScreen>
     }
 
     final currentUser = FirebaseAuth.instance.currentUser;
+
     final destination = currentUser == null
         ? const LoginScreen()
         : const DashboardScreen();
 
     Navigator.of(context).pushReplacement(
       PageRouteBuilder<void>(
-        pageBuilder: (_, animation, secondaryAnimation) => destination,
+        pageBuilder: (_, animation, secondaryAnimation) {
+          return destination;
+        },
         transitionDuration: AppMotion.route,
         transitionsBuilder: (_, animation, secondaryAnimation, child) {
           return FadeTransition(opacity: animation, child: child);
@@ -126,7 +133,7 @@ class _SplashScreenState extends State<SplashScreen>
       await operation.timeout(const Duration(seconds: 6));
     } catch (error) {
       debugPrint(
-        'SplashScreen: $serviceName indispon\u00edvel durante a inicializa\u00e7\u00e3o: '
+        'SplashScreen: $serviceName indisponível durante a inicialização: '
         '$error',
       );
     }
@@ -134,6 +141,8 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: AppColors.navy,
       body: DecoratedBox(
@@ -165,6 +174,7 @@ class _SplashScreenState extends State<SplashScreen>
                             builder: (context, child) {
                               final phase =
                                   _motionController.value * math.pi * 2;
+
                               final wave = math.sin(phase);
 
                               return Transform.translate(
@@ -199,15 +209,14 @@ class _SplashScreenState extends State<SplashScreen>
                               child: Image.asset(
                                 'assets/branding/calculo_trivial_icon_1024.png',
                                 fit: BoxFit.cover,
-                                semanticLabel:
-                                    'S\u00edmbolo do C\u00e1lculo Trivial',
+                                semanticLabel: l10n.appSymbolSemanticLabel,
                               ),
                             ),
                           ),
                         ),
                         const SizedBox(height: 28),
                         Text(
-                          'C\u00e1lculo Trivial',
+                          l10n.appName,
                           style: AppTypography.headingLarge.copyWith(
                             color: AppColors.white,
                             fontWeight: FontWeight.w800,
@@ -215,19 +224,20 @@ class _SplashScreenState extends State<SplashScreen>
                         ),
                         const SizedBox(height: 10),
                         Text(
-                          'Domine o c\u00e1lculo. Evolua al\u00e9m.',
+                          l10n.appTagline,
+                          textAlign: TextAlign.center,
                           style: AppTypography.bodyMedium.copyWith(
                             color: AppColors.primaryLight,
                           ),
                         ),
                         const SizedBox(height: 36),
-                        const SizedBox(
+                        SizedBox(
                           width: 24,
                           height: 24,
                           child: CircularProgressIndicator(
                             strokeWidth: 2.5,
                             color: AppColors.secondary,
-                            semanticsLabel: 'Carregando',
+                            semanticsLabel: l10n.loading,
                           ),
                         ),
                       ],

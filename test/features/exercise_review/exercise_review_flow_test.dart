@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:calcquest/features/exercise_review/presentation/exercise_review_screen.dart';
 import 'package:calcquest/features/result/presentation/result_screen.dart';
+import 'package:calcquest/l10n/app_localizations.dart';
 import 'package:calcquest/shared/domain/exercise_review_item.dart';
 import 'package:calcquest/shared/domain/exercise_session_result.dart';
 
@@ -14,13 +16,27 @@ const reviewItem = ExerciseReviewItem(
   explanation: 'Somamos duas unidades a outras duas unidades.',
 );
 
+Widget buildLocalizedApp(Widget home) {
+  return MaterialApp(
+    locale: const Locale('pt'),
+    supportedLocales: const [Locale('pt'), Locale('en')],
+    localizationsDelegates: const [
+      AppLocalizations.delegate,
+      GlobalMaterialLocalizations.delegate,
+      GlobalWidgetsLocalizations.delegate,
+      GlobalCupertinoLocalizations.delegate,
+    ],
+    home: home,
+  );
+}
+
 void main() {
   testWidgets('resultado aprovado exige revisão antes da recompensa', (
     WidgetTester tester,
   ) async {
     await tester.pumpWidget(
-      const MaterialApp(
-        home: ResultScreen(
+      buildLocalizedApp(
+        const ResultScreen(
           totalQuestions: 10,
           correctAnswers: 8,
           xpEarned: 60,
@@ -41,8 +57,8 @@ void main() {
     WidgetTester tester,
   ) async {
     await tester.pumpWidget(
-      const MaterialApp(
-        home: ResultScreen(
+      buildLocalizedApp(
+        const ResultScreen(
           totalQuestions: 10,
           correctAnswers: 7,
           xpEarned: 60,
@@ -64,8 +80,8 @@ void main() {
     WidgetTester tester,
   ) async {
     await tester.pumpWidget(
-      MaterialApp(
-        home: ExerciseReviewScreen(
+      buildLocalizedApp(
+        ExerciseReviewScreen(
           reviewItems: const <ExerciseReviewItem>[reviewItem],
           completedLessonId: 'algebra-fundamental',
           result: const ExerciseSessionResult(
