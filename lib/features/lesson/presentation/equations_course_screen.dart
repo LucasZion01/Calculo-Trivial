@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:calcquest/shared/data/equations_course_data.dart';
+import 'package:calcquest/shared/data/localized_equations_course_data.dart';
 import 'package:calcquest/shared/domain/course_lesson_data.dart';
+import 'package:calcquest/shared/localization/lesson_ui_text.dart';
 import 'package:calcquest/shared/state/app_progress.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
 import 'package:calcquest/shared/theme/app_spacing.dart';
@@ -21,55 +23,57 @@ class EquationsCourseScreen extends StatefulWidget {
 }
 
 class _EquationsCourseScreenState extends State<EquationsCourseScreen> {
+  List<CourseLessonData> get _lessons =>
+      localizedEquationsCourseLessons(Localizations.localeOf(context));
+
   int get _completedCount => equationsCourseLessons
       .where((lesson) => AppProgress.isContentLessonCompleted(lesson.id))
       .length;
 
   bool _isUnlocked(int index) {
     return index == 0 ||
-        AppProgress.isContentLessonCompleted(
-          equationsCourseLessons[index - 1].id,
-        );
+        AppProgress.isContentLessonCompleted(equationsCourseLessons[index - 1].id);
   }
 
   Future<void> _openLesson(int index) async {
-    if (!_isUnlocked(index)) {
-      return;
-    }
+    if (!_isUnlocked(index)) return;
 
-    await Navigator.of(
-      context,
-    ).push(MaterialPageRoute(builder: (_) => _buildLessonScreen(index)));
+    await Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => _buildLessonScreen(index)),
+    );
 
-    if (mounted) {
-      setState(() {});
-    }
+    if (mounted) setState(() {});
   }
 
   CourseLessonScreen _buildLessonScreen(int index) {
-    final lesson = equationsCourseLessons[index];
-    final isLast = index == equationsCourseLessons.length - 1;
+    final lessons = _lessons;
+    final lesson = lessons[index];
+    final isLast = index == lessons.length - 1;
+    final uiText = LessonUiText.of(context);
 
     return CourseLessonScreen(
       lesson: lesson,
       onComplete: () => AppProgress.completeContentLesson(lesson.id),
-      actionLabel: isLast ? 'Concluir aula' : 'Concluir e continuar',
+      actionLabel: isLast ? uiText.completeLesson : uiText.completeAndContinue,
       nextDestination: isLast ? null : (_) => _buildLessonScreen(index + 1),
     );
   }
 
   void _openExercises() {
-    Navigator.of(
-      context,
-    ).push(MaterialPageRoute(builder: (_) => const EquationsExercisesScreen()));
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => const EquationsExercisesScreen()),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    final lessons = _lessons;
     final completedCount = _completedCount;
-    final total = equationsCourseLessons.length;
+    final total = lessons.length;
     final progress = total == 0 ? 0.0 : completedCount / total;
     final canPractice = completedCount == total;
+    final uiText = LessonUiText.of(context);
+    final isEnglish = Localizations.localeOf(context).languageCode == 'en';
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -86,14 +90,16 @@ class _EquationsCourseScreenState extends State<EquationsCourseScreen> {
               child: Row(
                 children: [
                   IconButton(
-                    tooltip: 'Voltar',
+                    tooltip: uiText.back,
                     onPressed: () => Navigator.of(context).maybePop(),
                     icon: const Icon(Icons.arrow_back_rounded),
                   ),
                   const SizedBox(width: AppSpacing.xs),
                   Expanded(
                     child: Text(
-                      'Equações e Inequações',
+                      isEnglish
+                          ? 'Equations and Inequalities'
+                          : 'Equações e Inequações',
                       style: AppTypography.titleMedium,
                     ),
                   ),
@@ -113,9 +119,7 @@ class _EquationsCourseScreenState extends State<EquationsCourseScreen> {
                     padding: const EdgeInsets.all(AppSpacing.cardPaddingLarge),
                     decoration: BoxDecoration(
                       color: AppColors.navy,
-                      borderRadius: BorderRadius.circular(
-                        AppSpacing.radiusXLarge,
-                      ),
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusXLarge),
                       boxShadow: const [
                         BoxShadow(
                           color: AppColors.shadow,
@@ -128,22 +132,27 @@ class _EquationsCourseScreenState extends State<EquationsCourseScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'RESOLVA, INTERPRETE E COMPARE',
+                          isEnglish
+                              ? 'SOLVE, INTERPRET, AND COMPARE'
+                              : 'RESOLVA, INTERPRETE E COMPARE',
                           style: AppTypography.labelSmall.copyWith(
                             color: AppColors.secondaryLight,
                           ),
                         ),
                         const SizedBox(height: AppSpacing.xs),
                         Text(
-                          'Transforme relações em soluções',
+                          isEnglish
+                              ? 'Turn relationships into solutions'
+                              : 'Transforme relações em soluções',
                           style: AppTypography.headingMedium.copyWith(
                             color: AppColors.white,
                           ),
                         ),
                         const SizedBox(height: AppSpacing.sm),
                         Text(
-                          'Equações lineares, frações, sistemas, quadráticas, '
-                          'inequações, módulo e casos especiais.',
+                          isEnglish
+                              ? 'Linear equations, fractions, systems, quadratics, inequalities, absolute value, and special cases.'
+                              : 'Equações lineares, frações, sistemas, quadráticas, inequações, módulo e casos especiais.',
                           style: AppTypography.bodyMedium.copyWith(
                             color: AppColors.primaryLight,
                           ),
@@ -158,7 +167,9 @@ class _EquationsCourseScreenState extends State<EquationsCourseScreen> {
                         ),
                         const SizedBox(height: AppSpacing.sm),
                         Text(
-                          '$completedCount de $total aulas concluídas',
+                          isEnglish
+                              ? '$completedCount of $total lessons completed'
+                              : '$completedCount de $total aulas concluídas',
                           style: AppTypography.labelMedium.copyWith(
                             color: AppColors.white,
                           ),
@@ -167,24 +178,24 @@ class _EquationsCourseScreenState extends State<EquationsCourseScreen> {
                     ),
                   ),
                   const SizedBox(height: AppSpacing.xl),
-                  Text('Sua jornada', style: AppTypography.titleLarge),
+                  Text(
+                    isEnglish ? 'Your journey' : 'Sua jornada',
+                    style: AppTypography.titleLarge,
+                  ),
                   const SizedBox(height: AppSpacing.xs),
                   Text(
-                    'Aprenda a reconhecer o tipo de problema, escolher a '
-                    'estratégia correta e justificar cada transformação.',
+                    isEnglish
+                        ? 'Learn to recognize the problem type, choose the right strategy, and justify each transformation.'
+                        : 'Aprenda a reconhecer o tipo de problema, escolher a estratégia correta e justificar cada transformação.',
                     style: AppTypography.bodyMedium,
                   ),
                   const SizedBox(height: AppSpacing.md),
-                  for (
-                    var index = 0;
-                    index < equationsCourseLessons.length;
-                    index++
-                  ) ...[
+                  for (var index = 0; index < lessons.length; index++) ...[
                     _LessonCard(
                       number: index + 1,
-                      lesson: equationsCourseLessons[index],
+                      lesson: lessons[index],
                       isCompleted: AppProgress.isContentLessonCompleted(
-                        equationsCourseLessons[index].id,
+                        lessons[index].id,
                       ),
                       isUnlocked: _isUnlocked(index),
                       onTap: () => _openLesson(index),
@@ -198,9 +209,7 @@ class _EquationsCourseScreenState extends State<EquationsCourseScreen> {
                       color: canPractice
                           ? AppColors.successLight
                           : AppColors.surfaceSecondary,
-                      borderRadius: BorderRadius.circular(
-                        AppSpacing.radiusLarge,
-                      ),
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
                       border: Border.all(
                         color: canPractice
                             ? AppColors.success
@@ -221,23 +230,31 @@ class _EquationsCourseScreenState extends State<EquationsCourseScreen> {
                         const SizedBox(height: AppSpacing.sm),
                         Text(
                           canPractice
-                              ? 'Pronto para praticar'
-                              : 'Prática final bloqueada',
+                              ? (isEnglish
+                                    ? 'Ready to practice'
+                                    : 'Pronto para praticar')
+                              : (isEnglish
+                                    ? 'Final practice locked'
+                                    : 'Prática final bloqueada'),
                           style: AppTypography.titleMedium,
                         ),
                         const SizedBox(height: AppSpacing.xs),
                         Text(
                           canPractice
-                              ? 'Resolva uma sessão de exercícios para testar '
-                                    'o domínio de equações e inequações.'
-                              : 'Conclua as oito aulas para liberar a prática '
-                                    'final de Equações e Inequações.',
+                              ? (isEnglish
+                                    ? 'Complete an exercise session to test your mastery of equations and inequalities.'
+                                    : 'Resolva uma sessão de exercícios para testar o domínio de equações e inequações.')
+                              : (isEnglish
+                                    ? 'Complete all eight lessons to unlock the final Equations and Inequalities practice.'
+                                    : 'Conclua as oito aulas para liberar a prática final de Equações e Inequações.'),
                           textAlign: TextAlign.center,
                           style: AppTypography.bodyMedium,
                         ),
                         const SizedBox(height: AppSpacing.md),
                         PrimaryButton(
-                          text: 'Iniciar exercícios',
+                          text: isEnglish
+                              ? 'Start exercises'
+                              : 'Iniciar exercícios',
                           icon: Icons.play_arrow_rounded,
                           onPressed: canPractice ? _openExercises : null,
                         ),
@@ -271,14 +288,16 @@ class _LessonCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isEnglish = Localizations.localeOf(context).languageCode == 'en';
     final status = isCompleted
-        ? 'Concluída'
+        ? (isEnglish ? 'Completed' : 'Concluída')
         : isUnlocked
-        ? 'Disponível'
-        : 'Bloqueada';
+        ? (isEnglish ? 'Available' : 'Disponível')
+        : (isEnglish ? 'Locked' : 'Bloqueada');
 
     return MathCard(
-      title: 'Aula $number — ${lesson.title}',
+      title:
+          '${isEnglish ? 'Lesson' : 'Aula'} $number — ${lesson.title}',
       subtitle: '${lesson.duration} • ${lesson.description}',
       symbol: lesson.symbol,
       status: status,
