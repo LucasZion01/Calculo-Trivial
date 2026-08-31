@@ -7,14 +7,12 @@ class _ExerciseTranslation {
   final String statement;
   final String explanation;
   final String? skill;
-  final Map<String, String> options;
 
   const _ExerciseTranslation({
     required this.title,
     required this.statement,
     required this.explanation,
     this.skill,
-    this.options = const <String, String>{},
   });
 }
 
@@ -35,14 +33,7 @@ ExerciseData localizeAlgebraExerciseContent(
     id: exercise.id,
     title: translation.title,
     statement: translation.statement,
-    options: exercise.options
-        .map(
-          (option) => ExerciseOptionData(
-            id: option.id,
-            text: translation.options[option.id] ?? option.text,
-          ),
-        )
-        .toList(growable: false),
+    options: exercise.options,
     correctOptionId: exercise.correctOptionId,
     explanation: translation.explanation,
     contentLessonId: exercise.contentLessonId,
