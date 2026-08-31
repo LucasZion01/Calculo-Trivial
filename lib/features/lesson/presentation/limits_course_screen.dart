@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:calcquest/shared/data/limits_course_data.dart';
+import 'package:calcquest/shared/data/localized_limits_course_data.dart';
 import 'package:calcquest/shared/domain/course_lesson_data.dart';
 import 'package:calcquest/shared/localization/lesson_ui_text.dart';
 import 'package:calcquest/shared/state/app_progress.dart';
@@ -44,8 +45,11 @@ class _LimitsCourseScreenState extends State<LimitsCourseScreen> {
   }
 
   CourseLessonScreen _buildLessonScreen(int index) {
-    final lesson = limitsCourseLessons[index];
-    final isLast = index == limitsCourseLessons.length - 1;
+    final lessons = localizedLimitsCourseLessons(
+      Localizations.localeOf(context),
+    );
+    final lesson = lessons[index];
+    final isLast = index == lessons.length - 1;
     final ui = LessonUiText.of(context);
 
     return CourseLessonScreen(
@@ -64,10 +68,12 @@ class _LimitsCourseScreenState extends State<LimitsCourseScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isEnglish = Localizations.localeOf(context).languageCode == 'en';
+    final locale = Localizations.localeOf(context);
+    final isEnglish = locale.languageCode == 'en';
     final ui = LessonUiText.of(context);
+    final lessons = localizedLimitsCourseLessons(locale);
     final completedCount = _completedCount;
-    final total = limitsCourseLessons.length;
+    final total = lessons.length;
     final progress = completedCount / total;
     final canPractice = completedCount == total;
 
@@ -184,14 +190,12 @@ class _LimitsCourseScreenState extends State<LimitsCourseScreen> {
                     style: AppTypography.bodyMedium,
                   ),
                   const SizedBox(height: AppSpacing.md),
-                  for (var index = 0;
-                      index < limitsCourseLessons.length;
-                      index++) ...[
+                  for (var index = 0; index < lessons.length; index++) ...[
                     _LessonCard(
                       number: index + 1,
-                      lesson: limitsCourseLessons[index],
+                      lesson: lessons[index],
                       isCompleted: AppProgress.isContentLessonCompleted(
-                        limitsCourseLessons[index].id,
+                        lessons[index].id,
                       ),
                       isUnlocked: _isUnlocked(index),
                       isEnglish: isEnglish,
