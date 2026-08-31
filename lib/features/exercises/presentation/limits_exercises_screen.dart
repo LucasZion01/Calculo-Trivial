@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:calcquest/l10n/app_localizations.dart';
 import 'package:calcquest/shared/data/mock_exercise_data.dart';
 import 'package:calcquest/shared/data/mock_limits_exercise_data.dart';
 import 'package:calcquest/shared/domain/exercise_review_item.dart';
@@ -9,6 +10,7 @@ import 'package:calcquest/shared/theme/app_spacing.dart';
 import 'package:calcquest/shared/theme/app_typography.dart';
 import 'package:calcquest/shared/widgets/app_bottom_navigation_bar.dart';
 import 'package:calcquest/shared/widgets/app_progress_bar.dart';
+import 'package:calcquest/shared/widgets/exercise_answer_feedback.dart';
 import 'package:calcquest/shared/widgets/primary_button.dart';
 
 import '../../dashboard/presentation/dashboard_screen.dart';
@@ -135,136 +137,25 @@ class _LimitsExercisesScreenState extends State<LimitsExercisesScreen> {
       );
   }
 
-  String _difficultyLabel(ExerciseDifficulty difficulty) {
+  String _difficultyLabel(
+    ExerciseDifficulty difficulty,
+    AppLocalizations l10n,
+  ) {
     return switch (difficulty) {
-      ExerciseDifficulty.foundation => 'Fundamentos',
-      ExerciseDifficulty.intermediate => 'Intermediária',
-      ExerciseDifficulty.challenge => 'Desafio',
+      ExerciseDifficulty.foundation => l10n.exerciseDifficultyFoundation,
+      ExerciseDifficulty.intermediate => l10n.exerciseDifficultyIntermediate,
+      ExerciseDifficulty.challenge => l10n.exerciseDifficultyChallenge,
     };
-  }
-
-  Future<void> _showAnswerFeedback({
-    required ExerciseData exercise,
-    required bool isCorrect,
-    required String selectedAnswer,
-    required String correctAnswer,
-  }) {
-    return showModalBottomSheet<void>(
-      context: context,
-      isDismissible: false,
-      enableDrag: false,
-      isScrollControlled: true,
-      backgroundColor: AppColors.surface,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(AppSpacing.radiusXLarge),
-        ),
-      ),
-      builder: (sheetContext) {
-        final color = isCorrect ? AppColors.success : AppColors.error;
-        final background = isCorrect
-            ? AppColors.successLight
-            : AppColors.errorLight;
-
-        return SafeArea(
-          child: Padding(
-            padding: EdgeInsets.fromLTRB(
-              AppSpacing.screenHorizontal,
-              AppSpacing.lg,
-              AppSpacing.screenHorizontal,
-              MediaQuery.viewInsetsOf(sheetContext).bottom + AppSpacing.lg,
-            ),
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    width: 48,
-                    height: 48,
-                    decoration: BoxDecoration(
-                      color: background,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      isCorrect ? Icons.check_rounded : Icons.close_rounded,
-                      color: color,
-                      size: 28,
-                    ),
-                  ),
-                  const SizedBox(height: AppSpacing.md),
-                  Text(
-                    isCorrect ? 'Boa análise!' : 'Vamos entender o erro',
-                    style: AppTypography.headingSmall,
-                  ),
-                  const SizedBox(height: AppSpacing.sm),
-                  Text(
-                    'Sua resposta: $selectedAnswer',
-                    style: AppTypography.bodyMedium.copyWith(
-                      color: isCorrect ? AppColors.successDark : AppColors.error,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  if (!isCorrect) ...[
-                    const SizedBox(height: AppSpacing.xs),
-                    Text(
-                      'Resposta correta: $correctAnswer',
-                      style: AppTypography.bodyMedium.copyWith(
-                        color: AppColors.successDark,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                  const SizedBox(height: AppSpacing.md),
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(AppSpacing.cardPadding),
-                    decoration: BoxDecoration(
-                      color: AppColors.surfaceSecondary,
-                      borderRadius: BorderRadius.circular(
-                        AppSpacing.radiusMedium,
-                      ),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Explicação passo a passo',
-                          style: AppTypography.labelMedium,
-                        ),
-                        const SizedBox(height: AppSpacing.xs),
-                        Text(
-                          exercise.explanation,
-                          style: AppTypography.bodyMedium,
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: AppSpacing.lg),
-                  PrimaryButton(
-                    text: isLastExercise
-                        ? 'Ver meu resultado'
-                        : 'Continuar praticando',
-                    icon: isLastExercise
-                        ? Icons.analytics_outlined
-                        : Icons.arrow_forward_rounded,
-                    onPressed: () => Navigator.of(sheetContext).pop(),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
   }
 
   Future<void> _confirmAnswer() async {
     if (isShowingFeedback) return;
 
+    final l10n = AppLocalizations.of(context)!;
+
     if (selectedOptionId == null) {
       _showFeedback(
-        message: 'Escolha uma alternativa antes de continuar.',
+        message: l10n.exerciseChooseAlternative,
         backgroundColor: AppColors.warning,
         icon: Icons.warning_amber_rounded,
       );
@@ -298,11 +189,13 @@ class _LimitsExercisesScreenState extends State<LimitsExercisesScreen> {
       );
     }
 
-    await _showAnswerFeedback(
+    await showExerciseAnswerFeedback(
+      context: context,
       exercise: exercise,
       isCorrect: isCorrect,
       selectedAnswer: selectedOption.text,
       correctAnswer: correctOption.text,
+      isLastExercise: isLastExercise,
     );
 
     if (!mounted) return;
@@ -413,6 +306,7 @@ class _LimitsExercisesScreenState extends State<LimitsExercisesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final exercise = currentExercise;
 
     return Scaffold(
@@ -429,14 +323,14 @@ class _LimitsExercisesScreenState extends State<LimitsExercisesScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Questão ${currentExerciseIndex + 1} de ${sessionExercises.length}',
+                l10n.exerciseQuestionProgress(
+                  currentExerciseIndex + 1,
+                  sessionExercises.length,
+                ),
                 style: AppTypography.headingSmall,
               ),
               const SizedBox(height: AppSpacing.xs),
-              Text(
-                'Resolva o limite usando a estratégia adequada.',
-                style: AppTypography.bodyMedium,
-              ),
+              Text(l10n.limits, style: AppTypography.bodyMedium),
               const SizedBox(height: AppSpacing.sm),
               Wrap(
                 spacing: AppSpacing.xs,
@@ -448,8 +342,11 @@ class _LimitsExercisesScreenState extends State<LimitsExercisesScreen> {
                       label: Text(exercise.skill!),
                     ),
                   Chip(
-                    avatar: const Icon(Icons.signal_cellular_alt_rounded, size: 18),
-                    label: Text(_difficultyLabel(exercise.difficulty)),
+                    avatar: const Icon(
+                      Icons.signal_cellular_alt_rounded,
+                      size: 18,
+                    ),
+                    label: Text(_difficultyLabel(exercise.difficulty, l10n)),
                   ),
                 ],
               ),
@@ -495,8 +392,8 @@ class _LimitsExercisesScreenState extends State<LimitsExercisesScreen> {
               const SizedBox(height: AppSpacing.sm),
               PrimaryButton(
                 text: isLastExercise
-                    ? 'Finalizar exercícios'
-                    : 'Próxima questão',
+                    ? l10n.exerciseFinish
+                    : l10n.exerciseNextQuestion,
                 icon: isLastExercise
                     ? Icons.flag_rounded
                     : Icons.arrow_forward_rounded,
