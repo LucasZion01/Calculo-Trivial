@@ -154,6 +154,54 @@
   "xp": "XP",
   "gold": "Gold",
 
+  "statisticsYourProgress": "Your progress",
+  "statisticsSubtitle": "Track your progress with real data from your studies.",
+  "statisticsCheckingPremium": "Checking Premium access...",
+  "statisticsTotalXp": "Total XP",
+  "statisticsLevelStudyMessage": "Level {level} • Keep studying to progress.",
+  "@statisticsLevelStudyMessage": {
+    "placeholders": {
+      "level": { "type": "int" }
+    }
+  },
+  "statisticsCompletedLessons": "Lessons completed",
+  "statisticsAccumulatedGold": "Gold earned",
+  "statisticsTodayActivity": "Today's activity",
+  "statisticsDailyGoal": "Daily goal",
+  "statisticsDailyGoalCompleted": "Goal completed! You answered {answered} questions today.",
+  "@statisticsDailyGoalCompleted": {
+    "placeholders": {
+      "answered": { "type": "int" }
+    }
+  },
+  "statisticsDailyGoalRemaining": "Answer {remaining} questions to complete the goal.",
+  "@statisticsDailyGoalRemaining": {
+    "placeholders": {
+      "remaining": { "type": "int" }
+    }
+  },
+  "statisticsStreakDay": "day in a row",
+  "statisticsStreakDays": "days in a row",
+  "statisticsPerformance": "Performance",
+  "statisticsCorrectAnswers": "Correct answers",
+  "statisticsIncorrectAnswers": "Incorrect answers",
+  "statisticsOverallAccuracy": "Overall accuracy",
+  "statisticsAccuracyNoAnswers": "Answer exercises to calculate your accuracy.",
+  "statisticsAccuracyCalculated": "Calculated using all recorded answers.",
+  "statisticsContent": "Content",
+  "statisticsContentCompleted": "Content completed",
+  "statisticsProgressFirstLesson": "Complete your first lesson to start your statistics.",
+  "statisticsProgressAllCompleted": "You completed all content available in this version.",
+  "statisticsProgressRemaining": "{remaining} {lessonWord} in the current content.",
+  "@statisticsProgressRemaining": {
+    "placeholders": {
+      "remaining": { "type": "int" },
+      "lessonWord": { "type": "String" }
+    }
+  },
+  "statisticsRemainingLesson": "lesson remaining",
+  "statisticsRemainingLessons": "lessons remaining",
+
   "back": "Back",
   "continueLabel": "Continue",
   "finish": "Finish",
