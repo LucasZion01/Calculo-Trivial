@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:calcquest/shared/data/limits_course_data.dart';
 import 'package:calcquest/shared/domain/course_lesson_data.dart';
+import 'package:calcquest/shared/localization/lesson_ui_text.dart';
 import 'package:calcquest/shared/state/app_progress.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
 import 'package:calcquest/shared/theme/app_spacing.dart';
@@ -36,9 +37,7 @@ class _LimitsCourseScreenState extends State<LimitsCourseScreen> {
     if (!_isUnlocked(index)) return;
 
     await Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => _buildLessonScreen(index),
-      ),
+      MaterialPageRoute(builder: (_) => _buildLessonScreen(index)),
     );
 
     if (mounted) setState(() {});
@@ -47,14 +46,13 @@ class _LimitsCourseScreenState extends State<LimitsCourseScreen> {
   CourseLessonScreen _buildLessonScreen(int index) {
     final lesson = limitsCourseLessons[index];
     final isLast = index == limitsCourseLessons.length - 1;
+    final ui = LessonUiText.of(context);
 
     return CourseLessonScreen(
       lesson: lesson,
       onComplete: () => AppProgress.completeContentLesson(lesson.id),
-      actionLabel: isLast ? 'Concluir aula' : 'Concluir e continuar',
-      nextDestination: isLast
-          ? null
-          : (_) => _buildLessonScreen(index + 1),
+      actionLabel: isLast ? ui.completeLesson : ui.completeAndContinue,
+      nextDestination: isLast ? null : (_) => _buildLessonScreen(index + 1),
     );
   }
 
@@ -66,6 +64,8 @@ class _LimitsCourseScreenState extends State<LimitsCourseScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isEnglish = Localizations.localeOf(context).languageCode == 'en';
+    final ui = LessonUiText.of(context);
     final completedCount = _completedCount;
     final total = limitsCourseLessons.length;
     final progress = completedCount / total;
@@ -86,14 +86,14 @@ class _LimitsCourseScreenState extends State<LimitsCourseScreen> {
               child: Row(
                 children: [
                   IconButton(
-                    tooltip: 'Voltar',
+                    tooltip: ui.back,
                     onPressed: () => Navigator.of(context).maybePop(),
                     icon: const Icon(Icons.arrow_back_rounded),
                   ),
                   const SizedBox(width: AppSpacing.xs),
                   Expanded(
                     child: Text(
-                      'Curso de Limites',
+                      isEnglish ? 'Limits Course' : 'Curso de Limites',
                       style: AppTypography.titleMedium,
                     ),
                   ),
@@ -128,22 +128,25 @@ class _LimitsCourseScreenState extends State<LimitsCourseScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'UNIDADE COMPLETA',
+                          isEnglish ? 'COMPLETE UNIT' : 'UNIDADE COMPLETA',
                           style: AppTypography.labelSmall.copyWith(
                             color: AppColors.secondaryLight,
                           ),
                         ),
                         const SizedBox(height: AppSpacing.xs),
                         Text(
-                          'Entenda limites de verdade',
+                          isEnglish
+                              ? 'Understand limits for real'
+                              : 'Entenda limites de verdade',
                           style: AppTypography.headingMedium.copyWith(
                             color: AppColors.white,
                           ),
                         ),
                         const SizedBox(height: AppSpacing.sm),
                         Text(
-                          'Intuição, técnicas algébricas, gráficos, infinito '
-                          'e aplicações em Engenharia.',
+                          isEnglish
+                              ? 'Intuition, algebraic techniques, graphs, infinity, and Engineering applications.'
+                              : 'Intuição, técnicas algébricas, gráficos, infinito e aplicações em Engenharia.',
                           style: AppTypography.bodyMedium.copyWith(
                             color: AppColors.primaryLight,
                           ),
@@ -158,7 +161,9 @@ class _LimitsCourseScreenState extends State<LimitsCourseScreen> {
                         ),
                         const SizedBox(height: AppSpacing.sm),
                         Text(
-                          '$completedCount de $total aulas concluídas',
+                          isEnglish
+                              ? '$completedCount of $total lessons completed'
+                              : '$completedCount de $total aulas concluídas',
                           style: AppTypography.labelMedium.copyWith(
                             color: AppColors.white,
                           ),
@@ -167,11 +172,15 @@ class _LimitsCourseScreenState extends State<LimitsCourseScreen> {
                     ),
                   ),
                   const SizedBox(height: AppSpacing.xl),
-                  Text('Sua jornada', style: AppTypography.titleLarge),
+                  Text(
+                    isEnglish ? 'Your journey' : 'Sua jornada',
+                    style: AppTypography.titleLarge,
+                  ),
                   const SizedBox(height: AppSpacing.xs),
                   Text(
-                    'Cada aula prepara a próxima. Você pode voltar às aulas '
-                    'concluídas sempre que quiser.',
+                    isEnglish
+                        ? 'Each lesson prepares the next one. You can return to completed lessons whenever you want.'
+                        : 'Cada aula prepara a próxima. Você pode voltar às aulas concluídas sempre que quiser.',
                     style: AppTypography.bodyMedium,
                   ),
                   const SizedBox(height: AppSpacing.md),
@@ -185,6 +194,7 @@ class _LimitsCourseScreenState extends State<LimitsCourseScreen> {
                         limitsCourseLessons[index].id,
                       ),
                       isUnlocked: _isUnlocked(index),
+                      isEnglish: isEnglish,
                       onTap: () => _openLesson(index),
                     ),
                     const SizedBox(height: AppSpacing.md),
@@ -219,23 +229,31 @@ class _LimitsCourseScreenState extends State<LimitsCourseScreen> {
                         const SizedBox(height: AppSpacing.sm),
                         Text(
                           canPractice
-                              ? 'Pronto para praticar'
-                              : 'Prática final bloqueada',
+                              ? (isEnglish
+                                    ? 'Ready to practice'
+                                    : 'Pronto para praticar')
+                              : (isEnglish
+                                    ? 'Final practice locked'
+                                    : 'Prática final bloqueada'),
                           style: AppTypography.titleMedium,
                         ),
                         const SizedBox(height: AppSpacing.xs),
                         Text(
                           canPractice
-                              ? 'Resolva uma sessão de exercícios e descubra '
-                                  'quais pontos ainda precisam de revisão.'
-                              : 'Conclua as oito aulas para liberar os '
-                                  'exercícios de síntese.',
+                              ? (isEnglish
+                                    ? 'Complete an exercise session and find which points still need review.'
+                                    : 'Resolva uma sessão de exercícios e descubra quais pontos ainda precisam de revisão.')
+                              : (isEnglish
+                                    ? 'Complete all eight lessons to unlock the final synthesis exercises.'
+                                    : 'Conclua as oito aulas para liberar os exercícios de síntese.'),
                           textAlign: TextAlign.center,
                           style: AppTypography.bodyMedium,
                         ),
                         const SizedBox(height: AppSpacing.md),
                         PrimaryButton(
-                          text: 'Iniciar exercícios',
+                          text: isEnglish
+                              ? 'Start exercises'
+                              : 'Iniciar exercícios',
                           icon: Icons.play_arrow_rounded,
                           onPressed: canPractice ? _openExercises : null,
                         ),
@@ -257,6 +275,7 @@ class _LessonCard extends StatelessWidget {
   final CourseLessonData lesson;
   final bool isCompleted;
   final bool isUnlocked;
+  final bool isEnglish;
   final VoidCallback onTap;
 
   const _LessonCard({
@@ -264,19 +283,20 @@ class _LessonCard extends StatelessWidget {
     required this.lesson,
     required this.isCompleted,
     required this.isUnlocked,
+    required this.isEnglish,
     required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     final status = isCompleted
-        ? 'Concluída'
+        ? (isEnglish ? 'Completed' : 'Concluída')
         : isUnlocked
-        ? 'Disponível'
-        : 'Bloqueada';
+        ? (isEnglish ? 'Available' : 'Disponível')
+        : (isEnglish ? 'Locked' : 'Bloqueada');
 
     return MathCard(
-      title: 'Aula $number — ${lesson.title}',
+      title: '${isEnglish ? 'Lesson' : 'Aula'} $number — ${lesson.title}',
       subtitle: '${lesson.duration} • ${lesson.description}',
       symbol: lesson.symbol,
       status: status,
