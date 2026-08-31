@@ -154,6 +154,54 @@
   "xp": "XP",
   "gold": "Ouro",
 
+  "statisticsYourProgress": "Seu progresso",
+  "statisticsSubtitle": "Acompanhe sua evolução com dados reais dos seus estudos.",
+  "statisticsCheckingPremium": "Verificando acesso Premium...",
+  "statisticsTotalXp": "XP total",
+  "statisticsLevelStudyMessage": "Nível {level} • Continue estudando para evoluir.",
+  "@statisticsLevelStudyMessage": {
+    "placeholders": {
+      "level": { "type": "int" }
+    }
+  },
+  "statisticsCompletedLessons": "Aulas concluídas",
+  "statisticsAccumulatedGold": "Ouro acumulado",
+  "statisticsTodayActivity": "Atividade de hoje",
+  "statisticsDailyGoal": "Meta diária",
+  "statisticsDailyGoalCompleted": "Meta concluída! Você respondeu {answered} questões hoje.",
+  "@statisticsDailyGoalCompleted": {
+    "placeholders": {
+      "answered": { "type": "int" }
+    }
+  },
+  "statisticsDailyGoalRemaining": "Responda {remaining} questões para concluir a meta.",
+  "@statisticsDailyGoalRemaining": {
+    "placeholders": {
+      "remaining": { "type": "int" }
+    }
+  },
+  "statisticsStreakDay": "dia seguido",
+  "statisticsStreakDays": "dias seguidos",
+  "statisticsPerformance": "Desempenho",
+  "statisticsCorrectAnswers": "Acertos",
+  "statisticsIncorrectAnswers": "Erros",
+  "statisticsOverallAccuracy": "Precisão geral",
+  "statisticsAccuracyNoAnswers": "Responda exercícios para calcular sua precisão.",
+  "statisticsAccuracyCalculated": "Calculada com todas as respostas registradas.",
+  "statisticsContent": "Conteúdo",
+  "statisticsContentCompleted": "Conteúdo concluído",
+  "statisticsProgressFirstLesson": "Conclua sua primeira aula para iniciar suas estatísticas.",
+  "statisticsProgressAllCompleted": "Você concluiu todo o conteúdo disponível nesta versão.",
+  "statisticsProgressRemaining": "{remaining} {lessonWord} no conteúdo atual.",
+  "@statisticsProgressRemaining": {
+    "placeholders": {
+      "remaining": { "type": "int" },
+      "lessonWord": { "type": "String" }
+    }
+  },
+  "statisticsRemainingLesson": "aula restante",
+  "statisticsRemainingLessons": "aulas restantes",
+
   "back": "Voltar",
   "continueLabel": "Continuar",
   "finish": "Concluir",
