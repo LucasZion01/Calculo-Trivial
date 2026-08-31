@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:calcquest/l10n/app_localizations.dart';
 import 'package:calcquest/shared/data/mock_exercise_data.dart';
 import 'package:calcquest/shared/data/mock_continuity_exercise_data.dart';
 import 'package:calcquest/shared/domain/exercise_review_item.dart';
@@ -137,20 +138,25 @@ class _ContinuityExercisesScreenState extends State<ContinuityExercisesScreen> {
       );
   }
 
-  String _difficultyLabel(ExerciseDifficulty difficulty) {
+  String _difficultyLabel(
+    ExerciseDifficulty difficulty,
+    AppLocalizations l10n,
+  ) {
     return switch (difficulty) {
-      ExerciseDifficulty.foundation => 'Fundamentos',
-      ExerciseDifficulty.intermediate => 'Intermediária',
-      ExerciseDifficulty.challenge => 'Desafio',
+      ExerciseDifficulty.foundation => l10n.exerciseDifficultyFoundation,
+      ExerciseDifficulty.intermediate => l10n.exerciseDifficultyIntermediate,
+      ExerciseDifficulty.challenge => l10n.exerciseDifficultyChallenge,
     };
   }
 
   Future<void> _confirmAnswer() async {
     if (isShowingFeedback) return;
 
+    final l10n = AppLocalizations.of(context)!;
+
     if (selectedOptionId == null) {
       _showFeedback(
-        message: 'Escolha uma alternativa antes de continuar.',
+        message: l10n.exerciseChooseAlternative,
         backgroundColor: AppColors.warning,
         icon: Icons.warning_amber_rounded,
       );
@@ -301,6 +307,7 @@ class _ContinuityExercisesScreenState extends State<ContinuityExercisesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final exercise = currentExercise;
 
     return Scaffold(
@@ -317,14 +324,14 @@ class _ContinuityExercisesScreenState extends State<ContinuityExercisesScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Questão ${currentExerciseIndex + 1} de ${sessionExercises.length}',
+                l10n.exerciseQuestionProgress(
+                  currentExerciseIndex + 1,
+                  sessionExercises.length,
+                ),
                 style: AppTypography.headingSmall,
               ),
               const SizedBox(height: AppSpacing.xs),
-              Text(
-                'Analise a continuidade e escolha a alternativa correta.',
-                style: AppTypography.bodyMedium,
-              ),
+              Text(l10n.continuity, style: AppTypography.bodyMedium),
               const SizedBox(height: AppSpacing.sm),
               Wrap(
                 spacing: AppSpacing.xs,
@@ -340,7 +347,7 @@ class _ContinuityExercisesScreenState extends State<ContinuityExercisesScreen> {
                       Icons.signal_cellular_alt_rounded,
                       size: 18,
                     ),
-                    label: Text(_difficultyLabel(exercise.difficulty)),
+                    label: Text(_difficultyLabel(exercise.difficulty, l10n)),
                   ),
                 ],
               ),
@@ -386,8 +393,8 @@ class _ContinuityExercisesScreenState extends State<ContinuityExercisesScreen> {
               const SizedBox(height: AppSpacing.sm),
               PrimaryButton(
                 text: isLastExercise
-                    ? 'Finalizar exercícios'
-                    : 'Próxima questão',
+                    ? l10n.exerciseFinish
+                    : l10n.exerciseNextQuestion,
                 icon: isLastExercise
                     ? Icons.flag_rounded
                     : Icons.arrow_forward_rounded,
