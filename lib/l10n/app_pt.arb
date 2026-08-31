@@ -219,6 +219,16 @@
   "moduleDetailFunctionsTitle": "Aula 3 — Funções",
   "moduleDetailFunctionsSubtitle": "Domínio, imagem e gráficos",
 
+  "exerciseQuestionProgress": "Questão {current} de {total}",
+  "@exerciseQuestionProgress": { "placeholders": { "current": { "type": "int" }, "total": { "type": "int" } } },
+  "exerciseAlgebraInstruction": "Escolha a melhor transformação algébrica.",
+  "exerciseDifficultyFoundation": "Fundamentos",
+  "exerciseDifficultyIntermediate": "Intermediária",
+  "exerciseDifficultyChallenge": "Desafio",
+  "exerciseChooseAlternative": "Escolha uma alternativa antes de continuar.",
+  "exerciseFinish": "Finalizar exercícios",
+  "exerciseNextQuestion": "Próxima questão",
+
   "back": "Voltar",
   "continueLabel": "Continuar",
   "finish": "Concluir",
