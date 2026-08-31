@@ -650,6 +650,966 @@ abstract class AppLocalizations {
   /// **'Desbloqueado'**
   String get unlocked;
 
+  /// No description provided for @dashboardFirstWelcome.
+  ///
+  /// In pt, this message translates to:
+  /// **'Bem-vindo, futuro engenheiro!'**
+  String get dashboardFirstWelcome;
+
+  /// No description provided for @dashboardWelcomeBack.
+  ///
+  /// In pt, this message translates to:
+  /// **'Bem-vindo de volta, {name}!'**
+  String dashboardWelcomeBack(String name);
+
+  /// No description provided for @dashboardFirstWelcomeSubtitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sua jornada no Cálculo começa agora.'**
+  String get dashboardFirstWelcomeSubtitle;
+
+  /// No description provided for @dashboardWelcomeBackSubtitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Continue sua jornada no Cálculo.'**
+  String get dashboardWelcomeBackSubtitle;
+
+  /// No description provided for @dashboardCurrentProgress.
+  ///
+  /// In pt, this message translates to:
+  /// **'Progresso atual'**
+  String get dashboardCurrentProgress;
+
+  /// No description provided for @dashboardCalculusOneCompleted.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cálculo I concluído'**
+  String get dashboardCalculusOneCompleted;
+
+  /// No description provided for @dashboardContinuityCompleted.
+  ///
+  /// In pt, this message translates to:
+  /// **'Continuidade concluída'**
+  String get dashboardContinuityCompleted;
+
+  /// No description provided for @dashboardLimitsCompleted.
+  ///
+  /// In pt, this message translates to:
+  /// **'Limites concluído'**
+  String get dashboardLimitsCompleted;
+
+  /// No description provided for @dashboardFoundationsCompleted.
+  ///
+  /// In pt, this message translates to:
+  /// **'Fundamentos Matemáticos concluído'**
+  String get dashboardFoundationsCompleted;
+
+  /// No description provided for @dashboardEquationsCompleted.
+  ///
+  /// In pt, this message translates to:
+  /// **'Equações e Inequações concluídas'**
+  String get dashboardEquationsCompleted;
+
+  /// No description provided for @dashboardAlgebraCompleted.
+  ///
+  /// In pt, this message translates to:
+  /// **'Álgebra Fundamental concluída'**
+  String get dashboardAlgebraCompleted;
+
+  /// No description provided for @dashboardStartFirstLesson.
+  ///
+  /// In pt, this message translates to:
+  /// **'Comece sua primeira aula'**
+  String get dashboardStartFirstLesson;
+
+  /// No description provided for @dashboardNextMission.
+  ///
+  /// In pt, this message translates to:
+  /// **'Próxima missão'**
+  String get dashboardNextMission;
+
+  /// No description provided for @dashboardMissionModuleCompleted.
+  ///
+  /// In pt, this message translates to:
+  /// **'Módulo concluído! Continue praticando para fixar o conteúdo.'**
+  String get dashboardMissionModuleCompleted;
+
+  /// No description provided for @dashboardMissionDerivatives.
+  ///
+  /// In pt, this message translates to:
+  /// **'Próxima etapa: estudar Derivadas.'**
+  String get dashboardMissionDerivatives;
+
+  /// No description provided for @dashboardMissionContinuity.
+  ///
+  /// In pt, this message translates to:
+  /// **'Próxima etapa: estudar Continuidade.'**
+  String get dashboardMissionContinuity;
+
+  /// No description provided for @dashboardMissionLimits.
+  ///
+  /// In pt, this message translates to:
+  /// **'Inicie Cálculo I com a aula de Limites.'**
+  String get dashboardMissionLimits;
+
+  /// No description provided for @dashboardMissionFunctions.
+  ///
+  /// In pt, this message translates to:
+  /// **'Continue com Aula 3 — Funções.'**
+  String get dashboardMissionFunctions;
+
+  /// No description provided for @dashboardMissionEquations.
+  ///
+  /// In pt, this message translates to:
+  /// **'Continue com Equações e Inequações.'**
+  String get dashboardMissionEquations;
+
+  /// No description provided for @dashboardMissionFoundations.
+  ///
+  /// In pt, this message translates to:
+  /// **'Avance na trilha de Fundamentos Matemáticos.'**
+  String get dashboardMissionFoundations;
+
+  /// No description provided for @dashboardContinuePath.
+  ///
+  /// In pt, this message translates to:
+  /// **'Continuar trilha'**
+  String get dashboardContinuePath;
+
+  /// No description provided for @level.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nível'**
+  String get level;
+
+  /// No description provided for @xp.
+  ///
+  /// In pt, this message translates to:
+  /// **'XP'**
+  String get xp;
+
+  /// No description provided for @gold.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ouro'**
+  String get gold;
+
+  /// No description provided for @statisticsYourProgress.
+  ///
+  /// In pt, this message translates to:
+  /// **'Seu progresso'**
+  String get statisticsYourProgress;
+
+  /// No description provided for @statisticsSubtitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Acompanhe sua evolução com dados reais dos seus estudos.'**
+  String get statisticsSubtitle;
+
+  /// No description provided for @statisticsCheckingPremium.
+  ///
+  /// In pt, this message translates to:
+  /// **'Verificando acesso Premium...'**
+  String get statisticsCheckingPremium;
+
+  /// No description provided for @statisticsTotalXp.
+  ///
+  /// In pt, this message translates to:
+  /// **'XP total'**
+  String get statisticsTotalXp;
+
+  /// No description provided for @statisticsLevelStudyMessage.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nível {level} • Continue estudando para evoluir.'**
+  String statisticsLevelStudyMessage(int level);
+
+  /// No description provided for @statisticsCompletedLessons.
+  ///
+  /// In pt, this message translates to:
+  /// **'Aulas concluídas'**
+  String get statisticsCompletedLessons;
+
+  /// No description provided for @statisticsAccumulatedGold.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ouro acumulado'**
+  String get statisticsAccumulatedGold;
+
+  /// No description provided for @statisticsTodayActivity.
+  ///
+  /// In pt, this message translates to:
+  /// **'Atividade de hoje'**
+  String get statisticsTodayActivity;
+
+  /// No description provided for @statisticsDailyGoal.
+  ///
+  /// In pt, this message translates to:
+  /// **'Meta diária'**
+  String get statisticsDailyGoal;
+
+  /// No description provided for @statisticsDailyGoalCompleted.
+  ///
+  /// In pt, this message translates to:
+  /// **'Meta concluída! Você respondeu {answered} questões hoje.'**
+  String statisticsDailyGoalCompleted(int answered);
+
+  /// No description provided for @statisticsDailyGoalRemaining.
+  ///
+  /// In pt, this message translates to:
+  /// **'Responda {remaining} questões para concluir a meta.'**
+  String statisticsDailyGoalRemaining(int remaining);
+
+  /// No description provided for @statisticsStreakDay.
+  ///
+  /// In pt, this message translates to:
+  /// **'dia seguido'**
+  String get statisticsStreakDay;
+
+  /// No description provided for @statisticsStreakDays.
+  ///
+  /// In pt, this message translates to:
+  /// **'dias seguidos'**
+  String get statisticsStreakDays;
+
+  /// No description provided for @statisticsPerformance.
+  ///
+  /// In pt, this message translates to:
+  /// **'Desempenho'**
+  String get statisticsPerformance;
+
+  /// No description provided for @statisticsCorrectAnswers.
+  ///
+  /// In pt, this message translates to:
+  /// **'Acertos'**
+  String get statisticsCorrectAnswers;
+
+  /// No description provided for @statisticsIncorrectAnswers.
+  ///
+  /// In pt, this message translates to:
+  /// **'Erros'**
+  String get statisticsIncorrectAnswers;
+
+  /// No description provided for @statisticsOverallAccuracy.
+  ///
+  /// In pt, this message translates to:
+  /// **'Precisão geral'**
+  String get statisticsOverallAccuracy;
+
+  /// No description provided for @statisticsAccuracyNoAnswers.
+  ///
+  /// In pt, this message translates to:
+  /// **'Responda exercícios para calcular sua precisão.'**
+  String get statisticsAccuracyNoAnswers;
+
+  /// No description provided for @statisticsAccuracyCalculated.
+  ///
+  /// In pt, this message translates to:
+  /// **'Calculada com todas as respostas registradas.'**
+  String get statisticsAccuracyCalculated;
+
+  /// No description provided for @statisticsContent.
+  ///
+  /// In pt, this message translates to:
+  /// **'Conteúdo'**
+  String get statisticsContent;
+
+  /// No description provided for @statisticsContentCompleted.
+  ///
+  /// In pt, this message translates to:
+  /// **'Conteúdo concluído'**
+  String get statisticsContentCompleted;
+
+  /// No description provided for @statisticsProgressFirstLesson.
+  ///
+  /// In pt, this message translates to:
+  /// **'Conclua sua primeira aula para iniciar suas estatísticas.'**
+  String get statisticsProgressFirstLesson;
+
+  /// No description provided for @statisticsProgressAllCompleted.
+  ///
+  /// In pt, this message translates to:
+  /// **'Você concluiu todo o conteúdo disponível nesta versão.'**
+  String get statisticsProgressAllCompleted;
+
+  /// No description provided for @statisticsProgressRemaining.
+  ///
+  /// In pt, this message translates to:
+  /// **'{remaining} {lessonWord} no conteúdo atual.'**
+  String statisticsProgressRemaining(int remaining, String lessonWord);
+
+  /// No description provided for @statisticsRemainingLesson.
+  ///
+  /// In pt, this message translates to:
+  /// **'aula restante'**
+  String get statisticsRemainingLesson;
+
+  /// No description provided for @statisticsRemainingLessons.
+  ///
+  /// In pt, this message translates to:
+  /// **'aulas restantes'**
+  String get statisticsRemainingLessons;
+
+  /// No description provided for @settingsPrivacyAndData.
+  ///
+  /// In pt, this message translates to:
+  /// **'Privacidade e dados'**
+  String get settingsPrivacyAndData;
+
+  /// No description provided for @settingsPrivacySubtitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Política de privacidade e exclusão de conta'**
+  String get settingsPrivacySubtitle;
+
+  /// No description provided for @settingsNotifications.
+  ///
+  /// In pt, this message translates to:
+  /// **'Notificações'**
+  String get settingsNotifications;
+
+  /// No description provided for @settingsNotificationsSubtitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Lembretes de estudo e metas diárias'**
+  String get settingsNotificationsSubtitle;
+
+  /// No description provided for @settingsTheme.
+  ///
+  /// In pt, this message translates to:
+  /// **'Tema'**
+  String get settingsTheme;
+
+  /// No description provided for @settingsThemeSubtitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Modo claro ativado'**
+  String get settingsThemeSubtitle;
+
+  /// No description provided for @settingsSubscription.
+  ///
+  /// In pt, this message translates to:
+  /// **'Assinatura'**
+  String get settingsSubscription;
+
+  /// No description provided for @settingsPremiumAccessActive.
+  ///
+  /// In pt, this message translates to:
+  /// **'Você possui acesso aos recursos Premium.'**
+  String get settingsPremiumAccessActive;
+
+  /// No description provided for @settingsPremiumAccessFree.
+  ///
+  /// In pt, this message translates to:
+  /// **'Assine para liberar todos os recursos.'**
+  String get settingsPremiumAccessFree;
+
+  /// No description provided for @settingsRestorePurchases.
+  ///
+  /// In pt, this message translates to:
+  /// **'Restaurar compras'**
+  String get settingsRestorePurchases;
+
+  /// No description provided for @settingsRestorePurchasesSubtitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Recupere uma assinatura comprada anteriormente'**
+  String get settingsRestorePurchasesSubtitle;
+
+  /// No description provided for @settingsManageSubscription.
+  ///
+  /// In pt, this message translates to:
+  /// **'Gerenciar assinatura'**
+  String get settingsManageSubscription;
+
+  /// No description provided for @settingsManageSubscriptionSubtitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Consulte, altere ou cancele seu plano'**
+  String get settingsManageSubscriptionSubtitle;
+
+  /// No description provided for @settingsSignOut.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sair da conta'**
+  String get settingsSignOut;
+
+  /// No description provided for @settingsDeleteAccount.
+  ///
+  /// In pt, this message translates to:
+  /// **'Excluir minha conta'**
+  String get settingsDeleteAccount;
+
+  /// No description provided for @settingsDeleteAccountSubtitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Apague permanentemente sua conta e seu progresso'**
+  String get settingsDeleteAccountSubtitle;
+
+  /// No description provided for @settingsPrivacyOpenError.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível abrir a página de privacidade.'**
+  String get settingsPrivacyOpenError;
+
+  /// No description provided for @settingsPremiumUnavailable.
+  ///
+  /// In pt, this message translates to:
+  /// **'O sistema Premium está indisponível no momento.'**
+  String get settingsPremiumUnavailable;
+
+  /// No description provided for @settingsRestoreSuccess.
+  ///
+  /// In pt, this message translates to:
+  /// **'Compras restauradas. Seu acesso Premium está ativo.'**
+  String get settingsRestoreSuccess;
+
+  /// No description provided for @settingsRestoreNone.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhuma compra Premium foi encontrada para esta conta.'**
+  String get settingsRestoreNone;
+
+  /// No description provided for @settingsRestoreError.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível restaurar suas compras.'**
+  String get settingsRestoreError;
+
+  /// No description provided for @settingsCustomerCenterError.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível abrir o gerenciamento da assinatura.'**
+  String get settingsCustomerCenterError;
+
+  /// No description provided for @settingsSignOutTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sair da conta?'**
+  String get settingsSignOutTitle;
+
+  /// No description provided for @settingsSignOutDescription.
+  ///
+  /// In pt, this message translates to:
+  /// **'Seu progresso permanecerá salvo e poderá ser recuperado quando você entrar novamente.'**
+  String get settingsSignOutDescription;
+
+  /// No description provided for @settingsSignOutAction.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sair'**
+  String get settingsSignOutAction;
+
+  /// No description provided for @settingsSignOutError.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível sair da conta. Tente novamente.'**
+  String get settingsSignOutError;
+
+  /// No description provided for @settingsSignOutUnexpectedError.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ocorreu um erro inesperado ao sair da conta.'**
+  String get settingsSignOutUnexpectedError;
+
+  /// No description provided for @settingsDeleteTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Excluir conta permanentemente?'**
+  String get settingsDeleteTitle;
+
+  /// No description provided for @settingsDeleteWarning.
+  ///
+  /// In pt, this message translates to:
+  /// **'Seu progresso, XP, moedas e conta serão apagados. Essa ação não poderá ser desfeita.'**
+  String get settingsDeleteWarning;
+
+  /// No description provided for @settingsDeleteSubscriptionWarning.
+  ///
+  /// In pt, this message translates to:
+  /// **'A exclusão não cancela uma assinatura ativa. Cancele-a em “Gerenciar assinatura” antes de continuar.'**
+  String get settingsDeleteSubscriptionWarning;
+
+  /// No description provided for @settingsDeletePasswordLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Confirme sua senha'**
+  String get settingsDeletePasswordLabel;
+
+  /// No description provided for @settingsDeletePermanent.
+  ///
+  /// In pt, this message translates to:
+  /// **'Excluir permanentemente'**
+  String get settingsDeletePermanent;
+
+  /// No description provided for @settingsDeleteIdentifyError.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível identificar a conta atual.'**
+  String get settingsDeleteIdentifyError;
+
+  /// No description provided for @settingsDeleteFunctionError.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível concluir a exclusão. Tente novamente.'**
+  String get settingsDeleteFunctionError;
+
+  /// No description provided for @settingsDeleteWrongPassword.
+  ///
+  /// In pt, this message translates to:
+  /// **'Senha incorreta. A conta não foi excluída.'**
+  String get settingsDeleteWrongPassword;
+
+  /// No description provided for @settingsDeleteTooManyRequests.
+  ///
+  /// In pt, this message translates to:
+  /// **'Muitas tentativas. Aguarde um pouco e tente novamente.'**
+  String get settingsDeleteTooManyRequests;
+
+  /// No description provided for @settingsDeleteNetworkError.
+  ///
+  /// In pt, this message translates to:
+  /// **'Verifique sua conexão com a internet e tente novamente.'**
+  String get settingsDeleteNetworkError;
+
+  /// No description provided for @settingsDeleteRequiresRecentLogin.
+  ///
+  /// In pt, this message translates to:
+  /// **'Entre novamente na conta antes de tentar excluí-la.'**
+  String get settingsDeleteRequiresRecentLogin;
+
+  /// No description provided for @settingsDeleteGenericError.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível excluir a conta. Tente novamente.'**
+  String get settingsDeleteGenericError;
+
+  /// No description provided for @moduleDetailSubtitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Construa a base necessária para estudar Cálculo.'**
+  String get moduleDetailSubtitle;
+
+  /// No description provided for @moduleDetailCompleted.
+  ///
+  /// In pt, this message translates to:
+  /// **'Módulo concluído'**
+  String get moduleDetailCompleted;
+
+  /// No description provided for @moduleDetailLessonOneCompleted.
+  ///
+  /// In pt, this message translates to:
+  /// **'Aula 1 concluída'**
+  String get moduleDetailLessonOneCompleted;
+
+  /// No description provided for @moduleDetailLessonTwoCompleted.
+  ///
+  /// In pt, this message translates to:
+  /// **'Aula 2 concluída'**
+  String get moduleDetailLessonTwoCompleted;
+
+  /// No description provided for @moduleDetailStartFirstLesson.
+  ///
+  /// In pt, this message translates to:
+  /// **'Comece pela primeira aula'**
+  String get moduleDetailStartFirstLesson;
+
+  /// No description provided for @moduleDetailLessonUnlocked.
+  ///
+  /// In pt, this message translates to:
+  /// **'Desbloqueada'**
+  String get moduleDetailLessonUnlocked;
+
+  /// No description provided for @moduleDetailAlgebraTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Aula 1 — Álgebra Fundamental'**
+  String get moduleDetailAlgebraTitle;
+
+  /// No description provided for @moduleDetailAlgebraSubtitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'8 aulas • expressões, potências e fatoração'**
+  String get moduleDetailAlgebraSubtitle;
+
+  /// No description provided for @moduleDetailEquationsTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Aula 2 — Equações e Inequações'**
+  String get moduleDetailEquationsTitle;
+
+  /// No description provided for @moduleDetailEquationsSubtitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Manipulação algébrica e resolução'**
+  String get moduleDetailEquationsSubtitle;
+
+  /// No description provided for @moduleDetailFunctionsTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Aula 3 — Funções'**
+  String get moduleDetailFunctionsTitle;
+
+  /// No description provided for @moduleDetailFunctionsSubtitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Domínio, imagem e gráficos'**
+  String get moduleDetailFunctionsSubtitle;
+
+  /// No description provided for @exerciseQuestionProgress.
+  ///
+  /// In pt, this message translates to:
+  /// **'Questão {current} de {total}'**
+  String exerciseQuestionProgress(int current, int total);
+
+  /// No description provided for @exerciseAlgebraInstruction.
+  ///
+  /// In pt, this message translates to:
+  /// **'Escolha a melhor transformação algébrica.'**
+  String get exerciseAlgebraInstruction;
+
+  /// No description provided for @exerciseDifficultyFoundation.
+  ///
+  /// In pt, this message translates to:
+  /// **'Fundamentos'**
+  String get exerciseDifficultyFoundation;
+
+  /// No description provided for @exerciseDifficultyIntermediate.
+  ///
+  /// In pt, this message translates to:
+  /// **'Intermediária'**
+  String get exerciseDifficultyIntermediate;
+
+  /// No description provided for @exerciseDifficultyChallenge.
+  ///
+  /// In pt, this message translates to:
+  /// **'Desafio'**
+  String get exerciseDifficultyChallenge;
+
+  /// No description provided for @exerciseChooseAlternative.
+  ///
+  /// In pt, this message translates to:
+  /// **'Escolha uma alternativa antes de continuar.'**
+  String get exerciseChooseAlternative;
+
+  /// No description provided for @exerciseFinish.
+  ///
+  /// In pt, this message translates to:
+  /// **'Finalizar exercícios'**
+  String get exerciseFinish;
+
+  /// No description provided for @exerciseNextQuestion.
+  ///
+  /// In pt, this message translates to:
+  /// **'Próxima questão'**
+  String get exerciseNextQuestion;
+
+  /// No description provided for @resultExercisesCompletedSemantic.
+  ///
+  /// In pt, this message translates to:
+  /// **'Exercícios concluídos'**
+  String get resultExercisesCompletedSemantic;
+
+  /// No description provided for @resultGoalReached.
+  ///
+  /// In pt, this message translates to:
+  /// **'Objetivo atingido!'**
+  String get resultGoalReached;
+
+  /// No description provided for @resultKeepPracticing.
+  ///
+  /// In pt, this message translates to:
+  /// **'Continue praticando'**
+  String get resultKeepPracticing;
+
+  /// No description provided for @resultApprovedMessage.
+  ///
+  /// In pt, this message translates to:
+  /// **'Você alcançou o rendimento necessário para avançar.'**
+  String get resultApprovedMessage;
+
+  /// No description provided for @resultNeedEightyPercent.
+  ///
+  /// In pt, this message translates to:
+  /// **'Você precisa de pelo menos 80% para desbloquear a próxima aula.'**
+  String get resultNeedEightyPercent;
+
+  /// No description provided for @resultAccuracyPerformance.
+  ///
+  /// In pt, this message translates to:
+  /// **'{percentage}% de precisão'**
+  String resultAccuracyPerformance(int percentage);
+
+  /// No description provided for @resultCorrectAnswers.
+  ///
+  /// In pt, this message translates to:
+  /// **'Acertos'**
+  String get resultCorrectAnswers;
+
+  /// No description provided for @resultIncorrectAnswers.
+  ///
+  /// In pt, this message translates to:
+  /// **'Erros'**
+  String get resultIncorrectAnswers;
+
+  /// No description provided for @resultAccuracy.
+  ///
+  /// In pt, this message translates to:
+  /// **'Precisão'**
+  String get resultAccuracy;
+
+  /// No description provided for @resultXpEarned.
+  ///
+  /// In pt, this message translates to:
+  /// **'XP ganho'**
+  String get resultXpEarned;
+
+  /// No description provided for @resultGoldEarned.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ouro ganho'**
+  String get resultGoldEarned;
+
+  /// No description provided for @resultReviewOneError.
+  ///
+  /// In pt, this message translates to:
+  /// **'Revisar 1 erro'**
+  String get resultReviewOneError;
+
+  /// No description provided for @resultReviewErrors.
+  ///
+  /// In pt, this message translates to:
+  /// **'Revisar {count} erros'**
+  String resultReviewErrors(int count);
+
+  /// No description provided for @resultReceiveReward.
+  ///
+  /// In pt, this message translates to:
+  /// **'Receber recompensa'**
+  String get resultReceiveReward;
+
+  /// No description provided for @resultBackToPath.
+  ///
+  /// In pt, this message translates to:
+  /// **'Voltar para a trilha'**
+  String get resultBackToPath;
+
+  /// No description provided for @feedbackGoodAnalysis.
+  ///
+  /// In pt, this message translates to:
+  /// **'Boa análise!'**
+  String get feedbackGoodAnalysis;
+
+  /// No description provided for @feedbackUnderstandError.
+  ///
+  /// In pt, this message translates to:
+  /// **'Vamos entender o erro'**
+  String get feedbackUnderstandError;
+
+  /// No description provided for @feedbackYourAnswer.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sua resposta: {answer}'**
+  String feedbackYourAnswer(String answer);
+
+  /// No description provided for @feedbackCorrectAnswer.
+  ///
+  /// In pt, this message translates to:
+  /// **'Resposta correta: {answer}'**
+  String feedbackCorrectAnswer(String answer);
+
+  /// No description provided for @feedbackStepByStep.
+  ///
+  /// In pt, this message translates to:
+  /// **'Explicação passo a passo'**
+  String get feedbackStepByStep;
+
+  /// No description provided for @feedbackViewResult.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ver meu resultado'**
+  String get feedbackViewResult;
+
+  /// No description provided for @feedbackContinuePracticing.
+  ///
+  /// In pt, this message translates to:
+  /// **'Continuar praticando'**
+  String get feedbackContinuePracticing;
+
+  /// No description provided for @reviewErrorsTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Revisão dos erros'**
+  String get reviewErrorsTitle;
+
+  /// No description provided for @reviewUnderstandEachAnswer.
+  ///
+  /// In pt, this message translates to:
+  /// **'Entenda cada resposta'**
+  String get reviewUnderstandEachAnswer;
+
+  /// No description provided for @reviewScoreUnchanged.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sua nota não será alterada durante a revisão.'**
+  String get reviewScoreUnchanged;
+
+  /// No description provided for @reviewErrorProgress.
+  ///
+  /// In pt, this message translates to:
+  /// **'Erro {current} de {total}'**
+  String reviewErrorProgress(int current, int total);
+
+  /// No description provided for @reviewYourAnswer.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sua resposta'**
+  String get reviewYourAnswer;
+
+  /// No description provided for @reviewCorrectAnswer.
+  ///
+  /// In pt, this message translates to:
+  /// **'Resposta correta'**
+  String get reviewCorrectAnswer;
+
+  /// No description provided for @reviewExplanation.
+  ///
+  /// In pt, this message translates to:
+  /// **'Explicação'**
+  String get reviewExplanation;
+
+  /// No description provided for @reviewFinish.
+  ///
+  /// In pt, this message translates to:
+  /// **'Concluir revisão'**
+  String get reviewFinish;
+
+  /// No description provided for @reviewNextError.
+  ///
+  /// In pt, this message translates to:
+  /// **'Próximo erro'**
+  String get reviewNextError;
+
+  /// No description provided for @rewardUnlocked.
+  ///
+  /// In pt, this message translates to:
+  /// **'Recompensa desbloqueada'**
+  String get rewardUnlocked;
+
+  /// No description provided for @rewardDerivativesDescription.
+  ///
+  /// In pt, this message translates to:
+  /// **'Você concluiu Derivadas e finalizou o módulo Cálculo I.'**
+  String get rewardDerivativesDescription;
+
+  /// No description provided for @rewardContinuityDescription.
+  ///
+  /// In pt, this message translates to:
+  /// **'Você concluiu a sequência de Continuidade em Cálculo I.'**
+  String get rewardContinuityDescription;
+
+  /// No description provided for @rewardLimitsDescription.
+  ///
+  /// In pt, this message translates to:
+  /// **'Você concluiu a sequência universitária de Limites.'**
+  String get rewardLimitsDescription;
+
+  /// No description provided for @rewardFunctionsDescription.
+  ///
+  /// In pt, this message translates to:
+  /// **'Você concluiu a sequência de Funções e finalizou o módulo Fundamentos Matemáticos.'**
+  String get rewardFunctionsDescription;
+
+  /// No description provided for @rewardEquationsDescription.
+  ///
+  /// In pt, this message translates to:
+  /// **'Você concluiu a sequência de Equações e Inequações.'**
+  String get rewardEquationsDescription;
+
+  /// No description provided for @rewardAlgebraDescription.
+  ///
+  /// In pt, this message translates to:
+  /// **'Você concluiu a sequência de Álgebra Fundamental.'**
+  String get rewardAlgebraDescription;
+
+  /// No description provided for @rewardModuleCompleted.
+  ///
+  /// In pt, this message translates to:
+  /// **'Módulo concluído'**
+  String get rewardModuleCompleted;
+
+  /// No description provided for @rewardLessonCompleted.
+  ///
+  /// In pt, this message translates to:
+  /// **'Aula concluída'**
+  String get rewardLessonCompleted;
+
+  /// No description provided for @rewardExperienceReceived.
+  ///
+  /// In pt, this message translates to:
+  /// **'Experiência recebida'**
+  String get rewardExperienceReceived;
+
+  /// No description provided for @rewardGoldReceived.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ouro recebido'**
+  String get rewardGoldReceived;
+
+  /// No description provided for @rewardProgress.
+  ///
+  /// In pt, this message translates to:
+  /// **'Progresso'**
+  String get rewardProgress;
+
+  /// No description provided for @miniChallengeTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Mini Desafio'**
+  String get miniChallengeTitle;
+
+  /// No description provided for @miniChallengeQuickTest.
+  ///
+  /// In pt, this message translates to:
+  /// **'Teste rápido'**
+  String get miniChallengeQuickTest;
+
+  /// No description provided for @miniChallengeSubtitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Escolha a resposta correta para liberar os próximos exercícios.'**
+  String get miniChallengeSubtitle;
+
+  /// No description provided for @miniChallengeQuestion.
+  ///
+  /// In pt, this message translates to:
+  /// **'Qual é o resultado de 4x + 2x?'**
+  String get miniChallengeQuestion;
+
+  /// No description provided for @miniChallengeChooseAnswer.
+  ///
+  /// In pt, this message translates to:
+  /// **'Escolha uma alternativa antes de responder.'**
+  String get miniChallengeChooseAnswer;
+
+  /// No description provided for @miniChallengeIncorrect.
+  ///
+  /// In pt, this message translates to:
+  /// **'Resposta incorreta. Tente novamente.'**
+  String get miniChallengeIncorrect;
+
+  /// No description provided for @miniChallengeRespond.
+  ///
+  /// In pt, this message translates to:
+  /// **'Responder'**
+  String get miniChallengeRespond;
+
+  /// No description provided for @miniChallengeXpHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Você ganha XP ao acertar o desafio.'**
+  String get miniChallengeXpHint;
+
   /// No description provided for @back.
   ///
   /// In pt, this message translates to:
