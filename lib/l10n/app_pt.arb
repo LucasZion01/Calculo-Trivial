@@ -2,6 +2,9 @@
   "@@locale": "pt",
 
   "appName": "Cálculo Trivial",
+  "appTagline": "Domine o cálculo. Evolua além.",
+  "appSymbolSemanticLabel": "Símbolo do Cálculo Trivial",
+  "loading": "Carregando",
 
   "home": "Início",
   "learningPath": "Trilha",
@@ -20,26 +23,152 @@
   "accountSettingsSubtitle": "Gerencie sua conta, preferências e assinatura.",
   "unidentifiedAccount": "Conta não identificada",
 
+  "name": "Nome",
+  "email": "E-mail",
+  "password": "Senha",
+  "confirmPassword": "Confirmar senha",
+
+  "login": "Entrar",
+  "createAccount": "Criar conta",
+  "forgotPassword": "Esqueci minha senha",
+
+  "loginAccessAccount": "Acesse sua conta",
+  "loginJourneySubtitle": "Entre para iniciar ou continuar sua jornada.",
+  "loginEmailHint": "Digite seu e-mail",
+  "loginPasswordHint": "Digite sua senha",
+  "loginNoAccount": "Ainda não tem uma conta?",
+  "loginFillEmailAndPassword": "Preencha o e-mail e a senha.",
+  "loginInvalidEmail": "Digite um endereço de e-mail válido.",
+  "loginUserDisabled": "Esta conta foi desativada.",
+  "loginInvalidCredentials": "E-mail ou senha incorretos.",
+  "loginTooManyRequests": "Muitas tentativas. Aguarde um pouco e tente novamente.",
+  "loginNetworkError": "Verifique sua conexão com a internet.",
+  "loginGenericError": "Não foi possível entrar. Tente novamente.",
+  "loginUnexpectedError": "Ocorreu um erro inesperado ao entrar.",
+  "loginEnterEmailForReset": "Digite seu e-mail para receber a recuperação de senha.",
+  "loginResetEmailSent": "Enviamos as instruções de recuperação para o seu e-mail.",
+  "loginResetEmailError": "Não foi possível enviar a recuperação de senha.",
+
+  "registerCreateAccountTitle": "Crie sua conta",
+  "registerJourneySubtitle": "Comece sua jornada de aprendizagem.",
+  "registerNameHint": "Digite seu nome",
+  "registerPasswordHint": "Crie uma senha",
+  "registerConfirmPasswordHint": "Digite sua senha novamente",
+  "registerAlreadyHaveAccount": "Já possui uma conta?",
+  "registerFillAllFields": "Preencha todos os campos.",
+  "registerEnterName": "Digite seu nome.",
+  "registerPasswordTooShort": "A senha precisa ter pelo menos 6 caracteres.",
+  "registerPasswordsDoNotMatch": "As senhas não coincidem.",
+  "registerEmailAlreadyInUse": "Já existe uma conta cadastrada com este e-mail.",
+  "registerWeakPassword": "Crie uma senha mais forte, com pelo menos 6 caracteres.",
+  "registerOperationNotAllowed": "O cadastro por e-mail não está disponível.",
+  "registerGenericError": "Não foi possível criar sua conta.",
+  "registerUnexpectedError": "Ocorreu um erro inesperado ao criar sua conta.",
+
+  "student": "Estudante",
+  "emailNotProvided": "E-mail não informado",
+
+  "levelLabel": "Nível {level}",
+  "@levelLabel": {
+    "placeholders": {
+      "level": { "type": "int" }
+    }
+  },
+
+  "xpAndGold": "{xp} XP • {gold} de ouro",
+  "@xpAndGold": {
+    "placeholders": {
+      "xp": { "type": "int" },
+      "gold": { "type": "int" }
+    }
+  },
+
+  "xpRemainingForNextLevel": "Faltam {xp} XP para o próximo nível.",
+  "@xpRemainingForNextLevel": {
+    "placeholders": {
+      "xp": { "type": "int" }
+    }
+  },
+
+  "achievements": "Conquistas",
+  "premium": "Premium",
+  "premiumActive": "Premium ativo",
+  "premiumActiveUppercase": "PREMIUM ATIVO",
+  "premiumUppercase": "PREMIUM",
+  "freePlan": "Plano gratuito",
+  "premiumManageSubscription": "Gerencie sua assinatura e suas compras.",
+  "premiumDiscoverFeatures": "Conheça os recursos do Cálculo Trivial Premium.",
+
+  "achievementCalculusOneMastered": "Cálculo I dominado",
+  "achievementCalculusOneMasteredDescription": "Você concluiu Limites, Continuidade e Derivadas.",
+  "achievementContinuityCompleted": "Funções sem interrupções",
+  "achievementContinuityCompletedDescription": "Você concluiu Continuidade em Cálculo I.",
+  "achievementFirstCalculusSteps": "Primeiros passos no Cálculo I",
+  "achievementFirstCalculusStepsDescription": "Você concluiu sua primeira sequência de Limites.",
+  "achievementFoundationsMastered": "Fundamentos dominados",
+  "achievementFoundationsMasteredDescription": "Você concluiu o módulo Fundamentos Matemáticos.",
+  "achievementEquationsCompleted": "Equações concluídas",
+  "achievementEquationsCompletedDescription": "Você avançou em Equações e Inequações.",
+  "achievementFirstLessonCompleted": "Primeira aula concluída",
+  "achievementFirstLessonCompletedDescription": "Você iniciou sua jornada no Cálculo Trivial.",
+  "achievementFirstAchievement": "Sua primeira conquista",
+  "achievementFirstAchievementDescription": "Conclua a primeira aula para desbloquear.",
+
+  "learningPathTitle": "Trilha de Aprendizagem",
+  "learningPathSubtitle": "Avance módulo por módulo até dominar o Cálculo.",
+  "mathematicalFoundations": "Fundamentos Matemáticos",
+  "mathematicalFoundationsSubtitle": "Pré-Cálculo, funções e base algébrica",
+  "calculusOne": "Cálculo I",
+  "calculusOneSubtitle": "Limites, continuidade e derivadas",
+  "calculusTwo": "Cálculo II",
+  "calculusTwoSubtitle": "Integrais, séries e equações diferenciais",
+  "unlocked": "Desbloqueado",
+
+  "dashboardFirstWelcome": "Bem-vindo, futuro engenheiro!",
+  "dashboardWelcomeBack": "Bem-vindo de volta, {name}!",
+  "@dashboardWelcomeBack": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "dashboardFirstWelcomeSubtitle": "Sua jornada no Cálculo começa agora.",
+  "dashboardWelcomeBackSubtitle": "Continue sua jornada no Cálculo.",
+  "dashboardCurrentProgress": "Progresso atual",
+  "dashboardCalculusOneCompleted": "Cálculo I concluído",
+  "dashboardContinuityCompleted": "Continuidade concluída",
+  "dashboardLimitsCompleted": "Limites concluído",
+  "dashboardFoundationsCompleted": "Fundamentos Matemáticos concluído",
+  "dashboardEquationsCompleted": "Equações e Inequações concluídas",
+  "dashboardAlgebraCompleted": "Álgebra Fundamental concluída",
+  "dashboardStartFirstLesson": "Comece sua primeira aula",
+  "dashboardNextMission": "Próxima missão",
+  "dashboardMissionModuleCompleted": "Módulo concluído! Continue praticando para fixar o conteúdo.",
+  "dashboardMissionDerivatives": "Próxima etapa: estudar Derivadas.",
+  "dashboardMissionContinuity": "Próxima etapa: estudar Continuidade.",
+  "dashboardMissionLimits": "Inicie Cálculo I com a aula de Limites.",
+  "dashboardMissionFunctions": "Continue com Aula 3 — Funções.",
+  "dashboardMissionEquations": "Continue com Equações e Inequações.",
+  "dashboardMissionFoundations": "Avance na trilha de Fundamentos Matemáticos.",
+  "dashboardContinuePath": "Continuar trilha",
+  "level": "Nível",
+  "xp": "XP",
+  "gold": "Ouro",
+
   "back": "Voltar",
   "continueLabel": "Continuar",
   "finish": "Concluir",
   "cancel": "Cancelar",
-
   "available": "Disponível",
   "locked": "Bloqueada",
   "completed": "Concluída",
-
   "lesson": "Aula",
   "lessons": "Aulas",
   "lessonCompleted": "Aula concluída",
-
   "startExercises": "Iniciar exercícios",
   "readyToPractice": "Pronto para praticar",
   "finalPracticeLocked": "Prática final bloqueada",
-
   "yourJourney": "Sua jornada",
   "moduleProgress": "Progresso do módulo",
-
   "equationsAndInequalities": "Equações e Inequações",
   "fundamentalAlgebra": "Álgebra Fundamental",
   "functions": "Funções",
@@ -50,9 +179,7 @@
   "approxMinutes": "≈ {minutes} min",
   "@approxMinutes": {
     "placeholders": {
-      "minutes": {
-        "type": "int"
-      }
+      "minutes": { "type": "int" }
     }
   }
 }
