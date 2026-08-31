@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:calcquest/l10n/app_localizations.dart';
 import 'package:calcquest/shared/services/premium_access_guard.dart';
 import 'package:calcquest/shared/state/app_progress.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
@@ -95,20 +96,24 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
         .toDouble();
   }
 
-  String _progressDescription(int completedLessons) {
+  String _progressDescription(
+    int completedLessons,
+    AppLocalizations l10n,
+  ) {
     if (completedLessons == 0) {
-      return 'Conclua sua primeira aula para iniciar suas estatísticas.';
+      return l10n.statisticsProgressFirstLesson;
     }
 
     if (completedLessons >= _availableLessonCount) {
-      return 'Você concluiu todo o conteúdo disponível nesta versão.';
+      return l10n.statisticsProgressAllCompleted;
     }
 
     final remaining = _availableLessonCount - completedLessons;
+    final lessonWord = remaining == 1
+        ? l10n.statisticsRemainingLesson
+        : l10n.statisticsRemainingLessons;
 
-    final lessonWord = remaining == 1 ? 'aula restante' : 'aulas restantes';
-
-    return '$remaining $lessonWord no conteúdo atual.';
+    return l10n.statisticsProgressRemaining(remaining, lessonWord);
   }
 
   Widget _buildSmallStatCard({
@@ -160,7 +165,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
     );
   }
 
-  Widget _buildLoadingScreen() {
+  Widget _buildLoadingScreen(AppLocalizations l10n) {
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
@@ -173,7 +178,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                 const CircularProgressIndicator(),
                 const SizedBox(height: AppSpacing.md),
                 Text(
-                  'Verificando acesso Premium...',
+                  l10n.statisticsCheckingPremium,
                   textAlign: TextAlign.center,
                   style: AppTypography.bodyMedium,
                 ),
@@ -187,8 +192,10 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     if (_checkingPremiumAccess) {
-      return _buildLoadingScreen();
+      return _buildLoadingScreen(l10n);
     }
 
     return ValueListenableBuilder<int>(
@@ -208,7 +215,9 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
         final dailyGoal = AppProgress.dailyQuestionGoal;
         final dailyGoalProgress = AppProgress.dailyGoalProgress;
         final dailyGoalCompleted = dailyAnswers >= dailyGoal;
-        final streakLabel = studyStreak == 1 ? 'dia seguido' : 'dias seguidos';
+        final streakLabel = studyStreak == 1
+            ? l10n.statisticsStreakDay
+            : l10n.statisticsStreakDays;
 
         return Scaffold(
           backgroundColor: AppColors.background,
@@ -224,16 +233,19 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Estatísticas',
+                    l10n.statistics,
                     style: AppTypography.labelMedium.copyWith(
                       color: AppColors.primary,
                     ),
                   ),
                   const SizedBox(height: AppSpacing.xs),
-                  Text('Seu progresso', style: AppTypography.headingMedium),
+                  Text(
+                    l10n.statisticsYourProgress,
+                    style: AppTypography.headingMedium,
+                  ),
                   const SizedBox(height: AppSpacing.xs),
                   Text(
-                    'Acompanhe sua evolução com dados reais dos seus estudos.',
+                    l10n.statisticsSubtitle,
                     style: AppTypography.bodyMedium,
                   ),
                   const SizedBox(height: AppSpacing.lg),
@@ -277,14 +289,17 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                               ),
                             ),
                             const SizedBox(width: AppSpacing.sm),
-                            Text('XP total', style: AppTypography.titleMedium),
+                            Text(
+                              l10n.statisticsTotalXp,
+                              style: AppTypography.titleMedium,
+                            ),
                           ],
                         ),
                         const SizedBox(height: AppSpacing.md),
                         Text('$xp XP', style: AppTypography.headingLarge),
                         const SizedBox(height: AppSpacing.xs),
                         Text(
-                          'Nível $level • Continue estudando para evoluir.',
+                          l10n.statisticsLevelStudyMessage(level),
                           style: AppTypography.bodySmall,
                         ),
                       ],
@@ -298,7 +313,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                         child: _buildSmallStatCard(
                           icon: Icons.menu_book_outlined,
                           value: '$completedLessons/$_availableLessonCount',
-                          label: 'Aulas concluídas',
+                          label: l10n.statisticsCompletedLessons,
                           iconColor: AppColors.success,
                           iconBackground: AppColors.successLight,
                         ),
@@ -308,7 +323,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                         child: _buildSmallStatCard(
                           icon: Icons.monetization_on_outlined,
                           value: '$gold',
-                          label: 'Ouro acumulado',
+                          label: l10n.statisticsAccumulatedGold,
                           iconColor: AppColors.gold,
                           iconBackground: AppColors.goldLight,
                         ),
@@ -316,7 +331,10 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                     ],
                   ),
                   const SizedBox(height: AppSpacing.lg),
-                  Text('Atividade de hoje', style: AppTypography.titleLarge),
+                  Text(
+                    l10n.statisticsTodayActivity,
+                    style: AppTypography.titleLarge,
+                  ),
                   const SizedBox(height: AppSpacing.sm),
                   Container(
                     width: double.infinity,
@@ -366,7 +384,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                             const SizedBox(width: AppSpacing.sm),
                             Expanded(
                               child: Text(
-                                'Meta diária',
+                                l10n.statisticsDailyGoal,
                                 style: AppTypography.titleMedium,
                               ),
                             ),
@@ -386,8 +404,10 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                         const SizedBox(height: AppSpacing.xs),
                         Text(
                           dailyGoalCompleted
-                              ? 'Meta concluída! Você respondeu $dailyAnswers questões hoje.'
-                              : 'Responda ${dailyGoal - dailyAnswers} questões para concluir a meta.',
+                              ? l10n.statisticsDailyGoalCompleted(dailyAnswers)
+                              : l10n.statisticsDailyGoalRemaining(
+                                  dailyGoal - dailyAnswers,
+                                ),
                           style: AppTypography.bodySmall,
                         ),
                       ],
@@ -402,7 +422,10 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                     iconBackground: AppColors.warningLight,
                   ),
                   const SizedBox(height: AppSpacing.lg),
-                  Text('Desempenho', style: AppTypography.titleLarge),
+                  Text(
+                    l10n.statisticsPerformance,
+                    style: AppTypography.titleLarge,
+                  ),
                   const SizedBox(height: AppSpacing.sm),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -411,7 +434,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                         child: _buildSmallStatCard(
                           icon: Icons.check_circle_outline_rounded,
                           value: '$correctAnswers',
-                          label: 'Acertos',
+                          label: l10n.statisticsCorrectAnswers,
                           iconColor: AppColors.success,
                           iconBackground: AppColors.successLight,
                         ),
@@ -421,7 +444,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                         child: _buildSmallStatCard(
                           icon: Icons.cancel_outlined,
                           value: '$incorrectAnswers',
-                          label: 'Erros',
+                          label: l10n.statisticsIncorrectAnswers,
                           iconColor: AppColors.error,
                           iconBackground: AppColors.errorLight,
                         ),
@@ -471,7 +494,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                             const SizedBox(width: AppSpacing.sm),
                             Expanded(
                               child: Text(
-                                'Precisão geral',
+                                l10n.statisticsOverallAccuracy,
                                 style: AppTypography.titleMedium,
                               ),
                             ),
@@ -486,15 +509,18 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                         const SizedBox(height: AppSpacing.xs),
                         Text(
                           correctAnswers + incorrectAnswers == 0
-                              ? 'Responda exercícios para calcular sua precisão.'
-                              : 'Calculada com todas as respostas registradas.',
+                              ? l10n.statisticsAccuracyNoAnswers
+                              : l10n.statisticsAccuracyCalculated,
                           style: AppTypography.bodySmall,
                         ),
                       ],
                     ),
                   ),
                   const SizedBox(height: AppSpacing.lg),
-                  Text('Conteúdo', style: AppTypography.titleLarge),
+                  Text(
+                    l10n.statisticsContent,
+                    style: AppTypography.titleLarge,
+                  ),
                   const SizedBox(height: AppSpacing.sm),
                   Container(
                     width: double.infinity,
@@ -538,7 +564,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                             const SizedBox(width: AppSpacing.sm),
                             Expanded(
                               child: Text(
-                                'Conteúdo concluído',
+                                l10n.statisticsContentCompleted,
                                 style: AppTypography.titleMedium,
                               ),
                             ),
@@ -558,7 +584,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                         ),
                         const SizedBox(height: AppSpacing.xs),
                         Text(
-                          _progressDescription(completedLessons),
+                          _progressDescription(completedLessons, l10n),
                           style: AppTypography.bodySmall,
                         ),
                       ],
