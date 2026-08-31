@@ -219,6 +219,16 @@
   "moduleDetailFunctionsTitle": "Lesson 3 — Functions",
   "moduleDetailFunctionsSubtitle": "Domain, range, and graphs",
 
+  "exerciseQuestionProgress": "Question {current} of {total}",
+  "@exerciseQuestionProgress": { "placeholders": { "current": { "type": "int" }, "total": { "type": "int" } } },
+  "exerciseAlgebraInstruction": "Choose the best algebraic transformation.",
+  "exerciseDifficultyFoundation": "Foundations",
+  "exerciseDifficultyIntermediate": "Intermediate",
+  "exerciseDifficultyChallenge": "Challenge",
+  "exerciseChooseAlternative": "Choose an option before continuing.",
+  "exerciseFinish": "Finish exercises",
+  "exerciseNextQuestion": "Next question",
+
   "back": "Back",
   "continueLabel": "Continue",
   "finish": "Finish",
