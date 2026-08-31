@@ -85,6 +85,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Future<void> _openPrivacyPolicy() async {
+    final l10n = AppLocalizations.of(context)!;
+
     try {
       final opened = await launchUrl(
         _privacyPolicyUri,
@@ -92,14 +94,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
       );
 
       if (!opened) {
-        _showMessage('Não foi possível abrir a página de privacidade.');
+        _showMessage(l10n.settingsPrivacyOpenError);
       }
     } catch (error) {
       debugPrint(
         'Configurações: erro ao abrir política de privacidade: $error',
       );
 
-      _showMessage('Não foi possível abrir a página de privacidade.');
+      _showMessage(l10n.settingsPrivacyOpenError);
     }
   }
 
@@ -108,8 +110,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
       return;
     }
 
+    final l10n = AppLocalizations.of(context)!;
+
     if (!RevenueCatService.isConfigured) {
-      _showMessage('O sistema Premium está indisponível no momento.');
+      _showMessage(l10n.settingsPremiumUnavailable);
       return;
     }
 
@@ -125,14 +129,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
       }
 
       if (RevenueCatService.isPremium) {
-        _showMessage('Compras restauradas. Seu acesso Premium está ativo.');
+        _showMessage(l10n.settingsRestoreSuccess);
       } else {
-        _showMessage('Nenhuma compra Premium foi encontrada para esta conta.');
+        _showMessage(l10n.settingsRestoreNone);
       }
     } catch (error) {
       debugPrint('Configurações: erro ao restaurar compras: $error');
-
-      _showMessage('Não foi possível restaurar suas compras.');
+      _showMessage(l10n.settingsRestoreError);
     } finally {
       if (mounted) {
         setState(() {
@@ -147,8 +150,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
       return;
     }
 
+    final l10n = AppLocalizations.of(context)!;
+
     if (!RevenueCatService.isConfigured) {
-      _showMessage('O sistema Premium está indisponível no momento.');
+      _showMessage(l10n.settingsPremiumUnavailable);
       return;
     }
 
@@ -165,7 +170,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         'a central de assinatura: $error',
       );
 
-      _showMessage('Não foi possível abrir o gerenciamento da assinatura.');
+      _showMessage(l10n.settingsCustomerCenterError);
     } finally {
       if (mounted) {
         setState(() {
@@ -195,28 +200,27 @@ class _SettingsScreenState extends State<SettingsScreen> {
       return;
     }
 
+    final l10n = AppLocalizations.of(context)!;
+
     final shouldSignOut = await showDialog<bool>(
       context: context,
       builder: (dialogContext) {
         return AlertDialog(
-          title: const Text('Sair da conta?'),
-          content: const Text(
-            'Seu progresso permanecerá salvo e poderá ser '
-            'recuperado quando você entrar novamente.',
-          ),
+          title: Text(l10n.settingsSignOutTitle),
+          content: Text(l10n.settingsSignOutDescription),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(dialogContext).pop(false);
               },
-              child: const Text('Cancelar'),
+              child: Text(l10n.cancel),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(dialogContext).pop(true);
               },
               style: TextButton.styleFrom(foregroundColor: AppColors.error),
-              child: const Text('Sair'),
+              child: Text(l10n.settingsSignOutAction),
             ),
           ],
         );
@@ -231,6 +235,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Future<void> _signOut() async {
+    final l10n = AppLocalizations.of(context)!;
+
     setState(() {
       _isSigningOut = true;
     });
@@ -248,7 +254,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
       }
 
       await FirebaseAuth.instance.signOut();
-
       AppProgress.clearSession();
 
       if (!mounted) {
@@ -265,11 +270,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
         '${error.code} - ${error.message}',
       );
 
-      _showMessage('Não foi possível sair da conta. Tente novamente.');
+      _showMessage(l10n.settingsSignOutError);
     } catch (error) {
       debugPrint('Configurações: erro inesperado ao sair: $error');
-
-      _showMessage('Ocorreu um erro inesperado ao sair da conta.');
+      _showMessage(l10n.settingsSignOutUnexpectedError);
     } finally {
       if (mounted) {
         setState(() {
@@ -284,6 +288,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       return;
     }
 
+    final l10n = AppLocalizations.of(context)!;
     final passwordController = TextEditingController();
 
     final password = await showDialog<String>(
@@ -291,29 +296,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
       barrierDismissible: false,
       builder: (dialogContext) {
         return AlertDialog(
-          title: const Text('Excluir conta permanentemente?'),
+          title: Text(l10n.settingsDeleteTitle),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Seu progresso, XP, moedas e conta serão apagados. '
-                'Essa ação não poderá ser desfeita.',
-              ),
+              Text(l10n.settingsDeleteWarning),
               const SizedBox(height: AppSpacing.sm),
-              const Text(
-                'A exclusão não cancela uma assinatura ativa. '
-                'Cancele-a em “Gerenciar assinatura” antes de continuar.',
-              ),
+              Text(l10n.settingsDeleteSubscriptionWarning),
               const SizedBox(height: AppSpacing.md),
               TextField(
                 controller: passwordController,
                 obscureText: true,
                 autofocus: true,
                 textInputAction: TextInputAction.done,
-                decoration: const InputDecoration(
-                  labelText: 'Confirme sua senha',
-                  border: OutlineInputBorder(),
+                decoration: InputDecoration(
+                  labelText: l10n.settingsDeletePasswordLabel,
+                  border: const OutlineInputBorder(),
                 ),
                 onSubmitted: (value) {
                   if (value.isNotEmpty) {
@@ -328,7 +327,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               onPressed: () {
                 Navigator.of(dialogContext).pop();
               },
-              child: const Text('Cancelar'),
+              child: Text(l10n.cancel),
             ),
             TextButton(
               onPressed: () {
@@ -339,7 +338,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 }
               },
               style: TextButton.styleFrom(foregroundColor: AppColors.error),
-              child: const Text('Excluir permanentemente'),
+              child: Text(l10n.settingsDeletePermanent),
             ),
           ],
         );
@@ -356,11 +355,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Future<void> _deleteAccount(String password) async {
+    final l10n = AppLocalizations.of(context)!;
     final user = FirebaseAuth.instance.currentUser;
     final email = user?.email;
 
     if (user == null || email == null || email.isEmpty) {
-      _showMessage('Não foi possível identificar a conta atual.');
+      _showMessage(l10n.settingsDeleteIdentifyError);
       return;
     }
 
@@ -414,9 +414,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         'Configurações: falha pública na exclusão: ${error.code}',
       );
 
-      _showMessage(
-        'Não foi possível concluir a exclusão. Tente novamente.',
-      );
+      _showMessage(l10n.settingsDeleteFunctionError);
     } on FirebaseAuthException catch (error) {
       debugPrint(
         'Configurações: erro do Firebase ao excluir conta: '
@@ -424,22 +422,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
       );
 
       final message = switch (error.code) {
-        'invalid-credential' ||
-        'wrong-password' => 'Senha incorreta. A conta não foi excluída.',
-        'too-many-requests' =>
-          'Muitas tentativas. Aguarde um pouco e tente novamente.',
-        'network-request-failed' =>
-          'Verifique sua conexão com a internet e tente novamente.',
-        'requires-recent-login' =>
-          'Entre novamente na conta antes de tentar excluí-la.',
-        _ => 'Não foi possível excluir a conta. Tente novamente.',
+        'invalid-credential' || 'wrong-password' =>
+          l10n.settingsDeleteWrongPassword,
+        'too-many-requests' => l10n.settingsDeleteTooManyRequests,
+        'network-request-failed' => l10n.settingsDeleteNetworkError,
+        'requires-recent-login' => l10n.settingsDeleteRequiresRecentLogin,
+        _ => l10n.settingsDeleteGenericError,
       };
 
       _showMessage(message);
     } catch (error) {
       debugPrint('Configurações: erro inesperado ao excluir conta: $error');
-
-      _showMessage('Não foi possível excluir a conta. Tente novamente.');
+      _showMessage(l10n.settingsDeleteGenericError);
     } finally {
       if (mounted) {
         setState(() {
@@ -449,9 +443,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
     }
   }
 
-  Widget _buildSubscriptionStatus(bool isPremium) {
+  Widget _buildSubscriptionStatus(
+    bool isPremium,
+    AppLocalizations l10n,
+  ) {
     final statusColor = isPremium ? AppColors.success : const Color(0xFFFFB300);
-
     final statusBackground = statusColor.withValues(alpha: 0.12);
 
     return Container(
@@ -493,7 +489,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  isPremium ? 'Premium ativo' : 'Plano gratuito',
+                  isPremium ? l10n.premiumActive : l10n.freePlan,
                   style: AppTypography.titleMedium.copyWith(
                     color: statusColor,
                     fontWeight: FontWeight.w700,
@@ -502,8 +498,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 const SizedBox(height: AppSpacing.xxs),
                 Text(
                   isPremium
-                      ? 'Você possui acesso aos recursos Premium.'
-                      : 'Assine para liberar todos os recursos.',
+                      ? l10n.settingsPremiumAccessActive
+                      : l10n.settingsPremiumAccessFree,
                   style: AppTypography.bodySmall,
                 ),
               ],
@@ -641,36 +637,36 @@ class _SettingsScreenState extends State<SettingsScreen> {
               const SizedBox(height: AppSpacing.md),
               _SettingsCard(
                 icon: Icons.privacy_tip_outlined,
-                title: 'Privacidade e dados',
-                subtitle: 'Política de privacidade e exclusão de conta',
+                title: l10n.settingsPrivacyAndData,
+                subtitle: l10n.settingsPrivacySubtitle,
                 onTap: _openPrivacyPolicy,
               ),
               const SizedBox(height: AppSpacing.md),
-              const _SettingsCard(
+              _SettingsCard(
                 icon: Icons.notifications_none_rounded,
-                title: 'Notificações',
-                subtitle: 'Lembretes de estudo e metas diárias',
+                title: l10n.settingsNotifications,
+                subtitle: l10n.settingsNotificationsSubtitle,
               ),
               const SizedBox(height: AppSpacing.md),
-              const _SettingsCard(
+              _SettingsCard(
                 icon: Icons.light_mode_outlined,
-                title: 'Tema',
-                subtitle: 'Modo claro ativado',
+                title: l10n.settingsTheme,
+                subtitle: l10n.settingsThemeSubtitle,
               ),
               const SizedBox(height: AppSpacing.lg),
-              Text('Assinatura', style: AppTypography.titleLarge),
+              Text(l10n.settingsSubscription, style: AppTypography.titleLarge),
               const SizedBox(height: AppSpacing.sm),
               ValueListenableBuilder<bool>(
                 valueListenable: RevenueCatService.premiumAccess,
                 builder: (context, isPremium, child) {
-                  return _buildSubscriptionStatus(isPremium);
+                  return _buildSubscriptionStatus(isPremium, l10n);
                 },
               ),
               const SizedBox(height: AppSpacing.md),
               _SettingsCard(
                 icon: Icons.restore_rounded,
-                title: 'Restaurar compras',
-                subtitle: 'Recupere uma assinatura comprada anteriormente',
+                title: l10n.settingsRestorePurchases,
+                subtitle: l10n.settingsRestorePurchasesSubtitle,
                 onTap: _isBusy ? null : _restorePurchases,
                 trailing: _processingSubscriptionAction
                     ? const SizedBox(
@@ -683,13 +679,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
               const SizedBox(height: AppSpacing.md),
               _SettingsCard(
                 icon: Icons.manage_accounts_outlined,
-                title: 'Gerenciar assinatura',
-                subtitle: 'Consulte, altere ou cancele seu plano',
+                title: l10n.settingsManageSubscription,
+                subtitle: l10n.settingsManageSubscriptionSubtitle,
                 onTap: _isBusy ? null : _openCustomerCenter,
               ),
               const SizedBox(height: AppSpacing.lg),
               PrimaryButton(
-                text: 'Sair da conta',
+                text: l10n.settingsSignOut,
                 icon: Icons.logout_rounded,
                 variant: PrimaryButtonVariant.destructive,
                 onPressed: _isBusy ? null : _confirmSignOut,
@@ -698,8 +694,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               const SizedBox(height: AppSpacing.md),
               _SettingsCard(
                 icon: Icons.delete_forever_outlined,
-                title: 'Excluir minha conta',
-                subtitle: 'Apague permanentemente sua conta e seu progresso',
+                title: l10n.settingsDeleteAccount,
+                subtitle: l10n.settingsDeleteAccountSubtitle,
                 onTap: _isBusy ? null : _confirmDeleteAccount,
                 trailing: _isDeletingAccount
                     ? const SizedBox(
