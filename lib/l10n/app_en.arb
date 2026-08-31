@@ -69,26 +69,11 @@
   "emailNotProvided": "Email not provided",
 
   "levelLabel": "Level {level}",
-  "@levelLabel": {
-    "placeholders": {
-      "level": { "type": "int" }
-    }
-  },
-
+  "@levelLabel": { "placeholders": { "level": { "type": "int" } } },
   "xpAndGold": "{xp} XP • {gold} gold",
-  "@xpAndGold": {
-    "placeholders": {
-      "xp": { "type": "int" },
-      "gold": { "type": "int" }
-    }
-  },
-
+  "@xpAndGold": { "placeholders": { "xp": { "type": "int" }, "gold": { "type": "int" } } },
   "xpRemainingForNextLevel": "{xp} XP remaining until the next level.",
-  "@xpRemainingForNextLevel": {
-    "placeholders": {
-      "xp": { "type": "int" }
-    }
-  },
+  "@xpRemainingForNextLevel": { "placeholders": { "xp": { "type": "int" } } },
 
   "achievements": "Achievements",
   "premium": "Premium",
@@ -126,11 +111,7 @@
 
   "dashboardFirstWelcome": "Welcome, future engineer!",
   "dashboardWelcomeBack": "Welcome back, {name}!",
-  "@dashboardWelcomeBack": {
-    "placeholders": {
-      "name": { "type": "String" }
-    }
-  },
+  "@dashboardWelcomeBack": { "placeholders": { "name": { "type": "String" } } },
   "dashboardFirstWelcomeSubtitle": "Your Calculus journey starts now.",
   "dashboardWelcomeBackSubtitle": "Continue your Calculus journey.",
   "dashboardCurrentProgress": "Current progress",
@@ -159,27 +140,15 @@
   "statisticsCheckingPremium": "Checking Premium access...",
   "statisticsTotalXp": "Total XP",
   "statisticsLevelStudyMessage": "Level {level} • Keep studying to progress.",
-  "@statisticsLevelStudyMessage": {
-    "placeholders": {
-      "level": { "type": "int" }
-    }
-  },
+  "@statisticsLevelStudyMessage": { "placeholders": { "level": { "type": "int" } } },
   "statisticsCompletedLessons": "Lessons completed",
   "statisticsAccumulatedGold": "Gold earned",
   "statisticsTodayActivity": "Today's activity",
   "statisticsDailyGoal": "Daily goal",
   "statisticsDailyGoalCompleted": "Goal completed! You answered {answered} questions today.",
-  "@statisticsDailyGoalCompleted": {
-    "placeholders": {
-      "answered": { "type": "int" }
-    }
-  },
+  "@statisticsDailyGoalCompleted": { "placeholders": { "answered": { "type": "int" } } },
   "statisticsDailyGoalRemaining": "Answer {remaining} questions to complete the goal.",
-  "@statisticsDailyGoalRemaining": {
-    "placeholders": {
-      "remaining": { "type": "int" }
-    }
-  },
+  "@statisticsDailyGoalRemaining": { "placeholders": { "remaining": { "type": "int" } } },
   "statisticsStreakDay": "day in a row",
   "statisticsStreakDays": "days in a row",
   "statisticsPerformance": "Performance",
@@ -193,12 +162,7 @@
   "statisticsProgressFirstLesson": "Complete your first lesson to start your statistics.",
   "statisticsProgressAllCompleted": "You completed all content available in this version.",
   "statisticsProgressRemaining": "{remaining} {lessonWord} in the current content.",
-  "@statisticsProgressRemaining": {
-    "placeholders": {
-      "remaining": { "type": "int" },
-      "lessonWord": { "type": "String" }
-    }
-  },
+  "@statisticsProgressRemaining": { "placeholders": { "remaining": { "type": "int" }, "lessonWord": { "type": "String" } } },
   "statisticsRemainingLesson": "lesson remaining",
   "statisticsRemainingLessons": "lessons remaining",
 
@@ -242,6 +206,19 @@
   "settingsDeleteRequiresRecentLogin": "Sign in again before trying to delete your account.",
   "settingsDeleteGenericError": "Unable to delete the account. Try again.",
 
+  "moduleDetailSubtitle": "Build the foundation you need to study Calculus.",
+  "moduleDetailCompleted": "Module completed",
+  "moduleDetailLessonOneCompleted": "Lesson 1 completed",
+  "moduleDetailLessonTwoCompleted": "Lesson 2 completed",
+  "moduleDetailStartFirstLesson": "Start with the first lesson",
+  "moduleDetailLessonUnlocked": "Unlocked",
+  "moduleDetailAlgebraTitle": "Lesson 1 — Fundamental Algebra",
+  "moduleDetailAlgebraSubtitle": "8 lessons • expressions, powers, and factoring",
+  "moduleDetailEquationsTitle": "Lesson 2 — Equations and Inequalities",
+  "moduleDetailEquationsSubtitle": "Algebraic manipulation and solving",
+  "moduleDetailFunctionsTitle": "Lesson 3 — Functions",
+  "moduleDetailFunctionsSubtitle": "Domain, range, and graphs",
+
   "back": "Back",
   "continueLabel": "Continue",
   "finish": "Finish",
@@ -265,9 +242,5 @@
   "derivatives": "Derivatives",
 
   "approxMinutes": "≈ {minutes} min",
-  "@approxMinutes": {
-    "placeholders": {
-      "minutes": { "type": "int" }
-    }
-  }
+  "@approxMinutes": { "placeholders": { "minutes": { "type": "int" } } }
 }
