@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:calcquest/l10n/app_localizations.dart';
+import 'package:calcquest/shared/data/localized_continuity_exercise_content.dart';
 import 'package:calcquest/shared/data/mock_exercise_data.dart';
 import 'package:calcquest/shared/data/mock_continuity_exercise_data.dart';
 import 'package:calcquest/shared/domain/exercise_review_item.dart';
@@ -65,7 +66,10 @@ class _ContinuityExercisesScreenState extends State<ContinuityExercisesScreen> {
         .toList();
   }
 
-  ExerciseData get currentExercise => sessionExercises[currentExerciseIndex];
+  ExerciseData get currentExercise => localizeContinuityExerciseContent(
+        sessionExercises[currentExerciseIndex],
+        Localizations.localeOf(context),
+      );
 
   bool get isLastExercise =>
       currentExerciseIndex == sessionExercises.length - 1;
