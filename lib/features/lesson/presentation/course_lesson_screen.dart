@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:calcquest/shared/domain/course_lesson_data.dart';
+import 'package:calcquest/shared/localization/lesson_ui_text.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
 import 'package:calcquest/shared/theme/app_spacing.dart';
 import 'package:calcquest/shared/theme/app_typography.dart';
@@ -121,6 +122,7 @@ class _CourseLessonScreenState extends State<CourseLessonScreen> {
   @override
   Widget build(BuildContext context) {
     final lesson = widget.lesson;
+    final uiText = LessonUiText.of(context);
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -137,7 +139,7 @@ class _CourseLessonScreenState extends State<CourseLessonScreen> {
               child: Row(
                 children: [
                   IconButton(
-                    tooltip: 'Voltar',
+                    tooltip: uiText.back,
                     onPressed: _isCompleting
                         ? null
                         : () => Navigator.of(context).maybePop(),
