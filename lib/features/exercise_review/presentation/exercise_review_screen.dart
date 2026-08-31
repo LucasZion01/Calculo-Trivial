@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:calcquest/l10n/app_localizations.dart';
 import 'package:calcquest/shared/domain/exercise_review_item.dart';
 import 'package:calcquest/shared/domain/exercise_session_result.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
@@ -104,6 +105,7 @@ class _ExerciseReviewScreenState extends State<ExerciseReviewScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final progress = (currentIndex + 1) / widget.reviewItems.length;
 
     return Scaffold(
@@ -120,21 +122,27 @@ class _ExerciseReviewScreenState extends State<ExerciseReviewScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Revisão dos erros',
+                l10n.reviewErrorsTitle,
                 style: AppTypography.labelMedium.copyWith(
                   color: AppColors.primary,
                 ),
               ),
               const SizedBox(height: AppSpacing.xs),
-              Text('Entenda cada resposta', style: AppTypography.headingMedium),
+              Text(
+                l10n.reviewUnderstandEachAnswer,
+                style: AppTypography.headingMedium,
+              ),
               const SizedBox(height: AppSpacing.xs),
               Text(
-                'Sua nota não será alterada durante a revisão.',
+                l10n.reviewScoreUnchanged,
                 style: AppTypography.bodyMedium,
               ),
               const SizedBox(height: AppSpacing.md),
               Text(
-                'Erro ${currentIndex + 1} de ${widget.reviewItems.length}',
+                l10n.reviewErrorProgress(
+                  currentIndex + 1,
+                  widget.reviewItems.length,
+                ),
                 style: AppTypography.labelMedium,
               ),
               const SizedBox(height: AppSpacing.xs),
@@ -162,7 +170,7 @@ class _ExerciseReviewScreenState extends State<ExerciseReviewScreen> {
                     ),
                     const SizedBox(height: AppSpacing.md),
                     _buildAnswerCard(
-                      title: 'Sua resposta',
+                      title: l10n.reviewYourAnswer,
                       answer: currentItem.selectedAnswer,
                       backgroundColor: AppColors.errorLight,
                       borderColor: AppColors.error,
@@ -171,7 +179,7 @@ class _ExerciseReviewScreenState extends State<ExerciseReviewScreen> {
                     ),
                     const SizedBox(height: AppSpacing.sm),
                     _buildAnswerCard(
-                      title: 'Resposta correta',
+                      title: l10n.reviewCorrectAnswer,
                       answer: currentItem.correctAnswer,
                       backgroundColor: AppColors.successLight,
                       borderColor: AppColors.success,
@@ -194,7 +202,7 @@ class _ExerciseReviewScreenState extends State<ExerciseReviewScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Explicação',
+                            l10n.reviewExplanation,
                             style: AppTypography.titleMedium.copyWith(
                               color: AppColors.primary,
                             ),
@@ -212,7 +220,7 @@ class _ExerciseReviewScreenState extends State<ExerciseReviewScreen> {
               ),
               const SizedBox(height: AppSpacing.md),
               PrimaryButton(
-                text: isLastItem ? 'Concluir revisão' : 'Próximo erro',
+                text: isLastItem ? l10n.reviewFinish : l10n.reviewNextError,
                 icon: isLastItem
                     ? Icons.check_rounded
                     : Icons.arrow_forward_rounded,
