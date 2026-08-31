@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:calcquest/l10n/app_localizations.dart';
+import 'package:calcquest/shared/data/localized_algebra_exercise_content.dart';
 import 'package:calcquest/shared/data/mock_exercise_data.dart';
 import 'package:calcquest/shared/domain/exercise_review_item.dart';
 import 'package:calcquest/shared/state/app_progress.dart';
@@ -63,7 +64,10 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
         .toList();
   }
 
-  ExerciseData get currentExercise => sessionExercises[currentExerciseIndex];
+  ExerciseData get currentExercise => localizeAlgebraExerciseContent(
+        sessionExercises[currentExerciseIndex],
+        Localizations.localeOf(context),
+      );
 
   bool get isLastExercise =>
       currentExerciseIndex == sessionExercises.length - 1;
