@@ -71,72 +71,59 @@ class CalculusOneDetailScreen extends StatelessWidget {
   }
 
   String _moduleProgressText() {
-    if (AppProgress.derivativesCompleted) {
-      return '100%';
-    }
-
-    if (AppProgress.continuityCompleted) {
-      return '66%';
-    }
-
-    if (AppProgress.limitsCompleted) {
-      return '33%';
-    }
-
+    if (AppProgress.derivativesCompleted) return '100%';
+    if (AppProgress.continuityCompleted) return '66%';
+    if (AppProgress.limitsCompleted) return '33%';
     return '0%';
   }
 
   double _moduleProgressValue() {
-    if (AppProgress.derivativesCompleted) {
-      return 1;
-    }
-
-    if (AppProgress.continuityCompleted) {
-      return 0.66;
-    }
-
-    if (AppProgress.limitsCompleted) {
-      return 0.33;
-    }
-
+    if (AppProgress.derivativesCompleted) return 1;
+    if (AppProgress.continuityCompleted) return 0.66;
+    if (AppProgress.limitsCompleted) return 0.33;
     return 0;
   }
 
-  String _moduleProgressDescription() {
+  String _moduleProgressDescription(bool isEnglish) {
     if (AppProgress.derivativesCompleted) {
-      return 'Módulo Cálculo I concluído';
+      return isEnglish
+          ? 'Calculus I module completed'
+          : 'Módulo Cálculo I concluído';
     }
 
     if (AppProgress.continuityCompleted) {
-      return 'Aulas 1 e 2 concluídas';
+      return isEnglish ? 'Lessons 1 and 2 completed' : 'Aulas 1 e 2 concluídas';
     }
 
     if (AppProgress.limitsCompleted) {
-      return 'Aula 1 concluída';
+      return isEnglish ? 'Lesson 1 completed' : 'Aula 1 concluída';
     }
 
-    return 'Comece pela aula de Limites';
+    return isEnglish ? 'Start with Limits' : 'Comece pela aula de Limites';
   }
 
   @override
   Widget build(BuildContext context) {
+    final isEnglish = Localizations.localeOf(context).languageCode == 'en';
     final limitsCompleted = AppProgress.limitsCompleted;
     final continuityCompleted = AppProgress.continuityCompleted;
     final derivativesCompleted = AppProgress.derivativesCompleted;
 
-    final limitsStatus = limitsCompleted ? 'Concluída' : 'Comece aqui';
+    final limitsStatus = limitsCompleted
+        ? (isEnglish ? 'Completed' : 'Concluída')
+        : (isEnglish ? 'Start here' : 'Comece aqui');
 
     final continuityStatus = continuityCompleted
-        ? 'Concluída'
+        ? (isEnglish ? 'Completed' : 'Concluída')
         : limitsCompleted
-        ? 'Desbloqueada'
-        : 'Bloqueado';
+        ? (isEnglish ? 'Unlocked' : 'Desbloqueada')
+        : (isEnglish ? 'Locked' : 'Bloqueado');
 
     final derivativesStatus = derivativesCompleted
-        ? 'Concluída'
+        ? (isEnglish ? 'Completed' : 'Concluída')
         : continuityCompleted
-        ? 'Desbloqueada'
-        : 'Bloqueado';
+        ? (isEnglish ? 'Unlocked' : 'Desbloqueada')
+        : (isEnglish ? 'Locked' : 'Bloqueado');
 
     final progress = _moduleProgressValue();
 
@@ -153,10 +140,15 @@ class CalculusOneDetailScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Cálculo I', style: AppTypography.headingMedium),
+              Text(
+                isEnglish ? 'Calculus I' : 'Cálculo I',
+                style: AppTypography.headingMedium,
+              ),
               const SizedBox(height: AppSpacing.xs),
               Text(
-                'Estude limites, continuidade e derivadas passo a passo.',
+                isEnglish
+                    ? 'Study limits, continuity, and derivatives step by step.'
+                    : 'Estude limites, continuidade e derivadas passo a passo.',
                 style: AppTypography.bodyMedium,
               ),
               const SizedBox(height: AppSpacing.lg),
@@ -179,7 +171,7 @@ class CalculusOneDetailScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Progresso do módulo',
+                      isEnglish ? 'Module progress' : 'Progresso do módulo',
                       style: AppTypography.bodyMedium.copyWith(
                         color: AppColors.primaryLight,
                       ),
@@ -201,7 +193,7 @@ class CalculusOneDetailScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: AppSpacing.sm),
                     Text(
-                      _moduleProgressDescription(),
+                      _moduleProgressDescription(isEnglish),
                       style: AppTypography.bodySmall.copyWith(
                         color: AppColors.primaryLight,
                       ),
@@ -210,15 +202,20 @@ class CalculusOneDetailScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: AppSpacing.lg),
-              Text('Aulas', style: AppTypography.titleLarge),
+              Text(
+                isEnglish ? 'Lessons' : 'Aulas',
+                style: AppTypography.titleLarge,
+              ),
               const SizedBox(height: AppSpacing.sm),
               Expanded(
                 child: ListView(
                   padding: const EdgeInsets.only(bottom: AppSpacing.lg),
                   children: [
                     MathCard(
-                      title: 'Unidade 1 — Limites',
-                      subtitle: '8 aulas • teoria, técnicas e aplicações',
+                      title: isEnglish ? 'Unit 1 — Limits' : 'Unidade 1 — Limites',
+                      subtitle: isEnglish
+                          ? '8 lessons • theory, techniques, and applications'
+                          : '8 aulas • teoria, técnicas e aplicações',
                       symbol: 'lim',
                       status: limitsStatus,
                       statusColor: limitsCompleted
@@ -227,14 +224,16 @@ class CalculusOneDetailScreen extends StatelessWidget {
                       state: limitsCompleted
                           ? MathCardState.completed
                           : MathCardState.normal,
-                      onTap: () {
-                        _goToLimitsLesson(context);
-                      },
+                      onTap: () => _goToLimitsLesson(context),
                     ),
                     const SizedBox(height: AppSpacing.md),
                     MathCard(
-                      title: 'Unidade 2 — Continuidade',
-                      subtitle: '7 aulas • definição, rupturas e aplicações',
+                      title: isEnglish
+                          ? 'Unit 2 — Continuity'
+                          : 'Unidade 2 — Continuidade',
+                      subtitle: isEnglish
+                          ? '7 lessons • definition, discontinuities, and applications'
+                          : '7 aulas • definição, rupturas e aplicações',
                       symbol: 'C',
                       status: continuityStatus,
                       statusColor: limitsCompleted
@@ -248,15 +247,17 @@ class CalculusOneDetailScreen extends StatelessWidget {
                                 : MathCardState.normal
                           : MathCardState.locked,
                       onTap: limitsCompleted
-                          ? () {
-                              _goToContinuityLesson(context);
-                            }
+                          ? () => _goToContinuityLesson(context)
                           : null,
                     ),
                     const SizedBox(height: AppSpacing.md),
                     MathCard(
-                      title: 'Unidade 3 — Derivadas',
-                      subtitle: '8 aulas • regras, interpretação e aplicações',
+                      title: isEnglish
+                          ? 'Unit 3 — Derivatives'
+                          : 'Unidade 3 — Derivadas',
+                      subtitle: isEnglish
+                          ? '8 lessons • rules, interpretation, and applications'
+                          : '8 aulas • regras, interpretação e aplicações',
                       symbol: "f'",
                       status: derivativesStatus,
                       statusColor: continuityCompleted
@@ -270,9 +271,7 @@ class CalculusOneDetailScreen extends StatelessWidget {
                                 : MathCardState.normal
                           : MathCardState.locked,
                       onTap: continuityCompleted
-                          ? () {
-                              _goToDerivativesLesson(context);
-                            }
+                          ? () => _goToDerivativesLesson(context)
                           : null,
                     ),
                   ],
@@ -284,9 +283,7 @@ class CalculusOneDetailScreen extends StatelessWidget {
       ),
       bottomNavigationBar: AppBottomNavigationBar(
         currentIndex: 1,
-        onTap: (index) {
-          _onMenuTap(context, index);
-        },
+        onTap: (index) => _onMenuTap(context, index),
       ),
     );
   }
