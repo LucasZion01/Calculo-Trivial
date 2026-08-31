@@ -26,7 +26,7 @@ class LessonUiText {
   });
 
   factory LessonUiText.of(BuildContext context) {
-    return forLocale(Localizations.localeOf(context));
+    return LessonUiText.forLocale(Localizations.localeOf(context));
   }
 
   factory LessonUiText.forLocale(Locale locale) {
