@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:calcquest/l10n/app_localizations.dart';
 import 'package:calcquest/shared/domain/exercise_review_item.dart';
 import 'package:calcquest/shared/domain/exercise_session_result.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
@@ -151,6 +152,7 @@ class ResultScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final result = ExerciseSessionResult(
       totalQuestions: totalQuestions,
       correctAnswers: correctAnswers,
@@ -160,7 +162,7 @@ class ResultScreen extends StatelessWidget {
 
     final incorrectAnswers = result.incorrectAnswers;
     final accuracyPercentage = result.accuracyPercentage;
-    final performanceText = '$accuracyPercentage% de precisão';
+    final performanceText = l10n.resultAccuracyPerformance(accuracyPercentage);
     final isApproved = result.isApproved;
     final statusColor = isApproved ? AppColors.success : AppColors.error;
     final statusBackground = isApproved
@@ -201,21 +203,23 @@ class ResultScreen extends StatelessWidget {
                               : Icons.refresh_rounded,
                           size: AppIconSize.extraLarge,
                           color: statusColor,
-                          semanticLabel: 'Exercícios concluídos',
+                          semanticLabel: l10n.resultExercisesCompletedSemantic,
                         ),
                       ),
                     ),
                     const SizedBox(height: AppSpacing.lg),
                     Text(
-                      isApproved ? 'Objetivo atingido!' : 'Continue praticando',
+                      isApproved
+                          ? l10n.resultGoalReached
+                          : l10n.resultKeepPracticing,
                       textAlign: TextAlign.center,
                       style: AppTypography.headingLarge,
                     ),
                     const SizedBox(height: AppSpacing.xs),
                     Text(
                       isApproved
-                          ? 'Você alcançou o rendimento necessário para avançar.'
-                          : 'Você precisa de pelo menos 80% para desbloquear a próxima aula.',
+                          ? l10n.resultApprovedMessage
+                          : l10n.resultNeedEightyPercent,
                       textAlign: TextAlign.center,
                       style: AppTypography.bodyMedium,
                     ),
@@ -230,7 +234,7 @@ class ResultScreen extends StatelessWidget {
                     const SizedBox(height: AppSpacing.xl),
                     _buildResultCard(
                       icon: Icons.check_circle_outline_rounded,
-                      title: 'Acertos',
+                      title: l10n.resultCorrectAnswers,
                       value: '$correctAnswers',
                       iconColor: AppColors.success,
                       iconBackground: AppColors.successLight,
@@ -238,7 +242,7 @@ class ResultScreen extends StatelessWidget {
                     const SizedBox(height: AppSpacing.sm),
                     _buildResultCard(
                       icon: Icons.cancel_outlined,
-                      title: 'Erros',
+                      title: l10n.resultIncorrectAnswers,
                       value: '$incorrectAnswers',
                       iconColor: AppColors.error,
                       iconBackground: AppColors.errorLight,
@@ -246,14 +250,14 @@ class ResultScreen extends StatelessWidget {
                     const SizedBox(height: AppSpacing.sm),
                     _buildResultCard(
                       icon: Icons.analytics_outlined,
-                      title: 'Precisão',
+                      title: l10n.resultAccuracy,
                       value: '$accuracyPercentage%',
                     ),
                     const SizedBox(height: AppSpacing.sm),
                     if (isApproved) ...[
                       _buildResultCard(
                         icon: Icons.bolt_outlined,
-                        title: 'XP ganho',
+                        title: l10n.resultXpEarned,
                         value: '+${result.earnedXp} XP',
                         iconColor: AppColors.xp,
                         iconBackground: AppColors.xpLight,
@@ -261,7 +265,7 @@ class ResultScreen extends StatelessWidget {
                       const SizedBox(height: AppSpacing.sm),
                       _buildResultCard(
                         icon: Icons.monetization_on_outlined,
-                        title: 'Ouro ganho',
+                        title: l10n.resultGoldEarned,
                         value: '+${result.earnedGold}',
                         iconColor: AppColors.gold,
                         iconBackground: AppColors.goldLight,
@@ -273,16 +277,16 @@ class ResultScreen extends StatelessWidget {
               PrimaryButton(
                 text: reviewItems.isNotEmpty
                     ? reviewItems.length == 1
-                          ? 'Revisar 1 erro'
-                          : 'Revisar ${reviewItems.length} erros'
+                        ? l10n.resultReviewOneError
+                        : l10n.resultReviewErrors(reviewItems.length)
                     : isApproved
-                    ? 'Receber recompensa'
-                    : 'Voltar para a trilha',
+                        ? l10n.resultReceiveReward
+                        : l10n.resultBackToPath,
                 icon: reviewItems.isNotEmpty
                     ? Icons.fact_check_outlined
                     : isApproved
-                    ? Icons.arrow_forward_rounded
-                    : Icons.refresh_rounded,
+                        ? Icons.arrow_forward_rounded
+                        : Icons.refresh_rounded,
                 onPressed: () {
                   if (reviewItems.isNotEmpty) {
                     _goToReview(context, result);
