@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:calcquest/l10n/app_localizations.dart';
+import 'package:calcquest/shared/data/localized_derivatives_exercise_content.dart';
 import 'package:calcquest/shared/data/mock_exercise_data.dart';
 import 'package:calcquest/shared/data/mock_derivatives_exercise_data.dart';
 import 'package:calcquest/shared/domain/exercise_review_item.dart';
@@ -66,7 +67,10 @@ class _DerivativesExercisesScreenState
         .toList();
   }
 
-  ExerciseData get currentExercise => sessionExercises[currentExerciseIndex];
+  ExerciseData get currentExercise => localizeDerivativesExerciseContent(
+        sessionExercises[currentExerciseIndex],
+        Localizations.localeOf(context),
+      );
 
   bool get isLastExercise =>
       currentExerciseIndex == sessionExercises.length - 1;
