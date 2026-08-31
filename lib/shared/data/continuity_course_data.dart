@@ -9,7 +9,7 @@ const List<CourseLessonData> continuityCourseLessons = [
     title: 'Quando uma função é contínua?',
     description:
         'Conecte valor da função, limite e comportamento do gráfico em um ponto.',
-    duration: '14–18 min',
+    duration: '≈ 5 min',
     objective: 'verificar as três condições de continuidade em um ponto',
     symbol: 'C',
     sections: [
@@ -77,7 +77,7 @@ const List<CourseLessonData> continuityCourseLessons = [
     title: 'Continuidade no domínio',
     description:
         'Use propriedades de polinômios, racionais, raízes e trigonometria.',
-    duration: '16–20 min',
+    duration: '≈ 5 min',
     objective: 'determinar intervalos de continuidade a partir do domínio',
     symbol: 'D',
     sections: [
@@ -144,7 +144,7 @@ const List<CourseLessonData> continuityCourseLessons = [
     title: 'Furos, saltos e assíntotas',
     description:
         'Diferencie descontinuidades removíveis, de salto e infinitas.',
-    duration: '18–22 min',
+    duration: '≈ 5 min',
     objective: 'classificar uma descontinuidade pelo comportamento dos limites',
     symbol: '!',
     sections: [
@@ -212,7 +212,7 @@ const List<CourseLessonData> continuityCourseLessons = [
     title: 'Encontro entre duas regras',
     description:
         'Verifique continuidade em pontos de troca e nos extremos de intervalos.',
-    duration: '18–22 min',
+    duration: '≈ 5 min',
     objective: 'comparar limites laterais em funções definidas por partes',
     symbol: '{',
     sections: [
@@ -280,7 +280,7 @@ const List<CourseLessonData> continuityCourseLessons = [
     title: 'Escolha valores que eliminam rupturas',
     description:
         'Determine parâmetros e redefina pontos para tornar funções contínuas.',
-    duration: '18–22 min',
+    duration: '≈ 5 min',
     objective: 'montar e resolver condições de continuidade com parâmetros',
     symbol: 'k',
     sections: [
@@ -354,7 +354,7 @@ const List<CourseLessonData> continuityCourseLessons = [
     title: 'Teorema do Valor Intermediário',
     description:
         'Use continuidade para garantir valores e localizar raízes em intervalos.',
-    duration: '16–20 min',
+    duration: '≈ 5 min',
     objective: 'aplicar o Teorema do Valor Intermediário corretamente',
     symbol: '∃',
     sections: [
@@ -423,7 +423,7 @@ const List<CourseLessonData> continuityCourseLessons = [
     title: 'Um roteiro para analisar continuidade',
     description:
         'Escolha uma estratégia confiável para pontos, intervalos e funções por partes.',
-    duration: '14–18 min',
+    duration: '≈ 5 min',
     objective: 'diagnosticar e justificar problemas de continuidade',
     symbol: '✓',
     sections: [

@@ -96,7 +96,7 @@ class FunctionsLessonScreen extends StatelessWidget {
                     eyebrow: 'Aula 3 • Relações',
                     title: 'Funções: máquinas de transformação',
                     description: 'Entenda entradas, saídas, domínio, imagem e diferentes formas de representar uma função.',
-                    duration: '10–12 min',
+                    duration: '≈ 5 min',
                     objective: 'avaliar funções, reconhecer domínio e interpretar o significado de f(x)',
                     symbol: 'f(x)',
                   ),

@@ -4,9 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:purchases_ui_flutter/purchases_ui_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'package:calcquest/l10n/app_localizations.dart';
 import 'package:calcquest/shared/services/revenuecat_service.dart';
+import 'package:calcquest/shared/state/app_locale_controller.dart';
 import 'package:calcquest/shared/state/app_progress.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
+import 'package:calcquest/shared/theme/app_motion.dart';
 import 'package:calcquest/shared/theme/app_spacing.dart';
 import 'package:calcquest/shared/theme/app_typography.dart';
 import 'package:calcquest/shared/widgets/app_bottom_navigation_bar.dart';
@@ -170,6 +173,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
         });
       }
     }
+  }
+
+  Future<void> _changeLanguage(Locale locale) async {
+    await appLocaleController.setLocale(locale);
+
+    if (!mounted) {
+      return;
+    }
+
+    final l10n = AppLocalizations.of(context)!;
+    final languageName = locale.languageCode == 'en'
+        ? l10n.english
+        : l10n.portuguese;
+
+    _showMessage('${l10n.languageUpdated}: $languageName');
   }
 
   Future<void> _confirmSignOut() async {
@@ -502,10 +520,89 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
+  Widget _buildLanguageSelector(AppLocalizations l10n) {
+    return AnimatedBuilder(
+      animation: appLocaleController,
+      builder: (context, child) {
+        final selectedLanguage = appLocaleController.locale.languageCode;
+
+        return Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(AppSpacing.cardPaddingLarge),
+          decoration: BoxDecoration(
+            color: AppColors.surface,
+            borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
+            border: Border.all(color: AppColors.border),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    width: 44,
+                    height: 44,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: AppColors.selectedBackground,
+                      borderRadius: BorderRadius.circular(
+                        AppSpacing.radiusMedium,
+                      ),
+                    ),
+                    child: const AppIcon(
+                      icon: Icons.language_rounded,
+                      size: AppIconSize.large,
+                      color: AppColors.primary,
+                    ),
+                  ),
+                  const SizedBox(width: AppSpacing.sm),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(l10n.language, style: AppTypography.titleMedium),
+                        const SizedBox(height: AppSpacing.xxs),
+                        Text(
+                          l10n.languageSettingsSubtitle,
+                          style: AppTypography.bodySmall,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: AppSpacing.md),
+              Row(
+                children: [
+                  Expanded(
+                    child: _LanguageOption(
+                      label: l10n.portuguese,
+                      selected: selectedLanguage == 'pt',
+                      onTap: () => _changeLanguage(const Locale('pt')),
+                    ),
+                  ),
+                  const SizedBox(width: AppSpacing.sm),
+                  Expanded(
+                    child: _LanguageOption(
+                      label: l10n.english,
+                      selected: selectedLanguage == 'en',
+                      onTap: () => _changeLanguage(const Locale('en')),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final currentUser = FirebaseAuth.instance.currentUser;
-    final userEmail = currentUser?.email ?? 'Conta não identificada';
+    final userEmail = currentUser?.email ?? l10n.unidentifiedAccount;
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -521,24 +618,26 @@ class _SettingsScreenState extends State<SettingsScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Configurações',
+                l10n.settings,
                 style: AppTypography.labelMedium.copyWith(
                   color: AppColors.primary,
                 ),
               ),
               const SizedBox(height: AppSpacing.xs),
-              Text('Ajustes da conta', style: AppTypography.headingMedium),
+              Text(l10n.accountSettings, style: AppTypography.headingMedium),
               const SizedBox(height: AppSpacing.xs),
               Text(
-                'Gerencie sua conta, preferências e assinatura.',
+                l10n.accountSettingsSubtitle,
                 style: AppTypography.bodyMedium,
               ),
               const SizedBox(height: AppSpacing.lg),
               _SettingsCard(
                 icon: Icons.person_outline_rounded,
-                title: 'Conta',
+                title: l10n.account,
                 subtitle: userEmail,
               ),
+              const SizedBox(height: AppSpacing.md),
+              _buildLanguageSelector(l10n),
               const SizedBox(height: AppSpacing.md),
               _SettingsCard(
                 icon: Icons.privacy_tip_outlined,
@@ -619,6 +718,78 @@ class _SettingsScreenState extends State<SettingsScreen> {
         onTap: (index) {
           _onMenuTap(context, index);
         },
+      ),
+    );
+  }
+}
+
+class _LanguageOption extends StatelessWidget {
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  const _LanguageOption({
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final foregroundColor = selected ? AppColors.primary : AppColors.textPrimary;
+
+    return Material(
+      color: Colors.transparent,
+      borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
+        child: AnimatedContainer(
+          duration: AppMotion.standard,
+          curve: AppMotion.easeOut,
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.sm,
+            vertical: AppSpacing.sm,
+          ),
+          decoration: BoxDecoration(
+            color: selected ? AppColors.selectedBackground : AppColors.surface,
+            borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
+            border: Border.all(
+              color: selected ? AppColors.primary : AppColors.border,
+              width: selected ? 2 : 1,
+            ),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              AnimatedSwitcher(
+                duration: AppMotion.standard,
+                child: selected
+                    ? const Icon(
+                        Icons.check_circle_rounded,
+                        key: ValueKey<String>('selected-language'),
+                        size: AppSpacing.iconMedium,
+                        color: AppColors.primary,
+                      )
+                    : const SizedBox(
+                        key: ValueKey<String>('unselected-language'),
+                        width: AppSpacing.iconMedium,
+                        height: AppSpacing.iconMedium,
+                      ),
+              ),
+              const SizedBox(width: AppSpacing.xs),
+              Flexible(
+                child: Text(
+                  label,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTypography.labelMedium.copyWith(
+                    color: foregroundColor,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

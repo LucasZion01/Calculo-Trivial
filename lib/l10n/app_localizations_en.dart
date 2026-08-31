@@ -36,6 +36,25 @@ class AppLocalizationsEn extends AppLocalizations {
   String get english => 'English';
 
   @override
+  String get languageSettingsSubtitle => 'Choose the language used in the app.';
+
+  @override
+  String get languageUpdated => 'Language updated';
+
+  @override
+  String get account => 'Account';
+
+  @override
+  String get accountSettings => 'Account settings';
+
+  @override
+  String get accountSettingsSubtitle =>
+      'Manage your account, preferences, and subscription.';
+
+  @override
+  String get unidentifiedAccount => 'Account not identified';
+
+  @override
   String get back => 'Back';
 
   @override

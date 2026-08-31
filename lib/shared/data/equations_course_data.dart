@@ -8,7 +8,7 @@ const List<CourseLessonData> equationsCourseLessons = [
     eyebrow: 'Fundamentos',
     title: 'Equações e equilíbrio',
     description: 'igualdade, incógnita e equivalência',
-    duration: '8–10 min',
+    duration: '≈ 5 min',
     objective:
         'compreender uma equação como uma igualdade e preservar seu equilíbrio durante as transformações',
     symbol: '=',
@@ -76,7 +76,7 @@ const List<CourseLessonData> equationsCourseLessons = [
     eyebrow: 'Equações lineares',
     title: 'Equações do primeiro grau',
     description: 'operações inversas e isolamento',
-    duration: '9–11 min',
+    duration: '≈ 5 min',
     objective:
         'resolver equações lineares usando operações inversas de forma organizada',
     symbol: 'ax+b',
@@ -138,7 +138,7 @@ const List<CourseLessonData> equationsCourseLessons = [
     eyebrow: 'Equações lineares',
     title: 'Parênteses e frações',
     description: 'distributiva e denominadores',
-    duration: '11–13 min',
+    duration: '≈ 5 min',
     objective:
         'resolver equações com parênteses e frações preparando a expressão antes de isolar a incógnita',
     symbol: 'x/3',
@@ -200,7 +200,7 @@ const List<CourseLessonData> equationsCourseLessons = [
     eyebrow: 'Interpretação',
     title: 'Uma, nenhuma ou infinitas soluções',
     description: 'identidades e contradições',
-    duration: '9–11 min',
+    duration: '≈ 5 min',
     objective:
         'distinguir equações com solução única, nenhuma solução ou infinitas soluções',
     symbol: '∅',
@@ -263,7 +263,7 @@ const List<CourseLessonData> equationsCourseLessons = [
     eyebrow: 'Duas incógnitas',
     title: 'Sistemas de equações',
     description: 'substituição e eliminação',
-    duration: '12–14 min',
+    duration: '≈ 5 min',
     objective:
         'resolver sistemas lineares simples e interpretar a solução como um par ordenado',
     symbol: '{x,y}',
@@ -324,7 +324,7 @@ const List<CourseLessonData> equationsCourseLessons = [
     eyebrow: 'Segundo grau',
     title: 'Equações quadráticas',
     description: 'raízes, fatoração e produto nulo',
-    duration: '12–14 min',
+    duration: '≈ 5 min',
     objective:
         'resolver equações quadráticas simples usando fatoração e produto nulo',
     symbol: 'x²',
@@ -383,7 +383,7 @@ const List<CourseLessonData> equationsCourseLessons = [
     eyebrow: 'Desigualdades',
     title: 'Inequações',
     description: 'intervalos e inversão do sinal',
-    duration: '11–13 min',
+    duration: '≈ 5 min',
     objective:
         'resolver inequações lineares e interpretar a solução como conjunto de valores',
     symbol: '≤',
@@ -443,7 +443,7 @@ const List<CourseLessonData> equationsCourseLessons = [
     eyebrow: 'Consolidação',
     title: 'Módulo e estratégia final',
     description: 'distância, duas possibilidades e revisão',
-    duration: '11–13 min',
+    duration: '≈ 5 min',
     objective:
         'interpretar equações modulares simples e escolher estratégias adequadas para diferentes problemas',
     symbol: '|x|',

@@ -8,7 +8,7 @@ const List<CourseLessonData> algebraCourseLessons = [
     eyebrow: 'Fundamentos',
     title: 'A linguagem da Álgebra',
     description: 'variáveis, constantes e expressões',
-    duration: '8–10 min',
+    duration: '≈ 5 min',
     objective: 'interpretar letras como números variáveis e reconhecer a estrutura de uma expressão algébrica',
     symbol: 'x',
     sections: [
@@ -67,7 +67,7 @@ const List<CourseLessonData> algebraCourseLessons = [
     eyebrow: 'Fundamentos',
     title: 'Termos semelhantes',
     description: 'coeficientes, constantes e redução',
-    duration: '9–11 min',
+    duration: '≈ 5 min',
     objective: 'simplificar somas e subtrações combinando apenas termos com a mesma parte literal',
     symbol: '3x',
     sections: [
@@ -126,7 +126,7 @@ const List<CourseLessonData> algebraCourseLessons = [
     eyebrow: 'Fundamentos',
     title: 'Distributiva e sinais',
     description: 'parênteses, produtos e sinais negativos',
-    duration: '10–12 min',
+    duration: '≈ 5 min',
     objective: 'aplicar a propriedade distributiva sem perder sinais dentro dos parênteses',
     symbol: 'a(b+c)',
     sections: [
@@ -185,7 +185,7 @@ const List<CourseLessonData> algebraCourseLessons = [
     eyebrow: 'Fundamentos',
     title: 'Potências e expoentes',
     description: 'regras de multiplicação e divisão',
-    duration: '10–12 min',
+    duration: '≈ 5 min',
     objective: 'usar propriedades de potências para simplificar monômios e expressões algébricas',
     symbol: 'x²',
     sections: [
@@ -244,7 +244,7 @@ const List<CourseLessonData> algebraCourseLessons = [
     eyebrow: 'Fundamentos',
     title: 'Produtos notáveis',
     description: 'padrões que aceleram cálculos',
-    duration: '11–13 min',
+    duration: '≈ 5 min',
     objective: 'reconhecer quadrados, diferença de quadrados e produtos binomiais comuns',
     symbol: '(a+b)²',
     sections: [
@@ -303,7 +303,7 @@ const List<CourseLessonData> algebraCourseLessons = [
     eyebrow: 'Fundamentos',
     title: 'Fatoração',
     description: 'colocar expressões em forma de produto',
-    duration: '11–13 min',
+    duration: '≈ 5 min',
     objective: 'fatorar expressões por fator comum, agrupamento e padrões notáveis',
     symbol: '(x−a)',
     sections: [
@@ -362,7 +362,7 @@ const List<CourseLessonData> algebraCourseLessons = [
     eyebrow: 'Fundamentos',
     title: 'Frações algébricas',
     description: 'restrições, simplificação e denominadores',
-    duration: '12–14 min',
+    duration: '≈ 5 min',
     objective: 'simplificar frações algébricas preservando restrições de domínio',
     symbol: 'x/y',
     sections: [
@@ -421,7 +421,7 @@ const List<CourseLessonData> algebraCourseLessons = [
     eyebrow: 'Fundamentos',
     title: 'Síntese algébrica',
     description: 'escolher a ferramenta certa',
-    duration: '9–11 min',
+    duration: '≈ 5 min',
     objective: 'decidir quando simplificar, expandir, fatorar ou substituir valores',
     symbol: '✓',
     sections: [

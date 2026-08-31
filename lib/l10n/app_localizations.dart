@@ -152,6 +152,42 @@ abstract class AppLocalizations {
   /// **'English'**
   String get english;
 
+  /// No description provided for @languageSettingsSubtitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Escolha o idioma usado no aplicativo.'**
+  String get languageSettingsSubtitle;
+
+  /// No description provided for @languageUpdated.
+  ///
+  /// In pt, this message translates to:
+  /// **'Idioma atualizado'**
+  String get languageUpdated;
+
+  /// No description provided for @account.
+  ///
+  /// In pt, this message translates to:
+  /// **'Conta'**
+  String get account;
+
+  /// No description provided for @accountSettings.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ajustes da conta'**
+  String get accountSettings;
+
+  /// No description provided for @accountSettingsSubtitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Gerencie sua conta, preferências e assinatura.'**
+  String get accountSettingsSubtitle;
+
+  /// No description provided for @unidentifiedAccount.
+  ///
+  /// In pt, this message translates to:
+  /// **'Conta não identificada'**
+  String get unidentifiedAccount;
+
   /// No description provided for @back.
   ///
   /// In pt, this message translates to:

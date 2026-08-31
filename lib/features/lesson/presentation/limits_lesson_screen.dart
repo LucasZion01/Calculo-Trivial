@@ -84,7 +84,7 @@ class LimitsLessonScreen extends StatelessWidget {
                     title: 'Limites sem decorar receitas',
                     description:
                         'Descubra como prever o comportamento de uma função quando x se aproxima de um ponto.',
-                    duration: '10–12 min',
+                    duration: '≈ 5 min',
                     objective:
                         'interpretar a notação de limite, escolher uma estratégia e justificar o resultado',
                     symbol: 'lim',

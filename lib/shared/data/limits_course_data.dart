@@ -9,7 +9,7 @@ const List<CourseLessonData> limitsCourseLessons = [
     title: 'Aproximar antes de calcular',
     description:
         'Construa a intuição de limite e aprenda a ler cada parte da notação.',
-    duration: '12–15 min',
+    duration: '≈ 5 min',
     objective:
         'explicar com suas palavras o que um limite descreve',
     symbol: 'lim',
@@ -91,7 +91,7 @@ const List<CourseLessonData> limitsCourseLessons = [
     title: 'Limites laterais, tabelas e gráficos',
     description:
         'Aprenda a investigar um ponto pelos dois lados e a reconhecer quando o limite não existe.',
-    duration: '15–18 min',
+    duration: '≈ 5 min',
     objective:
         'calcular limites laterais e comparar seus resultados',
     symbol: '→',
@@ -174,7 +174,7 @@ const List<CourseLessonData> limitsCourseLessons = [
     title: 'Propriedades e substituição direta',
     description:
         'Descubra quando basta substituir e como combinar limites conhecidos com segurança.',
-    duration: '15–18 min',
+    duration: '≈ 5 min',
     objective:
         'usar as propriedades algébricas e reconhecer funções contínuas',
     symbol: 'L',
@@ -256,7 +256,7 @@ const List<CourseLessonData> limitsCourseLessons = [
     title: 'Fatoração revela o limite escondido',
     description:
         'Transforme expressões equivalentes para remover fatores responsáveis pela forma 0/0.',
-    duration: '18–22 min',
+    duration: '≈ 5 min',
     objective:
         'resolver limites indeterminados usando fator comum e produtos notáveis',
     symbol: '0/0',
@@ -354,7 +354,7 @@ const List<CourseLessonData> limitsCourseLessons = [
     title: 'Racionalização com expressões conjugadas',
     description:
         'Elimine indeterminações envolvendo raízes sem alterar o valor da expressão.',
-    duration: '18–22 min',
+    duration: '≈ 5 min',
     objective:
         'identificar conjugados e racionalizar numeradores ou denominadores',
     symbol: '√',
@@ -424,7 +424,7 @@ const List<CourseLessonData> limitsCourseLessons = [
     title: 'Limites no infinito e assíntotas',
     description:
         'Compare termos dominantes para prever o comportamento de funções racionais.',
-    duration: '18–22 min',
+    duration: '≈ 5 min',
     objective:
         'calcular limites no infinito e interpretar assíntotas horizontais',
     symbol: '∞',
@@ -501,7 +501,7 @@ const List<CourseLessonData> limitsCourseLessons = [
     title: 'Limites trigonométricos fundamentais',
     description:
         'Entenda por que sen(x)/x tende a 1 e aprenda a adaptar esse padrão.',
-    duration: '18–22 min',
+    duration: '≈ 5 min',
     objective: 'reconhecer e aplicar limites trigonométricos em radianos',
     symbol: 'sen',
     sections: [
@@ -584,7 +584,7 @@ const List<CourseLessonData> limitsCourseLessons = [
     title: 'Como escolher a técnica certa',
     description:
         'Organize as ideias do módulo em um método de análise confiável.',
-    duration: '15–18 min',
+    duration: '≈ 5 min',
     objective:
         'diagnosticar um limite e justificar a técnica escolhida',
     symbol: '?',

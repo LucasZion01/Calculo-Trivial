@@ -36,6 +36,25 @@ class AppLocalizationsPt extends AppLocalizations {
   String get english => 'English';
 
   @override
+  String get languageSettingsSubtitle => 'Escolha o idioma usado no aplicativo.';
+
+  @override
+  String get languageUpdated => 'Idioma atualizado';
+
+  @override
+  String get account => 'Conta';
+
+  @override
+  String get accountSettings => 'Ajustes da conta';
+
+  @override
+  String get accountSettingsSubtitle =>
+      'Gerencie sua conta, preferências e assinatura.';
+
+  @override
+  String get unidentifiedAccount => 'Conta não identificada';
+
+  @override
   String get back => 'Voltar';
 
   @override

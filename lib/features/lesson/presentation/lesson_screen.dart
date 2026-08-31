@@ -97,7 +97,7 @@ class LessonScreen extends StatelessWidget {
                     title: 'Álgebra: a caixa de ferramentas do Cálculo',
                     description:
                         'Aprenda a ler expressões, combinar termos e transformar fórmulas sem alterar seu valor.',
-                    duration: '10–12 min',
+                    duration: '≈ 5 min',
                     objective:
                         'simplificar expressões e justificar cada transformação algébrica',
                     symbol: 'x',

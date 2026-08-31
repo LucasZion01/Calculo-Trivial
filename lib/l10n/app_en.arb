@@ -12,6 +12,13 @@
   "language": "Language",
   "portuguese": "Português",
   "english": "English",
+  "languageSettingsSubtitle": "Choose the language used in the app.",
+  "languageUpdated": "Language updated",
+
+  "account": "Account",
+  "accountSettings": "Account settings",
+  "accountSettingsSubtitle": "Manage your account, preferences, and subscription.",
+  "unidentifiedAccount": "Account not identified",
 
   "back": "Back",
   "continueLabel": "Continue",

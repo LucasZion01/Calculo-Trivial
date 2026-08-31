@@ -96,7 +96,7 @@ class ContinuityLessonScreen extends StatelessWidget {
                     eyebrow: 'Aula 2 • Comportamento',
                     title: 'Continuidade: quando tudo se conecta',
                     description: 'Identifique furos, saltos e interrupções comparando o valor da função com seu limite.',
-                    duration: '10–12 min',
+                    duration: '≈ 5 min',
                     objective: 'testar as três condições de continuidade e classificar descontinuidades',
                     symbol: 'C',
                   ),

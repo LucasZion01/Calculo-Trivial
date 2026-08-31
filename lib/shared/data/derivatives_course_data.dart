@@ -9,7 +9,7 @@ const List<CourseLessonData> derivativesCourseLessons = [
     title: 'Taxa de variação e reta tangente',
     description:
         'Entenda a derivada como velocidade instantânea e inclinação local.',
-    duration: '18–22 min',
+    duration: '≈ 5 min',
     objective: 'interpretar a derivada geometricamente e em situações reais',
     symbol: "f'",
     sections: [
@@ -87,7 +87,7 @@ const List<CourseLessonData> derivativesCourseLessons = [
     title: 'Constantes, potências e polinômios',
     description:
         'Derive termo a termo e trabalhe com expoentes inteiros e fracionários.',
-    duration: '18–22 min',
+    duration: '≈ 5 min',
     objective: 'aplicar linearidade e regra da potência com segurança',
     symbol: 'xⁿ',
     sections: [
@@ -167,7 +167,7 @@ const List<CourseLessonData> derivativesCourseLessons = [
     title: 'Regras do produto e do quociente',
     description:
         'Combine funções preservando todos os termos necessários.',
-    duration: '20–24 min',
+    duration: '≈ 5 min',
     objective: 'aplicar e conferir as regras do produto e do quociente',
     symbol: 'u·v',
     sections: [
@@ -247,7 +247,7 @@ const List<CourseLessonData> derivativesCourseLessons = [
     title: 'Regra da cadeia por camadas',
     description:
         'Derive funções compostas da camada externa para a interna.',
-    duration: '20–24 min',
+    duration: '≈ 5 min',
     objective: 'identificar função externa, interna e aplicar a cadeia',
     symbol: 'f∘g',
     sections: [
@@ -315,7 +315,7 @@ const List<CourseLessonData> derivativesCourseLessons = [
     title: 'Seno, cosseno, exponencial e logaritmo',
     description:
         'Memorize com significado as derivadas elementares mais usadas.',
-    duration: '18–22 min',
+    duration: '≈ 5 min',
     objective: 'derivar funções trigonométricas, exponenciais e logarítmicas',
     symbol: 'eˣ',
     sections: [
@@ -395,7 +395,7 @@ const List<CourseLessonData> derivativesCourseLessons = [
     title: 'Inclinação e equação da tangente',
     description:
         'Use f′(a) para construir a reta que melhor aproxima o gráfico.',
-    duration: '18–22 min',
+    duration: '≈ 5 min',
     objective: 'calcular inclinação e equação da reta tangente',
     symbol: 'y=mx+b',
     sections: [
@@ -464,7 +464,7 @@ const List<CourseLessonData> derivativesCourseLessons = [
     title: 'Derivabilidade e pontos críticos',
     description:
         'Reconheça cantos, derivadas laterais e candidatos a extremos.',
-    duration: '20–24 min',
+    duration: '≈ 5 min',
     objective: 'analisar existência da derivada e localizar pontos críticos',
     symbol: 'f′=0',
     sections: [
@@ -540,7 +540,7 @@ const List<CourseLessonData> derivativesCourseLessons = [
     title: 'Movimento, unidades e modelagem',
     description:
         'Interprete derivadas em problemas físicos e organize o método completo.',
-    duration: '18–22 min',
+    duration: '≈ 5 min',
     objective: 'modelar taxas instantâneas e interpretar seus resultados',
     symbol: 'v(t)',
     sections: [

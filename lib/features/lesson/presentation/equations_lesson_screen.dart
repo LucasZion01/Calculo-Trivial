@@ -96,7 +96,7 @@ class EquationsLessonScreen extends StatelessWidget {
                     eyebrow: 'Aula 2 • Álgebra',
                     title: 'Equações: preserve o equilíbrio',
                     description: 'Aprenda a isolar incógnitas com operações justificadas e a interpretar desigualdades.',
-                    duration: '10–12 min',
+                    duration: '≈ 5 min',
                     objective: 'resolver equações lineares e manipular inequações sem perder soluções',
                     symbol: '=',
                   ),

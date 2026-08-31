@@ -96,7 +96,7 @@ class DerivativesLessonScreen extends StatelessWidget {
                     eyebrow: 'Aula 3 • Variação',
                     title: 'Derivadas: medir mudanças instantâneas',
                     description: 'Conecte velocidade, inclinação e taxa de variação antes de aplicar as regras algébricas.',
-                    duration: '12–15 min',
+                    duration: '≈ 5 min',
                     objective: 'interpretar uma derivada e aplicar as regras básicas com significado',
                     symbol: 'f′',
                   ),
