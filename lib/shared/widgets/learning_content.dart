@@ -4,10 +4,10 @@ export 'package:calcquest/shared/domain/course_lesson_data.dart'
     show LearningCardTone;
 
 import 'package:calcquest/shared/domain/course_lesson_data.dart';
+import 'package:calcquest/shared/localization/lesson_ui_text.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
 import 'package:calcquest/shared/theme/app_spacing.dart';
 import 'package:calcquest/shared/theme/app_typography.dart';
-
 
 class LessonHeroCard extends StatelessWidget {
   final String eyebrow;
@@ -29,6 +29,8 @@ class LessonHeroCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final uiText = LessonUiText.of(context);
+
     return Semantics(
       container: true,
       header: true,
@@ -163,7 +165,7 @@ class LessonHeroCard extends StatelessWidget {
                   const SizedBox(width: AppSpacing.sm),
                   Expanded(
                     child: Text(
-                      'Ao final, você será capaz de $objective.',
+                      uiText.objective(objective),
                       style: AppTypography.bodyMedium.copyWith(
                         color: AppColors.white,
                         fontWeight: FontWeight.w500,
@@ -361,9 +363,11 @@ class WorkedExampleCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final uiText = LessonUiText.of(context);
+
     return Semantics(
       container: true,
-      label: 'Exemplo resolvido: $title',
+      label: uiText.solvedExampleSemantics(title),
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.all(AppSpacing.lg),
@@ -382,7 +386,7 @@ class WorkedExampleCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'EXEMPLO RESOLVIDO',
+              uiText.solvedExample,
               style: AppTypography.labelSmall.copyWith(
                 color: AppColors.secondaryLight,
                 letterSpacing: 1,
@@ -502,9 +506,11 @@ class _LessonCheckCardState extends State<LessonCheckCard> {
 
   @override
   Widget build(BuildContext context) {
+    final uiText = LessonUiText.of(context);
+
     return Semantics(
       container: true,
-      label: 'Cheque seu entendimento',
+      label: uiText.checkUnderstanding,
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.all(AppSpacing.cardPaddingLarge),
@@ -529,7 +535,7 @@ class _LessonCheckCardState extends State<LessonCheckCard> {
                 const SizedBox(width: AppSpacing.sm),
                 Expanded(
                   child: Text(
-                    'Cheque seu entendimento',
+                    uiText.checkUnderstanding,
                     style: AppTypography.titleMedium,
                   ),
                 ),
@@ -602,9 +608,10 @@ class _LessonCheckCardState extends State<LessonCheckCard> {
                     ),
                   ),
                   child: Text(
-                    _isCorrect
-                        ? 'Muito bem! ${widget.explanation}'
-                        : 'Quase! ${widget.explanation}',
+                    uiText.feedback(
+                      isCorrect: _isCorrect,
+                      explanation: widget.explanation,
+                    ),
                     style: AppTypography.bodyMedium.copyWith(
                       color: AppColors.textPrimary,
                       fontWeight: FontWeight.w500,
@@ -617,7 +624,7 @@ class _LessonCheckCardState extends State<LessonCheckCard> {
                 child: TextButton.icon(
                   onPressed: () => setState(() => _selectedIndex = null),
                   icon: const Icon(Icons.refresh_rounded),
-                  label: const Text('Responder novamente'),
+                  label: Text(uiText.answerAgain),
                 ),
               ),
             ],
@@ -655,6 +662,8 @@ class LessonTakeawaysCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final uiText = LessonUiText.of(context);
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(AppSpacing.cardPaddingLarge),
@@ -667,7 +676,7 @@ class LessonTakeawaysCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Antes de praticar, leve isto com você:',
+            uiText.takeawaysTitle,
             style: AppTypography.titleMedium,
           ),
           const SizedBox(height: AppSpacing.sm),
