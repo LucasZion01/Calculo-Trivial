@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:calcquest/l10n/app_localizations.dart';
 import 'package:calcquest/shared/data/mock_exercise_data.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
 import 'package:calcquest/shared/theme/app_spacing.dart';
@@ -26,6 +27,7 @@ Future<void> showExerciseAnswerFeedback({
       ),
     ),
     builder: (sheetContext) {
+      final l10n = AppLocalizations.of(sheetContext)!;
       final color = isCorrect ? AppColors.success : AppColors.error;
       final background = isCorrect
           ? AppColors.successLight
@@ -59,12 +61,14 @@ Future<void> showExerciseAnswerFeedback({
                 ),
                 const SizedBox(height: AppSpacing.md),
                 Text(
-                  isCorrect ? 'Boa análise!' : 'Vamos entender o erro',
+                  isCorrect
+                      ? l10n.feedbackGoodAnalysis
+                      : l10n.feedbackUnderstandError,
                   style: AppTypography.headingSmall,
                 ),
                 const SizedBox(height: AppSpacing.sm),
                 Text(
-                  'Sua resposta: $selectedAnswer',
+                  l10n.feedbackYourAnswer(selectedAnswer),
                   style: AppTypography.bodyMedium.copyWith(
                     color: isCorrect ? AppColors.successDark : AppColors.error,
                     fontWeight: FontWeight.w600,
@@ -73,7 +77,7 @@ Future<void> showExerciseAnswerFeedback({
                 if (!isCorrect) ...[
                   const SizedBox(height: AppSpacing.xs),
                   Text(
-                    'Resposta correta: $correctAnswer',
+                    l10n.feedbackCorrectAnswer(correctAnswer),
                     style: AppTypography.bodyMedium.copyWith(
                       color: AppColors.successDark,
                       fontWeight: FontWeight.w600,
@@ -94,7 +98,7 @@ Future<void> showExerciseAnswerFeedback({
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Explicação passo a passo',
+                        l10n.feedbackStepByStep,
                         style: AppTypography.labelMedium,
                       ),
                       const SizedBox(height: AppSpacing.xs),
@@ -108,8 +112,8 @@ Future<void> showExerciseAnswerFeedback({
                 const SizedBox(height: AppSpacing.lg),
                 PrimaryButton(
                   text: isLastExercise
-                      ? 'Ver meu resultado'
-                      : 'Continuar praticando',
+                      ? l10n.feedbackViewResult
+                      : l10n.feedbackContinuePracticing,
                   icon: isLastExercise
                       ? Icons.analytics_outlined
                       : Icons.arrow_forward_rounded,
