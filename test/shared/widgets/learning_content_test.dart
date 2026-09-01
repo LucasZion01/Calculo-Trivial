@@ -9,6 +9,7 @@ void main() {
   ) async {
     await tester.pumpWidget(
       const MaterialApp(
+        locale: Locale('pt'),
         home: Scaffold(
           body: SingleChildScrollView(
             child: LessonCheckCard(
@@ -46,6 +47,7 @@ void main() {
   testWidgets('cabeçalho de aula apresenta objetivo e duração', (tester) async {
     await tester.pumpWidget(
       const MaterialApp(
+        locale: Locale('pt'),
         home: Scaffold(
           body: LessonHeroCard(
             eyebrow: 'Aula 1',
