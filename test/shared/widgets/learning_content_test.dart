@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:calcquest/l10n/app_localizations.dart';
 import 'package:calcquest/shared/widgets/learning_content.dart';
 
 void main() {
@@ -10,7 +11,8 @@ void main() {
     await tester.pumpWidget(
       const MaterialApp(
         locale: Locale('pt'),
-        supportedLocales: [Locale('pt')],
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
         home: Scaffold(
           body: SingleChildScrollView(
             child: LessonCheckCard(
@@ -49,7 +51,8 @@ void main() {
     await tester.pumpWidget(
       const MaterialApp(
         locale: Locale('pt'),
-        supportedLocales: [Locale('pt')],
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
         home: Scaffold(
           body: LessonHeroCard(
             eyebrow: 'Aula 1',
