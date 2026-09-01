@@ -34,7 +34,7 @@ service cloud.firestore {
 
     function validContentLessonIds(values) {
       return values is list
-        && values.size() <= 31
+        && values.size() <= 39
         && values.hasOnly([
           'algebra-01-linguagem',
           'algebra-02-termos-semelhantes',
@@ -44,6 +44,14 @@ service cloud.firestore {
           'algebra-06-fatoracao',
           'algebra-07-fracoes-algebricas',
           'algebra-08-sintese',
+          'equations-01-equilibrio',
+          'equations-02-primeiro-grau',
+          'equations-03-parenteses-fracoes',
+          'equations-04-casos-especiais',
+          'equations-05-sistemas-lineares',
+          'equations-06-quadraticas',
+          'equations-07-inequacoes',
+          'equations-08-modulo-revisao',
           'limites-01-intuicao',
           'limites-02-laterais',
           'limites-03-propriedades',
