@@ -10,6 +10,7 @@ void main() {
     await tester.pumpWidget(
       const MaterialApp(
         locale: Locale('pt'),
+        supportedLocales: [Locale('pt')],
         home: Scaffold(
           body: SingleChildScrollView(
             child: LessonCheckCard(
@@ -48,6 +49,7 @@ void main() {
     await tester.pumpWidget(
       const MaterialApp(
         locale: Locale('pt'),
+        supportedLocales: [Locale('pt')],
         home: Scaffold(
           body: LessonHeroCard(
             eyebrow: 'Aula 1',
