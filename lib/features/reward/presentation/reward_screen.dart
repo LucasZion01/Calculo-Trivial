@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:calcquest/l10n/app_localizations.dart';
 import 'package:calcquest/shared/state/app_progress.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
 import 'package:calcquest/shared/theme/app_spacing.dart';
@@ -105,37 +106,37 @@ class _RewardScreenState extends State<RewardScreen> {
     );
   }
 
-  String get _rewardDescription {
+  String _rewardDescription(AppLocalizations l10n) {
     if (widget.completedLessonId == 'derivadas') {
-      return 'Você concluiu Derivadas e finalizou o módulo Cálculo I.';
+      return l10n.rewardDerivativesDescription;
     }
 
     if (widget.completedLessonId == 'continuidade') {
-      return 'Você concluiu a sequência de Continuidade em Cálculo I.';
+      return l10n.rewardContinuityDescription;
     }
 
     if (widget.completedLessonId == 'limites') {
-      return 'Você concluiu a sequência universitária de Limites.';
+      return l10n.rewardLimitsDescription;
     }
 
     if (widget.completedLessonId == 'funcoes') {
-      return 'Você concluiu a sequência de Funções e finalizou o módulo Fundamentos Matemáticos.';
+      return l10n.rewardFunctionsDescription;
     }
 
     if (widget.completedLessonId == 'equacoes-inequacoes') {
-      return 'Você concluiu a sequência de Equações e Inequações.';
+      return l10n.rewardEquationsDescription;
     }
 
-    return 'Você concluiu a sequência de Álgebra Fundamental.';
+    return l10n.rewardAlgebraDescription;
   }
 
-  String get _progressText {
+  String _progressText(AppLocalizations l10n) {
     if (widget.completedLessonId == 'funcoes' ||
         widget.completedLessonId == 'derivadas') {
-      return 'Módulo concluído';
+      return l10n.rewardModuleCompleted;
     }
 
-    return 'Aula concluída';
+    return l10n.rewardLessonCompleted;
   }
 
   Widget _buildRewardItem({
@@ -187,6 +188,8 @@ class _RewardScreenState extends State<RewardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
@@ -201,7 +204,6 @@ class _RewardScreenState extends State<RewardScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(height: AppSpacing.sm),
-
               Container(
                 width: 96,
                 height: 96,
@@ -219,63 +221,50 @@ class _RewardScreenState extends State<RewardScreen> {
                   ),
                 ),
               ),
-
               const SizedBox(height: AppSpacing.lg),
-
               Text(
-                'Recompensa desbloqueada',
+                l10n.rewardUnlocked,
                 textAlign: TextAlign.center,
                 style: AppTypography.headingLarge,
               ),
-
               const SizedBox(height: AppSpacing.xs),
-
               Text(
-                _rewardDescription,
+                _rewardDescription(l10n),
                 textAlign: TextAlign.center,
                 style: AppTypography.bodyMedium,
               ),
-
               const SizedBox(height: AppSpacing.xl),
-
               _buildRewardItem(
                 icon: Icons.bolt_outlined,
-                title: 'Experiência recebida',
+                title: l10n.rewardExperienceReceived,
                 value: '+${widget.xpEarned} XP',
                 iconColor: AppColors.xp,
                 iconBackground: AppColors.xpLight,
               ),
-
               const SizedBox(height: AppSpacing.sm),
-
               _buildRewardItem(
                 icon: Icons.monetization_on_outlined,
-                title: 'Ouro recebido',
+                title: l10n.rewardGoldReceived,
                 value: '+${widget.goldEarned}',
                 iconColor: AppColors.gold,
                 iconBackground: AppColors.goldLight,
               ),
-
               const SizedBox(height: AppSpacing.sm),
-
               _buildRewardItem(
                 icon: Icons.school_outlined,
-                title: 'Progresso',
-                value: _progressText,
+                title: l10n.rewardProgress,
+                value: _progressText(l10n),
                 iconColor: AppColors.success,
                 iconBackground: AppColors.successLight,
               ),
-
               const Spacer(),
-
               PrimaryButton(
-                text: 'Voltar para a trilha',
+                text: l10n.resultBackToPath,
                 icon: Icons.map_outlined,
                 onPressed: () {
                   _backToLearningPath(context);
                 },
               ),
-
               const SizedBox(height: AppSpacing.screenBottom),
             ],
           ),

@@ -9,6 +9,9 @@ import {
 } from "firebase-admin/firestore";
 
 import {
+  createTutorOwnerHash,
+} from "../account/accountDeletion";
+import {
   tutorBackendResponseSchema,
 } from "../contracts/responseSchemas";
 import {
@@ -23,6 +26,7 @@ import {
 } from "./idempotencyTypes";
 
 interface IdempotencyDocument {
+  ownerHash: string;
   status: "processing" | "completed";
   claimToken: string;
   createdAt: Timestamp;
@@ -147,6 +151,10 @@ implements IdempotencyStore {
 
           const document:
           IdempotencyDocument = {
+            ownerHash:
+              createTutorOwnerHash(
+                key.uid,
+              ),
             status: "processing",
             claimToken,
             createdAt:

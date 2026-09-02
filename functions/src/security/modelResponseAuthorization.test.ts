@@ -38,7 +38,7 @@ function buildRawResponse(
     responseType: "hint",
     title: "Pista",
     message:
-      "Observe a estrutura algÃƒÂ©brica antes de substituir.",
+      "Observe a estrutura algébrica antes de substituir.",
     steps: [],
     checkQuestion: "",
     referenceKeys,

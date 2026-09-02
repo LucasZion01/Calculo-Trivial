@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:calcquest/l10n/app_localizations.dart';
 import 'package:calcquest/shared/data/mock_learning_data.dart';
 import 'package:calcquest/shared/services/premium_access_guard.dart';
 import 'package:calcquest/shared/services/revenuecat_service.dart';
@@ -82,6 +83,7 @@ class LearningPathScreen extends StatelessWidget {
   String _getModuleStatus({
     required ModuleData module,
     required bool isPremiumUser,
+    required AppLocalizations l10n,
   }) {
     if (module.id == 'fundamentos') {
       final completed = _completedFundamentalsLessons();
@@ -115,17 +117,17 @@ class LearningPathScreen extends StatelessWidget {
       }
 
       if (!AppProgress.functionsCompleted) {
-        return 'Bloqueado';
+        return l10n.locked;
       }
 
       if (isPremiumUser) {
-        return 'Desbloqueado';
+        return l10n.unlocked;
       }
 
-      return 'Premium';
+      return l10n.premium;
     }
 
-    return module.status;
+    return l10n.locked;
   }
 
   Color _getModuleStatusColor({
@@ -201,7 +203,36 @@ class LearningPathScreen extends StatelessWidget {
     return null;
   }
 
-  Widget _buildPremiumBadge({required bool isPremiumUser}) {
+  String _moduleTitle(ModuleData module, AppLocalizations l10n) {
+    switch (module.id) {
+      case 'fundamentos':
+        return l10n.mathematicalFoundations;
+      case 'calculo-1':
+        return l10n.calculusOne;
+      case 'calculo-2':
+        return l10n.calculusTwo;
+      default:
+        return module.title;
+    }
+  }
+
+  String _moduleSubtitle(ModuleData module, AppLocalizations l10n) {
+    switch (module.id) {
+      case 'fundamentos':
+        return l10n.mathematicalFoundationsSubtitle;
+      case 'calculo-1':
+        return l10n.calculusOneSubtitle;
+      case 'calculo-2':
+        return l10n.calculusTwoSubtitle;
+      default:
+        return module.subtitle;
+    }
+  }
+
+  Widget _buildPremiumBadge({
+    required bool isPremiumUser,
+    required AppLocalizations l10n,
+  }) {
     final badgeColor = isPremiumUser
         ? AppColors.success
         : const Color(0xFFFFB300);
@@ -230,7 +261,9 @@ class LearningPathScreen extends StatelessWidget {
             ),
             const SizedBox(width: 6),
             Text(
-              isPremiumUser ? 'PREMIUM ATIVO' : 'PREMIUM',
+              isPremiumUser
+                  ? l10n.premiumActiveUppercase
+                  : l10n.premiumUppercase,
               style: TextStyle(
                 color: badgeColor,
                 fontSize: 11,
@@ -248,6 +281,7 @@ class LearningPathScreen extends StatelessWidget {
     required BuildContext context,
     required ModuleData module,
     required bool isPremiumUser,
+    required AppLocalizations l10n,
   }) {
     final isPremiumModule = _isPremiumModule(module);
 
@@ -255,16 +289,17 @@ class LearningPathScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         if (isPremiumModule) ...[
-          _buildPremiumBadge(isPremiumUser: isPremiumUser),
+          _buildPremiumBadge(isPremiumUser: isPremiumUser, l10n: l10n),
           const SizedBox(height: AppSpacing.xs),
         ],
         MathCard(
-          title: module.title,
-          subtitle: module.subtitle,
+          title: _moduleTitle(module, l10n),
+          subtitle: _moduleSubtitle(module, l10n),
           symbol: module.symbol,
           status: _getModuleStatus(
             module: module,
             isPremiumUser: isPremiumUser,
+            l10n: l10n,
           ),
           statusColor: _getModuleStatusColor(
             module: module,
@@ -279,6 +314,8 @@ class LearningPathScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
@@ -292,15 +329,9 @@ class LearningPathScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Trilha de Aprendizagem',
-                style: AppTypography.headingMedium,
-              ),
+              Text(l10n.learningPathTitle, style: AppTypography.headingMedium),
               const SizedBox(height: AppSpacing.xs),
-              Text(
-                'Avance módulo por módulo até dominar o Cálculo.',
-                style: AppTypography.bodyMedium,
-              ),
+              Text(l10n.learningPathSubtitle, style: AppTypography.bodyMedium),
               const SizedBox(height: AppSpacing.lg),
               Expanded(
                 child: ValueListenableBuilder<bool>(
@@ -319,6 +350,7 @@ class LearningPathScreen extends StatelessWidget {
                           context: context,
                           module: module,
                           isPremiumUser: isPremiumUser,
+                          l10n: l10n,
                         );
                       },
                     );

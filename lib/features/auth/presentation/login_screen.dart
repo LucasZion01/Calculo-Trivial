@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import 'package:calcquest/features/auth/presentation/register_screen.dart';
 import 'package:calcquest/features/dashboard/presentation/dashboard_screen.dart';
+import 'package:calcquest/l10n/app_localizations.dart';
 import 'package:calcquest/shared/services/revenuecat_service.dart';
 import 'package:calcquest/shared/state/app_progress.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
@@ -96,22 +97,25 @@ class _LoginScreenState extends State<LoginScreen>
       ..showSnackBar(SnackBar(content: Text(message)));
   }
 
-  String _firebaseErrorMessage(FirebaseAuthException error) {
+  String _firebaseErrorMessage(
+    FirebaseAuthException error,
+    AppLocalizations l10n,
+  ) {
     switch (error.code) {
       case 'invalid-email':
-        return 'Digite um endere\u00e7o de e-mail v\u00e1lido.';
+        return l10n.loginInvalidEmail;
       case 'user-disabled':
-        return 'Esta conta foi desativada.';
+        return l10n.loginUserDisabled;
       case 'user-not-found':
       case 'wrong-password':
       case 'invalid-credential':
-        return 'E-mail ou senha incorretos.';
+        return l10n.loginInvalidCredentials;
       case 'too-many-requests':
-        return 'Muitas tentativas. Aguarde um pouco e tente novamente.';
+        return l10n.loginTooManyRequests;
       case 'network-request-failed':
-        return 'Verifique sua conex\u00e3o com a internet.';
+        return l10n.loginNetworkError;
       default:
-        return 'N\u00e3o foi poss\u00edvel entrar. Tente novamente.';
+        return l10n.loginGenericError;
     }
   }
 
@@ -124,7 +128,7 @@ class _LoginScreenState extends State<LoginScreen>
       await RevenueCatService.identifyUser(userId);
     } catch (error) {
       debugPrint(
-        'Login: n\u00e3o foi poss\u00edvel identificar o usu\u00e1rio no RevenueCat: $error',
+        'Login: não foi possível identificar o usuário no RevenueCat: $error',
       );
     }
   }
@@ -134,11 +138,13 @@ class _LoginScreenState extends State<LoginScreen>
       return;
     }
 
+    final l10n = AppLocalizations.of(context)!;
+
     final email = _emailController.text.trim();
     final password = _passwordController.text;
 
     if (email.isEmpty || password.isEmpty) {
-      _showMessage('Preencha o e-mail e a senha.');
+      _showMessage(l10n.loginFillEmailAndPassword);
       return;
     }
 
@@ -155,9 +161,7 @@ class _LoginScreenState extends State<LoginScreen>
       final user = credential.user;
 
       if (user == null) {
-        throw StateError(
-          'Firebase n\u00e3o retornou o usu\u00e1rio autenticado.',
-        );
+        throw StateError('Firebase não retornou o usuário autenticado.');
       }
 
       await AppProgress.loadProgress();
@@ -172,10 +176,11 @@ class _LoginScreenState extends State<LoginScreen>
         (route) => false,
       );
     } on FirebaseAuthException catch (error) {
-      _showMessage(_firebaseErrorMessage(error));
+      _showMessage(_firebaseErrorMessage(error, l10n));
     } catch (error) {
       debugPrint('Login: erro inesperado: $error');
-      _showMessage('Ocorreu um erro inesperado ao entrar.');
+
+      _showMessage(l10n.loginUnexpectedError);
     } finally {
       if (mounted) {
         setState(() {
@@ -186,28 +191,25 @@ class _LoginScreenState extends State<LoginScreen>
   }
 
   Future<void> _resetPassword() async {
+    final l10n = AppLocalizations.of(context)!;
+
     final email = _emailController.text.trim();
 
     if (email.isEmpty) {
-      _showMessage(
-        'Digite seu e-mail para receber a recupera\u00e7\u00e3o de senha.',
-      );
+      _showMessage(l10n.loginEnterEmailForReset);
       return;
     }
 
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
 
-      _showMessage(
-        'Enviamos as instru\u00e7\u00f5es de recupera\u00e7\u00e3o para o seu e-mail.',
-      );
+      _showMessage(l10n.loginResetEmailSent);
     } on FirebaseAuthException catch (error) {
-      _showMessage(_firebaseErrorMessage(error));
+      _showMessage(_firebaseErrorMessage(error, l10n));
     } catch (error) {
-      debugPrint('Recupera\u00e7\u00e3o de senha: erro inesperado: $error');
-      _showMessage(
-        'N\u00e3o foi poss\u00edvel enviar a recupera\u00e7\u00e3o de senha.',
-      );
+      debugPrint('Recuperação de senha: erro inesperado: $error');
+
+      _showMessage(l10n.loginResetEmailError);
     }
   }
 
@@ -219,6 +221,8 @@ class _LoginScreenState extends State<LoginScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: AppColors.navy,
       body: Stack(
@@ -310,7 +314,7 @@ class _LoginScreenState extends State<LoginScreen>
                                             'assets/branding/calculo_trivial_icon_1024.png',
                                             fit: BoxFit.cover,
                                             semanticLabel:
-                                                'S\u00edmbolo do C\u00e1lculo Trivial',
+                                                l10n.appSymbolSemanticLabel,
                                           ),
                                         ),
                                       ),
@@ -319,7 +323,7 @@ class _LoginScreenState extends State<LoginScreen>
                                 ),
                                 const SizedBox(height: AppSpacing.md),
                                 Text(
-                                  'C\u00e1lculo Trivial',
+                                  l10n.appName,
                                   textAlign: TextAlign.center,
                                   style: AppTypography.headingMedium.copyWith(
                                     fontWeight: FontWeight.w800,
@@ -328,7 +332,7 @@ class _LoginScreenState extends State<LoginScreen>
                                 ),
                                 const SizedBox(height: AppSpacing.xs),
                                 Text(
-                                  'Domine o c\u00e1lculo. Evolua al\u00e9m.',
+                                  l10n.appTagline,
                                   textAlign: TextAlign.center,
                                   style: AppTypography.bodyMedium.copyWith(
                                     color: AppColors.primaryLight,
@@ -359,19 +363,19 @@ class _LoginScreenState extends State<LoginScreen>
                                           CrossAxisAlignment.stretch,
                                       children: [
                                         Text(
-                                          'Acesse sua conta',
+                                          l10n.loginAccessAccount,
                                           style: AppTypography.titleLarge,
                                         ),
                                         const SizedBox(height: AppSpacing.xs),
                                         Text(
-                                          'Entre para iniciar ou continuar sua jornada.',
+                                          l10n.loginJourneySubtitle,
                                           style: AppTypography.bodyMedium,
                                         ),
                                         const SizedBox(height: AppSpacing.lg),
                                         AppTextField(
                                           controller: _emailController,
-                                          labelText: 'E-mail',
-                                          hintText: 'Digite seu e-mail',
+                                          labelText: l10n.email,
+                                          hintText: l10n.loginEmailHint,
                                           keyboardType:
                                               TextInputType.emailAddress,
                                           prefixIcon: Icons.email_outlined,
@@ -380,8 +384,8 @@ class _LoginScreenState extends State<LoginScreen>
                                         const SizedBox(height: AppSpacing.md),
                                         AppTextField(
                                           controller: _passwordController,
-                                          labelText: 'Senha',
-                                          hintText: 'Digite sua senha',
+                                          labelText: l10n.password,
+                                          hintText: l10n.loginPasswordHint,
                                           obscureText: !_isPasswordVisible,
                                           prefixIcon: Icons.lock_outline,
                                           enabled: !_isLoading,
@@ -404,7 +408,7 @@ class _LoginScreenState extends State<LoginScreen>
                                         ),
                                         const SizedBox(height: AppSpacing.lg),
                                         PrimaryButton(
-                                          text: 'Entrar',
+                                          text: l10n.login,
                                           onPressed: _login,
                                           isLoading: _isLoading,
                                         ),
@@ -413,9 +417,7 @@ class _LoginScreenState extends State<LoginScreen>
                                           onPressed: _isLoading
                                               ? null
                                               : _resetPassword,
-                                          child: const Text(
-                                            'Esqueci minha senha',
-                                          ),
+                                          child: Text(l10n.forgotPassword),
                                         ),
                                       ],
                                     ),
@@ -427,7 +429,7 @@ class _LoginScreenState extends State<LoginScreen>
                                   crossAxisAlignment: WrapCrossAlignment.center,
                                   children: [
                                     Text(
-                                      'Ainda n\u00e3o tem uma conta?',
+                                      l10n.loginNoAccount,
                                       style: AppTypography.bodyMedium.copyWith(
                                         color: AppColors.primaryLight,
                                       ),
@@ -439,7 +441,7 @@ class _LoginScreenState extends State<LoginScreen>
                                       style: TextButton.styleFrom(
                                         foregroundColor: AppColors.secondary,
                                       ),
-                                      child: const Text('Criar conta'),
+                                      child: Text(l10n.createAccount),
                                     ),
                                   ],
                                 ),
@@ -472,7 +474,9 @@ class _AnimatedLoginBackground extends StatelessWidget {
         animation: animation,
         builder: (context, child) {
           final phase = animation.value * math.pi * 2;
+
           final horizontal = math.sin(phase);
+
           final vertical = math.cos(phase);
 
           return Stack(

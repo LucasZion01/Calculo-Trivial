@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import 'package:calcquest/l10n/app_localizations.dart';
 import 'package:calcquest/shared/state/app_progress.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
 import 'package:calcquest/shared/theme/app_spacing.dart';
@@ -10,7 +11,6 @@ import 'package:calcquest/shared/widgets/app_icon.dart';
 import 'package:calcquest/shared/widgets/app_progress_bar.dart';
 import 'package:calcquest/shared/widgets/primary_button.dart';
 
-import '../domain/dashboard_welcome.dart';
 import '../../learning_path/presentation/learning_path_screen.dart';
 import '../../profile/presentation/profile_screen.dart';
 import '../../statistics/presentation/statistics_screen.dart';
@@ -18,7 +18,10 @@ import '../../statistics/presentation/statistics_screen.dart';
 class DashboardScreen extends StatelessWidget {
   final bool isFirstAccess;
 
-  const DashboardScreen({super.key, this.isFirstAccess = false});
+  const DashboardScreen({
+    super.key,
+    this.isFirstAccess = false,
+  });
 
   static const int _availableLessonCount = 6;
 
@@ -29,26 +32,32 @@ class DashboardScreen extends StatelessWidget {
 
     if (index == 1) {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const LearningPathScreen()),
+        MaterialPageRoute(
+          builder: (_) => const LearningPathScreen(),
+        ),
       );
       return;
     }
 
     if (index == 2) {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const StatisticsScreen()),
+        MaterialPageRoute(
+          builder: (_) => const StatisticsScreen(),
+        ),
       );
       return;
     }
 
     if (index == 3) {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const ProfileScreen()),
+        MaterialPageRoute(
+          builder: (_) => const ProfileScreen(),
+        ),
       );
     }
   }
 
-  String _firstName() {
+  String _firstName(AppLocalizations l10n) {
     final user = FirebaseAuth.instance.currentUser;
     final displayName = user?.displayName?.trim();
 
@@ -62,7 +71,23 @@ class DashboardScreen extends StatelessWidget {
       return email.split('@').first;
     }
 
-    return 'Estudante';
+    return l10n.student;
+  }
+
+  String _welcomeTitle(AppLocalizations l10n) {
+    if (isFirstAccess) {
+      return l10n.dashboardFirstWelcome;
+    }
+
+    return l10n.dashboardWelcomeBack(_firstName(l10n));
+  }
+
+  String _welcomeSubtitle(AppLocalizations l10n) {
+    if (isFirstAccess) {
+      return l10n.dashboardFirstWelcomeSubtitle;
+    }
+
+    return l10n.dashboardWelcomeBackSubtitle;
   }
 
   int _levelFromXp(int xp) {
@@ -71,9 +96,7 @@ class DashboardScreen extends StatelessWidget {
 
   double _progressValue() {
     final completedLessons = AppProgress.completedLessonIds.length;
-
     final value = completedLessons / _availableLessonCount;
-
     return value.clamp(0.0, 1.0).toDouble();
   }
 
@@ -81,60 +104,60 @@ class DashboardScreen extends StatelessWidget {
     return '${(progress * 100).round()}%';
   }
 
-  String _lastLesson() {
+  String _lastLesson(AppLocalizations l10n) {
     if (AppProgress.derivativesCompleted) {
-      return 'Cálculo I concluído';
+      return l10n.dashboardCalculusOneCompleted;
     }
 
     if (AppProgress.continuityCompleted) {
-      return 'Continuidade concluída';
+      return l10n.dashboardContinuityCompleted;
     }
 
     if (AppProgress.limitsCompleted) {
-      return 'Limites concluído';
+      return l10n.dashboardLimitsCompleted;
     }
 
     if (AppProgress.functionsCompleted) {
-      return 'Fundamentos Matemáticos concluído';
+      return l10n.dashboardFoundationsCompleted;
     }
 
     if (AppProgress.equationsAndInequationsCompleted) {
-      return 'Equações e Inequações concluída';
+      return l10n.dashboardEquationsCompleted;
     }
 
     if (AppProgress.algebraFundamentalCompleted) {
-      return 'Álgebra Fundamental concluída';
+      return l10n.dashboardAlgebraCompleted;
     }
 
-    return 'Comece sua primeira aula';
+    return l10n.dashboardStartFirstLesson;
   }
 
-  String _nextMission() {
+  String _nextMission(AppLocalizations l10n) {
     if (AppProgress.derivativesCompleted) {
-      return 'Módulo concluído! Continue praticando para fixar o conteúdo.';
+      return l10n.dashboardMissionModuleCompleted;
     }
 
     if (AppProgress.continuityCompleted) {
-      return 'Próxima etapa: estudar Derivadas.';
+      return l10n.dashboardMissionDerivatives;
     }
 
     if (AppProgress.limitsCompleted) {
-      return 'Próxima etapa: estudar Continuidade.';
+      return l10n.dashboardMissionContinuity;
     }
 
     if (AppProgress.functionsCompleted) {
-      return 'Inicie Cálculo I com a aula de Limites.';
+      return l10n.dashboardMissionLimits;
     }
 
     if (AppProgress.equationsAndInequationsCompleted) {
-      return 'Continue com Aula 3 — Funções.';
+      return l10n.dashboardMissionFunctions;
     }
 
     if (AppProgress.algebraFundamentalCompleted) {
-      return 'Continue com Equações e Inequações.';
+      return l10n.dashboardMissionEquations;
     }
 
-    return 'Avance na trilha de Fundamentos Matemáticos.';
+    return l10n.dashboardMissionFoundations;
   }
 
   Widget _buildInfoCard({
@@ -180,6 +203,8 @@ class DashboardScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return ValueListenableBuilder<int>(
       valueListenable: AppProgress.revision,
       builder: (context, revision, child) {
@@ -188,7 +213,6 @@ class DashboardScreen extends StatelessWidget {
         final level = _levelFromXp(xp);
         final progress = _progressValue();
         final progressCompleted = progress >= 1;
-        final firstName = isFirstAccess ? null : _firstName();
 
         return Scaffold(
           backgroundColor: AppColors.background,
@@ -204,15 +228,12 @@ class DashboardScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    DashboardWelcome.title(
-                      isFirstAccess: isFirstAccess,
-                      firstName: firstName,
-                    ),
+                    _welcomeTitle(l10n),
                     style: AppTypography.headingMedium,
                   ),
                   const SizedBox(height: AppSpacing.xs),
                   Text(
-                    DashboardWelcome.subtitle(isFirstAccess: isFirstAccess),
+                    _welcomeSubtitle(l10n),
                     style: AppTypography.bodyMedium,
                   ),
                   const SizedBox(height: AppSpacing.lg),
@@ -236,7 +257,7 @@ class DashboardScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Progresso atual',
+                          l10n.dashboardCurrentProgress,
                           style: AppTypography.bodyMedium.copyWith(
                             color: AppColors.primaryLight,
                           ),
@@ -258,7 +279,7 @@ class DashboardScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: AppSpacing.sm),
                         Text(
-                          _lastLesson(),
+                          _lastLesson(l10n),
                           style: AppTypography.bodySmall.copyWith(
                             color: AppColors.primaryLight,
                           ),
@@ -271,19 +292,19 @@ class DashboardScreen extends StatelessWidget {
                     children: [
                       _buildInfoCard(
                         icon: Icons.military_tech_outlined,
-                        title: 'Nível',
+                        title: l10n.level,
                         value: '$level',
                       ),
                       const SizedBox(width: AppSpacing.sm),
                       _buildInfoCard(
                         icon: Icons.bolt_outlined,
-                        title: 'XP',
+                        title: l10n.xp,
                         value: '$xp',
                       ),
                       const SizedBox(width: AppSpacing.sm),
                       _buildInfoCard(
                         icon: Icons.monetization_on_outlined,
-                        title: 'Ouro',
+                        title: l10n.gold,
                         value: '$gold',
                       ),
                     ],
@@ -332,12 +353,12 @@ class DashboardScreen extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Próxima missão',
+                                l10n.dashboardNextMission,
                                 style: AppTypography.titleMedium,
                               ),
                               const SizedBox(height: AppSpacing.xxs),
                               Text(
-                                _nextMission(),
+                                _nextMission(l10n),
                                 style: AppTypography.bodySmall,
                               ),
                             ],
@@ -348,7 +369,7 @@ class DashboardScreen extends StatelessWidget {
                   ),
                   const Spacer(),
                   PrimaryButton(
-                    text: 'Continuar trilha',
+                    text: l10n.dashboardContinuePath,
                     icon: Icons.arrow_forward_rounded,
                     onPressed: () {
                       Navigator.of(context).pushReplacement(

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:calcquest/l10n/app_localizations.dart';
+import 'package:calcquest/shared/data/localized_equations_exercise_content.dart';
 import 'package:calcquest/shared/data/mock_equations_exercise_data.dart';
 import 'package:calcquest/shared/data/mock_exercise_data.dart';
 import 'package:calcquest/shared/domain/exercise_review_item.dart';
@@ -62,7 +64,10 @@ class _EquationsExercisesScreenState extends State<EquationsExercisesScreen> {
         .toList();
   }
 
-  ExerciseData get currentExercise => sessionExercises[currentExerciseIndex];
+  ExerciseData get currentExercise => localizeEquationsExerciseContent(
+    sessionExercises[currentExerciseIndex],
+    Localizations.localeOf(context),
+  );
 
   bool get isLastExercise =>
       currentExerciseIndex == sessionExercises.length - 1;
@@ -136,46 +141,49 @@ class _EquationsExercisesScreenState extends State<EquationsExercisesScreen> {
   }
 
   void _confirmAnswer() {
+    final l10n = AppLocalizations.of(context)!;
+
     if (selectedOptionId == null) {
       _showFeedback(
-        message: 'Escolha uma alternativa antes de continuar.',
+        message: l10n.exerciseChooseAlternative,
         backgroundColor: AppColors.warning,
         icon: Icons.warning_amber_rounded,
       );
       return;
     }
 
-    final isCorrect = selectedOptionId == currentExercise.correctOptionId;
+    final exercise = currentExercise;
+    final isCorrect = selectedOptionId == exercise.correctOptionId;
 
     AppProgress.recordExerciseAnswer(isCorrect: isCorrect);
 
     if (isCorrect) {
       correctAnswers++;
       _showFeedback(
-        message: currentExercise.explanation,
+        message: exercise.explanation,
         backgroundColor: AppColors.success,
         icon: Icons.check_rounded,
       );
     } else {
-      final selectedOption = currentExercise.options.firstWhere(
+      final selectedOption = exercise.options.firstWhere(
         (option) => option.id == selectedOptionId,
       );
-      final correctOption = currentExercise.options.firstWhere(
-        (option) => option.id == currentExercise.correctOptionId,
+      final correctOption = exercise.options.firstWhere(
+        (option) => option.id == exercise.correctOptionId,
       );
 
       reviewItems.add(
         ExerciseReviewItem(
-          questionId: currentExercise.id,
-          statement: currentExercise.statement,
+          questionId: exercise.id,
+          statement: exercise.statement,
           selectedAnswer: selectedOption.text,
           correctAnswer: correctOption.text,
-          explanation: currentExercise.explanation,
+          explanation: exercise.explanation,
         ),
       );
 
       _showFeedback(
-        message: 'Resposta incorreta. ${currentExercise.explanation}',
+        message: exercise.explanation,
         backgroundColor: AppColors.error,
         icon: Icons.close_rounded,
       );
@@ -290,6 +298,7 @@ class _EquationsExercisesScreenState extends State<EquationsExercisesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final exercise = currentExercise;
 
     return Scaffold(
@@ -306,12 +315,15 @@ class _EquationsExercisesScreenState extends State<EquationsExercisesScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Questão ${currentExerciseIndex + 1} de ${sessionExercises.length}',
+                l10n.exerciseQuestionProgress(
+                  currentExerciseIndex + 1,
+                  sessionExercises.length,
+                ),
                 style: AppTypography.headingSmall,
               ),
               const SizedBox(height: AppSpacing.xs),
               Text(
-                'Resolva a equação ou inequação.',
+                l10n.equationsAndInequalities,
                 style: AppTypography.bodyMedium,
               ),
               const SizedBox(height: AppSpacing.md),
@@ -356,8 +368,8 @@ class _EquationsExercisesScreenState extends State<EquationsExercisesScreen> {
               const SizedBox(height: AppSpacing.sm),
               PrimaryButton(
                 text: isLastExercise
-                    ? 'Finalizar exercícios'
-                    : 'Próxima questão',
+                    ? l10n.exerciseFinish
+                    : l10n.exerciseNextQuestion,
                 icon: isLastExercise
                     ? Icons.flag_rounded
                     : Icons.arrow_forward_rounded,

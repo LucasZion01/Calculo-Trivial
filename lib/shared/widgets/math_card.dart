@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:calcquest/shared/theme/app_colors.dart';
+import 'package:calcquest/shared/theme/app_motion.dart';
 import 'package:calcquest/shared/theme/app_spacing.dart';
 import 'package:calcquest/shared/theme/app_typography.dart';
 
@@ -124,8 +125,8 @@ class _MathCardState extends State<MathCard> {
   Widget build(BuildContext context) {
     return AnimatedScale(
       scale: _isPressed ? 0.985 : 1,
-      duration: const Duration(milliseconds: 120),
-      curve: Curves.easeOut,
+      duration: AppMotion.quick,
+      curve: AppMotion.easeOut,
       child: Material(
         color: Colors.transparent,
         borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
@@ -136,8 +137,8 @@ class _MathCardState extends State<MathCard> {
           onTapCancel: () => _setPressed(false),
           borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
           child: AnimatedContainer(
-            duration: const Duration(milliseconds: 180),
-            curve: Curves.easeOut,
+            duration: AppMotion.standard,
+            curve: AppMotion.easeOut,
             width: double.infinity,
             constraints: const BoxConstraints(minHeight: 96),
             padding: const EdgeInsets.all(AppSpacing.cardPaddingLarge),

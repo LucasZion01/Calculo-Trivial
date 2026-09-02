@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:calcquest/l10n/app_localizations.dart';
+import 'package:calcquest/shared/data/localized_functions_exercise_content.dart';
 import 'package:calcquest/shared/data/mock_exercise_data.dart';
 import 'package:calcquest/shared/data/mock_functions_exercise_data.dart';
 import 'package:calcquest/shared/domain/exercise_review_item.dart';
@@ -62,7 +64,10 @@ class _FunctionsExercisesScreenState extends State<FunctionsExercisesScreen> {
         .toList();
   }
 
-  ExerciseData get currentExercise => sessionExercises[currentExerciseIndex];
+  ExerciseData get currentExercise => localizeFunctionsExerciseContent(
+        sessionExercises[currentExerciseIndex],
+        Localizations.localeOf(context),
+      );
 
   bool get isLastExercise =>
       currentExerciseIndex == sessionExercises.length - 1;
@@ -136,9 +141,11 @@ class _FunctionsExercisesScreenState extends State<FunctionsExercisesScreen> {
   }
 
   void _confirmAnswer() {
+    final l10n = AppLocalizations.of(context)!;
+
     if (selectedOptionId == null) {
       _showFeedback(
-        message: 'Escolha uma alternativa antes de continuar.',
+        message: l10n.exerciseChooseAlternative,
         backgroundColor: AppColors.warning,
         icon: Icons.warning_amber_rounded,
       );
@@ -175,7 +182,7 @@ class _FunctionsExercisesScreenState extends State<FunctionsExercisesScreen> {
       );
 
       _showFeedback(
-        message: 'Resposta incorreta. ${currentExercise.explanation}',
+        message: currentExercise.explanation,
         backgroundColor: AppColors.error,
         icon: Icons.close_rounded,
       );
@@ -290,6 +297,7 @@ class _FunctionsExercisesScreenState extends State<FunctionsExercisesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final exercise = currentExercise;
 
     return Scaffold(
@@ -306,14 +314,14 @@ class _FunctionsExercisesScreenState extends State<FunctionsExercisesScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Questão ${currentExerciseIndex + 1} de ${sessionExercises.length}',
+                l10n.exerciseQuestionProgress(
+                  currentExerciseIndex + 1,
+                  sessionExercises.length,
+                ),
                 style: AppTypography.headingSmall,
               ),
               const SizedBox(height: AppSpacing.xs),
-              Text(
-                'Resolva a questão sobre funções.',
-                style: AppTypography.bodyMedium,
-              ),
+              Text(l10n.functions, style: AppTypography.bodyMedium),
               const SizedBox(height: AppSpacing.md),
               AppProgressBar(value: progress),
               const SizedBox(height: AppSpacing.lg),
@@ -356,8 +364,8 @@ class _FunctionsExercisesScreenState extends State<FunctionsExercisesScreen> {
               const SizedBox(height: AppSpacing.sm),
               PrimaryButton(
                 text: isLastExercise
-                    ? 'Finalizar exercícios'
-                    : 'Próxima questão',
+                    ? l10n.exerciseFinish
+                    : l10n.exerciseNextQuestion,
                 icon: isLastExercise
                     ? Icons.flag_rounded
                     : Icons.arrow_forward_rounded,

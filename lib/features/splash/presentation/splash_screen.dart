@@ -6,9 +6,11 @@ import 'package:flutter/material.dart';
 
 import 'package:calcquest/features/auth/presentation/login_screen.dart';
 import 'package:calcquest/features/dashboard/presentation/dashboard_screen.dart';
+import 'package:calcquest/l10n/app_localizations.dart';
 import 'package:calcquest/shared/services/revenuecat_service.dart';
 import 'package:calcquest/shared/state/app_progress.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
+import 'package:calcquest/shared/theme/app_motion.dart';
 import 'package:calcquest/shared/theme/app_typography.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -33,30 +35,33 @@ class _SplashScreenState extends State<SplashScreen>
 
     _entranceController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1200),
+      duration: AppMotion.entrance,
       animationBehavior: AnimationBehavior.preserve,
     );
 
     _motionController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1800),
+      duration: AppMotion.ambient,
       animationBehavior: AnimationBehavior.preserve,
     );
 
     _fadeAnimation = CurvedAnimation(
       parent: _entranceController,
-      curve: const Interval(0, 0.85, curve: Curves.easeOut),
+      curve: const Interval(0, 0.85, curve: AppMotion.easeOut),
     );
 
     _iconScaleAnimation = Tween<double>(begin: 0.65, end: 1).animate(
-      CurvedAnimation(parent: _entranceController, curve: Curves.easeOutBack),
+      CurvedAnimation(
+        parent: _entranceController,
+        curve: AppMotion.easeOutBack,
+      ),
     );
 
     _slideAnimation =
         Tween<Offset>(begin: const Offset(0, 0.12), end: Offset.zero).animate(
           CurvedAnimation(
             parent: _entranceController,
-            curve: Curves.easeOutCubic,
+            curve: AppMotion.easeOutCubic,
           ),
         );
 
@@ -90,14 +95,17 @@ class _SplashScreenState extends State<SplashScreen>
     }
 
     final currentUser = FirebaseAuth.instance.currentUser;
+
     final destination = currentUser == null
         ? const LoginScreen()
         : const DashboardScreen();
 
     Navigator.of(context).pushReplacement(
       PageRouteBuilder<void>(
-        pageBuilder: (_, animation, secondaryAnimation) => destination,
-        transitionDuration: const Duration(milliseconds: 500),
+        pageBuilder: (_, animation, secondaryAnimation) {
+          return destination;
+        },
+        transitionDuration: AppMotion.route,
         transitionsBuilder: (_, animation, secondaryAnimation, child) {
           return FadeTransition(opacity: animation, child: child);
         },
@@ -125,7 +133,7 @@ class _SplashScreenState extends State<SplashScreen>
       await operation.timeout(const Duration(seconds: 6));
     } catch (error) {
       debugPrint(
-        'SplashScreen: $serviceName indispon\u00edvel durante a inicializa\u00e7\u00e3o: '
+        'SplashScreen: $serviceName indisponível durante a inicialização: '
         '$error',
       );
     }
@@ -133,6 +141,8 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: AppColors.navy,
       body: DecoratedBox(
@@ -144,92 +154,203 @@ class _SplashScreenState extends State<SplashScreen>
           ),
         ),
         child: SafeArea(
-          child: Center(
-            child: FadeTransition(
-              opacity: _fadeAnimation,
-              child: SlideTransition(
-                position: _slideAnimation,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    ScaleTransition(
-                      scale: _iconScaleAnimation,
-                      child: AnimatedBuilder(
-                        animation: _motionController,
-                        builder: (context, child) {
-                          final phase = _motionController.value * math.pi * 2;
-                          final wave = math.sin(phase);
+          child: Stack(
+            children: [
+              Positioned.fill(
+                child: _FloatingMathSymbols(animation: _motionController),
+              ),
+              Center(
+                child: FadeTransition(
+                  opacity: _fadeAnimation,
+                  child: SlideTransition(
+                    position: _slideAnimation,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ScaleTransition(
+                          scale: _iconScaleAnimation,
+                          child: AnimatedBuilder(
+                            animation: _motionController,
+                            builder: (context, child) {
+                              final phase =
+                                  _motionController.value * math.pi * 2;
 
-                          return Transform.translate(
-                            offset: Offset(0, wave * 9),
-                            child: Transform.scale(
-                              scale: 1 + (wave * 0.045),
-                              child: Container(
-                                width: 144,
-                                height: 144,
-                                padding: const EdgeInsets.all(6),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(34),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Color.lerp(
-                                        const Color(0x4006B6D4),
-                                        const Color(0xA006B6D4),
-                                        (wave + 1) / 2,
-                                      )!,
-                                      blurRadius: 30 + ((wave + 1) * 10),
-                                      spreadRadius: 2 + ((wave + 1) * 2),
+                              final wave = math.sin(phase);
+
+                              return Transform.translate(
+                                offset: Offset(0, wave * 9),
+                                child: Transform.scale(
+                                  scale: 1 + (wave * 0.045),
+                                  child: Container(
+                                    width: 144,
+                                    height: 144,
+                                    padding: const EdgeInsets.all(6),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(34),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Color.lerp(
+                                            const Color(0x4006B6D4),
+                                            const Color(0xA006B6D4),
+                                            (wave + 1) / 2,
+                                          )!,
+                                          blurRadius: 30 + ((wave + 1) * 10),
+                                          spreadRadius: 2 + ((wave + 1) * 2),
+                                        ),
+                                      ],
                                     ),
-                                  ],
+                                    child: child,
+                                  ),
                                 ),
-                                child: child,
+                              );
+                            },
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(28),
+                              child: Image.asset(
+                                'assets/branding/calculo_trivial_icon_1024.png',
+                                fit: BoxFit.cover,
+                                semanticLabel: l10n.appSymbolSemanticLabel,
                               ),
                             ),
-                          );
-                        },
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(28),
-                          child: Image.asset(
-                            'assets/branding/calculo_trivial_icon_1024.png',
-                            fit: BoxFit.cover,
-                            semanticLabel:
-                                'S\u00edmbolo do C\u00e1lculo Trivial',
                           ),
                         ),
-                      ),
+                        const SizedBox(height: 28),
+                        Text(
+                          l10n.appName,
+                          style: AppTypography.headingLarge.copyWith(
+                            color: AppColors.white,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          l10n.appTagline,
+                          textAlign: TextAlign.center,
+                          style: AppTypography.bodyMedium.copyWith(
+                            color: AppColors.primaryLight,
+                          ),
+                        ),
+                        const SizedBox(height: 36),
+                        SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2.5,
+                            color: AppColors.secondary,
+                            semanticsLabel: l10n.loading,
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 28),
-                    Text(
-                      'C\u00e1lculo Trivial',
-                      style: AppTypography.headingLarge.copyWith(
-                        color: AppColors.white,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      'Domine o c\u00e1lculo. Evolua al\u00e9m.',
-                      style: AppTypography.bodyMedium.copyWith(
-                        color: AppColors.primaryLight,
-                      ),
-                    ),
-                    const SizedBox(height: 36),
-                    const SizedBox(
-                      width: 24,
-                      height: 24,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2.5,
-                        color: AppColors.secondary,
-                        semanticsLabel: 'Carregando',
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ),
-            ),
+            ],
           ),
         ),
       ),
     );
   }
+}
+
+class _FloatingMathSymbols extends StatelessWidget {
+  final Animation<double> animation;
+
+  const _FloatingMathSymbols({required this.animation});
+
+  static const List<_FloatingMathSymbolSpec> _symbols =
+      <_FloatingMathSymbolSpec>[
+        _FloatingMathSymbolSpec(
+          value: '∫',
+          alignment: Alignment(-0.78, -0.72),
+          size: 46,
+          phase: 0.2,
+          opacity: 0.16,
+        ),
+        _FloatingMathSymbolSpec(
+          value: 'π',
+          alignment: Alignment(0.72, -0.62),
+          size: 40,
+          phase: 1.4,
+          opacity: 0.14,
+        ),
+        _FloatingMathSymbolSpec(
+          value: '√x',
+          alignment: Alignment(-0.68, 0.48),
+          size: 30,
+          phase: 2.3,
+          opacity: 0.13,
+        ),
+        _FloatingMathSymbolSpec(
+          value: 'f′',
+          alignment: Alignment(0.68, 0.36),
+          size: 34,
+          phase: 3.2,
+          opacity: 0.15,
+        ),
+        _FloatingMathSymbolSpec(
+          value: 'lim',
+          alignment: Alignment(0.02, -0.88),
+          size: 28,
+          phase: 4.1,
+          opacity: 0.12,
+        ),
+      ];
+
+  @override
+  Widget build(BuildContext context) {
+    return IgnorePointer(
+      child: AnimatedBuilder(
+        animation: animation,
+        builder: (context, child) {
+          final progress = animation.value * math.pi * 2;
+
+          return Stack(
+            children: [
+              for (final symbol in _symbols)
+                Align(
+                  alignment: symbol.alignment,
+                  child: Transform.translate(
+                    offset: Offset(
+                      math.cos(progress + symbol.phase) * 8,
+                      math.sin(progress + symbol.phase) * 14,
+                    ),
+                    child: Transform.rotate(
+                      angle: math.sin(progress + symbol.phase) * 0.08,
+                      child: Opacity(
+                        opacity: symbol.opacity,
+                        child: Text(
+                          symbol.value,
+                          style: AppTypography.headingLarge.copyWith(
+                            color: AppColors.white,
+                            fontSize: symbol.size,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _FloatingMathSymbolSpec {
+  final String value;
+  final Alignment alignment;
+  final double size;
+  final double phase;
+  final double opacity;
+
+  const _FloatingMathSymbolSpec({
+    required this.value,
+    required this.alignment,
+    required this.size,
+    required this.phase,
+    required this.opacity,
+  });
 }

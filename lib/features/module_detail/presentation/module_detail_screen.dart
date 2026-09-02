@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:calcquest/l10n/app_localizations.dart';
 import 'package:calcquest/shared/data/mock_learning_data.dart';
 import 'package:calcquest/shared/state/app_progress.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
@@ -11,9 +12,9 @@ import 'package:calcquest/shared/widgets/math_card.dart';
 
 import '../../dashboard/presentation/dashboard_screen.dart';
 import '../../learning_path/presentation/learning_path_screen.dart';
-import '../../lesson/presentation/equations_lesson_screen.dart';
+import '../../lesson/presentation/algebra_course_screen.dart';
+import '../../lesson/presentation/equations_course_screen.dart';
 import '../../lesson/presentation/functions_lesson_screen.dart';
-import '../../lesson/presentation/lesson_screen.dart';
 import '../../profile/presentation/profile_screen.dart';
 import '../../statistics/presentation/statistics_screen.dart';
 
@@ -56,13 +57,13 @@ class ModuleDetailScreen extends StatelessWidget {
   void _goToLesson(BuildContext context) {
     Navigator.of(
       context,
-    ).push(MaterialPageRoute(builder: (_) => const LessonScreen()));
+    ).push(MaterialPageRoute(builder: (_) => const AlgebraCourseScreen()));
   }
 
   void _goToEquationsLesson(BuildContext context) {
     Navigator.of(
       context,
-    ).push(MaterialPageRoute(builder: (_) => const EquationsLessonScreen()));
+    ).push(MaterialPageRoute(builder: (_) => const EquationsCourseScreen()));
   }
 
   void _goToFunctionsLesson(BuildContext context) {
@@ -125,48 +126,82 @@ class ModuleDetailScreen extends StatelessWidget {
     return 1;
   }
 
-  String _moduleProgressDescription() {
+  String _moduleProgressDescription(AppLocalizations l10n) {
     if (AppProgress.functionsCompleted) {
-      return 'Módulo concluído';
+      return l10n.moduleDetailCompleted;
     }
 
     if (AppProgress.equationsAndInequationsCompleted) {
-      return 'Aula 2 concluída';
+      return l10n.moduleDetailLessonTwoCompleted;
     }
 
     if (AppProgress.algebraFundamentalCompleted) {
-      return 'Aula 1 concluída';
+      return l10n.moduleDetailLessonOneCompleted;
     }
 
-    return 'Comece pela primeira aula';
+    return l10n.moduleDetailStartFirstLesson;
   }
 
-  String _getLessonStatus(LessonData lesson) {
+  String _getLessonStatus(LessonData lesson, AppLocalizations l10n) {
     if (lesson.id == 'algebra-fundamental' &&
         AppProgress.algebraFundamentalCompleted) {
-      return 'Concluída';
+      return l10n.completed;
     }
 
     if (lesson.id == 'equacoes-inequacoes' &&
         AppProgress.equationsAndInequationsCompleted) {
-      return 'Concluída';
+      return l10n.completed;
     }
 
     if (lesson.id == 'equacoes-inequacoes' &&
         AppProgress.algebraFundamentalCompleted) {
-      return 'Desbloqueada';
+      return l10n.moduleDetailLessonUnlocked;
     }
 
     if (lesson.id == 'funcoes' && AppProgress.functionsCompleted) {
-      return 'Concluída';
+      return l10n.completed;
     }
 
     if (lesson.id == 'funcoes' &&
         AppProgress.equationsAndInequationsCompleted) {
-      return 'Desbloqueada';
+      return l10n.moduleDetailLessonUnlocked;
     }
 
-    return lesson.status;
+    return _fallbackLessonStatus(lesson, l10n);
+  }
+
+  String _fallbackLessonStatus(LessonData lesson, AppLocalizations l10n) {
+    if (lesson.isUnlocked) {
+      return l10n.available;
+    }
+
+    return l10n.locked;
+  }
+
+  String _lessonTitle(LessonData lesson, AppLocalizations l10n) {
+    switch (lesson.id) {
+      case 'algebra-fundamental':
+        return l10n.moduleDetailAlgebraTitle;
+      case 'equacoes-inequacoes':
+        return l10n.moduleDetailEquationsTitle;
+      case 'funcoes':
+        return l10n.moduleDetailFunctionsTitle;
+      default:
+        return lesson.title;
+    }
+  }
+
+  String _lessonSubtitle(LessonData lesson, AppLocalizations l10n) {
+    switch (lesson.id) {
+      case 'algebra-fundamental':
+        return l10n.moduleDetailAlgebraSubtitle;
+      case 'equacoes-inequacoes':
+        return l10n.moduleDetailEquationsSubtitle;
+      case 'funcoes':
+        return l10n.moduleDetailFunctionsSubtitle;
+      default:
+        return lesson.subtitle;
+    }
   }
 
   bool _isLessonUnlocked(LessonData lesson) {
@@ -242,12 +277,12 @@ class ModuleDetailScreen extends StatelessWidget {
     if (lesson.id == 'funcoes' &&
         AppProgress.equationsAndInequationsCompleted) {
       _goToFunctionsLesson(context);
-      return;
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final module = mockModules.first;
     final progress = _moduleProgressValue();
     final moduleCompleted = progress >= 1;
@@ -265,10 +300,13 @@ class ModuleDetailScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(module.title, style: AppTypography.headingMedium),
+              Text(
+                l10n.mathematicalFoundations,
+                style: AppTypography.headingMedium,
+              ),
               const SizedBox(height: AppSpacing.xs),
               Text(
-                'Construa a base necessária para estudar Cálculo.',
+                l10n.moduleDetailSubtitle,
                 style: AppTypography.bodyMedium,
               ),
               const SizedBox(height: AppSpacing.lg),
@@ -291,7 +329,7 @@ class ModuleDetailScreen extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      'Progresso do módulo',
+                      l10n.moduleProgress,
                       style: AppTypography.bodyMedium.copyWith(
                         color: AppColors.primaryLight,
                       ),
@@ -313,7 +351,7 @@ class ModuleDetailScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: AppSpacing.sm),
                     Text(
-                      _moduleProgressDescription(),
+                      _moduleProgressDescription(l10n),
                       style: AppTypography.bodySmall.copyWith(
                         color: AppColors.primaryLight,
                       ),
@@ -322,7 +360,7 @@ class ModuleDetailScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: AppSpacing.lg),
-              Text('Aulas', style: AppTypography.titleLarge),
+              Text(l10n.lessons, style: AppTypography.titleLarge),
               const SizedBox(height: AppSpacing.sm),
               Expanded(
                 child: ListView.separated(
@@ -335,10 +373,10 @@ class ModuleDetailScreen extends StatelessWidget {
                     final isUnlocked = _isLessonUnlocked(lesson);
 
                     return MathCard(
-                      title: lesson.title,
-                      subtitle: lesson.subtitle,
+                      title: _lessonTitle(lesson, l10n),
+                      subtitle: _lessonSubtitle(lesson, l10n),
                       symbol: lesson.symbol,
-                      status: _getLessonStatus(lesson),
+                      status: _getLessonStatus(lesson, l10n),
                       statusColor: _getLessonStatusColor(lesson),
                       state: _getLessonCardState(lesson),
                       onTap: isUnlocked

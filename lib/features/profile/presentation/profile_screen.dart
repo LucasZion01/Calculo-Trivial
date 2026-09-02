@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import 'package:calcquest/l10n/app_localizations.dart';
 import 'package:calcquest/shared/services/revenuecat_service.dart';
 import 'package:calcquest/shared/state/app_progress.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
@@ -50,7 +51,7 @@ class ProfileScreen extends StatelessWidget {
     ).push(MaterialPageRoute(builder: (_) => const SettingsScreen()));
   }
 
-  String _displayName(User? user) {
+  String _displayName(User? user, AppLocalizations l10n) {
     final name = user?.displayName?.trim();
 
     if (name != null && name.isNotEmpty) {
@@ -63,72 +64,74 @@ class ProfileScreen extends StatelessWidget {
       return email.split('@').first;
     }
 
-    return 'Estudante';
+    return l10n.student;
   }
 
   int _levelFromXp(int xp) {
     return (xp ~/ 250) + 1;
   }
 
-  String _levelDescription(int xp) {
+  String _levelDescription(int xp, AppLocalizations l10n) {
     final currentLevelXp = xp % 250;
     final remainingXp = 250 - currentLevelXp;
 
-    return 'Faltam $remainingXp XP para o próximo nível.';
+    return l10n.xpRemainingForNextLevel(remainingXp);
   }
 
-  ({String title, String description, bool unlocked}) _achievementData() {
+  ({String title, String description, bool unlocked}) _achievementData(
+    AppLocalizations l10n,
+  ) {
     if (AppProgress.derivativesCompleted) {
       return (
-        title: 'Cálculo I dominado',
-        description: 'Você concluiu Limites, Continuidade e Derivadas.',
+        title: l10n.achievementCalculusOneMastered,
+        description: l10n.achievementCalculusOneMasteredDescription,
         unlocked: true,
       );
     }
 
     if (AppProgress.continuityCompleted) {
       return (
-        title: 'Funções sem interrupções',
-        description: 'Você concluiu Continuidade em Cálculo I.',
+        title: l10n.achievementContinuityCompleted,
+        description: l10n.achievementContinuityCompletedDescription,
         unlocked: true,
       );
     }
 
     if (AppProgress.limitsCompleted) {
       return (
-        title: 'Primeiros passos no Cálculo I',
-        description: 'Você concluiu sua primeira sequência de Limites.',
+        title: l10n.achievementFirstCalculusSteps,
+        description: l10n.achievementFirstCalculusStepsDescription,
         unlocked: true,
       );
     }
 
     if (AppProgress.functionsCompleted) {
       return (
-        title: 'Fundamentos dominados',
-        description: 'Você concluiu o módulo Fundamentos Matemáticos.',
+        title: l10n.achievementFoundationsMastered,
+        description: l10n.achievementFoundationsMasteredDescription,
         unlocked: true,
       );
     }
 
     if (AppProgress.equationsAndInequationsCompleted) {
       return (
-        title: 'Equações concluídas',
-        description: 'Você avançou em Equações e Inequações.',
+        title: l10n.achievementEquationsCompleted,
+        description: l10n.achievementEquationsCompletedDescription,
         unlocked: true,
       );
     }
 
     if (AppProgress.algebraFundamentalCompleted) {
       return (
-        title: 'Primeira aula concluída',
-        description: 'Você iniciou sua jornada no Cálculo Trivial.',
+        title: l10n.achievementFirstLessonCompleted,
+        description: l10n.achievementFirstLessonCompletedDescription,
         unlocked: true,
       );
     }
 
     return (
-      title: 'Sua primeira conquista',
-      description: 'Conclua a primeira aula para desbloquear.',
+      title: l10n.achievementFirstAchievement,
+      description: l10n.achievementFirstAchievementDescription,
       unlocked: false,
     );
   }
@@ -194,8 +197,8 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildAchievementCard() {
-    final achievement = _achievementData();
+  Widget _buildAchievementCard(AppLocalizations l10n) {
+    final achievement = _achievementData(l10n);
 
     final iconColor = achievement.unlocked
         ? AppColors.achievement
@@ -254,7 +257,11 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildPremiumCard(BuildContext context, bool isPremium) {
+  Widget _buildPremiumCard(
+    BuildContext context,
+    bool isPremium,
+    AppLocalizations l10n,
+  ) {
     final statusColor = isPremium ? AppColors.success : const Color(0xFFFFB300);
 
     return Material(
@@ -297,7 +304,7 @@ class ProfileScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      isPremium ? 'Premium ativo' : 'Plano gratuito',
+                      isPremium ? l10n.premiumActive : l10n.freePlan,
                       style: AppTypography.titleMedium.copyWith(
                         color: statusColor,
                         fontWeight: FontWeight.w700,
@@ -306,8 +313,8 @@ class ProfileScreen extends StatelessWidget {
                     const SizedBox(height: AppSpacing.xxs),
                     Text(
                       isPremium
-                          ? 'Gerencie sua assinatura e suas compras.'
-                          : 'Conheça os recursos do Cálculo Trivial Premium.',
+                          ? l10n.premiumManageSubscription
+                          : l10n.premiumDiscoverFeatures,
                       style: AppTypography.bodySmall,
                     ),
                   ],
@@ -325,7 +332,7 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSettingsCard(BuildContext context) {
+  Widget _buildSettingsCard(BuildContext context, AppLocalizations l10n) {
     return Material(
       color: Colors.transparent,
       borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
@@ -360,7 +367,7 @@ class ProfileScreen extends StatelessWidget {
               ),
               const SizedBox(width: AppSpacing.sm),
               Expanded(
-                child: Text('Configurações', style: AppTypography.titleMedium),
+                child: Text(l10n.settings, style: AppTypography.titleMedium),
               ),
               const AppIcon(
                 icon: Icons.chevron_right_rounded,
@@ -376,14 +383,20 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return ValueListenableBuilder<int>(
       valueListenable: AppProgress.revision,
       builder: (context, revision, child) {
         final user = FirebaseAuth.instance.currentUser;
-        final name = _displayName(user);
-        final email = user?.email ?? 'E-mail não informado';
+
+        final name = _displayName(user, l10n);
+
+        final email = user?.email ?? l10n.emailNotProvided;
+
         final xp = AppProgress.totalXp;
         final gold = AppProgress.totalGold;
+
         final level = _levelFromXp(xp);
 
         return Scaffold(
@@ -400,7 +413,7 @@ class ProfileScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Perfil',
+                    l10n.profile,
                     style: AppTypography.labelMedium.copyWith(
                       color: AppColors.primary,
                     ),
@@ -414,25 +427,25 @@ class ProfileScreen extends StatelessWidget {
                     icon: Icons.military_tech_outlined,
                     iconColor: AppColors.primary,
                     iconBackground: AppColors.selectedBackground,
-                    title: 'Nível $level',
-                    value: '$xp XP • $gold de ouro',
-                    description: _levelDescription(xp),
+                    title: l10n.levelLabel(level),
+                    value: l10n.xpAndGold(xp, gold),
+                    description: _levelDescription(xp, l10n),
                   ),
                   const SizedBox(height: AppSpacing.lg),
-                  Text('Conquistas', style: AppTypography.titleLarge),
+                  Text(l10n.achievements, style: AppTypography.titleLarge),
                   const SizedBox(height: AppSpacing.sm),
-                  _buildAchievementCard(),
+                  _buildAchievementCard(l10n),
                   const SizedBox(height: AppSpacing.lg),
-                  Text('Premium', style: AppTypography.titleLarge),
+                  Text(l10n.premium, style: AppTypography.titleLarge),
                   const SizedBox(height: AppSpacing.sm),
                   ValueListenableBuilder<bool>(
                     valueListenable: RevenueCatService.premiumAccess,
                     builder: (context, isPremium, child) {
-                      return _buildPremiumCard(context, isPremium);
+                      return _buildPremiumCard(context, isPremium, l10n);
                     },
                   ),
                   const SizedBox(height: AppSpacing.md),
-                  _buildSettingsCard(context),
+                  _buildSettingsCard(context, l10n),
                 ],
               ),
             ),

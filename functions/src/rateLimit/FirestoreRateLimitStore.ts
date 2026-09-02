@@ -1,7 +1,6 @@
 import {
-  createHash,
-} from "node:crypto";
-
+  createTutorOwnerHash,
+} from "../account/accountDeletion";
 import {
   Firestore,
   Timestamp,
@@ -23,6 +22,7 @@ interface RateLimitDocument {
   dayWindowStart: Timestamp;
   dayCount: number;
   updatedAt: Timestamp;
+  expiresAt: Timestamp;
 }
 
 interface WindowState {
@@ -39,9 +39,7 @@ interface WindowState {
 function createRateLimitDocumentId(
   uid: string,
 ): string {
-  return createHash("sha256")
-    .update(uid, "utf8")
-    .digest("hex");
+  return createTutorOwnerHash(uid);
 }
 
 /**
@@ -158,6 +156,13 @@ implements RateLimitStore {
             dayCount: 0,
             updatedAt:
               Timestamp.fromDate(now),
+            expiresAt:
+              Timestamp.fromDate(
+                new Date(
+                  nowMs +
+                  config.dayWindowMs * 2,
+                ),
+              ),
           };
 
         const burst =
@@ -266,6 +271,13 @@ implements RateLimitStore {
           dayCount: nextDay,
           updatedAt:
             Timestamp.fromDate(now),
+          expiresAt:
+            Timestamp.fromDate(
+              new Date(
+                nowMs +
+                config.dayWindowMs * 2,
+              ),
+            ),
         };
 
         transaction.set(

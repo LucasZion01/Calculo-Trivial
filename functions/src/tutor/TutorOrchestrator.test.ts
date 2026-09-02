@@ -50,7 +50,7 @@ TutorQuestion = {
   questionId: "q014",
   subject: "Limites",
   statement:
-    "Calcule lim xâ†’2 de (xÂ²âˆ’4)/(xâˆ’2).",
+    "Calcule lim x→2 de (x²−4)/(x−2).",
   options: [
     {
       id: "a",
@@ -67,7 +67,7 @@ TutorQuestion = {
   ],
   correctOptionId: "c",
   originalExplanation:
-    "Fatore xÂ²âˆ’4.",
+    "Fatore x²−4.",
   references: [
     {
       sourceId:
@@ -94,10 +94,10 @@ const validHintRaw =
     responseType: "hint",
     title: "Pista",
     message:
-      "Observe a diferenÃ§a de quadrados.",
+      "Observe a diferença de quadrados.",
     steps: [],
     checkQuestion:
-      "Como fatorar xÂ²âˆ’4?",
+      "Como fatorar x²−4?",
     referenceKeys: [
       {
         sourceId:
@@ -116,9 +116,9 @@ const validStepsRaw =
       "step_by_step",
     title: "Passos",
     message:
-      "Comece identificando a fatoraÃ§Ã£o.",
+      "Comece identificando a fatoração.",
     steps: [
-      "ReconheÃ§a uma diferenÃ§a de quadrados.",
+      "Reconheça uma diferença de quadrados.",
     ],
     checkQuestion: "",
     referenceKeys: [],
@@ -131,9 +131,9 @@ const validSimilarRaw =
     responseType:
       "similar_exercise",
     title:
-      "ExercÃ­cio semelhante",
+      "Exercício semelhante",
     message:
-      "Calcule lim xâ†’3 de (xÂ²âˆ’9)/(xâˆ’3).",
+      "Calcule lim x→3 de (x²−9)/(x−3).",
     steps: [],
     checkQuestion: "",
     referenceKeys: [],

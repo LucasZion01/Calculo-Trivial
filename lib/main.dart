@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'debug/tutor_callable_probe.dart';
 import 'features/splash/presentation/splash_screen.dart';
 import 'firebase_options.dart';
+import 'l10n/app_localizations.dart';
+import 'shared/state/app_locale_controller.dart';
 import 'shared/theme/app_colors.dart';
 
 const bool _useFirebaseEmulators = bool.fromEnvironment(
@@ -41,12 +43,14 @@ Future<void> main() async {
 
     debugPrint('Firebase App Check inicializado.');
   } catch (error) {
-    debugPrint('Firebase App Check nÃƒÂ£o pÃƒÂ´de ser inicializado: $error');
+    debugPrint('Firebase App Check não pôde ser inicializado: $error');
   }
 
   if (_useFirebaseEmulators && _runTutorProbe) {
     await runTutorCallableProbe();
   }
+
+  await appLocaleController.load();
 
   runApp(const CalcQuestApp());
 }
@@ -74,20 +78,32 @@ String _firebaseEmulatorHost() {
 
 class CalcQuestApp extends StatelessWidget {
   final Widget? home;
+  final AppLocaleController? localeController;
 
-  const CalcQuestApp({super.key, this.home});
+  const CalcQuestApp({super.key, this.home, this.localeController});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'CÃƒÂ¡lculo Trivial',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        scaffoldBackgroundColor: AppColors.background,
-        fontFamily: 'Roboto',
-        useMaterial3: true,
-      ),
-      home: home ?? const SplashScreen(),
+    final controller = localeController ?? appLocaleController;
+
+    return AnimatedBuilder(
+      animation: controller,
+      builder: (context, child) {
+        return MaterialApp(
+          onGenerateTitle: (context) => AppLocalizations.of(context)!.appName,
+          debugShowCheckedModeBanner: false,
+          locale: controller.locale,
+          supportedLocales: AppLocalizations.supportedLocales,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          theme: ThemeData(
+            scaffoldBackgroundColor: AppColors.background,
+            fontFamily: 'Roboto',
+            useMaterial3: true,
+          ),
+          home: child,
+        );
+      },
+      child: home ?? const SplashScreen(),
     );
   }
 }
