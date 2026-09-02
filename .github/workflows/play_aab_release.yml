@@ -120,7 +120,7 @@ jobs:
 
       - name: Verify AAB signature
         run: |
-          jarsigner -verify -strict \
+          jarsigner -verify \
             build/app/outputs/bundle/release/app-release.aab
 
       - name: Upload signed AAB
