@@ -1,4 +1,5 @@
 name: Build signed Play AAB
+run-name: Build signed Play AAB • ${{ github.ref_name }}
 
 on:
   workflow_dispatch:
@@ -37,7 +38,12 @@ jobs:
           REVENUECAT_API_KEY: ${{ secrets.REVENUECAT_API_KEY }}
         run: |
           missing=0
-          for variable in             ANDROID_KEYSTORE_BASE64             ANDROID_KEYSTORE_PASSWORD             ANDROID_KEY_ALIAS             ANDROID_KEY_PASSWORD             REVENUECAT_API_KEY
+          for variable in \
+            ANDROID_KEYSTORE_BASE64 \
+            ANDROID_KEYSTORE_PASSWORD \
+            ANDROID_KEY_ALIAS \
+            ANDROID_KEY_PASSWORD \
+            REVENUECAT_API_KEY
           do
             if [ -z "${!variable:-}" ]; then
               echo "::error::Required GitHub secret is missing: $variable"
@@ -54,7 +60,9 @@ jobs:
           ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
           ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: |
-          printf '%s' "$ANDROID_KEYSTORE_BASE64"             | base64 --decode             > android/app/upload-keystore.jks
+          printf '%s' "$ANDROID_KEYSTORE_BASE64" \
+            | base64 --decode \
+            > android/app/upload-keystore.jks
 
           python3 - <<'PY'
           import os
@@ -87,7 +95,11 @@ jobs:
           ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
         run: |
-          keytool -list             -keystore android/app/upload-keystore.jks             -storepass "$ANDROID_KEYSTORE_PASSWORD"             -alias "$ANDROID_KEY_ALIAS"             >/dev/null
+          keytool -list \
+            -keystore android/app/upload-keystore.jks \
+            -storepass "$ANDROID_KEYSTORE_PASSWORD" \
+            -alias "$ANDROID_KEY_ALIAS" \
+            >/dev/null
 
       - name: Install dependencies
         run: flutter pub get
@@ -103,11 +115,13 @@ jobs:
         env:
           REVENUECAT_API_KEY: ${{ secrets.REVENUECAT_API_KEY }}
         run: |
-          flutter build appbundle --release             --dart-define=REVENUECAT_API_KEY="$REVENUECAT_API_KEY"
+          flutter build appbundle --release \
+            --dart-define=REVENUECAT_API_KEY="$REVENUECAT_API_KEY"
 
       - name: Verify AAB signature
         run: |
-          jarsigner -verify -strict             build/app/outputs/bundle/release/app-release.aab
+          jarsigner -verify -strict \
+            build/app/outputs/bundle/release/app-release.aab
 
       - name: Upload signed AAB
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
