@@ -65,17 +65,9 @@ class LearningPathScreen extends StatelessWidget {
   int _completedFundamentalsLessons() {
     int completed = 0;
 
-    if (AppProgress.algebraFundamentalCompleted) {
-      completed++;
-    }
-
-    if (AppProgress.equationsAndInequationsCompleted) {
-      completed++;
-    }
-
-    if (AppProgress.functionsCompleted) {
-      completed++;
-    }
+    if (AppProgress.algebraFundamentalCompleted) completed++;
+    if (AppProgress.equationsAndInequationsCompleted) completed++;
+    if (AppProgress.functionsCompleted) completed++;
 
     return completed;
   }
@@ -87,43 +79,18 @@ class LearningPathScreen extends StatelessWidget {
   }) {
     if (module.id == 'fundamentos') {
       final completed = _completedFundamentalsLessons();
-
-      if (completed == 0) {
-        return '0%';
-      }
-
-      if (completed == 1) {
-        return '33%';
-      }
-
-      if (completed == 2) {
-        return '66%';
-      }
-
+      if (completed == 0) return '0%';
+      if (completed == 1) return '33%';
+      if (completed == 2) return '66%';
       return '100%';
     }
 
     if (module.id == 'calculo-1') {
-      if (AppProgress.derivativesCompleted) {
-        return '100%';
-      }
-
-      if (AppProgress.continuityCompleted) {
-        return '66%';
-      }
-
-      if (AppProgress.limitsCompleted) {
-        return '33%';
-      }
-
-      if (!AppProgress.functionsCompleted) {
-        return l10n.locked;
-      }
-
-      if (isPremiumUser) {
-        return l10n.unlocked;
-      }
-
+      if (AppProgress.derivativesCompleted) return '100%';
+      if (AppProgress.continuityCompleted) return '66%';
+      if (AppProgress.limitsCompleted) return '33%';
+      if (!AppProgress.functionsCompleted) return l10n.locked;
+      if (isPremiumUser) return l10n.unlocked;
       return l10n.premium;
     }
 
@@ -135,22 +102,13 @@ class LearningPathScreen extends StatelessWidget {
     required bool isPremiumUser,
   }) {
     if (module.id == 'fundamentos') {
-      if (_completedFundamentalsLessons() == 3) {
-        return AppColors.success;
-      }
-
+      if (_completedFundamentalsLessons() == 3) return AppColors.success;
       return AppColors.primary;
     }
 
     if (module.id == 'calculo-1' && AppProgress.functionsCompleted) {
-      if (AppProgress.derivativesCompleted) {
-        return AppColors.success;
-      }
-
-      if (isPremiumUser) {
-        return AppColors.primary;
-      }
-
+      if (AppProgress.derivativesCompleted) return AppColors.success;
+      if (isPremiumUser) return AppColors.primary;
       return const Color(0xFFFFB300);
     }
 
@@ -162,19 +120,12 @@ class LearningPathScreen extends StatelessWidget {
       if (_completedFundamentalsLessons() == 3) {
         return MathCardState.completed;
       }
-
       return MathCardState.normal;
     }
 
     if (module.id == 'calculo-1') {
-      if (AppProgress.derivativesCompleted) {
-        return MathCardState.completed;
-      }
-
-      if (AppProgress.functionsCompleted) {
-        return MathCardState.normal;
-      }
-
+      if (AppProgress.derivativesCompleted) return MathCardState.completed;
+      if (AppProgress.functionsCompleted) return MathCardState.normal;
       return MathCardState.locked;
     }
 
@@ -183,19 +134,13 @@ class LearningPathScreen extends StatelessWidget {
 
   VoidCallback? _getModuleTap(BuildContext context, ModuleData module) {
     if (module.id == 'fundamentos') {
-      return () {
-        _goToModuleDetail(context);
-      };
+      return () => _goToModuleDetail(context);
     }
 
     if (module.id == 'calculo-1' && AppProgress.functionsCompleted) {
       return () async {
         final hasAccess = await PremiumAccessGuard.ensureAccess(context);
-
-        if (!context.mounted || !hasAccess) {
-          return;
-        }
-
+        if (!context.mounted || !hasAccess) return;
         _goToCalculusOne(context);
       };
     }
@@ -233,9 +178,8 @@ class LearningPathScreen extends StatelessWidget {
     required bool isPremiumUser,
     required AppLocalizations l10n,
   }) {
-    final badgeColor = isPremiumUser
-        ? AppColors.success
-        : const Color(0xFFFFB300);
+    final badgeColor =
+        isPremiumUser ? AppColors.success : const Color(0xFFFFB300);
 
     return Align(
       alignment: Alignment.centerRight,
@@ -277,38 +221,137 @@ class LearningPathScreen extends StatelessWidget {
     );
   }
 
+  Widget _buildSummaryCard(AppLocalizations l10n) {
+    final completed = _completedFundamentalsLessons();
+    final progress = completed / 3;
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(AppSpacing.cardPaddingLarge),
+      decoration: BoxDecoration(
+        color: AppColors.primary,
+        borderRadius: BorderRadius.circular(AppSpacing.radiusXLarge),
+        boxShadow: const [
+          BoxShadow(
+            color: AppColors.shadow,
+            blurRadius: 16,
+            offset: Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          SizedBox(
+            width: 58,
+            height: 58,
+            child: TweenAnimationBuilder<double>(
+              tween: Tween(begin: 0, end: progress),
+              duration: const Duration(milliseconds: 700),
+              curve: Curves.easeOutCubic,
+              builder: (context, value, child) {
+                return Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    CircularProgressIndicator(
+                      value: value,
+                      strokeWidth: 6,
+                      backgroundColor: AppColors.white.withValues(alpha: 0.18),
+                      valueColor:
+                          const AlwaysStoppedAnimation<Color>(AppColors.white),
+                    ),
+                    Center(
+                      child: Text(
+                        '${(value * 100).round()}%',
+                        style: AppTypography.labelMedium.copyWith(
+                          color: AppColors.white,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
+          const SizedBox(width: AppSpacing.md),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  l10n.mathematicalFoundations,
+                  style: AppTypography.titleMedium.copyWith(
+                    color: AppColors.white,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.xxs),
+                Text(
+                  '$completed/3 ${l10n.lessons.toLowerCase()}',
+                  style: AppTypography.bodySmall.copyWith(
+                    color: AppColors.primaryLight,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const Icon(
+            Icons.auto_graph_rounded,
+            color: AppColors.white,
+            size: 28,
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildModuleCard({
     required BuildContext context,
     required ModuleData module,
     required bool isPremiumUser,
     required AppLocalizations l10n,
+    required int index,
   }) {
     final isPremiumModule = _isPremiumModule(module);
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        if (isPremiumModule) ...[
-          _buildPremiumBadge(isPremiumUser: isPremiumUser, l10n: l10n),
-          const SizedBox(height: AppSpacing.xs),
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0, end: 1),
+      duration: Duration(milliseconds: 380 + (index * 110)),
+      curve: Curves.easeOutCubic,
+      builder: (context, value, child) {
+        return Opacity(
+          opacity: value,
+          child: Transform.translate(
+            offset: Offset(0, 22 * (1 - value)),
+            child: child,
+          ),
+        );
+      },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          if (isPremiumModule) ...[
+            _buildPremiumBadge(isPremiumUser: isPremiumUser, l10n: l10n),
+            const SizedBox(height: AppSpacing.xs),
+          ],
+          MathCard(
+            title: _moduleTitle(module, l10n),
+            subtitle: _moduleSubtitle(module, l10n),
+            symbol: module.symbol,
+            status: _getModuleStatus(
+              module: module,
+              isPremiumUser: isPremiumUser,
+              l10n: l10n,
+            ),
+            statusColor: _getModuleStatusColor(
+              module: module,
+              isPremiumUser: isPremiumUser,
+            ),
+            state: _getModuleCardState(module),
+            onTap: _getModuleTap(context, module),
+          ),
         ],
-        MathCard(
-          title: _moduleTitle(module, l10n),
-          subtitle: _moduleSubtitle(module, l10n),
-          symbol: module.symbol,
-          status: _getModuleStatus(
-            module: module,
-            isPremiumUser: isPremiumUser,
-            l10n: l10n,
-          ),
-          statusColor: _getModuleStatusColor(
-            module: module,
-            isPremiumUser: isPremiumUser,
-          ),
-          state: _getModuleCardState(module),
-          onTap: _getModuleTap(context, module),
-        ),
-      ],
+      ),
     );
   }
 
@@ -329,9 +372,30 @@ class LearningPathScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(l10n.learningPathTitle, style: AppTypography.headingMedium),
-              const SizedBox(height: AppSpacing.xs),
-              Text(l10n.learningPathSubtitle, style: AppTypography.bodyMedium),
+              TweenAnimationBuilder<double>(
+                tween: Tween(begin: 0, end: 1),
+                duration: const Duration(milliseconds: 360),
+                curve: Curves.easeOut,
+                builder: (context, value, child) {
+                  return Opacity(opacity: value, child: child);
+                },
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10n.learningPathTitle,
+                      style: AppTypography.headingMedium,
+                    ),
+                    const SizedBox(height: AppSpacing.xs),
+                    Text(
+                      l10n.learningPathSubtitle,
+                      style: AppTypography.bodyMedium,
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: AppSpacing.lg),
+              _buildSummaryCard(l10n),
               const SizedBox(height: AppSpacing.lg),
               Expanded(
                 child: ValueListenableBuilder<bool>(
@@ -345,12 +409,12 @@ class LearningPathScreen extends StatelessWidget {
                       },
                       itemBuilder: (context, index) {
                         final module = mockModules[index];
-
                         return _buildModuleCard(
                           context: context,
                           module: module,
                           isPremiumUser: isPremiumUser,
                           l10n: l10n,
+                          index: index,
                         );
                       },
                     );
@@ -363,9 +427,7 @@ class LearningPathScreen extends StatelessWidget {
       ),
       bottomNavigationBar: AppBottomNavigationBar(
         currentIndex: 1,
-        onTap: (index) {
-          _onMenuTap(context, index);
-        },
+        onTap: (index) => _onMenuTap(context, index),
       ),
     );
   }
