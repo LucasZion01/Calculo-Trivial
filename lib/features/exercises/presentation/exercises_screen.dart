@@ -38,7 +38,6 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
   @override
   void initState() {
     super.initState();
-
     sessionExercises = _createSession(
       lessonId: AppProgress.algebraFundamentalId,
       questionBank: mockExercises,
@@ -175,7 +174,6 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
     );
 
     setState(() => isShowingFeedback = true);
-
     AppProgress.recordExerciseAnswer(isCorrect: isCorrect);
 
     if (isCorrect) {
@@ -216,7 +214,6 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
           ),
         ),
       );
-
       return;
     }
 
@@ -242,14 +239,13 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
       color: Colors.transparent,
       borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
       child: InkWell(
-        onTap: () {
-          setState(() {
-            selectedOptionId = option.id;
-          });
-        },
+        onTap: isShowingFeedback
+            ? null
+            : () => setState(() => selectedOptionId = option.id),
         borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 160),
+          duration: const Duration(milliseconds: 180),
+          curve: Curves.easeOutCubic,
           width: double.infinity,
           padding: const EdgeInsets.all(AppSpacing.cardPadding),
           decoration: BoxDecoration(
@@ -261,10 +257,20 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
               color: isSelected ? AppColors.primary : AppColors.border,
               width: isSelected ? 2 : 1,
             ),
+            boxShadow: isSelected
+                ? const [
+                    BoxShadow(
+                      color: AppColors.shadow,
+                      blurRadius: 10,
+                      offset: Offset(0, 4),
+                    ),
+                  ]
+                : null,
           ),
           child: Row(
             children: [
-              Container(
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 180),
                 width: 36,
                 height: 36,
                 alignment: Alignment.center,
@@ -292,15 +298,59 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
                   ),
                 ),
               ),
-              if (isSelected) ...[
-                const SizedBox(width: AppSpacing.xs),
-                const Icon(
-                  Icons.check_circle_rounded,
-                  color: AppColors.primary,
-                  size: AppSpacing.iconLarge,
-                ),
-              ],
+              AnimatedSwitcher(
+                duration: const Duration(milliseconds: 180),
+                child: isSelected
+                    ? const Icon(
+                        Icons.check_circle_rounded,
+                        key: ValueKey('selected'),
+                        color: AppColors.primary,
+                        size: AppSpacing.iconLarge,
+                      )
+                    : const SizedBox.shrink(key: ValueKey('empty')),
+              ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildQuestionCard(ExerciseData exercise) {
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 260),
+      switchInCurve: Curves.easeOutCubic,
+      switchOutCurve: Curves.easeInCubic,
+      transitionBuilder: (child, animation) {
+        final slide = Tween<Offset>(
+          begin: const Offset(0.05, 0),
+          end: Offset.zero,
+        ).animate(animation);
+        return FadeTransition(
+          opacity: animation,
+          child: SlideTransition(position: slide, child: child),
+        );
+      },
+      child: Container(
+        key: ValueKey(exercise.id),
+        width: double.infinity,
+        padding: const EdgeInsets.all(AppSpacing.cardPaddingLarge),
+        decoration: BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
+          border: Border.all(color: AppColors.border),
+          boxShadow: const [
+            BoxShadow(
+              color: AppColors.shadow,
+              blurRadius: 12,
+              offset: Offset(0, 6),
+            ),
+          ],
+        ),
+        child: Text(
+          exercise.statement,
+          style: AppTypography.headingSmall.copyWith(
+            fontWeight: FontWeight.w600,
           ),
         ),
       ),
@@ -325,12 +375,35 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                l10n.exerciseQuestionProgress(
-                  currentExerciseIndex + 1,
-                  sessionExercises.length,
-                ),
-                style: AppTypography.headingSmall,
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      l10n.exerciseQuestionProgress(
+                        currentExerciseIndex + 1,
+                        sessionExercises.length,
+                      ),
+                      style: AppTypography.headingSmall,
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.sm,
+                      vertical: AppSpacing.xs,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.selectedBackground,
+                      borderRadius: BorderRadius.circular(999),
+                    ),
+                    child: Text(
+                      '${(progress * 100).round()}%',
+                      style: AppTypography.labelMedium.copyWith(
+                        color: AppColors.primary,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: AppSpacing.xs),
               Text(
@@ -357,42 +430,31 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
                 ],
               ),
               const SizedBox(height: AppSpacing.md),
-              AppProgressBar(value: progress),
-              const SizedBox(height: AppSpacing.lg),
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(AppSpacing.cardPaddingLarge),
-                decoration: BoxDecoration(
-                  color: AppColors.surface,
-                  borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
-                  border: Border.all(color: AppColors.border),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: AppColors.shadow,
-                      blurRadius: 12,
-                      offset: Offset(0, 6),
-                    ),
-                  ],
-                ),
-                child: Text(
-                  exercise.statement,
-                  style: AppTypography.headingSmall.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
+              TweenAnimationBuilder<double>(
+                tween: Tween(begin: 0, end: progress),
+                duration: const Duration(milliseconds: 320),
+                curve: Curves.easeOutCubic,
+                builder: (context, value, child) {
+                  return AppProgressBar(value: value);
+                },
               ),
               const SizedBox(height: AppSpacing.lg),
+              _buildQuestionCard(exercise),
+              const SizedBox(height: AppSpacing.lg),
               Expanded(
-                child: ListView.separated(
-                  padding: const EdgeInsets.only(bottom: AppSpacing.md),
-                  itemCount: exercise.options.length,
-                  separatorBuilder: (context, index) =>
-                      const SizedBox(height: AppSpacing.sm),
-                  itemBuilder: (context, index) {
-                    final option = exercise.options[index];
-
-                    return _buildOption(option: option, index: index);
-                  },
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 240),
+                  child: ListView.separated(
+                    key: ValueKey(exercise.id),
+                    padding: const EdgeInsets.only(bottom: AppSpacing.md),
+                    itemCount: exercise.options.length,
+                    separatorBuilder: (context, index) =>
+                        const SizedBox(height: AppSpacing.sm),
+                    itemBuilder: (context, index) {
+                      final option = exercise.options[index];
+                      return _buildOption(option: option, index: index);
+                    },
+                  ),
                 ),
               ),
               const SizedBox(height: AppSpacing.sm),
@@ -413,9 +475,7 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
       ),
       bottomNavigationBar: AppBottomNavigationBar(
         currentIndex: 1,
-        onTap: (index) {
-          _onMenuTap(context, index);
-        },
+        onTap: (index) => _onMenuTap(context, index),
       ),
     );
   }
