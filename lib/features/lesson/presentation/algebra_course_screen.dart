@@ -10,7 +10,7 @@ import 'package:calcquest/shared/widgets/app_progress_bar.dart';
 import 'package:calcquest/shared/widgets/math_card.dart';
 import 'package:calcquest/shared/widgets/primary_button.dart';
 
-import '../../exercises/presentation/exercises_screen.dart';
+import '../../exercises/presentation/algebra_practice_screen.dart';
 import 'course_lesson_screen.dart';
 
 class AlgebraCourseScreen extends StatefulWidget {
@@ -67,7 +67,7 @@ class _AlgebraCourseScreenState extends State<AlgebraCourseScreen> {
 
   void _openExercises() {
     Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => const ExercisesScreen()),
+      MaterialPageRoute(builder: (_) => const AlgebraPracticeScreen()),
     );
   }
 
@@ -242,34 +242,34 @@ class _AlgebraCourseScreenState extends State<AlgebraCourseScreen> {
                         Text(
                           canPractice
                               ? (_isEnglish
-                                    ? 'Ready to practice'
-                                    : 'Pronto para praticar')
+                                    ? 'Ready for guided practice'
+                                    : 'Pronto para a prática guiada')
                               : (_isEnglish
-                                    ? 'Final practice locked'
-                                    : 'Prática final bloqueada'),
+                                    ? 'Guided practice locked'
+                                    : 'Prática guiada bloqueada'),
                           style: AppTypography.titleMedium,
                         ),
                         const SizedBox(height: AppSpacing.xs),
                         Text(
                           canPractice
                               ? (_isEnglish
-                                    ? 'Complete an exercise session and identify '
-                                        'which points still need review.'
-                                    : 'Resolva uma sessão de exercícios e descubra '
-                                        'quais pontos ainda precisam de revisão.')
+                                    ? 'Practice with immediate feedback, review every mistake, '
+                                        'then take a separate final test.'
+                                    : 'Pratique com feedback imediato, revise cada erro e '
+                                        'depois faça um teste final separado.')
                               : (_isEnglish
-                                    ? 'Complete all eight lessons to unlock the '
-                                        'final Fundamental Algebra practice.'
-                                    : 'Conclua as oito aulas para liberar a prática '
-                                        'final de Álgebra Fundamental.'),
+                                    ? 'Complete all eight lessons to unlock guided practice '
+                                        'and the final Fundamental Algebra test.'
+                                    : 'Conclua as oito aulas para liberar a prática guiada '
+                                        'e o teste final de Álgebra Fundamental.'),
                           textAlign: TextAlign.center,
                           style: AppTypography.bodyMedium,
                         ),
                         const SizedBox(height: AppSpacing.md),
                         PrimaryButton(
                           text: _isEnglish
-                              ? 'Start exercises'
-                              : 'Iniciar exercícios',
+                              ? 'Start guided practice'
+                              : 'Iniciar prática guiada',
                           icon: Icons.play_arrow_rounded,
                           onPressed: canPractice ? _openExercises : null,
                         ),
