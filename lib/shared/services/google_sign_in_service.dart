@@ -40,7 +40,7 @@ class GoogleSignInService {
     final user = FirebaseAuth.instance.currentUser;
 
     if (user == null) {
-      throw const FirebaseAuthException(
+      throw FirebaseAuthException(
         code: 'no-current-user',
         message: 'Nenhum usuário autenticado foi encontrado.',
       );
