@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:calcquest/features/auth/presentation/login_screen.dart';
 import 'package:calcquest/features/dashboard/presentation/dashboard_screen.dart';
 import 'package:calcquest/l10n/app_localizations.dart';
+import 'package:calcquest/shared/services/app_update_service.dart';
 import 'package:calcquest/shared/services/revenuecat_service.dart';
 import 'package:calcquest/shared/state/app_progress.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
@@ -85,13 +86,33 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   Future<void> _openNextScreen() async {
+    final updateCheck = AppUpdateService.isUpdateAvailable();
+
     await Future.wait<void>([
       Future<void>.delayed(const Duration(milliseconds: 2400)),
       _initializeServices(),
     ]);
 
+    final updateAvailable = await updateCheck;
+
     if (!mounted) {
       return;
+    }
+
+    if (updateAvailable) {
+      final shouldUpdate = await _showUpdateDialog();
+
+      if (!mounted) {
+        return;
+      }
+
+      if (shouldUpdate) {
+        await AppUpdateService.performImmediateUpdate();
+
+        if (!mounted) {
+          return;
+        }
+      }
     }
 
     final currentUser = FirebaseAuth.instance.currentUser;
@@ -111,6 +132,39 @@ class _SplashScreenState extends State<SplashScreen>
         },
       ),
     );
+  }
+
+  Future<bool> _showUpdateDialog() async {
+    final isEnglish = Localizations.localeOf(context).languageCode == 'en';
+
+    final result = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: Text(
+            isEnglish ? 'Update available' : 'Atualização disponível',
+          ),
+          content: Text(
+            isEnglish
+                ? 'A new version of Cálculo Trivial is available on Google Play. Update now to get the latest improvements.'
+                : 'Uma nova versão do Cálculo Trivial está disponível na Google Play. Atualize agora para receber as melhorias mais recentes.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(false),
+              child: Text(isEnglish ? 'Later' : 'Agora não'),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.of(dialogContext).pop(true),
+              child: Text(isEnglish ? 'Update now' : 'Atualizar agora'),
+            ),
+          ],
+        );
+      },
+    );
+
+    return result ?? false;
   }
 
   Future<void> _initializeServices() async {
