@@ -103,6 +103,7 @@ class ResultScreen extends StatelessWidget {
     required IconData icon,
     required String title,
     required String value,
+    required int index,
     Color? iconColor,
     Color? iconBackground,
   }) {
@@ -110,41 +111,158 @@ class ResultScreen extends StatelessWidget {
     final resolvedIconBackground =
         iconBackground ?? AppColors.selectedBackground;
 
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(AppSpacing.cardPaddingLarge),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
-        border: Border.all(color: AppColors.border),
-        boxShadow: const [
-          BoxShadow(
-            color: AppColors.shadow,
-            blurRadius: 12,
-            offset: Offset(0, 6),
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0, end: 1),
+      duration: Duration(milliseconds: 420 + (index * 90)),
+      curve: Curves.easeOutCubic,
+      builder: (context, animationValue, child) {
+        return Opacity(
+          opacity: animationValue,
+          child: Transform.translate(
+            offset: Offset(0, 18 * (1 - animationValue)),
+            child: child,
           ),
-        ],
+        );
+      },
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(AppSpacing.cardPaddingLarge),
+        decoration: BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
+          border: Border.all(color: AppColors.border),
+          boxShadow: const [
+            BoxShadow(
+              color: AppColors.shadow,
+              blurRadius: 12,
+              offset: Offset(0, 6),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 48,
+              height: 48,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: resolvedIconBackground,
+                borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
+              ),
+              child: AppIcon(
+                icon: icon,
+                size: AppIconSize.large,
+                color: resolvedIconColor,
+              ),
+            ),
+            const SizedBox(width: AppSpacing.sm),
+            Expanded(child: Text(title, style: AppTypography.bodyMedium)),
+            const SizedBox(width: AppSpacing.sm),
+            Text(value, style: AppTypography.titleLarge),
+          ],
+        ),
       ),
-      child: Row(
+    );
+  }
+
+  Widget _buildHero({
+    required AppLocalizations l10n,
+    required bool isApproved,
+    required Color statusColor,
+    required Color statusBackground,
+    required int accuracyPercentage,
+    required String performanceText,
+  }) {
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0, end: 1),
+      duration: const Duration(milliseconds: 520),
+      curve: Curves.easeOutBack,
+      builder: (context, value, child) {
+        return Opacity(
+          opacity: value.clamp(0.0, 1.0),
+          child: Transform.scale(
+            scale: 0.86 + (0.14 * value),
+            child: child,
+          ),
+        );
+      },
+      child: Column(
         children: [
           Container(
-            width: 48,
-            height: 48,
+            width: 96,
+            height: 96,
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: resolvedIconBackground,
-              borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
+              color: statusBackground,
+              borderRadius: BorderRadius.circular(AppSpacing.radiusXLarge),
+              boxShadow: const [
+                BoxShadow(
+                  color: AppColors.shadow,
+                  blurRadius: 18,
+                  offset: Offset(0, 8),
+                ),
+              ],
             ),
             child: AppIcon(
-              icon: icon,
-              size: AppIconSize.large,
-              color: resolvedIconColor,
+              icon: isApproved
+                  ? Icons.check_rounded
+                  : Icons.refresh_rounded,
+              size: AppIconSize.extraLarge,
+              color: statusColor,
+              semanticLabel: l10n.resultExercisesCompletedSemantic,
             ),
           ),
-          const SizedBox(width: AppSpacing.sm),
-          Expanded(child: Text(title, style: AppTypography.bodyMedium)),
-          const SizedBox(width: AppSpacing.sm),
-          Text(value, style: AppTypography.titleLarge),
+          const SizedBox(height: AppSpacing.lg),
+          Text(
+            isApproved ? l10n.resultGoalReached : l10n.resultKeepPracticing,
+            textAlign: TextAlign.center,
+            style: AppTypography.headingLarge,
+          ),
+          const SizedBox(height: AppSpacing.xs),
+          Text(
+            isApproved
+                ? l10n.resultApprovedMessage
+                : l10n.resultNeedEightyPercent,
+            textAlign: TextAlign.center,
+            style: AppTypography.bodyMedium,
+          ),
+          const SizedBox(height: AppSpacing.md),
+          Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.md,
+              vertical: AppSpacing.sm,
+            ),
+            decoration: BoxDecoration(
+              color: statusBackground,
+              borderRadius: BorderRadius.circular(999),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TweenAnimationBuilder<double>(
+                  tween: Tween(begin: 0, end: accuracyPercentage.toDouble()),
+                  duration: const Duration(milliseconds: 700),
+                  curve: Curves.easeOutCubic,
+                  builder: (context, value, child) {
+                    return Text(
+                      '${value.round()}%',
+                      style: AppTypography.titleMedium.copyWith(
+                        color: statusColor,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    );
+                  },
+                ),
+                const SizedBox(width: AppSpacing.xs),
+                Text(
+                  performanceText,
+                  style: AppTypography.labelMedium.copyWith(
+                    color: statusColor,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
@@ -165,9 +283,10 @@ class ResultScreen extends StatelessWidget {
     final performanceText = l10n.resultAccuracyPerformance(accuracyPercentage);
     final isApproved = result.isApproved;
     final statusColor = isApproved ? AppColors.success : AppColors.error;
-    final statusBackground = isApproved
-        ? AppColors.successLight
-        : AppColors.errorLight;
+    final statusBackground =
+        isApproved ? AppColors.successLight : AppColors.errorLight;
+
+    int cardIndex = 0;
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -186,56 +305,20 @@ class ResultScreen extends StatelessWidget {
                   padding: const EdgeInsets.only(bottom: AppSpacing.lg),
                   children: [
                     const SizedBox(height: AppSpacing.sm),
-                    Center(
-                      child: Container(
-                        width: 88,
-                        height: 88,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: statusBackground,
-                          borderRadius: BorderRadius.circular(
-                            AppSpacing.radiusXLarge,
-                          ),
-                        ),
-                        child: AppIcon(
-                          icon: isApproved
-                              ? Icons.check_rounded
-                              : Icons.refresh_rounded,
-                          size: AppIconSize.extraLarge,
-                          color: statusColor,
-                          semanticLabel: l10n.resultExercisesCompletedSemantic,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: AppSpacing.lg),
-                    Text(
-                      isApproved
-                          ? l10n.resultGoalReached
-                          : l10n.resultKeepPracticing,
-                      textAlign: TextAlign.center,
-                      style: AppTypography.headingLarge,
-                    ),
-                    const SizedBox(height: AppSpacing.xs),
-                    Text(
-                      isApproved
-                          ? l10n.resultApprovedMessage
-                          : l10n.resultNeedEightyPercent,
-                      textAlign: TextAlign.center,
-                      style: AppTypography.bodyMedium,
-                    ),
-                    const SizedBox(height: AppSpacing.xs),
-                    Text(
-                      performanceText,
-                      textAlign: TextAlign.center,
-                      style: AppTypography.labelMedium.copyWith(
-                        color: statusColor,
-                      ),
+                    _buildHero(
+                      l10n: l10n,
+                      isApproved: isApproved,
+                      statusColor: statusColor,
+                      statusBackground: statusBackground,
+                      accuracyPercentage: accuracyPercentage,
+                      performanceText: performanceText,
                     ),
                     const SizedBox(height: AppSpacing.xl),
                     _buildResultCard(
                       icon: Icons.check_circle_outline_rounded,
                       title: l10n.resultCorrectAnswers,
                       value: '$correctAnswers',
+                      index: cardIndex++,
                       iconColor: AppColors.success,
                       iconBackground: AppColors.successLight,
                     ),
@@ -244,6 +327,7 @@ class ResultScreen extends StatelessWidget {
                       icon: Icons.cancel_outlined,
                       title: l10n.resultIncorrectAnswers,
                       value: '$incorrectAnswers',
+                      index: cardIndex++,
                       iconColor: AppColors.error,
                       iconBackground: AppColors.errorLight,
                     ),
@@ -252,13 +336,15 @@ class ResultScreen extends StatelessWidget {
                       icon: Icons.analytics_outlined,
                       title: l10n.resultAccuracy,
                       value: '$accuracyPercentage%',
+                      index: cardIndex++,
                     ),
-                    const SizedBox(height: AppSpacing.sm),
                     if (isApproved) ...[
+                      const SizedBox(height: AppSpacing.sm),
                       _buildResultCard(
                         icon: Icons.bolt_outlined,
                         title: l10n.resultXpEarned,
                         value: '+${result.earnedXp} XP',
+                        index: cardIndex++,
                         iconColor: AppColors.xp,
                         iconBackground: AppColors.xpLight,
                       ),
@@ -267,6 +353,7 @@ class ResultScreen extends StatelessWidget {
                         icon: Icons.monetization_on_outlined,
                         title: l10n.resultGoldEarned,
                         value: '+${result.earnedGold}',
+                        index: cardIndex++,
                         iconColor: AppColors.gold,
                         iconBackground: AppColors.goldLight,
                       ),
@@ -308,9 +395,7 @@ class ResultScreen extends StatelessWidget {
       ),
       bottomNavigationBar: AppBottomNavigationBar(
         currentIndex: 1,
-        onTap: (index) {
-          _onMenuTap(context, index);
-        },
+        onTap: (index) => _onMenuTap(context, index),
       ),
     );
   }
