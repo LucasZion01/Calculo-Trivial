@@ -12,7 +12,20 @@
           "package_name": "com.lucaszion01.calculotrivial"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "617140538662-q80mpk3osn0m9063bhp2icofajeaj4gk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lucaszion01.calculotrivial",
+            "certificate_hash": "ce5b92f8a496bbc2a454074a133dbc0f88f8a269"
+          }
+        },
+        {
+          "client_id": "617140538662-mi3bk1kl73ea0fd4ql5o7t93cnp5npif.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAqfXxGbwJ5XB7rwSzq9mrbzewm0k3vjbc"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "617140538662-mi3bk1kl73ea0fd4ql5o7t93cnp5npif.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "617140538662-lvpm72m5q57dnks097824hgjp6h69du2.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.calcquest"
+              }
+            }
+          ]
         }
       }
     }
