@@ -2,10 +2,12 @@ import 'dart:math' as math;
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import 'package:calcquest/features/auth/presentation/register_screen.dart';
 import 'package:calcquest/features/dashboard/presentation/dashboard_screen.dart';
 import 'package:calcquest/l10n/app_localizations.dart';
+import 'package:calcquest/shared/services/google_sign_in_service.dart';
 import 'package:calcquest/shared/services/revenuecat_service.dart';
 import 'package:calcquest/shared/state/app_progress.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
@@ -133,6 +135,20 @@ class _LoginScreenState extends State<LoginScreen>
     }
   }
 
+  Future<void> _finishLogin(User user) async {
+    await AppProgress.loadProgress();
+    await _identifyRevenueCatUser(user.uid);
+
+    if (!mounted) {
+      return;
+    }
+
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute<void>(builder: (_) => const DashboardScreen()),
+      (route) => false,
+    );
+  }
+
   Future<void> _login() async {
     if (_isLoading) {
       return;
@@ -164,22 +180,64 @@ class _LoginScreenState extends State<LoginScreen>
         throw StateError('Firebase não retornou o usuário autenticado.');
       }
 
-      await AppProgress.loadProgress();
-      await _identifyRevenueCatUser(user.uid);
-
-      if (!mounted) {
-        return;
-      }
-
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute<void>(builder: (_) => const DashboardScreen()),
-        (route) => false,
-      );
+      await _finishLogin(user);
     } on FirebaseAuthException catch (error) {
       _showMessage(_firebaseErrorMessage(error, l10n));
     } catch (error) {
       debugPrint('Login: erro inesperado: $error');
 
+      _showMessage(l10n.loginUnexpectedError);
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
+  Future<void> _loginWithGoogle() async {
+    if (_isLoading) {
+      return;
+    }
+
+    final l10n = AppLocalizations.of(context)!;
+    final isPortuguese = Localizations.localeOf(context).languageCode == 'pt';
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final credential = await GoogleSignInService.signInWithGoogle();
+      final user = credential.user;
+
+      if (user == null) {
+        throw StateError('Firebase não retornou o usuário autenticado.');
+      }
+
+      await _finishLogin(user);
+    } on GoogleSignInException catch (error) {
+      if (error.code == GoogleSignInExceptionCode.canceled) {
+        return;
+      }
+
+      debugPrint(
+        'Login com Google: ${error.code} - ${error.description}',
+      );
+      _showMessage(l10n.loginGenericError);
+    } on FirebaseAuthException catch (error) {
+      if (error.code == 'account-exists-with-different-credential') {
+        _showMessage(
+          isPortuguese
+              ? 'Este e-mail já possui uma conta. Entre com e-mail e senha primeiro.'
+              : 'An account already exists for this email. Sign in with email and password first.',
+        );
+      } else {
+        _showMessage(_firebaseErrorMessage(error, l10n));
+      }
+    } catch (error) {
+      debugPrint('Login com Google: erro inesperado: $error');
       _showMessage(l10n.loginUnexpectedError);
     } finally {
       if (mounted) {
@@ -222,6 +280,7 @@ class _LoginScreenState extends State<LoginScreen>
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final isPortuguese = Localizations.localeOf(context).languageCode == 'pt';
 
     return Scaffold(
       backgroundColor: AppColors.navy,
@@ -418,6 +477,36 @@ class _LoginScreenState extends State<LoginScreen>
                                               ? null
                                               : _resetPassword,
                                           child: Text(l10n.forgotPassword),
+                                        ),
+                                        const SizedBox(height: AppSpacing.sm),
+                                        Row(
+                                          children: [
+                                            const Expanded(child: Divider()),
+                                            Padding(
+                                              padding: const EdgeInsets.symmetric(
+                                                horizontal: AppSpacing.sm,
+                                              ),
+                                              child: Text(
+                                                isPortuguese ? 'ou' : 'or',
+                                                style: AppTypography.bodySmall,
+                                              ),
+                                            ),
+                                            const Expanded(child: Divider()),
+                                          ],
+                                        ),
+                                        const SizedBox(height: AppSpacing.sm),
+                                        OutlinedButton.icon(
+                                          onPressed: _isLoading
+                                              ? null
+                                              : _loginWithGoogle,
+                                          icon: const Icon(
+                                            Icons.account_circle_outlined,
+                                          ),
+                                          label: Text(
+                                            isPortuguese
+                                                ? 'Continuar com Google'
+                                                : 'Continue with Google',
+                                          ),
                                         ),
                                       ],
                                     ),
