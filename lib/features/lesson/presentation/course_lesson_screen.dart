@@ -27,7 +27,37 @@ class CourseLessonScreen extends StatefulWidget {
 }
 
 class _CourseLessonScreenState extends State<CourseLessonScreen> {
+  final ScrollController _scrollController = ScrollController();
+
   bool _isCompleting = false;
+  double _readingProgress = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_updateReadingProgress);
+  }
+
+  @override
+  void dispose() {
+    _scrollController
+      ..removeListener(_updateReadingProgress)
+      ..dispose();
+    super.dispose();
+  }
+
+  void _updateReadingProgress() {
+    if (!_scrollController.hasClients) return;
+
+    final maxExtent = _scrollController.position.maxScrollExtent;
+    final nextProgress = maxExtent <= 0
+        ? 1.0
+        : (_scrollController.offset / maxExtent).clamp(0.0, 1.0).toDouble();
+
+    if ((nextProgress - _readingProgress).abs() < 0.01) return;
+
+    setState(() => _readingProgress = nextProgress);
+  }
 
   Future<void> _completeLesson() async {
     if (_isCompleting) return;
@@ -94,13 +124,31 @@ class _CourseLessonScreenState extends State<CourseLessonScreen> {
   List<Widget> _buildSections() {
     final widgets = <Widget>[];
 
-    for (final section in widget.lesson.sections) {
+    for (var sectionIndex = 0;
+        sectionIndex < widget.lesson.sections.length;
+        sectionIndex++) {
+      final section = widget.lesson.sections[sectionIndex];
+
       widgets
         ..add(
-          LessonSectionHeader(
-            number: section.number,
-            title: section.title,
-            subtitle: section.subtitle,
+          TweenAnimationBuilder<double>(
+            tween: Tween(begin: 0, end: 1),
+            duration: Duration(milliseconds: 320 + (sectionIndex * 70)),
+            curve: Curves.easeOutCubic,
+            builder: (context, value, child) {
+              return Opacity(
+                opacity: value,
+                child: Transform.translate(
+                  offset: Offset(0, 14 * (1 - value)),
+                  child: child,
+                ),
+              );
+            },
+            child: LessonSectionHeader(
+              number: section.number,
+              title: section.title,
+              subtitle: section.subtitle,
+            ),
           ),
         )
         ..add(const SizedBox(height: AppSpacing.md));
@@ -117,6 +165,48 @@ class _CourseLessonScreenState extends State<CourseLessonScreen> {
     }
 
     return widgets;
+  }
+
+  Widget _buildReadingProgress() {
+    final percentage = (_readingProgress * 100).round();
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+        AppSpacing.screenHorizontal,
+        AppSpacing.xs,
+        AppSpacing.screenHorizontal,
+        AppSpacing.xs,
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(999),
+              child: LinearProgressIndicator(
+                value: _readingProgress,
+                minHeight: 5,
+                backgroundColor: AppColors.border,
+                valueColor: const AlwaysStoppedAnimation<Color>(
+                  AppColors.primary,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: AppSpacing.sm),
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 180),
+            child: Text(
+              '$percentage%',
+              key: ValueKey<int>(percentage),
+              style: AppTypography.labelMedium.copyWith(
+                color: AppColors.primary,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -149,14 +239,18 @@ class _CourseLessonScreenState extends State<CourseLessonScreen> {
                   Expanded(
                     child: Text(
                       lesson.trailTitle,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: AppTypography.titleMedium,
                     ),
                   ),
                 ],
               ),
             ),
+            _buildReadingProgress(),
             Expanded(
               child: ListView(
+                controller: _scrollController,
                 padding: const EdgeInsets.fromLTRB(
                   AppSpacing.screenHorizontal,
                   AppSpacing.md,
@@ -164,13 +258,27 @@ class _CourseLessonScreenState extends State<CourseLessonScreen> {
                   AppSpacing.lg,
                 ),
                 children: [
-                  LessonHeroCard(
-                    eyebrow: lesson.eyebrow,
-                    title: lesson.title,
-                    description: lesson.description,
-                    duration: lesson.duration,
-                    objective: lesson.objective,
-                    symbol: lesson.symbol,
+                  TweenAnimationBuilder<double>(
+                    tween: Tween(begin: 0, end: 1),
+                    duration: const Duration(milliseconds: 360),
+                    curve: Curves.easeOutCubic,
+                    builder: (context, value, child) {
+                      return Opacity(
+                        opacity: value,
+                        child: Transform.translate(
+                          offset: Offset(0, 18 * (1 - value)),
+                          child: child,
+                        ),
+                      );
+                    },
+                    child: LessonHeroCard(
+                      eyebrow: lesson.eyebrow,
+                      title: lesson.title,
+                      description: lesson.description,
+                      duration: lesson.duration,
+                      objective: lesson.objective,
+                      symbol: lesson.symbol,
+                    ),
                   ),
                   const SizedBox(height: AppSpacing.xl),
                   ..._buildSections(),
@@ -191,10 +299,16 @@ class _CourseLessonScreenState extends State<CourseLessonScreen> {
                 ],
               ),
             ),
-            Padding(
+            Container(
+              decoration: const BoxDecoration(
+                color: AppColors.background,
+                border: Border(
+                  top: BorderSide(color: AppColors.border),
+                ),
+              ),
               padding: const EdgeInsets.fromLTRB(
                 AppSpacing.screenHorizontal,
-                AppSpacing.xs,
+                AppSpacing.sm,
                 AppSpacing.screenHorizontal,
                 AppSpacing.screenBottom,
               ),
