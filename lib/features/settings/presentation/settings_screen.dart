@@ -5,6 +5,7 @@ import 'package:purchases_ui_flutter/purchases_ui_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:calcquest/l10n/app_localizations.dart';
+import 'package:calcquest/shared/services/google_sign_in_service.dart';
 import 'package:calcquest/shared/services/revenuecat_service.dart';
 import 'package:calcquest/shared/state/app_locale_controller.dart';
 import 'package:calcquest/shared/state/app_progress.dart';
@@ -253,6 +254,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
         }
       }
 
+      try {
+        await GoogleSignInService.signOut();
+      } catch (error) {
+        debugPrint(
+          'Configurações: não foi possível desconectar '
+          'a sessão Google: $error',
+        );
+      }
+
       await FirebaseAuth.instance.signOut();
       AppProgress.clearSession();
 
@@ -289,6 +299,67 @@ class _SettingsScreenState extends State<SettingsScreen> {
     }
 
     final l10n = AppLocalizations.of(context)!;
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user == null) {
+      _showMessage(l10n.settingsDeleteIdentifyError);
+      return;
+    }
+
+    final usesGoogle = user.providerData.any(
+      (provider) => provider.providerId == GoogleAuthProvider.PROVIDER_ID,
+    );
+
+    if (usesGoogle) {
+      final isPortuguese = Localizations.localeOf(context).languageCode == 'pt';
+      final confirmed = await showDialog<bool>(
+        context: context,
+        barrierDismissible: false,
+        builder: (dialogContext) {
+          return AlertDialog(
+            title: Text(l10n.settingsDeleteTitle),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(l10n.settingsDeleteWarning),
+                const SizedBox(height: AppSpacing.sm),
+                Text(l10n.settingsDeleteSubscriptionWarning),
+                const SizedBox(height: AppSpacing.md),
+                Text(
+                  isPortuguese
+                      ? 'Para confirmar sua identidade, o Google será aberto antes da exclusão definitiva.'
+                      : 'To confirm your identity, Google will open before the account is permanently deleted.',
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(dialogContext).pop(false);
+                },
+                child: Text(l10n.cancel),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(dialogContext).pop(true);
+                },
+                style: TextButton.styleFrom(foregroundColor: AppColors.error),
+                child: Text(
+                  isPortuguese ? 'Confirmar com Google' : 'Confirm with Google',
+                ),
+              ),
+            ],
+          );
+        },
+      );
+
+      if (confirmed == true && mounted) {
+        await _deleteAccount(useGoogle: true);
+      }
+      return;
+    }
+
     final passwordController = TextEditingController();
 
     final password = await showDialog<String>(
@@ -351,15 +422,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
       return;
     }
 
-    await _deleteAccount(password);
+    await _deleteAccount(password: password);
   }
 
-  Future<void> _deleteAccount(String password) async {
+  Future<void> _deleteAccount({String? password, bool useGoogle = false}) async {
     final l10n = AppLocalizations.of(context)!;
     final user = FirebaseAuth.instance.currentUser;
     final email = user?.email;
 
-    if (user == null || email == null || email.isEmpty) {
+    if (user == null) {
+      _showMessage(l10n.settingsDeleteIdentifyError);
+      return;
+    }
+
+    if (!useGoogle && (email == null || email.isEmpty || password == null)) {
       _showMessage(l10n.settingsDeleteIdentifyError);
       return;
     }
@@ -369,12 +445,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
     });
 
     try {
-      final credential = EmailAuthProvider.credential(
-        email: email,
-        password: password,
-      );
-
-      await user.reauthenticateWithCredential(credential);
+      if (useGoogle) {
+        await GoogleSignInService.reauthenticateCurrentUser();
+      } else {
+        final credential = EmailAuthProvider.credential(
+          email: email!,
+          password: password!,
+        );
+        await user.reauthenticateWithCredential(credential);
+      }
 
       final callable = FirebaseFunctions.instanceFor(
         region: 'us-central1',
@@ -396,6 +475,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
             'o RevenueCat após a exclusão: $error',
           );
         }
+      }
+
+      try {
+        await GoogleSignInService.signOut();
+      } catch (error) {
+        debugPrint(
+          'Configurações: não foi possível limpar '
+          'a sessão Google após a exclusão: $error',
+        );
       }
 
       await FirebaseAuth.instance.signOut();
