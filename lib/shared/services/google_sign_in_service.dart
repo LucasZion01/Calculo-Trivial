@@ -11,7 +11,7 @@ class GoogleSignInService {
     return _initialization ??= _googleSignIn.initialize();
   }
 
-  static Future<UserCredential> signInWithGoogle() async {
+  static Future<AuthCredential> _googleCredential() async {
     await _ensureInitialized();
 
     if (!_googleSignIn.supportsAuthenticate()) {
@@ -28,9 +28,26 @@ class GoogleSignInService {
       throw StateError('O Google não retornou um ID token válido.');
     }
 
-    final firebaseCredential = GoogleAuthProvider.credential(idToken: idToken);
+    return GoogleAuthProvider.credential(idToken: idToken);
+  }
 
+  static Future<UserCredential> signInWithGoogle() async {
+    final firebaseCredential = await _googleCredential();
     return FirebaseAuth.instance.signInWithCredential(firebaseCredential);
+  }
+
+  static Future<void> reauthenticateCurrentUser() async {
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user == null) {
+      throw const FirebaseAuthException(
+        code: 'no-current-user',
+        message: 'Nenhum usuário autenticado foi encontrado.',
+      );
+    }
+
+    final firebaseCredential = await _googleCredential();
+    await user.reauthenticateWithCredential(firebaseCredential);
   }
 
   static Future<void> signOut() async {
