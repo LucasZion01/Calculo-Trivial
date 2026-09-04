@@ -3,7 +3,7 @@ description: "Aplicativo educacional para aprender Cálculo com trilhas, exercí
 
 publish_to: 'none'
 
-version: 1.0.2+3
+version: 1.0.3+4
 
 environment:
   sdk: ^3.12.2
@@ -25,6 +25,7 @@ dependencies:
   cloud_firestore: ^6.8.0
   firebase_app_check: ^0.4.6
   google_sign_in: ^7.2.0
+  in_app_update: ^5.0.0
   url_launcher: ^6.3.2
   cloud_functions: ^6.4.0
 
