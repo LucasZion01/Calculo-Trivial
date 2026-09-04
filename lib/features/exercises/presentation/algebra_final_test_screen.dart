@@ -279,7 +279,7 @@ class _AlgebraFinalTestScreenState extends State<AlgebraFinalTestScreen> {
               Expanded(
                 child: ListView.separated(
                   itemCount: exercise.options.length,
-                  separatorBuilder: (_, __) =>
+                  separatorBuilder: (_, _) =>
                       const SizedBox(height: AppSpacing.sm),
                   itemBuilder: (context, index) =>
                       _buildOption(exercise.options[index], index),
