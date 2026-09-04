@@ -25,34 +25,32 @@ class DashboardScreen extends StatelessWidget {
 
   static const int _availableLessonCount = 6;
 
+  void _openLearningPath(BuildContext context) {
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (_) => const LearningPathScreen()),
+    );
+  }
+
   void _onMenuTap(BuildContext context, int index) {
     if (index == 0) {
       return;
     }
 
     if (index == 1) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (_) => const LearningPathScreen(),
-        ),
-      );
+      _openLearningPath(context);
       return;
     }
 
     if (index == 2) {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (_) => const StatisticsScreen(),
-        ),
+        MaterialPageRoute(builder: (_) => const StatisticsScreen()),
       );
       return;
     }
 
     if (index == 3) {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (_) => const ProfileScreen(),
-        ),
+        MaterialPageRoute(builder: (_) => const ProfileScreen()),
       );
     }
   }
@@ -167,18 +165,14 @@ class DashboardScreen extends StatelessWidget {
   }) {
     return Expanded(
       child: Container(
-        padding: const EdgeInsets.all(AppSpacing.cardPadding),
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.sm,
+          vertical: AppSpacing.cardPadding,
+        ),
         decoration: BoxDecoration(
           color: AppColors.surface,
           borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
           border: Border.all(color: AppColors.border),
-          boxShadow: const [
-            BoxShadow(
-              color: AppColors.shadow,
-              blurRadius: 12,
-              offset: Offset(0, 6),
-            ),
-          ],
         ),
         child: Column(
           children: [
@@ -192,11 +186,155 @@ class DashboardScreen extends StatelessWidget {
             const SizedBox(height: AppSpacing.xxs),
             Text(
               title,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
               style: AppTypography.bodySmall,
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildProgressCard({
+    required AppLocalizations l10n,
+    required double progress,
+    required bool progressCompleted,
+  }) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(AppSpacing.cardPaddingLarge),
+      decoration: BoxDecoration(
+        color: AppColors.primary,
+        borderRadius: BorderRadius.circular(AppSpacing.radiusXLarge),
+        boxShadow: const [
+          BoxShadow(
+            color: AppColors.shadow,
+            blurRadius: 16,
+            offset: Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  l10n.dashboardCurrentProgress,
+                  style: AppTypography.bodyMedium.copyWith(
+                    color: AppColors.primaryLight,
+                  ),
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.sm,
+                  vertical: AppSpacing.xs,
+                ),
+                decoration: BoxDecoration(
+                  color: AppColors.white.withValues(alpha: 0.14),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
+                ),
+                child: Text(
+                  _progressText(progress),
+                  style: AppTypography.titleMedium.copyWith(
+                    color: AppColors.white,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.md),
+          AppProgressBar(
+            value: progress,
+            state: progressCompleted
+                ? AppProgressBarState.success
+                : AppProgressBarState.normal,
+            height: 8,
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          Text(
+            _lastLesson(l10n),
+            style: AppTypography.bodySmall.copyWith(
+              color: AppColors.primaryLight,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNextMissionCard(
+    BuildContext context,
+    AppLocalizations l10n,
+  ) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(AppSpacing.cardPaddingLarge),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
+        border: Border.all(color: AppColors.border),
+        boxShadow: const [
+          BoxShadow(
+            color: AppColors.shadow,
+            blurRadius: 12,
+            offset: Offset(0, 6),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: 48,
+                height: 48,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: AppColors.selectedBackground,
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
+                ),
+                child: Text(
+                  'f(x)',
+                  style: AppTypography.headingSmall.copyWith(
+                    color: AppColors.primary,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10n.dashboardNextMission,
+                      style: AppTypography.titleMedium,
+                    ),
+                    const SizedBox(height: AppSpacing.xxs),
+                    Text(
+                      _nextMission(l10n),
+                      style: AppTypography.bodyMedium,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.md),
+          PrimaryButton(
+            text: l10n.dashboardContinuePath,
+            icon: Icons.arrow_forward_rounded,
+            onPressed: () => _openLearningPath(context),
+          ),
+        ],
       ),
     );
   }
@@ -217,12 +355,12 @@ class DashboardScreen extends StatelessWidget {
         return Scaffold(
           backgroundColor: AppColors.background,
           body: SafeArea(
-            child: Padding(
+            child: SingleChildScrollView(
               padding: const EdgeInsets.fromLTRB(
                 AppSpacing.screenHorizontal,
                 AppSpacing.screenTop,
                 AppSpacing.screenHorizontal,
-                0,
+                AppSpacing.screenBottom,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -237,55 +375,10 @@ class DashboardScreen extends StatelessWidget {
                     style: AppTypography.bodyMedium,
                   ),
                   const SizedBox(height: AppSpacing.lg),
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(AppSpacing.cardPaddingLarge),
-                    decoration: BoxDecoration(
-                      color: AppColors.primary,
-                      borderRadius: BorderRadius.circular(
-                        AppSpacing.radiusXLarge,
-                      ),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: AppColors.shadow,
-                          blurRadius: 16,
-                          offset: Offset(0, 8),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          l10n.dashboardCurrentProgress,
-                          style: AppTypography.bodyMedium.copyWith(
-                            color: AppColors.primaryLight,
-                          ),
-                        ),
-                        const SizedBox(height: AppSpacing.xs),
-                        Text(
-                          _progressText(progress),
-                          style: AppTypography.displayLarge.copyWith(
-                            color: AppColors.white,
-                          ),
-                        ),
-                        const SizedBox(height: AppSpacing.sm),
-                        AppProgressBar(
-                          value: progress,
-                          state: progressCompleted
-                              ? AppProgressBarState.success
-                              : AppProgressBarState.normal,
-                          height: 8,
-                        ),
-                        const SizedBox(height: AppSpacing.sm),
-                        Text(
-                          _lastLesson(l10n),
-                          style: AppTypography.bodySmall.copyWith(
-                            color: AppColors.primaryLight,
-                          ),
-                        ),
-                      ],
-                    ),
+                  _buildProgressCard(
+                    l10n: l10n,
+                    progress: progress,
+                    progressCompleted: progressCompleted,
                   ),
                   const SizedBox(height: AppSpacing.lg),
                   Row(
@@ -310,76 +403,7 @@ class DashboardScreen extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: AppSpacing.lg),
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(AppSpacing.cardPaddingLarge),
-                    decoration: BoxDecoration(
-                      color: AppColors.surface,
-                      borderRadius: BorderRadius.circular(
-                        AppSpacing.radiusLarge,
-                      ),
-                      border: Border.all(color: AppColors.border),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: AppColors.shadow,
-                          blurRadius: 12,
-                          offset: Offset(0, 6),
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 48,
-                          height: 48,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            color: AppColors.selectedBackground,
-                            borderRadius: BorderRadius.circular(
-                              AppSpacing.radiusMedium,
-                            ),
-                          ),
-                          child: Text(
-                            'f(x)',
-                            style: AppTypography.headingSmall.copyWith(
-                              color: AppColors.primary,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: AppSpacing.sm),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                l10n.dashboardNextMission,
-                                style: AppTypography.titleMedium,
-                              ),
-                              const SizedBox(height: AppSpacing.xxs),
-                              Text(
-                                _nextMission(l10n),
-                                style: AppTypography.bodySmall,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const Spacer(),
-                  PrimaryButton(
-                    text: l10n.dashboardContinuePath,
-                    icon: Icons.arrow_forward_rounded,
-                    onPressed: () {
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                          builder: (_) => const LearningPathScreen(),
-                        ),
-                      );
-                    },
-                  ),
-                  const SizedBox(height: AppSpacing.screenBottom),
+                  _buildNextMissionCard(context, l10n),
                 ],
               ),
             ),
