@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:calcquest/l10n/app_localizations.dart';
 import 'package:calcquest/shared/data/mock_exercise_data.dart';
+import 'package:calcquest/shared/domain/exercise_feedback_guidance.dart';
 import 'package:calcquest/shared/services/learning_difficulty_tracker.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
 import 'package:calcquest/shared/theme/app_spacing.dart';
@@ -77,22 +78,10 @@ class _ExerciseAnswerFeedbackContentState
   bool get _isEnglish =>
       Localizations.localeOf(context).languageCode.toLowerCase() == 'en';
 
-  String get _firstHint {
-    final skill = widget.exercise.skill?.trim();
-    if (skill == null || skill.isEmpty) {
-      return _isEnglish
-          ? 'Identify the main rule needed in this question before comparing the alternatives.'
-          : 'Identifique a regra principal necessária nesta questão antes de comparar as alternativas.';
-    }
-
-    return _isEnglish
-        ? 'Start from the skill “$skill”. Identify which rule from this skill should be applied before comparing the alternatives.'
-        : 'Comece pela habilidade “$skill”. Identifique qual regra dessa habilidade deve ser aplicada antes de comparar as alternativas.';
-  }
-
-  String get _nextStep => _isEnglish
-      ? 'Redo only the first step without looking at the alternatives. Check signs, operations and restrictions before moving on.'
-      : 'Refaça apenas o primeiro passo sem olhar para as alternativas. Verifique sinais, operações e restrições antes de avançar.';
+  ExerciseFeedbackGuidance get _guidance => resolveExerciseFeedbackGuidance(
+        skill: widget.exercise.skill,
+        isEnglish: _isEnglish,
+      );
 
   Widget _guidanceCard({
     required String title,
@@ -157,7 +146,7 @@ class _ExerciseAnswerFeedbackContentState
     final background = widget.isCorrect
         ? AppColors.successLight
         : AppColors.errorLight;
-
+    final guidance = _guidance;
     final showSolution = widget.isCorrect || _helpStage >= 2;
 
     return SafeArea(
@@ -207,13 +196,13 @@ class _ExerciseAnswerFeedbackContentState
                 const SizedBox(height: AppSpacing.md),
                 _guidanceCard(
                   title: _isEnglish ? 'First hint' : 'Primeira pista',
-                  body: _firstHint,
+                  body: guidance.firstHint,
                 ),
                 if (_helpStage >= 1) ...[
                   const SizedBox(height: AppSpacing.sm),
                   _guidanceCard(
                     title: _isEnglish ? 'Next step' : 'Próximo passo',
-                    body: _nextStep,
+                    body: guidance.nextStep,
                     icon: Icons.route_outlined,
                   ),
                 ],
