@@ -86,20 +86,20 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   Future<void> _openNextScreen() async {
-    final updateCheck = AppUpdateService.isUpdateAvailable();
+    final updateCheck = AppUpdateService.checkForUpdate();
 
     await Future.wait<void>([
       Future<void>.delayed(const Duration(milliseconds: 2400)),
       _initializeServices(),
     ]);
 
-    final updateAvailable = await updateCheck;
+    final updateStatus = await updateCheck;
 
     if (!mounted) {
       return;
     }
 
-    if (updateAvailable) {
+    if (updateStatus.available) {
       final shouldUpdate = await _showUpdateDialog();
 
       if (!mounted) {
@@ -107,7 +107,7 @@ class _SplashScreenState extends State<SplashScreen>
       }
 
       if (shouldUpdate) {
-        await AppUpdateService.performImmediateUpdate();
+        await AppUpdateService.updateNow(updateStatus);
 
         if (!mounted) {
           return;
