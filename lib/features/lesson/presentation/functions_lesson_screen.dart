@@ -5,6 +5,7 @@ import 'package:calcquest/shared/theme/app_colors.dart';
 import 'package:calcquest/shared/theme/app_spacing.dart';
 import 'package:calcquest/shared/theme/app_typography.dart';
 import 'package:calcquest/shared/widgets/app_bottom_navigation_bar.dart';
+import 'package:calcquest/shared/widgets/function_visualization_card.dart';
 import 'package:calcquest/shared/widgets/learning_content.dart';
 import 'package:calcquest/shared/widgets/primary_button.dart';
 
@@ -209,6 +210,8 @@ class FunctionsLessonScreen extends StatelessWidget {
                         : 'No gráfico, x é lido no eixo horizontal e f(x) no eixo vertical.',
                     tone: LearningCardTone.success,
                   ),
+                  const SizedBox(height: AppSpacing.md),
+                  FunctionVisualizationCard(isEnglish: isEnglish),
                   const SizedBox(height: AppSpacing.md),
                   LessonCheckCard(
                     question: isEnglish
