@@ -8,11 +8,13 @@ import 'package:calcquest/shared/theme/app_spacing.dart';
 import 'package:calcquest/shared/theme/app_typography.dart';
 import 'package:calcquest/shared/widgets/app_bottom_navigation_bar.dart';
 import 'package:calcquest/shared/widgets/app_icon.dart';
+import 'package:calcquest/shared/widgets/learning_difficulty_recommendation_card.dart';
 import 'package:calcquest/shared/widgets/primary_button.dart';
 
 import '../../dashboard/presentation/dashboard_screen.dart';
 import '../../exercise_review/presentation/exercise_review_screen.dart';
 import '../../learning_path/presentation/learning_path_screen.dart';
+import '../../lesson/presentation/functions_lesson_screen.dart';
 import '../../profile/presentation/profile_screen.dart';
 import '../../reward/presentation/reward_screen.dart';
 import '../../statistics/presentation/statistics_screen.dart';
@@ -24,6 +26,7 @@ class ResultScreen extends StatelessWidget {
   final int xpEarned;
   final int goldEarned;
   final List<ExerciseReviewItem> reviewItems;
+  final bool enableLearningRecommendation;
 
   const ResultScreen({
     super.key,
@@ -33,6 +36,7 @@ class ResultScreen extends StatelessWidget {
     this.xpEarned = 60,
     this.goldEarned = 25,
     this.reviewItems = const <ExerciseReviewItem>[],
+    this.enableLearningRecommendation = false,
   });
 
   void _onMenuTap(BuildContext context, int index) {
@@ -96,6 +100,12 @@ class ResultScreen extends StatelessWidget {
           result: result,
         ),
       ),
+    );
+  }
+
+  void _reviewFunctions(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => const FunctionsLessonScreen()),
     );
   }
 
@@ -271,6 +281,8 @@ class ResultScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final isEnglish =
+        Localizations.localeOf(context).languageCode.toLowerCase() == 'en';
     final result = ExerciseSessionResult(
       totalQuestions: totalQuestions,
       correctAnswers: correctAnswers,
@@ -338,6 +350,14 @@ class ResultScreen extends StatelessWidget {
                       value: '$accuracyPercentage%',
                       index: cardIndex++,
                     ),
+                    if (enableLearningRecommendation) ...[
+                      const SizedBox(height: AppSpacing.sm),
+                      LearningDifficultyRecommendationSection(
+                        moduleId: completedLessonId,
+                        isEnglish: isEnglish,
+                        onReview: () => _reviewFunctions(context),
+                      ),
+                    ],
                     if (isApproved) ...[
                       const SizedBox(height: AppSpacing.sm),
                       _buildResultCard(

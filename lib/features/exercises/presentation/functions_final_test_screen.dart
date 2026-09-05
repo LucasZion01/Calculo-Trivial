@@ -132,6 +132,7 @@ class _FunctionsFinalTestScreenState extends State<FunctionsFinalTestScreen> {
             xpEarned: 80,
             goldEarned: 35,
             reviewItems: List<ExerciseReviewItem>.unmodifiable(reviewItems),
+            enableLearningRecommendation: true,
           ),
         ),
       );

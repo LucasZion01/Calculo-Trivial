@@ -7,8 +7,11 @@ import 'package:calcquest/shared/services/learning_difficulty_tracker.dart';
 import 'package:calcquest/shared/state/app_progress.dart';
 
 void main() {
-  setUp(() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
+  setUp(() async {
     SharedPreferences.setMockInitialValues(<String, Object>{});
+    await LearningDifficultyTracker.clearCurrentScope();
   });
 
   test('persists attempts and restores them for diagnosis', () async {
@@ -60,6 +63,25 @@ void main() {
     expect(restored, hasLength(1));
     expect(restored.single.moduleId, AppProgress.functionsId);
     expect(restored.single.phase, LearningAttemptPhase.practice);
+  });
+
+  test('concurrent attempts are serialized without losing signals', () async {
+    final exercise = mockFunctionsExercises.first;
+
+    final writes = List<Future<void>>.generate(
+      12,
+      (index) => LearningDifficultyTracker.recordAttempt(
+        moduleId: AppProgress.functionsId,
+        exercise: exercise,
+        isCorrect: index.isEven,
+        phase: LearningAttemptPhase.practice,
+      ),
+    );
+
+    await Future.wait(writes);
+
+    final restored = await LearningDifficultyTracker.loadSignals();
+    expect(restored, hasLength(12));
   });
 
   test('clear removes only the current local diagnosis scope', () async {
