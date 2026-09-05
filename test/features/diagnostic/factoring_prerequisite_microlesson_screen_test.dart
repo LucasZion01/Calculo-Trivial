@@ -36,4 +36,40 @@ void main() {
       findsOneWidget,
     );
   });
+
+  testWidgets('questão equivalente permite aplicar a revisão em novo limite', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        locale: Locale('pt'),
+        supportedLocales: <Locale>[Locale('pt')],
+        localizationsDelegates: localizationsDelegates,
+        home: FactoringPrerequisiteMicrolessonScreen(
+          prerequisites: <FactoringPrerequisite>[
+            FactoringPrerequisite.differenceOfSquares,
+          ],
+        ),
+      ),
+    );
+
+    final title = find.text('Questão equivalente');
+    await tester.ensureVisible(title);
+    expect(title, findsOneWidget);
+    expect(
+      find.text('Calcule: lim x→5 (x² − 25)/(x − 5)'),
+      findsOneWidget,
+    );
+
+    final correctAnswer = find.text('10');
+    await tester.ensureVisible(correctAnswer);
+    await tester.tap(correctAnswer);
+    await tester.pump();
+
+    expect(find.textContaining('Correto. Fatore x² − 25'), findsOneWidget);
+    expect(
+      find.textContaining('também não altera sua nota nem seu progresso'),
+      findsOneWidget,
+    );
+  });
 }
