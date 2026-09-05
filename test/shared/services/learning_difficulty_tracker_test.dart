@@ -7,6 +7,8 @@ import 'package:calcquest/shared/services/learning_difficulty_tracker.dart';
 import 'package:calcquest/shared/state/app_progress.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   setUp(() async {
     await LearningDifficultyTracker.clearCurrentScope();
     SharedPreferences.setMockInitialValues(<String, Object>{});
