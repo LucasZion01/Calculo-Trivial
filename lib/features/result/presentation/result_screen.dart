@@ -14,10 +14,10 @@ import 'package:calcquest/shared/widgets/primary_button.dart';
 import '../../dashboard/presentation/dashboard_screen.dart';
 import '../../exercise_review/presentation/exercise_review_screen.dart';
 import '../../learning_path/presentation/learning_path_screen.dart';
-import '../../lesson/presentation/functions_lesson_screen.dart';
 import '../../profile/presentation/profile_screen.dart';
 import '../../reward/presentation/reward_screen.dart';
 import '../../statistics/presentation/statistics_screen.dart';
+import 'learning_recommendation_destination.dart';
 
 class ResultScreen extends StatelessWidget {
   final String completedLessonId;
@@ -103,9 +103,15 @@ class ResultScreen extends StatelessWidget {
     );
   }
 
-  void _reviewFunctions(BuildContext context) {
+  void _reviewLearningRecommendation(BuildContext context) {
+    final destination = learningRecommendationDestinationFor(completedLessonId);
+    if (destination == null) {
+      _backToLearningPath(context);
+      return;
+    }
+
     Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => const FunctionsLessonScreen()),
+      MaterialPageRoute(builder: (_) => destination),
     );
   }
 
@@ -355,7 +361,7 @@ class ResultScreen extends StatelessWidget {
                       LearningDifficultyRecommendationSection(
                         moduleId: completedLessonId,
                         isEnglish: isEnglish,
-                        onReview: () => _reviewFunctions(context),
+                        onReview: () => _reviewLearningRecommendation(context),
                       ),
                     ],
                     if (isApproved) ...[
