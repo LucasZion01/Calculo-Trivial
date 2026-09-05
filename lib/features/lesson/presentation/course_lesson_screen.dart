@@ -6,6 +6,7 @@ import 'package:calcquest/shared/theme/app_colors.dart';
 import 'package:calcquest/shared/theme/app_spacing.dart';
 import 'package:calcquest/shared/theme/app_typography.dart';
 import 'package:calcquest/shared/widgets/learning_content.dart';
+import 'package:calcquest/shared/widgets/lesson_visualization_resolver.dart';
 import 'package:calcquest/shared/widgets/primary_button.dart';
 
 class CourseLessonScreen extends StatefulWidget {
@@ -213,6 +214,11 @@ class _CourseLessonScreenState extends State<CourseLessonScreen> {
   Widget build(BuildContext context) {
     final lesson = widget.lesson;
     final uiText = LessonUiText.of(context);
+    final isEnglish = Localizations.localeOf(context).languageCode == 'en';
+    final visualization = lessonVisualizationFor(
+      lesson,
+      isEnglish: isEnglish,
+    );
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -280,6 +286,10 @@ class _CourseLessonScreenState extends State<CourseLessonScreen> {
                       symbol: lesson.symbol,
                     ),
                   ),
+                  if (visualization != null) ...[
+                    const SizedBox(height: AppSpacing.xl),
+                    visualization,
+                  ],
                   const SizedBox(height: AppSpacing.xl),
                   ..._buildSections(),
                   LessonCheckCard(
