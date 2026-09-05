@@ -18,6 +18,8 @@ class LearningDifficultyTracker {
   static const String _storageKey = 'learning_difficulty_attempt_signals_v1';
   static const int _maxSignals = 180;
 
+  static Future<void> _writeQueue = Future<void>.value();
+
   static final Map<String, String> _moduleByQuestionId = <String, String>{
     for (final exercise in mockExercises)
       exercise.id: AppProgress.algebraFundamentalId,
@@ -72,11 +74,11 @@ class LearningDifficultyTracker {
   static Future<void> recordPracticeAttempt({
     required ExerciseData exercise,
     required bool isCorrect,
-  }) async {
+  }) {
     final moduleId = _moduleByQuestionId[exercise.id];
-    if (moduleId == null) return;
+    if (moduleId == null) return Future<void>.value();
 
-    await recordAttempt(
+    return recordAttempt(
       moduleId: moduleId,
       exercise: exercise,
       isCorrect: isCorrect,
@@ -102,7 +104,7 @@ class LearningDifficultyTracker {
     required ExerciseData exercise,
     required bool isCorrect,
     required LearningAttemptPhase phase,
-  }) async {
+  }) {
     final explicitContentLessonId = exercise.contentLessonId?.trim();
     final explicitSkill = exercise.skill?.trim();
 
@@ -122,22 +124,25 @@ class LearningDifficultyTracker {
         contentLessonId.isEmpty ||
         skill == null ||
         skill.isEmpty) {
-      return;
+      return Future<void>.value();
     }
 
-    final signals = await loadSignals();
-    final updated = <LearningAttemptSignal>[
-      ...signals,
-      LearningAttemptSignal(
-        moduleId: moduleId,
-        questionId: exercise.id,
-        contentLessonId: contentLessonId,
-        skill: skill,
-        isCorrect: isCorrect,
-        phase: phase,
-      ),
-    ];
+    final signal = LearningAttemptSignal(
+      moduleId: moduleId,
+      questionId: exercise.id,
+      contentLessonId: contentLessonId,
+      skill: skill,
+      isCorrect: isCorrect,
+      phase: phase,
+    );
 
+    _writeQueue = _writeQueue.then((_) => _appendSignal(signal));
+    return _writeQueue;
+  }
+
+  static Future<void> _appendSignal(LearningAttemptSignal signal) async {
+    final signals = await _loadSignalsNow();
+    final updated = <LearningAttemptSignal>[...signals, signal];
     final bounded = updated.length <= _maxSignals
         ? updated
         : updated.sublist(updated.length - _maxSignals);
@@ -150,6 +155,11 @@ class LearningDifficultyTracker {
   }
 
   static Future<List<LearningAttemptSignal>> loadSignals() async {
+    await _writeQueue;
+    return _loadSignalsNow();
+  }
+
+  static Future<List<LearningAttemptSignal>> _loadSignalsNow() async {
     final preferences = await SharedPreferences.getInstance();
     final raw = preferences.getString(_scopedStorageKey());
 
@@ -178,9 +188,12 @@ class LearningDifficultyTracker {
     return LearningDifficultyDiagnoser.evaluate(selected);
   }
 
-  static Future<void> clearCurrentScope() async {
-    final preferences = await SharedPreferences.getInstance();
-    await preferences.remove(_scopedStorageKey());
+  static Future<void> clearCurrentScope() {
+    _writeQueue = _writeQueue.then((_) async {
+      final preferences = await SharedPreferences.getInstance();
+      await preferences.remove(_scopedStorageKey());
+    });
+    return _writeQueue;
   }
 
   static Map<String, dynamic> _signalToJson(LearningAttemptSignal signal) {
