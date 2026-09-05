@@ -66,9 +66,13 @@ void main() {
     await tester.ensureVisible(correctAnswer);
     await tester.pumpAndSettle();
     await tester.tap(correctAnswer);
-    await tester.pump();
+    await tester.pumpAndSettle();
 
     expect(find.textContaining('Correto. Fatore x² − 25'), findsOneWidget);
+
+    await tester.drag(find.byType(ListView), const Offset(0, -320));
+    await tester.pumpAndSettle();
+
     expect(
       find.textContaining('também não altera sua nota nem seu progresso'),
       findsOneWidget,
