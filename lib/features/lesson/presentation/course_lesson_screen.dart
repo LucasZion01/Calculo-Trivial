@@ -8,6 +8,7 @@ import 'package:calcquest/shared/theme/app_typography.dart';
 import 'package:calcquest/shared/widgets/guided_factoring_practice_card.dart';
 import 'package:calcquest/shared/widgets/learning_content.dart';
 import 'package:calcquest/shared/widgets/lesson_visualization_resolver.dart';
+import 'package:calcquest/shared/widgets/limits_strategy_comparison_card.dart';
 import 'package:calcquest/shared/widgets/primary_button.dart';
 
 class CourseLessonScreen extends StatefulWidget {
@@ -226,8 +227,8 @@ class _CourseLessonScreenState extends State<CourseLessonScreen> {
       lesson,
       isEnglish: isEnglish,
     );
-    final showGuidedFactoringPractice =
-        lesson.id == 'limites-04-fatoracao';
+    final showGuidedFactoringPractice = lesson.id == 'limites-04-fatoracao';
+    final showStrategyComparison = lesson.id == 'limites-04-fatoracao';
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -303,6 +304,10 @@ class _CourseLessonScreenState extends State<CourseLessonScreen> {
                   ..._buildSections(),
                   if (showGuidedFactoringPractice) ...[
                     GuidedFactoringPracticeCard(isEnglish: isEnglish),
+                    const SizedBox(height: AppSpacing.xl),
+                  ],
+                  if (showStrategyComparison) ...[
+                    LimitsStrategyComparisonCard(isEnglish: isEnglish),
                     const SizedBox(height: AppSpacing.xl),
                   ],
                   LessonCheckCard(
