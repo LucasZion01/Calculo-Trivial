@@ -84,10 +84,25 @@ void main() {
 
     expect(find.text('Resposta correta: 4x²y'), findsOneWidget);
     expect(find.text(exercise.explanation), findsOneWidget);
+    expect(find.text('Reflexão rápida'), findsOneWidget);
+    expect(find.text('Qual foi a ideia decisiva nesta questão?'), findsOneWidget);
+    expect(find.text('Dividir monômios'), findsOneWidget);
+
+    final skillOption = find.text('Dividir monômios');
+    await tester.ensureVisible(skillOption);
+    await tester.tap(skillOption);
+    await tester.pump();
+
+    expect(
+      find.text('Isso. Essa foi a ideia matemática central.'),
+      findsOneWidget,
+    );
     expect(find.text('Continuar praticando'), findsOneWidget);
   });
 
-  testWidgets('acerto mantém explicação direta', (WidgetTester tester) async {
+  testWidgets('acerto mantém explicação direta sem reflexão extra', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(
       buildLocalizedFeedback(isCorrect: true, selectedAnswer: '4x²y'),
     );
@@ -96,6 +111,7 @@ void main() {
     expect(find.text(exercise.explanation), findsOneWidget);
     expect(find.text('Primeira pista'), findsNothing);
     expect(find.text('Mostrar próxima pista'), findsNothing);
+    expect(find.text('Reflexão rápida'), findsNothing);
     expect(find.text('Continuar praticando'), findsOneWidget);
   });
 }
