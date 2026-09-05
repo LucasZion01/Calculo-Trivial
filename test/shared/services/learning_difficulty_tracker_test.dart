@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:calcquest/shared/data/mock_functions_exercise_data.dart';
+import 'package:calcquest/shared/data/mock_limits_exercise_data.dart';
 import 'package:calcquest/shared/domain/learning_difficulty_diagnosis.dart';
 import 'package:calcquest/shared/services/learning_difficulty_tracker.dart';
 import 'package:calcquest/shared/state/app_progress.dart';
@@ -63,6 +64,53 @@ void main() {
     expect(restored, hasLength(1));
     expect(restored.single.moduleId, AppProgress.functionsId);
     expect(restored.single.phase, LearningAttemptPhase.practice);
+  });
+
+  test('limits attempts preserve lesson and skill metadata', () async {
+    final exercise = mockLimitsExercises.firstWhere(
+      (item) => item.id == 'limite-fatoracao',
+    );
+
+    await LearningDifficultyTracker.recordPracticeAttempt(
+      exercise: exercise,
+      isCorrect: false,
+    );
+    await LearningDifficultyTracker.recordFinalTestAttempt(
+      moduleId: AppProgress.limitsId,
+      exercise: exercise,
+      isCorrect: false,
+    );
+    await LearningDifficultyTracker.recordFinalTestAttempt(
+      moduleId: AppProgress.limitsId,
+      exercise: exercise,
+      isCorrect: true,
+    );
+
+    final restored = await LearningDifficultyTracker.loadSignals();
+    final diagnosis = await LearningDifficultyTracker.diagnose(
+      moduleId: AppProgress.limitsId,
+    );
+
+    expect(restored, hasLength(3));
+    expect(restored.every((signal) => signal.moduleId == AppProgress.limitsId), isTrue);
+    expect(
+      restored.every(
+        (signal) => signal.contentLessonId == 'limites-04-fatoracao',
+      ),
+      isTrue,
+    );
+    expect(restored.every((signal) => signal.skill == 'Diferença de quadrados'), isTrue);
+    expect(diagnosis.analyzedAttempts, 3);
+    expect(diagnosis.reviewRecommendations, hasLength(1));
+    expect(
+      diagnosis.reviewRecommendations.single.contentLessonId,
+      'limites-04-fatoracao',
+    );
+    expect(
+      diagnosis.reviewRecommendations.single.skill,
+      'Diferença de quadrados',
+    );
+    expect(diagnosis.reviewRecommendations.single.finalTestErrors, 1);
   });
 
   test('concurrent attempts are serialized without losing signals', () async {
