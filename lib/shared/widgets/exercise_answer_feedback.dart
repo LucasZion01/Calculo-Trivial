@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:calcquest/l10n/app_localizations.dart';
 import 'package:calcquest/shared/data/mock_exercise_data.dart';
 import 'package:calcquest/shared/domain/exercise_feedback_guidance.dart';
+import 'package:calcquest/shared/domain/exercise_self_explanation.dart';
 import 'package:calcquest/shared/services/learning_difficulty_tracker.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
 import 'package:calcquest/shared/theme/app_spacing.dart';
@@ -74,11 +75,18 @@ class ExerciseAnswerFeedbackContent extends StatefulWidget {
 class _ExerciseAnswerFeedbackContentState
     extends State<ExerciseAnswerFeedbackContent> {
   int _helpStage = 0;
+  String? _selectedReflectionOptionId;
 
   bool get _isEnglish =>
       Localizations.localeOf(context).languageCode.toLowerCase() == 'en';
 
   ExerciseFeedbackGuidance get _guidance => resolveExerciseFeedbackGuidance(
+        skill: widget.exercise.skill,
+        isEnglish: _isEnglish,
+      );
+
+  ExerciseSelfExplanationQuestion? get _selfExplanation =>
+      resolveExerciseSelfExplanationQuestion(
         skill: widget.exercise.skill,
         isEnglish: _isEnglish,
       );
@@ -139,6 +147,66 @@ class _ExerciseAnswerFeedbackContentState
     );
   }
 
+  Widget _selfExplanationCard(ExerciseSelfExplanationQuestion question) {
+    final selectedId = _selectedReflectionOptionId;
+    final hasAnswered = selectedId != null;
+    final isCorrect = selectedId == question.correctOptionId;
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(AppSpacing.cardPadding),
+      decoration: BoxDecoration(
+        color: AppColors.surfaceSecondary,
+        borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
+        border: Border.all(color: AppColors.border),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            _isEnglish ? 'Quick reflection' : 'Reflexão rápida',
+            style: AppTypography.labelMedium.copyWith(
+              color: AppColors.primary,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          const SizedBox(height: AppSpacing.xs),
+          Text(question.prompt, style: AppTypography.bodyMedium),
+          const SizedBox(height: AppSpacing.sm),
+          ...question.options.map(
+            (option) => Padding(
+              padding: const EdgeInsets.only(bottom: AppSpacing.xs),
+              child: SizedBox(
+                width: double.infinity,
+                child: OutlinedButton(
+                  onPressed: hasAnswered
+                      ? null
+                      : () => setState(
+                            () => _selectedReflectionOptionId = option.id,
+                          ),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(option.text),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          if (hasAnswered) ...[
+            const SizedBox(height: AppSpacing.xs),
+            Text(
+              isCorrect ? question.successMessage : question.correctionMessage,
+              style: AppTypography.bodyMedium.copyWith(
+                color: isCorrect ? AppColors.successDark : AppColors.textSecondary,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -147,7 +215,10 @@ class _ExerciseAnswerFeedbackContentState
         ? AppColors.successLight
         : AppColors.errorLight;
     final guidance = _guidance;
+    final selfExplanation = _selfExplanation;
     final showSolution = widget.isCorrect || _helpStage >= 2;
+    final showSelfExplanation =
+        !widget.isCorrect && showSolution && selfExplanation != null;
 
     return SafeArea(
       child: Padding(
@@ -220,6 +291,10 @@ class _ExerciseAnswerFeedbackContentState
               if (showSolution) ...[
                 const SizedBox(height: AppSpacing.md),
                 _explanationCard(l10n),
+              ],
+              if (showSelfExplanation) ...[
+                const SizedBox(height: AppSpacing.md),
+                _selfExplanationCard(selfExplanation),
               ],
               const SizedBox(height: AppSpacing.lg),
               if (!widget.isCorrect && _helpStage == 0)
