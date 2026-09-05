@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:calcquest/features/diagnostic/presentation/factoring_prerequisite_microlesson_screen.dart';
 import 'package:calcquest/shared/domain/factoring_diagnostic.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
 import 'package:calcquest/shared/theme/app_spacing.dart';
@@ -278,6 +279,7 @@ class _FactoringDiagnosticScreenState extends State<FactoringDiagnosticScreen> {
   @override
   Widget build(BuildContext context) {
     final result = _result;
+    final reviewItems = result?.prerequisitesToReview ?? const <FactoringPrerequisite>[];
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -315,6 +317,22 @@ class _FactoringDiagnosticScreenState extends State<FactoringDiagnosticScreen> {
             if (result != null) ...[
               _buildResult(result),
               const SizedBox(height: AppSpacing.lg),
+              if (reviewItems.isNotEmpty) ...[
+                PrimaryButton(
+                  text: _isEnglish ? 'Review prerequisites' : 'Revisar pré-requisitos',
+                  icon: Icons.school_outlined,
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => FactoringPrerequisiteMicrolessonScreen(
+                          prerequisites: reviewItems,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+                const SizedBox(height: AppSpacing.sm),
+              ],
               PrimaryButton(
                 text: _isEnglish ? 'Close' : 'Fechar',
                 icon: Icons.close_rounded,
