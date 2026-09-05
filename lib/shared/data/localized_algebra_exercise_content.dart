@@ -21,7 +21,22 @@ ExerciseData localizeAlgebraExerciseContent(
   Locale locale,
 ) {
   if (locale.languageCode != 'en') {
-    return exercise;
+    final normalizedStatement = exercise.statement.replaceAll(r'\n', '\n');
+    if (normalizedStatement == exercise.statement) {
+      return exercise;
+    }
+
+    return ExerciseData(
+      id: exercise.id,
+      title: exercise.title,
+      statement: normalizedStatement,
+      options: exercise.options,
+      correctOptionId: exercise.correctOptionId,
+      explanation: exercise.explanation,
+      contentLessonId: exercise.contentLessonId,
+      skill: exercise.skill,
+      difficulty: exercise.difficulty,
+    );
   }
 
   final translation = _englishAlgebraExercises[exercise.id];
