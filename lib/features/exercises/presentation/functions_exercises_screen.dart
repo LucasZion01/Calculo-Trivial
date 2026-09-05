@@ -9,15 +9,11 @@ import 'package:calcquest/shared/state/app_progress.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
 import 'package:calcquest/shared/theme/app_spacing.dart';
 import 'package:calcquest/shared/theme/app_typography.dart';
-import 'package:calcquest/shared/widgets/app_bottom_navigation_bar.dart';
 import 'package:calcquest/shared/widgets/app_progress_bar.dart';
+import 'package:calcquest/shared/widgets/exercise_answer_feedback.dart';
 import 'package:calcquest/shared/widgets/primary_button.dart';
 
-import '../../dashboard/presentation/dashboard_screen.dart';
-import '../../learning_path/presentation/learning_path_screen.dart';
-import '../../profile/presentation/profile_screen.dart';
-import '../../result/presentation/result_screen.dart';
-import '../../statistics/presentation/statistics_screen.dart';
+import 'functions_final_test_screen.dart';
 
 class FunctionsExercisesScreen extends StatefulWidget {
   const FunctionsExercisesScreen({super.key});
@@ -34,34 +30,28 @@ class _FunctionsExercisesScreenState extends State<FunctionsExercisesScreen> {
   int currentExerciseIndex = 0;
   int correctAnswers = 0;
   String? selectedOptionId;
+  bool isShowingFeedback = false;
+
+  bool get _isEnglish =>
+      Localizations.localeOf(context).languageCode.toLowerCase() == 'en';
 
   @override
   void initState() {
     super.initState();
 
-    sessionExercises = _createSession(
-      lessonId: AppProgress.functionsId,
-      questionBank: mockFunctionsExercises,
-    );
-  }
-
-  List<ExerciseData> _createSession({
-    required String lessonId,
-    required List<ExerciseData> questionBank,
-  }) {
     final selectedIds = AppProgress.selectExerciseQuestionIds(
-      lessonId: lessonId,
-      availableQuestionIds: questionBank.map((exercise) => exercise.id),
+      lessonId: AppProgress.functionsId,
+      availableQuestionIds: mockFunctionsExercises.map((exercise) => exercise.id),
     );
 
     final exercisesById = <String, ExerciseData>{
-      for (final exercise in questionBank) exercise.id: exercise,
+      for (final exercise in mockFunctionsExercises) exercise.id: exercise,
     };
 
-    return selectedIds
+    sessionExercises = selectedIds
         .map((questionId) => exercisesById[questionId])
         .whereType<ExerciseData>()
-        .toList();
+        .toList(growable: false);
   }
 
   ExerciseData get currentExercise => localizeFunctionsExerciseContent(
@@ -74,170 +64,124 @@ class _FunctionsExercisesScreenState extends State<FunctionsExercisesScreen> {
 
   double get progress => (currentExerciseIndex + 1) / sessionExercises.length;
 
-  void _onMenuTap(BuildContext context, int index) {
-    if (index == 0) {
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (_) => const DashboardScreen()),
-        (route) => false,
-      );
-      return;
-    }
-
-    if (index == 1) {
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (_) => const LearningPathScreen()),
-        (route) => false,
-      );
-      return;
-    }
-
-    if (index == 2) {
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (_) => const StatisticsScreen()),
-        (route) => false,
-      );
-      return;
-    }
-
-    if (index == 3) {
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (_) => const ProfileScreen()),
-        (route) => false,
-      );
-    }
+  String _difficultyLabel(
+    ExerciseDifficulty difficulty,
+    AppLocalizations l10n,
+  ) {
+    return switch (difficulty) {
+      ExerciseDifficulty.foundation => l10n.exerciseDifficultyFoundation,
+      ExerciseDifficulty.intermediate => l10n.exerciseDifficultyIntermediate,
+      ExerciseDifficulty.challenge => l10n.exerciseDifficultyChallenge,
+    };
   }
 
-  void _showFeedback({
-    required String message,
-    required Color backgroundColor,
-    required IconData icon,
-  }) {
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(
-          behavior: SnackBarBehavior.floating,
-          backgroundColor: backgroundColor,
-          margin: const EdgeInsets.all(AppSpacing.md),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
-          ),
-          content: Row(
-            children: [
-              Icon(icon, color: AppColors.white),
-              const SizedBox(width: AppSpacing.sm),
-              Expanded(
-                child: Text(
-                  message,
-                  style: AppTypography.bodyMedium.copyWith(
-                    color: AppColors.white,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-  }
+  Future<void> _confirmAnswer() async {
+    if (isShowingFeedback) return;
 
-  void _confirmAnswer() {
     final l10n = AppLocalizations.of(context)!;
 
     if (selectedOptionId == null) {
-      _showFeedback(
-        message: l10n.exerciseChooseAlternative,
-        backgroundColor: AppColors.warning,
-        icon: Icons.warning_amber_rounded,
-      );
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            behavior: SnackBarBehavior.floating,
+            backgroundColor: AppColors.warning,
+            content: Text(l10n.exerciseChooseAlternative),
+          ),
+        );
       return;
     }
 
-    final isCorrect = selectedOptionId == currentExercise.correctOptionId;
+    final exercise = currentExercise;
+    final isCorrect = selectedOptionId == exercise.correctOptionId;
+    final selectedOption = exercise.options.firstWhere(
+      (option) => option.id == selectedOptionId,
+    );
+    final correctOption = exercise.options.firstWhere(
+      (option) => option.id == exercise.correctOptionId,
+    );
 
+    setState(() => isShowingFeedback = true);
     AppProgress.recordExerciseAnswer(isCorrect: isCorrect);
 
     if (isCorrect) {
       correctAnswers++;
-      _showFeedback(
-        message: currentExercise.explanation,
-        backgroundColor: AppColors.success,
-        icon: Icons.check_rounded,
-      );
     } else {
-      final selectedOption = currentExercise.options.firstWhere(
-        (option) => option.id == selectedOptionId,
-      );
-      final correctOption = currentExercise.options.firstWhere(
-        (option) => option.id == currentExercise.correctOptionId,
-      );
-
       reviewItems.add(
         ExerciseReviewItem(
-          questionId: currentExercise.id,
-          statement: currentExercise.statement,
+          questionId: exercise.id,
+          statement: exercise.statement,
           selectedAnswer: selectedOption.text,
           correctAnswer: correctOption.text,
-          explanation: currentExercise.explanation,
+          explanation: exercise.explanation,
         ),
-      );
-
-      _showFeedback(
-        message: currentExercise.explanation,
-        backgroundColor: AppColors.error,
-        icon: Icons.close_rounded,
       );
     }
 
+    await showExerciseAnswerFeedback(
+      context: context,
+      exercise: exercise,
+      isCorrect: isCorrect,
+      selectedAnswer: selectedOption.text,
+      correctAnswer: correctOption.text,
+      isLastExercise: isLastExercise,
+    );
+
+    if (!mounted) return;
+
     if (isLastExercise) {
-      Future.delayed(const Duration(milliseconds: 700), () {
-        if (!mounted) return;
-
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (_) => ResultScreen(
-              completedLessonId: 'funcoes',
-              totalQuestions: sessionExercises.length,
-              correctAnswers: correctAnswers,
-              xpEarned: 80,
-              goldEarned: 35,
-              reviewItems: List<ExerciseReviewItem>.unmodifiable(reviewItems),
-            ),
-          ),
-        );
-      });
-
+      _finishPractice();
       return;
     }
 
     setState(() {
       currentExerciseIndex++;
       selectedOptionId = null;
+      isShowingFeedback = false;
     });
   }
 
-  String _letterForIndex(int index) {
-    const letters = ['A', 'B', 'C', 'D'];
-    return letters[index];
+  void _finishPractice() {
+    final practiceIds = sessionExercises.map((exercise) => exercise.id).toSet();
+
+    if (reviewItems.isEmpty) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (_) => FunctionsFinalTestScreen(
+            practiceQuestionIds: practiceIds,
+          ),
+        ),
+      );
+      return;
+    }
+
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (_) => _FunctionsPracticeReviewScreen(
+          reviewItems: List<ExerciseReviewItem>.unmodifiable(reviewItems),
+          practiceQuestionIds: practiceIds,
+          correctAnswers: correctAnswers,
+          totalQuestions: sessionExercises.length,
+        ),
+      ),
+    );
   }
 
-  Widget _buildOption({
-    required ExerciseOptionData option,
-    required int index,
-  }) {
+  Widget _buildOption(ExerciseOptionData option, int index) {
     final isSelected = selectedOptionId == option.id;
+    const letters = <String>['A', 'B', 'C', 'D'];
 
     return Material(
       color: Colors.transparent,
       borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
       child: InkWell(
-        onTap: () {
-          setState(() {
-            selectedOptionId = option.id;
-          });
-        },
+        onTap: isShowingFeedback
+            ? null
+            : () => setState(() => selectedOptionId = option.id),
         borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 160),
+          duration: const Duration(milliseconds: 180),
           width: double.infinity,
           padding: const EdgeInsets.all(AppSpacing.cardPadding),
           decoration: BoxDecoration(
@@ -263,7 +207,7 @@ class _FunctionsExercisesScreenState extends State<FunctionsExercisesScreen> {
                   borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
                 ),
                 child: Text(
-                  _letterForIndex(index),
+                  letters[index],
                   style: AppTypography.labelMedium.copyWith(
                     color: isSelected
                         ? AppColors.white
@@ -272,22 +216,12 @@ class _FunctionsExercisesScreenState extends State<FunctionsExercisesScreen> {
                 ),
               ),
               const SizedBox(width: AppSpacing.sm),
-              Expanded(
-                child: Text(
-                  option.text,
-                  style: AppTypography.bodyLarge.copyWith(
-                    color: AppColors.textPrimary,
-                  ),
-                ),
-              ),
-              if (isSelected) ...[
-                const SizedBox(width: AppSpacing.xs),
+              Expanded(child: Text(option.text, style: AppTypography.bodyLarge)),
+              if (isSelected)
                 const Icon(
                   Icons.check_circle_rounded,
                   color: AppColors.primary,
-                  size: AppSpacing.iconLarge,
                 ),
-              ],
             ],
           ),
         ),
@@ -302,29 +236,71 @@ class _FunctionsExercisesScreenState extends State<FunctionsExercisesScreen> {
 
     return Scaffold(
       backgroundColor: AppColors.background,
+      appBar: AppBar(
+        backgroundColor: AppColors.background,
+        elevation: 0,
+        title: Text(_isEnglish ? 'Guided practice' : 'Prática guiada'),
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(
             AppSpacing.screenHorizontal,
-            AppSpacing.screenTop,
+            AppSpacing.md,
             AppSpacing.screenHorizontal,
-            0,
+            AppSpacing.screenBottom,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                l10n.exerciseQuestionProgress(
-                  currentExerciseIndex + 1,
-                  sessionExercises.length,
-                ),
-                style: AppTypography.headingSmall,
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      _isEnglish
+                          ? 'Question ${currentExerciseIndex + 1} of ${sessionExercises.length}'
+                          : 'Questão ${currentExerciseIndex + 1} de ${sessionExercises.length}',
+                      style: AppTypography.headingSmall,
+                    ),
+                  ),
+                  Text(
+                    '${(progress * 100).round()}%',
+                    style: AppTypography.labelMedium.copyWith(
+                      color: AppColors.primary,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: AppSpacing.xs),
-              Text(l10n.functions, style: AppTypography.bodyMedium),
+              Text(
+                _isEnglish
+                    ? 'Use the feedback to correct your reasoning before the final test.'
+                    : 'Use o feedback para corrigir seu raciocínio antes do teste final.',
+                style: AppTypography.bodyMedium,
+              ),
               const SizedBox(height: AppSpacing.md),
-              AppProgressBar(value: progress),
+              TweenAnimationBuilder<double>(
+                tween: Tween(begin: 0, end: progress),
+                duration: const Duration(milliseconds: 300),
+                builder: (context, value, child) => AppProgressBar(value: value),
+              ),
               const SizedBox(height: AppSpacing.lg),
+              Wrap(
+                spacing: AppSpacing.xs,
+                runSpacing: AppSpacing.xs,
+                children: [
+                  if (exercise.skill != null)
+                    Chip(
+                      avatar: const Icon(Icons.school_outlined, size: 18),
+                      label: Text(exercise.skill!),
+                    ),
+                  Chip(
+                    avatar: const Icon(Icons.signal_cellular_alt_rounded, size: 18),
+                    label: Text(_difficultyLabel(exercise.difficulty, l10n)),
+                  ),
+                ],
+              ),
+              const SizedBox(height: AppSpacing.md),
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(AppSpacing.cardPaddingLarge),
@@ -332,13 +308,6 @@ class _FunctionsExercisesScreenState extends State<FunctionsExercisesScreen> {
                   color: AppColors.surface,
                   borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
                   border: Border.all(color: AppColors.border),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: AppColors.shadow,
-                      blurRadius: 12,
-                      offset: Offset(0, 6),
-                    ),
-                  ],
                 ),
                 child: Text(
                   exercise.statement,
@@ -350,37 +319,223 @@ class _FunctionsExercisesScreenState extends State<FunctionsExercisesScreen> {
               const SizedBox(height: AppSpacing.lg),
               Expanded(
                 child: ListView.separated(
-                  padding: const EdgeInsets.only(bottom: AppSpacing.md),
                   itemCount: exercise.options.length,
-                  separatorBuilder: (context, index) =>
+                  separatorBuilder: (_, _) =>
                       const SizedBox(height: AppSpacing.sm),
-                  itemBuilder: (context, index) {
-                    final option = exercise.options[index];
-
-                    return _buildOption(option: option, index: index);
-                  },
+                  itemBuilder: (context, index) =>
+                      _buildOption(exercise.options[index], index),
                 ),
               ),
-              const SizedBox(height: AppSpacing.sm),
               PrimaryButton(
                 text: isLastExercise
-                    ? l10n.exerciseFinish
-                    : l10n.exerciseNextQuestion,
+                    ? (_isEnglish ? 'Finish practice' : 'Finalizar prática')
+                    : (_isEnglish ? 'Check answer' : 'Verificar resposta'),
                 icon: isLastExercise
-                    ? Icons.flag_rounded
+                    ? Icons.fact_check_outlined
                     : Icons.arrow_forward_rounded,
-                onPressed: _confirmAnswer,
+                onPressed: isShowingFeedback ? null : _confirmAnswer,
+                isLoading: isShowingFeedback,
               ),
-              const SizedBox(height: AppSpacing.screenBottom),
             ],
           ),
         ),
       ),
-      bottomNavigationBar: AppBottomNavigationBar(
-        currentIndex: 1,
-        onTap: (index) {
-          _onMenuTap(context, index);
-        },
+    );
+  }
+}
+
+class _FunctionsPracticeReviewScreen extends StatefulWidget {
+  final List<ExerciseReviewItem> reviewItems;
+  final Set<String> practiceQuestionIds;
+  final int correctAnswers;
+  final int totalQuestions;
+
+  const _FunctionsPracticeReviewScreen({
+    required this.reviewItems,
+    required this.practiceQuestionIds,
+    required this.correctAnswers,
+    required this.totalQuestions,
+  });
+
+  @override
+  State<_FunctionsPracticeReviewScreen> createState() =>
+      _FunctionsPracticeReviewScreenState();
+}
+
+class _FunctionsPracticeReviewScreenState
+    extends State<_FunctionsPracticeReviewScreen> {
+  int currentIndex = 0;
+
+  bool get _isEnglish =>
+      Localizations.localeOf(context).languageCode.toLowerCase() == 'en';
+
+  ExerciseReviewItem get currentItem => widget.reviewItems[currentIndex];
+
+  bool get isLastItem => currentIndex == widget.reviewItems.length - 1;
+
+  void _continue() {
+    if (!isLastItem) {
+      setState(() => currentIndex++);
+      return;
+    }
+
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (_) => FunctionsFinalTestScreen(
+          practiceQuestionIds: widget.practiceQuestionIds,
+        ),
+      ),
+    );
+  }
+
+  Widget _answerCard({
+    required String title,
+    required String answer,
+    required Color backgroundColor,
+    required Color borderColor,
+    required IconData icon,
+    required Color iconColor,
+  }) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(AppSpacing.cardPadding),
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
+        border: Border.all(color: borderColor),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(icon, color: iconColor),
+          const SizedBox(width: AppSpacing.sm),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title, style: AppTypography.labelMedium),
+                const SizedBox(height: AppSpacing.xxs),
+                Text(answer, style: AppTypography.bodyMedium),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final reviewProgress = (currentIndex + 1) / widget.reviewItems.length;
+
+    return Scaffold(
+      backgroundColor: AppColors.background,
+      appBar: AppBar(
+        backgroundColor: AppColors.background,
+        elevation: 0,
+        title: Text(_isEnglish ? 'Practice review' : 'Revisão da prática'),
+      ),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.screenHorizontal,
+            AppSpacing.md,
+            AppSpacing.screenHorizontal,
+            AppSpacing.screenBottom,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                _isEnglish
+                    ? '${widget.correctAnswers}/${widget.totalQuestions} correct in practice'
+                    : '${widget.correctAnswers}/${widget.totalQuestions} acertos na prática',
+                style: AppTypography.headingSmall,
+              ),
+              const SizedBox(height: AppSpacing.xs),
+              Text(
+                _isEnglish
+                    ? 'Review every mistake before starting the final test.'
+                    : 'Revise cada erro antes de iniciar o teste final.',
+                style: AppTypography.bodyMedium,
+              ),
+              const SizedBox(height: AppSpacing.md),
+              AppProgressBar(value: reviewProgress),
+              const SizedBox(height: AppSpacing.lg),
+              Expanded(
+                child: ListView(
+                  children: [
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(AppSpacing.cardPaddingLarge),
+                      decoration: BoxDecoration(
+                        color: AppColors.surface,
+                        borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
+                        border: Border.all(color: AppColors.border),
+                      ),
+                      child: Text(
+                        currentItem.statement,
+                        style: AppTypography.titleMedium,
+                      ),
+                    ),
+                    const SizedBox(height: AppSpacing.md),
+                    _answerCard(
+                      title: _isEnglish ? 'Your answer' : 'Sua resposta',
+                      answer: currentItem.selectedAnswer,
+                      backgroundColor: AppColors.errorLight,
+                      borderColor: AppColors.error,
+                      icon: Icons.close_rounded,
+                      iconColor: AppColors.error,
+                    ),
+                    const SizedBox(height: AppSpacing.sm),
+                    _answerCard(
+                      title: _isEnglish ? 'Correct answer' : 'Resposta correta',
+                      answer: currentItem.correctAnswer,
+                      backgroundColor: AppColors.successLight,
+                      borderColor: AppColors.success,
+                      icon: Icons.check_rounded,
+                      iconColor: AppColors.success,
+                    ),
+                    const SizedBox(height: AppSpacing.md),
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(AppSpacing.cardPaddingLarge),
+                      decoration: BoxDecoration(
+                        color: AppColors.selectedBackground,
+                        borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            _isEnglish ? 'Why?' : 'Por quê?',
+                            style: AppTypography.titleMedium.copyWith(
+                              color: AppColors.primary,
+                            ),
+                          ),
+                          const SizedBox(height: AppSpacing.xs),
+                          Text(
+                            currentItem.explanation,
+                            style: AppTypography.bodyMedium,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              PrimaryButton(
+                text: isLastItem
+                    ? (_isEnglish ? 'Start final test' : 'Iniciar teste final')
+                    : (_isEnglish ? 'Next mistake' : 'Próximo erro'),
+                icon: isLastItem
+                    ? Icons.quiz_outlined
+                    : Icons.arrow_forward_rounded,
+                onPressed: _continue,
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
