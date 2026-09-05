@@ -43,6 +43,16 @@ class AppUpdateService {
     }
   }
 
+  static Future<bool> isUpdateAvailable() async {
+    final status = await checkForUpdate();
+    return status.available;
+  }
+
+  static Future<void> performImmediateUpdate() async {
+    final status = await checkForUpdate();
+    await updateNow(status);
+  }
+
   static Future<void> updateNow(AppUpdateStatus status) async {
     if (defaultTargetPlatform != TargetPlatform.android || !status.available) {
       return;
