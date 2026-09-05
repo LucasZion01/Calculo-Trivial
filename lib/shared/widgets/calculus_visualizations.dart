@@ -143,8 +143,6 @@ class DerivativeTangentVisualization extends StatefulWidget {
 class _DerivativeTangentVisualizationState
     extends State<DerivativeTangentVisualization> {
   double _x = 1;
-
-  double get _y => _x * _x;
   double get _slope => 2 * _x;
 
   @override
