@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:calcquest/shared/domain/exercise_question_selector.dart';
+import 'package:calcquest/shared/domain/final_test_question_selector.dart';
 
 class AppProgress {
   static const String algebraFundamentalId = 'algebra-fundamental';
@@ -35,6 +36,7 @@ class AppProgress {
   static const String _dailyAnsweredQuestionsKey = 'daily_answered_questions';
   static const String _dailyActivityDateKey = 'daily_activity_date';
   static const String _lastQuestionSessionKey = 'last_question_session';
+  static const String _lastFinalTestSessionKey = 'last_final_test_session';
 
   static const List<String> _lessonIds = <String>[
     algebraFundamentalId,
@@ -67,6 +69,8 @@ class AppProgress {
   static final Set<String> _completedLessonIds = <String>{};
   static final Set<String> _completedContentLessonIds = <String>{};
   static final Map<String, Set<String>> _lastQuestionSessionIds =
+      <String, Set<String>>{};
+  static final Map<String, Set<String>> _lastFinalTestSessionIds =
       <String, Set<String>>{};
 
   static Future<void> _saveQueue = Future<void>.value();
@@ -135,6 +139,7 @@ class AppProgress {
     _completedLessonIds.clear();
     _completedContentLessonIds.clear();
     _lastQuestionSessionIds.clear();
+    _lastFinalTestSessionIds.clear();
 
     algebraFundamentalCompleted = false;
     equationsAndInequationsCompleted = false;
@@ -272,6 +277,14 @@ class AppProgress {
       if (questionIds != null && questionIds.isNotEmpty) {
         _lastQuestionSessionIds[lessonId] = questionIds.toSet();
       }
+
+      final finalTestQuestionIds = preferences.getStringList(
+        _scopedKey('${_lastFinalTestSessionKey}_$lessonId', userId),
+      );
+
+      if (finalTestQuestionIds != null && finalTestQuestionIds.isNotEmpty) {
+        _lastFinalTestSessionIds[lessonId] = finalTestQuestionIds.toSet();
+      }
     }
   }
 
@@ -335,6 +348,7 @@ class AppProgress {
     _mergeStudyStreak(data);
     _mergeDailyActivity(data);
     _mergeQuestionSessions(data);
+    _mergeFinalTestSessions(data);
   }
 
   static void _mergeQuestionSessions(Map<String, dynamic> data) {
@@ -352,6 +366,26 @@ class AppProgress {
 
         if (questionIds.isNotEmpty) {
           _lastQuestionSessionIds[lessonId] = questionIds;
+        }
+      }
+    }
+  }
+
+  static void _mergeFinalTestSessions(Map<String, dynamic> data) {
+    final remoteSessions = data['lastFinalTestSessionIds'];
+
+    if (remoteSessions is! Map) {
+      return;
+    }
+
+    for (final lessonId in _lessonIds) {
+      final remoteQuestionIds = remoteSessions[lessonId];
+
+      if (remoteQuestionIds is Iterable) {
+        final questionIds = remoteQuestionIds.whereType<String>().toSet();
+
+        if (questionIds.isNotEmpty) {
+          _lastFinalTestSessionIds[lessonId] = questionIds;
         }
       }
     }
@@ -554,6 +588,14 @@ class AppProgress {
         _scopedKey('${_lastQuestionSessionKey}_$lessonId', _activeUserId),
         questionIds,
       );
+
+      final finalTestQuestionIds =
+          _lastFinalTestSessionIds[lessonId]?.toList() ?? <String>[];
+
+      await preferences.setStringList(
+        _scopedKey('${_lastFinalTestSessionKey}_$lessonId', _activeUserId),
+        finalTestQuestionIds,
+      );
     }
   }
 
@@ -589,6 +631,10 @@ class AppProgress {
       'dailyActivityDate': dailyActivityDate,
       'lastQuestionSessionIds': <String, List<String>>{
         for (final entry in _lastQuestionSessionIds.entries)
+          entry.key: entry.value.toList(),
+      },
+      'lastFinalTestSessionIds': <String, List<String>>{
+        for (final entry in _lastFinalTestSessionIds.entries)
           entry.key: entry.value.toList(),
       },
       'updatedAt': FieldValue.serverTimestamp(),
@@ -632,6 +678,34 @@ class AppProgress {
     }
 
     _lastQuestionSessionIds[lessonId] = selectedQuestionIds.toSet();
+    _queueProgressSave();
+
+    return selectedQuestionIds;
+  }
+
+  static List<String> selectFinalTestQuestionIds({
+    required String lessonId,
+    required Iterable<String> availableQuestionIds,
+    Iterable<String> practiceQuestionIds = const <String>[],
+    int questionCount = 10,
+  }) {
+    _activeUserId ??= FirebaseAuth.instance.currentUser?.uid;
+
+    final previousFinalTestIds =
+        _lastFinalTestSessionIds[lessonId] ?? <String>{};
+
+    final selectedQuestionIds = FinalTestQuestionSelector.select(
+      availableQuestionIds: availableQuestionIds,
+      practiceQuestionIds: practiceQuestionIds,
+      previousFinalTestIds: previousFinalTestIds,
+      questionCount: questionCount,
+    );
+
+    if (selectedQuestionIds.isEmpty) {
+      return <String>[];
+    }
+
+    _lastFinalTestSessionIds[lessonId] = selectedQuestionIds.toSet();
     _queueProgressSave();
 
     return selectedQuestionIds;
@@ -743,6 +817,7 @@ class AppProgress {
       'dailyQuestionGoal': dailyQuestionGoal,
       'dailyActivityDate': dailyActivityDate,
       'lastQuestionSessionIds': <String, List<String>>{},
+      'lastFinalTestSessionIds': <String, List<String>>{},
       'updatedAt': FieldValue.serverTimestamp(),
     });
   }
@@ -784,6 +859,9 @@ class AppProgress {
     for (final lessonId in _lessonIds) {
       await preferences.remove(
         _scopedKey('${_lastQuestionSessionKey}_$lessonId', userId),
+      );
+      await preferences.remove(
+        _scopedKey('${_lastFinalTestSessionKey}_$lessonId', userId),
       );
     }
 
