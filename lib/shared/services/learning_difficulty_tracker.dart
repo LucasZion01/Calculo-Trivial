@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:calcquest/shared/data/mock_algebra_exercise_data.dart';
 import 'package:calcquest/shared/data/mock_continuity_exercise_data.dart';
 import 'package:calcquest/shared/data/mock_derivatives_exercise_data.dart';
 import 'package:calcquest/shared/data/mock_equations_exercise_data.dart';
