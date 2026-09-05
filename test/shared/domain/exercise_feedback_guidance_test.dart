@@ -27,6 +27,86 @@ void main() {
     expect(guidance.nextStep, contains('subtract the exponent'));
   });
 
+  test('limite com racionalização orienta conjugado sem revelar valor', () {
+    final guidance = resolveExerciseFeedbackGuidance(
+      skill: 'Racionalização com conjugado',
+      isEnglish: false,
+    );
+
+    expect(guidance.isSpecific, isTrue);
+    expect(guidance.firstHint, contains('conjugado'));
+    expect(guidance.nextStep, contains('diferença de quadrados'));
+    expect(guidance.firstHint, isNot(contains('resultado')));
+  });
+
+  test('limite lateral preserva direção da aproximação', () {
+    final guidance = resolveExerciseFeedbackGuidance(
+      skill: 'Limite lateral pela direita',
+      isEnglish: false,
+    );
+
+    expect(guidance.isSpecific, isTrue);
+    expect(guidance.firstHint, contains('lado indicado'));
+    expect(guidance.nextStep, contains('limite lateral'));
+  });
+
+  test('continuidade em função racional começa pelo domínio', () {
+    final guidance = resolveExerciseFeedbackGuidance(
+      skill: 'Domínio de função racional',
+      isEnglish: false,
+    );
+
+    expect(guidance.isSpecific, isTrue);
+    expect(guidance.firstHint, contains('denominador'));
+    expect(guidance.nextStep, contains('fora do domínio'));
+  });
+
+  test('continuidade em um ponto usa as três condições', () {
+    final guidance = resolveExerciseFeedbackGuidance(
+      skill: 'Continuidade em um ponto',
+      isEnglish: false,
+    );
+
+    expect(guidance.isSpecific, isTrue);
+    expect(guidance.firstHint, contains('f(a)'));
+    expect(guidance.firstHint, contains('limite'));
+    expect(guidance.nextStep, contains('três condições'));
+  });
+
+  test('regra da potência orienta procedimento sem resolver exercício', () {
+    final guidance = resolveExerciseFeedbackGuidance(
+      skill: 'Regra da potência',
+      isEnglish: false,
+    );
+
+    expect(guidance.isSpecific, isTrue);
+    expect(guidance.firstHint, contains('expoente'));
+    expect(guidance.nextStep, contains('uma unidade'));
+    expect(guidance.firstHint, isNot(contains('3x²')));
+  });
+
+  test('regra do produto lembra as duas parcelas', () {
+    final guidance = resolveExerciseFeedbackGuidance(
+      skill: 'Regra do produto',
+      isEnglish: false,
+    );
+
+    expect(guidance.isSpecific, isTrue);
+    expect(guidance.firstHint, contains('produto u·v'));
+    expect(guidance.nextStep, contains('u′v + uv′'));
+  });
+
+  test('regra da cadeia identifica função externa e interna', () {
+    final guidance = resolveExerciseFeedbackGuidance(
+      skill: 'Regra da cadeia',
+      isEnglish: false,
+    );
+
+    expect(guidance.isSpecific, isTrue);
+    expect(guidance.firstHint, contains('função externa'));
+    expect(guidance.nextStep, contains('função interna'));
+  });
+
   test('habilidade desconhecida mantém fallback seguro', () {
     final guidance = resolveExerciseFeedbackGuidance(
       skill: 'Habilidade futura',
