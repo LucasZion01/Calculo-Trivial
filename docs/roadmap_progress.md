@@ -1,6 +1,6 @@
 # Roadmap do Cálculo Trivial — Progresso
 
-Última atualização: 04/09/2026
+Última atualização: 05/09/2026
 
 Este documento registra o estado atual das principais etapas do projeto Cálculo Trivial.
 
@@ -39,7 +39,7 @@ Este documento registra o estado atual das principais etapas do projeto Cálculo
 5. 🟡 **Aulas em nível universitário**
    - Estrutura de aulas consolidada e aprofundada nos módulos atuais.
    - Fluxo pedagógico adotado: Aula → exemplos resolvidos → prática → revisão dos erros → teste final.
-   - Próxima melhoria relevante: apoio visual por conceito quando necessário.
+   - Apoio visual conceitual já iniciado em Funções, Limites, Continuidade e Derivadas.
 
 6. 🟡 **Expansão do currículo**
    - Conteúdo atual cobre base algébrica e tópicos iniciais de cálculo.
@@ -56,14 +56,15 @@ Este documento registra o estado atual das principais etapas do projeto Cálculo
    - Recompensa e conclusão somente após o teste final.
    - Pendente: histórico separado de prática e teste final para evitar repetição entre tentativas futuras.
 
-8. ⏳ **Visualização matemática** — PRÓXIMA ETAPA RECOMENDADA
-   - Adicionar suporte visual reutilizável dentro das aulas.
-   - Prioridades:
-     1. Funções — gráficos, domínio, imagem e transformações.
-     2. Limites — aproximação, limites laterais e assíntotas.
-     3. Continuidade — furos, saltos e tipos de descontinuidade.
-     4. Derivadas — reta tangente, inclinação e taxa de variação.
-   - Regra: usar figuras e gráficos quando contribuírem diretamente para a compreensão, não apenas como decoração.
+8. 🟡 **Visualização matemática**
+   - Infraestrutura reutilizável de visualização matemática implementada.
+   - Funções: gráfico interativo de `f(x) = 2x + 1`, com slider, ponto destacado e relação entre entrada e saída.
+   - Limites: aproximação interativa de `x → 3`, conectando a tendência de `f(x)` ao valor-limite.
+   - Continuidade: comparação interativa entre ponto contínuo e descontinuidade removível.
+   - Derivadas: parábola com ponto móvel, reta tangente e inclinação `f'(x)` atualizada dinamicamente.
+   - Visualizações integradas às aulas correspondentes, com PT/EN e semântica de acessibilidade.
+   - Próximas expansões visuais: domínio/imagem e transformações; limites laterais e assíntotas; saltos e outros tipos de descontinuidade; secante → tangente e interpretação geométrica ampliada.
+   - Validação visual final em dispositivo real permanece pendente.
 
 9. ⏳ **Tutor Trivial com IA**
    - Backend/protótipo com `@google/genai` já existe.
@@ -87,6 +88,8 @@ Este documento registra o estado atual das principais etapas do projeto Cálculo
 14. 🟡 **Segurança e infraestrutura**
    - Firebase Auth e Firestore em uso.
    - Regras e segurança foram endurecidas em partes.
+   - Fluxo de atualização no Android possui aviso, atualização imediata quando permitida e fallback para a Play Store.
+   - O status de atualização detectado na splash é reutilizado no clique, evitando uma segunda consulta desnecessária à Play Store.
    - Ainda revisar App Check em produção, regras finais do Firestore, anti-cheat e cenários de conta/compra.
 
 15. 🟡 **Teste fechado**
@@ -107,12 +110,12 @@ Este documento registra o estado atual das principais etapas do projeto Cálculo
 
 ## Próxima sequência sugerida
 
-1. Visualização matemática.
-2. Persistência separada de histórico de prática e teste final.
+1. Persistência separada de histórico de prática e teste final.
+2. Expandir a cobertura das visualizações matemáticas já implantadas.
 3. Revisão de continuidade de conta Google ↔ senha.
 4. Hardening final do Premium.
 5. Validação visual no aparelho.
-6. Tutor Trivial com IA.
+6. Tutor Trivial com IA contextual.
 
 ## Estado atual do fluxo pedagógico
 
