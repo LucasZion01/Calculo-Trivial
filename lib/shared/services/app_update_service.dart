@@ -22,8 +22,11 @@ class AppUpdateService {
 
   static const _packageName = 'com.lucaszion01.calculotrivial';
 
+  static bool get _isAndroidApp =>
+      !kIsWeb && defaultTargetPlatform == TargetPlatform.android;
+
   static Future<AppUpdateStatus> checkForUpdate() async {
-    if (defaultTargetPlatform != TargetPlatform.android) {
+    if (!_isAndroidApp) {
       return AppUpdateStatus.unavailable;
     }
 
@@ -54,7 +57,7 @@ class AppUpdateService {
   }
 
   static Future<void> updateNow(AppUpdateStatus status) async {
-    if (defaultTargetPlatform != TargetPlatform.android || !status.available) {
+    if (!_isAndroidApp || !status.available) {
       return;
     }
 
@@ -73,7 +76,7 @@ class AppUpdateService {
   }
 
   static Future<void> openPlayStore() async {
-    if (defaultTargetPlatform != TargetPlatform.android) {
+    if (!_isAndroidApp) {
       return;
     }
 
