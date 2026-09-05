@@ -55,6 +55,7 @@ void main() {
 
     final title = find.text('Questão equivalente');
     await tester.ensureVisible(title);
+    await tester.pumpAndSettle();
     expect(title, findsOneWidget);
     expect(
       find.text('Calcule: lim x→5 (x² − 25)/(x − 5)'),
@@ -63,6 +64,7 @@ void main() {
 
     final correctAnswer = find.text('10');
     await tester.ensureVisible(correctAnswer);
+    await tester.pumpAndSettle();
     await tester.tap(correctAnswer);
     await tester.pump();
 
