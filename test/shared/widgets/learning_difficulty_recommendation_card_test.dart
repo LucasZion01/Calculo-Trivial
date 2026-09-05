@@ -38,9 +38,41 @@ void main() {
       find.textContaining('não uma nota nem uma prova de aprendizagem'),
       findsOneWidget,
     );
+    expect(find.text('Investigar dificuldade'), findsNothing);
 
     await tester.tap(find.text('Revisar conteúdo recomendado'));
     expect(reviewPressed, isTrue);
+  });
+
+  testWidgets('shows optional investigation action when provided', (tester) async {
+    var investigatePressed = false;
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: SingleChildScrollView(
+            child: LearningDifficultyRecommendationCard(
+              evidence: const LearningDifficultyEvidence(
+                moduleId: 'limites',
+                contentLessonId: 'limites-04-fatoracao',
+                skill: 'Diferença de quadrados',
+                attempts: 4,
+                errors: 3,
+                finalTestAttempts: 2,
+                finalTestErrors: 1,
+              ),
+              isEnglish: false,
+              onReview: () {},
+              onInvestigate: () => investigatePressed = true,
+            ),
+          ),
+        ),
+      ),
+    );
+
+    expect(find.text('Investigar dificuldade'), findsOneWidget);
+    await tester.tap(find.text('Investigar dificuldade'));
+    expect(investigatePressed, isTrue);
   });
 
   testWidgets('shows the equivalent conservative copy in English', (tester) async {

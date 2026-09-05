@@ -12,6 +12,7 @@ import 'package:calcquest/shared/widgets/learning_difficulty_recommendation_card
 import 'package:calcquest/shared/widgets/primary_button.dart';
 
 import '../../dashboard/presentation/dashboard_screen.dart';
+import '../../diagnostic/presentation/factoring_diagnostic_screen.dart';
 import '../../exercise_review/presentation/exercise_review_screen.dart';
 import '../../learning_path/presentation/learning_path_screen.dart';
 import '../../profile/presentation/profile_screen.dart';
@@ -362,6 +363,15 @@ class ResultScreen extends StatelessWidget {
                         moduleId: completedLessonId,
                         isEnglish: isEnglish,
                         onReview: () => _reviewLearningRecommendation(context),
+                        onInvestigate: (evidence) {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => FactoringDiagnosticScreen(
+                                sourceSkill: evidence.skill,
+                              ),
+                            ),
+                          );
+                        },
                       ),
                     ],
                     if (isApproved) ...[
