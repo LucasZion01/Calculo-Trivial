@@ -4,6 +4,7 @@ import 'package:calcquest/shared/localization/lesson_ui_text.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
 import 'package:calcquest/shared/theme/app_spacing.dart';
 import 'package:calcquest/shared/theme/app_typography.dart';
+import 'package:calcquest/shared/widgets/advanced_calculus_visualizations.dart';
 import 'package:calcquest/shared/widgets/app_bottom_navigation_bar.dart';
 import 'package:calcquest/shared/widgets/function_visualization_card.dart';
 import 'package:calcquest/shared/widgets/learning_content.dart';
@@ -212,6 +213,8 @@ class FunctionsLessonScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: AppSpacing.md),
                   FunctionVisualizationCard(isEnglish: isEnglish),
+                  const SizedBox(height: AppSpacing.md),
+                  FunctionDomainTransformVisualization(isEnglish: isEnglish),
                   const SizedBox(height: AppSpacing.md),
                   LessonCheckCard(
                     question: isEnglish
