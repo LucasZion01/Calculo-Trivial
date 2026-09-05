@@ -10,12 +10,14 @@ class LearningDifficultyRecommendationSection extends StatefulWidget {
   final String moduleId;
   final bool isEnglish;
   final VoidCallback onReview;
+  final ValueChanged<LearningDifficultyEvidence>? onInvestigate;
 
   const LearningDifficultyRecommendationSection({
     super.key,
     required this.moduleId,
     required this.isEnglish,
     required this.onReview,
+    this.onInvestigate,
   });
 
   @override
@@ -47,10 +49,18 @@ class _LearningDifficultyRecommendationSectionState
           return const SizedBox.shrink();
         }
 
+        final evidence = recommendations.first;
+        final supportsFactoringPilot =
+            evidence.moduleId == 'limites' &&
+            evidence.contentLessonId == 'limites-04-fatoracao';
+
         return LearningDifficultyRecommendationCard(
-          evidence: recommendations.first,
+          evidence: evidence,
           isEnglish: widget.isEnglish,
           onReview: widget.onReview,
+          onInvestigate: supportsFactoringPilot && widget.onInvestigate != null
+              ? () => widget.onInvestigate!(evidence)
+              : null,
         );
       },
     );
@@ -61,12 +71,14 @@ class LearningDifficultyRecommendationCard extends StatelessWidget {
   final LearningDifficultyEvidence evidence;
   final bool isEnglish;
   final VoidCallback onReview;
+  final VoidCallback? onInvestigate;
 
   const LearningDifficultyRecommendationCard({
     super.key,
     required this.evidence,
     required this.isEnglish,
     required this.onReview,
+    this.onInvestigate,
   });
 
   @override
@@ -80,6 +92,9 @@ class LearningDifficultyRecommendationCard extends StatelessWidget {
     final actionText = isEnglish
         ? 'Review recommended content'
         : 'Revisar conteúdo recomendado';
+    final investigateText = isEnglish
+        ? 'Check prerequisites'
+        : 'Investigar dificuldade';
 
     return Semantics(
       container: true,
@@ -124,13 +139,22 @@ class LearningDifficultyRecommendationCard extends StatelessWidget {
             const SizedBox(height: AppSpacing.sm),
             Text(evidenceText, style: AppTypography.bodyMedium),
             const SizedBox(height: AppSpacing.sm),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: TextButton.icon(
-                onPressed: onReview,
-                icon: const Icon(Icons.menu_book_outlined),
-                label: Text(actionText),
-              ),
+            Wrap(
+              spacing: AppSpacing.xs,
+              runSpacing: AppSpacing.xs,
+              children: [
+                TextButton.icon(
+                  onPressed: onReview,
+                  icon: const Icon(Icons.menu_book_outlined),
+                  label: Text(actionText),
+                ),
+                if (onInvestigate != null)
+                  TextButton.icon(
+                    onPressed: onInvestigate,
+                    icon: const Icon(Icons.fact_check_outlined),
+                    label: Text(investigateText),
+                  ),
+              ],
             ),
           ],
         ),
