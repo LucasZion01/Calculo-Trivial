@@ -9,6 +9,7 @@ void main() {
   ) async {
     await tester.pumpWidget(
       const MaterialApp(
+        locale: Locale('pt'),
         home: FactoringDiagnosticScreen(sourceSkill: 'Diferença de quadrados'),
       ),
     );
@@ -31,6 +32,7 @@ void main() {
   ) async {
     await tester.pumpWidget(
       const MaterialApp(
+        locale: Locale('pt'),
         home: FactoringDiagnosticScreen(sourceSkill: 'Diferença de quadrados'),
       ),
     );
