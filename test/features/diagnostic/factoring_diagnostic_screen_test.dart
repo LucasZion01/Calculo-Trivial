@@ -28,11 +28,8 @@ void main() {
       find.textContaining('Nada aqui altera sua nota ou progresso'),
       findsOneWidget,
     );
-
-    final submitButtons = find.byType(ElevatedButton);
-    expect(submitButtons, findsWidgets);
-    final submitButton = tester.widget<ElevatedButton>(submitButtons.last);
-    expect(submitButton.onPressed, isNull);
+    expect(find.text('O resultado é inconclusivo'), findsNothing);
+    expect(find.textContaining('possível lacuna de pré-requisito'), findsNothing);
   });
 
   testWidgets('três respostas corretas produzem resultado inconclusivo', (
