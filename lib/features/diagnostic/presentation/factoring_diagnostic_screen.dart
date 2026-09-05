@@ -129,50 +129,52 @@ class _FactoringDiagnosticScreenState extends State<FactoringDiagnosticScreen> {
   }
 
   Widget _buildQuestion(int index, _DiagnosticQuestion question) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(AppSpacing.cardPaddingLarge),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
+    return Material(
+      color: AppColors.surface,
+      shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
-        border: Border.all(color: AppColors.border),
+        side: const BorderSide(color: AppColors.border),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            '${_isEnglish ? 'Question' : 'Questão'} ${index + 1}',
-            style: AppTypography.labelMedium.copyWith(
-              color: AppColors.primary,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          const SizedBox(height: AppSpacing.xs),
-          Text(question.prompt, style: AppTypography.titleMedium),
-          const SizedBox(height: AppSpacing.sm),
-          AbsorbPointer(
-            absorbing: _result != null,
-            child: RadioGroup<int>(
-              groupValue: _answers[index],
-              onChanged: (value) {
-                if (_result != null) return;
-                setState(() => _answers[index] = value);
-              },
-              child: Column(
-                children: [
-                  for (var choiceIndex = 0;
-                      choiceIndex < question.choices.length;
-                      choiceIndex++)
-                    RadioListTile<int>(
-                      value: choiceIndex,
-                      contentPadding: EdgeInsets.zero,
-                      title: Text(question.choices[choiceIndex]),
-                    ),
-                ],
+      clipBehavior: Clip.antiAlias,
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.cardPaddingLarge),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '${_isEnglish ? 'Question' : 'Questão'} ${index + 1}',
+              style: AppTypography.labelMedium.copyWith(
+                color: AppColors.primary,
+                fontWeight: FontWeight.w700,
               ),
             ),
-          ),
-        ],
+            const SizedBox(height: AppSpacing.xs),
+            Text(question.prompt, style: AppTypography.titleMedium),
+            const SizedBox(height: AppSpacing.sm),
+            AbsorbPointer(
+              absorbing: _result != null,
+              child: RadioGroup<int>(
+                groupValue: _answers[index],
+                onChanged: (value) {
+                  if (_result != null) return;
+                  setState(() => _answers[index] = value);
+                },
+                child: Column(
+                  children: [
+                    for (var choiceIndex = 0;
+                        choiceIndex < question.choices.length;
+                        choiceIndex++)
+                      RadioListTile<int>(
+                        value: choiceIndex,
+                        contentPadding: EdgeInsets.zero,
+                        title: Text(question.choices[choiceIndex]),
+                      ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
