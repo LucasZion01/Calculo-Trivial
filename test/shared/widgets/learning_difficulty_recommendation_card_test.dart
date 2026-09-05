@@ -34,9 +34,12 @@ void main() {
 
     expect(find.text('Pode valer a pena revisar'), findsOneWidget);
     expect(find.text('Domínio de funções'), findsOneWidget);
-    expect(find.textContaining('não uma nota nem uma prova de aprendizagem'), findsOneWidget);
+    expect(
+      find.textContaining('não uma nota nem uma prova de aprendizagem'),
+      findsOneWidget,
+    );
 
-    await tester.tap(find.text('Revisar aula de Funções'));
+    await tester.tap(find.text('Revisar conteúdo recomendado'));
     expect(reviewPressed, isTrue);
   });
 
@@ -57,5 +60,6 @@ void main() {
 
     expect(find.text('It may be worth reviewing'), findsOneWidget);
     expect(find.textContaining('not a grade or proof of learning'), findsOneWidget);
+    expect(find.text('Review recommended content'), findsOneWidget);
   });
 }
