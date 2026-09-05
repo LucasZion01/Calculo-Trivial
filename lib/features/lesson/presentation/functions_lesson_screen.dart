@@ -16,8 +16,15 @@ import '../../learning_path/presentation/learning_path_screen.dart';
 import '../../profile/presentation/profile_screen.dart';
 import '../../statistics/presentation/statistics_screen.dart';
 
-class FunctionsLessonScreen extends StatelessWidget {
+class FunctionsLessonScreen extends StatefulWidget {
   const FunctionsLessonScreen({super.key});
+
+  @override
+  State<FunctionsLessonScreen> createState() => _FunctionsLessonScreenState();
+}
+
+class _FunctionsLessonScreenState extends State<FunctionsLessonScreen> {
+  bool _lessonCheckAnswered = false;
 
   void _onMenuTap(BuildContext context, int index) {
     if (index == 0) {
@@ -50,9 +57,16 @@ class FunctionsLessonScreen extends StatelessWidget {
   }
 
   void _goToExercises(BuildContext context) {
+    if (!_lessonCheckAnswered) return;
+
     Navigator.of(context).push(
       MaterialPageRoute(builder: (_) => const FunctionsExercisesScreen()),
     );
+  }
+
+  void _markLessonCheckAnswered() {
+    if (_lessonCheckAnswered) return;
+    setState(() => _lessonCheckAnswered = true);
   }
 
   @override
@@ -235,6 +249,7 @@ class FunctionsLessonScreen extends StatelessWidget {
                     explanation: isEnglish
                         ? 'Different inputs can produce the same output, but one input cannot produce two different outputs in the same function.'
                         : 'Entradas diferentes podem produzir a mesma saída, mas uma entrada não pode produzir duas saídas diferentes na mesma função.',
+                    onAnswered: _markLessonCheckAnswered,
                   ),
                   const SizedBox(height: AppSpacing.md),
                   LessonTakeawaysCard(
@@ -273,7 +288,9 @@ class FunctionsLessonScreen extends StatelessWidget {
               child: PrimaryButton(
                 text: isEnglish ? 'Practice functions' : 'Praticar funções',
                 icon: Icons.play_arrow_rounded,
-                onPressed: () => _goToExercises(context),
+                onPressed: _lessonCheckAnswered
+                    ? () => _goToExercises(context)
+                    : null,
               ),
             ),
           ],
