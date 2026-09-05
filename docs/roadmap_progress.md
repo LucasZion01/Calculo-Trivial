@@ -124,3 +124,75 @@ O padrão vigente para os módulos principais é:
 **Aula → exemplos resolvidos → prática guiada → revisão dos erros → teste final → resultado/recompensa**
 
 Esse padrão deve ser mantido nos novos módulos e nas futuras expansões do currículo.
+
+## Backlog complementar — avaliação futura de uso com PostHog
+
+Esta frente está registrada apenas para avaliação futura. **Não autoriza instalação de dependências, conexão de contas, alteração do aplicativo nem coleta de dados neste momento.**
+
+O comando explícito para iniciar essa frente será:
+
+**“Vamos avaliar a integração do PostHog no Cálculo Trivial”.**
+
+### Antes de propor qualquer integração
+
+Quando essa etapa for autorizada:
+
+1. Inspecionar se o projeto já utiliza Firebase Analytics ou outra solução de análise de uso.
+2. Identificar quais eventos já são coletados e evitar duplicidade.
+3. Avaliar se o PostHog acrescenta benefícios suficientes para justificar manutenção, custos e mudanças de privacidade.
+4. Diferenciar a conexão de um plugin para consultar dados da integração do SDK no Flutter: conectar um plugin não instrumenta o aplicativo automaticamente.
+5. Apresentar um plano técnico e aguardar aprovação antes de implementar.
+
+### Escopo inicial proposto
+
+Coletar somente eventos necessários para responder:
+
+- Quantos estudantes iniciam e concluem uma sessão?
+- Quantos acessam a revisão dos erros?
+- Quantos retornam ao aplicativo em outros dias?
+- Quantos visualizam a oferta Premium?
+
+Eventos candidatos:
+
+- `learning_session_started`
+- `learning_session_completed`
+- `error_review_opened`
+- `premium_offer_viewed`
+
+Antes de implementar, definir precisamente o gatilho de cada evento, propriedades mínimas, regras de deduplicação e identificadores de sessão para relacionar início e conclusão.
+
+Uma sessão sem evento de conclusão **não deve ser classificada automaticamente como abandono**, pois pode representar interrupção, uso offline ou falha de envio.
+
+### Integração futura com diagnóstico de dificuldades
+
+Somente após implementação e aprovação do piloto pedagógico, considerar eventos para:
+
+- investigação de dificuldade iniciada e concluída;
+- revisão recomendada aberta e concluída;
+- tentativa de questão equivalente após a revisão;
+- nova verificação da habilidade em outro momento.
+
+Esses dados devem apoiar avaliação de adesão e resultados, sem tratar cliques, tempo de tela ou um único acerto como prova de aprendizagem.
+
+Com poucos testadores, apresentar contagens, limitações e feedback qualitativo. Não afirmar causalidade sem desenho de avaliação adequado.
+
+### Privacidade e segurança
+
+- Não enviar nomes, e-mails, senhas, tokens, textos livres ou conteúdo de conversas.
+- Usar apenas identificadores pseudônimos quando necessários, sem chamá-los de dados anônimos.
+- Manter gravação de sessões e captura automática desativadas no escopo inicial.
+- Revisar consentimento quando aplicável, política de privacidade e declarações de coleta na Google Play antes de ativar.
+- Definir retenção, exclusão de dados, controle de acesso e comportamento após logout ou exclusão da conta.
+- Nunca colocar credenciais administrativas do PostHog no aplicativo.
+- Separar eventos de desenvolvimento, testes e produção.
+
+### Confiabilidade e limites de responsabilidade
+
+- A coleta de telemetria não pode bloquear exercícios, login ou sincronização de progresso.
+- Prever funcionamento offline, tratamento de falhas e testes contra eventos duplicados.
+- O PostHog não será a fonte oficial de progresso, aprovação, recompensas ou acesso Premium.
+- Essas responsabilidades continuam nos componentes existentes do aplicativo.
+
+### Objetivo
+
+Usar evidências para orientar melhorias pedagógicas e de produto, sem transformar aumento de tempo de uso em objetivo principal.
