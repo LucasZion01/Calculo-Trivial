@@ -10,8 +10,8 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   setUp(() async {
-    await LearningDifficultyTracker.clearCurrentScope();
     SharedPreferences.setMockInitialValues(<String, Object>{});
+    await LearningDifficultyTracker.clearCurrentScope();
   });
 
   test('persists attempts and restores them for diagnosis', () async {
