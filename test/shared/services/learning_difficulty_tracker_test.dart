@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:calcquest/shared/data/mock_continuity_exercise_data.dart';
 import 'package:calcquest/shared/data/mock_functions_exercise_data.dart';
 import 'package:calcquest/shared/data/mock_limits_exercise_data.dart';
 import 'package:calcquest/shared/domain/learning_difficulty_diagnosis.dart';
@@ -109,6 +110,59 @@ void main() {
     expect(
       diagnosis.reviewRecommendations.single.skill,
       'Diferença de quadrados',
+    );
+    expect(diagnosis.reviewRecommendations.single.finalTestErrors, 1);
+  });
+
+  test('continuity attempts preserve lesson and skill metadata', () async {
+    final exercise = mockContinuityExercises.firstWhere(
+      (item) => item.id == 'continuidade-furo-nao-corrigido',
+    );
+
+    await LearningDifficultyTracker.recordPracticeAttempt(
+      exercise: exercise,
+      isCorrect: false,
+    );
+    await LearningDifficultyTracker.recordFinalTestAttempt(
+      moduleId: AppProgress.continuityId,
+      exercise: exercise,
+      isCorrect: false,
+    );
+    await LearningDifficultyTracker.recordFinalTestAttempt(
+      moduleId: AppProgress.continuityId,
+      exercise: exercise,
+      isCorrect: true,
+    );
+
+    final restored = await LearningDifficultyTracker.loadSignals();
+    final diagnosis = await LearningDifficultyTracker.diagnose(
+      moduleId: AppProgress.continuityId,
+    );
+
+    expect(restored, hasLength(3));
+    expect(
+      restored.every((signal) => signal.moduleId == AppProgress.continuityId),
+      isTrue,
+    );
+    expect(
+      restored.every(
+        (signal) => signal.contentLessonId == 'continuidade-03-descontinuidades',
+      ),
+      isTrue,
+    );
+    expect(
+      restored.every((signal) => signal.skill == 'Classificação de furo removível'),
+      isTrue,
+    );
+    expect(diagnosis.analyzedAttempts, 3);
+    expect(diagnosis.reviewRecommendations, hasLength(1));
+    expect(
+      diagnosis.reviewRecommendations.single.contentLessonId,
+      'continuidade-03-descontinuidades',
+    );
+    expect(
+      diagnosis.reviewRecommendations.single.skill,
+      'Classificação de furo removível',
     );
     expect(diagnosis.reviewRecommendations.single.finalTestErrors, 1);
   });
