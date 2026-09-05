@@ -3,17 +3,21 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:calcquest/shared/widgets/function_visualization_card.dart';
 
+Widget _testApp({required bool isEnglish}) {
+  return MaterialApp(
+    home: Scaffold(
+      body: SingleChildScrollView(
+        child: FunctionVisualizationCard(isEnglish: isEnglish),
+      ),
+    ),
+  );
+}
+
 void main() {
   testWidgets('shows the function, current values and interaction control', (
     tester,
   ) async {
-    await tester.pumpWidget(
-      const MaterialApp(
-        home: Scaffold(
-          body: FunctionVisualizationCard(isEnglish: false),
-        ),
-      ),
-    );
+    await tester.pumpWidget(_testApp(isEnglish: false));
 
     expect(find.text('f(x) = 2x + 1'), findsOneWidget);
     expect(find.text('x = 1'), findsOneWidget);
@@ -23,13 +27,7 @@ void main() {
   });
 
   testWidgets('uses English explanatory copy when requested', (tester) async {
-    await tester.pumpWidget(
-      const MaterialApp(
-        home: Scaffold(
-          body: FunctionVisualizationCard(isEnglish: true),
-        ),
-      ),
-    );
+    await tester.pumpWidget(_testApp(isEnglish: true));
 
     expect(
       find.text('Move x and watch the point change on the graph.'),
