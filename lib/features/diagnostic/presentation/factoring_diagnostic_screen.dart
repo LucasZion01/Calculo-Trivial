@@ -103,8 +103,8 @@ class _FactoringDiagnosticScreenState extends State<FactoringDiagnosticScreen> {
   String _resultTitle(FactoringDiagnosticOutcome outcome) {
     return switch (outcome) {
       FactoringDiagnosticOutcome.prerequisiteSignal => _isEnglish
-          ? 'There are signs that a prerequisite deserves review'
-          : 'Há indícios de que um pré-requisito merece revisão',
+          ? 'There are signs that prerequisites deserve review'
+          : 'Há indícios de que pré-requisitos merecem revisão',
       FactoringDiagnosticOutcome.mixedEvidence => _isEnglish
           ? 'The evidence is mixed'
           : 'A evidência ficou mista',
@@ -117,14 +117,28 @@ class _FactoringDiagnosticScreenState extends State<FactoringDiagnosticScreen> {
   String _resultBody(FactoringDiagnosticResult result) {
     return switch (result.outcome) {
       FactoringDiagnosticOutcome.prerequisiteSignal => _isEnglish
-          ? 'Factoring, canceling common factors, or interpreting 0/0 may be contributing to the difficulty. Review these prerequisites before trying an equivalent limit again.'
-          : 'Fatoração, cancelamento de fatores comuns ou interpretação de 0/0 podem estar contribuindo para a dificuldade. Revise esses pré-requisitos antes de tentar um limite equivalente novamente.',
+          ? 'The missed prerequisite questions suggest specific points worth reviewing before trying an equivalent limit again.'
+          : 'As questões de pré-requisito não respondidas corretamente sugerem pontos específicos que vale revisar antes de tentar um limite equivalente novamente.',
       FactoringDiagnosticOutcome.mixedEvidence => _isEnglish
-          ? 'Some prerequisites appear stable and another may still need review. This short check is not enough to identify a single cause with confidence.'
-          : 'Alguns pré-requisitos parecem estáveis e outro ainda pode precisar de revisão. Este diagnóstico curto não é suficiente para apontar uma causa única com segurança.',
+          ? 'Most prerequisites appeared stable, but one point may still deserve review. This short check does not prove a single cause.'
+          : 'A maior parte dos pré-requisitos parece estável, mas um ponto ainda pode merecer revisão. Este diagnóstico curto não prova uma causa única.',
       FactoringDiagnosticOutcome.inconclusive => _isEnglish
           ? 'These prerequisite questions did not confirm a clear gap. The original difficulty may involve strategy selection, attention, or another factor not measured here.'
           : 'Estas questões de pré-requisito não confirmaram uma lacuna clara. A dificuldade original pode envolver escolha de estratégia, atenção ou outro fator que este piloto não mede.',
+    };
+  }
+
+  String _prerequisiteLabel(FactoringPrerequisite prerequisite) {
+    return switch (prerequisite) {
+      FactoringPrerequisite.differenceOfSquares => _isEnglish
+          ? 'Recognizing and factoring a difference of squares'
+          : 'Reconhecer e fatorar uma diferença de quadrados',
+      FactoringPrerequisite.commonFactorCancellation => _isEnglish
+          ? 'Canceling a common factor after factoring'
+          : 'Cancelar um fator comum depois de fatorar',
+      FactoringPrerequisite.indeterminateFormInterpretation => _isEnglish
+          ? 'Interpreting 0/0 as an indeterminate form'
+          : 'Interpretar 0/0 como forma indeterminada',
     };
   }
 
@@ -180,6 +194,8 @@ class _FactoringDiagnosticScreenState extends State<FactoringDiagnosticScreen> {
   }
 
   Widget _buildResult(FactoringDiagnosticResult result) {
+    final reviewItems = result.prerequisitesToReview;
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(AppSpacing.cardPaddingLarge),
@@ -205,11 +221,53 @@ class _FactoringDiagnosticScreenState extends State<FactoringDiagnosticScreen> {
           ),
           const SizedBox(height: AppSpacing.sm),
           Text(_resultBody(result), style: AppTypography.bodyMedium),
+          if (reviewItems.isNotEmpty) ...[
+            const SizedBox(height: AppSpacing.md),
+            Text(
+              _isEnglish ? 'Points worth reviewing' : 'Pontos que merecem revisão',
+              style: AppTypography.titleSmall.copyWith(
+                color: AppColors.primary,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            const SizedBox(height: AppSpacing.xs),
+            for (final prerequisite in reviewItems)
+              Padding(
+                padding: const EdgeInsets.only(bottom: AppSpacing.xxs),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.only(top: 2),
+                      child: Icon(
+                        Icons.arrow_right_rounded,
+                        size: AppSpacing.iconSmall,
+                        color: AppColors.primary,
+                      ),
+                    ),
+                    const SizedBox(width: AppSpacing.xs),
+                    Expanded(
+                      child: Text(
+                        _prerequisiteLabel(prerequisite),
+                        style: AppTypography.bodyMedium,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+          ],
           const SizedBox(height: AppSpacing.sm),
           Text(
             _isEnglish
-                ? 'This is a study hypothesis, not a grade or a definitive diagnosis.'
-                : 'Isto é uma hipótese de estudo, não uma nota nem um diagnóstico definitivo.',
+                ? 'These are study hypotheses from three questions, not proof of the cause of the difficulty.'
+                : 'Estes pontos são hipóteses de estudo obtidas a partir de três questões, não uma prova da causa da dificuldade.',
+            style: AppTypography.bodySmall,
+          ),
+          const SizedBox(height: AppSpacing.xxs),
+          Text(
+            _isEnglish
+                ? 'This is not a grade or a definitive diagnosis.'
+                : 'Isto não é uma nota nem um diagnóstico definitivo.',
             style: AppTypography.bodySmall,
           ),
         ],
