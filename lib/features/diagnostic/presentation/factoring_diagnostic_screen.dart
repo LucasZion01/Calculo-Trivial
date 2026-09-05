@@ -150,18 +150,28 @@ class _FactoringDiagnosticScreenState extends State<FactoringDiagnosticScreen> {
           const SizedBox(height: AppSpacing.xs),
           Text(question.prompt, style: AppTypography.titleMedium),
           const SizedBox(height: AppSpacing.sm),
-          for (var choiceIndex = 0;
-              choiceIndex < question.choices.length;
-              choiceIndex++)
-            RadioListTile<int>(
-              value: choiceIndex,
+          AbsorbPointer(
+            absorbing: _result != null,
+            child: RadioGroup<int>(
               groupValue: _answers[index],
-              contentPadding: EdgeInsets.zero,
-              title: Text(question.choices[choiceIndex]),
-              onChanged: _result != null
-                  ? null
-                  : (value) => setState(() => _answers[index] = value),
+              onChanged: (value) {
+                if (_result != null) return;
+                setState(() => _answers[index] = value);
+              },
+              child: Column(
+                children: [
+                  for (var choiceIndex = 0;
+                      choiceIndex < question.choices.length;
+                      choiceIndex++)
+                    RadioListTile<int>(
+                      value: choiceIndex,
+                      contentPadding: EdgeInsets.zero,
+                      title: Text(question.choices[choiceIndex]),
+                    ),
+                ],
+              ),
             ),
+          ),
         ],
       ),
     );
