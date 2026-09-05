@@ -12,9 +12,7 @@ void main() {
   });
 
   test('persists attempts and restores them for diagnosis', () async {
-    final exercise = mockFunctionsExercises.firstWhere(
-      (item) => item.contentLessonId != null && item.skill != null,
-    );
+    final exercise = mockFunctionsExercises.first;
 
     await LearningDifficultyTracker.recordAttempt(
       moduleId: AppProgress.functionsId,
@@ -41,16 +39,16 @@ void main() {
     );
 
     expect(restored, hasLength(3));
+    expect(restored.first.contentLessonId, AppProgress.functionsId);
+    expect(restored.first.skill, 'Domínio de funções');
     expect(diagnosis.analyzedAttempts, 3);
     expect(diagnosis.reviewRecommendations, hasLength(1));
-    expect(diagnosis.reviewRecommendations.single.skill, exercise.skill);
+    expect(diagnosis.reviewRecommendations.single.skill, 'Domínio de funções');
     expect(diagnosis.reviewRecommendations.single.finalTestErrors, 1);
   });
 
   test('practice helper identifies the module from the question bank', () async {
-    final exercise = mockFunctionsExercises.firstWhere(
-      (item) => item.contentLessonId != null && item.skill != null,
-    );
+    final exercise = mockFunctionsExercises.first;
 
     await LearningDifficultyTracker.recordPracticeAttempt(
       exercise: exercise,
@@ -65,9 +63,7 @@ void main() {
   });
 
   test('clear removes only the current local diagnosis scope', () async {
-    final exercise = mockFunctionsExercises.firstWhere(
-      (item) => item.contentLessonId != null && item.skill != null,
-    );
+    final exercise = mockFunctionsExercises.first;
 
     await LearningDifficultyTracker.recordPracticeAttempt(
       exercise: exercise,
