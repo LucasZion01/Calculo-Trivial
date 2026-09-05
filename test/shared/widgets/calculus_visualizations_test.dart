@@ -35,7 +35,9 @@ void main() {
     expect(find.byType(SegmentedButton<bool>), findsOneWidget);
     expect(find.textContaining('função é contínua'), findsOneWidget);
 
-    await tester.tap(find.text('Com furo'));
+    final holeButton = find.text('Com furo');
+    await tester.ensureVisible(holeButton);
+    await tester.tap(holeButton);
     await tester.pumpAndSettle();
 
     expect(find.textContaining('continuidade falha'), findsOneWidget);
