@@ -78,8 +78,8 @@ class LearningDifficultyRecommendationCard extends StatelessWidget {
         ? '${evidence.errors} errors in ${evidence.attempts} recent attempts. This is a study suggestion, not a grade or proof of learning.'
         : '${evidence.errors} erros em ${evidence.attempts} tentativas recentes. Esta é uma sugestão de estudo, não uma nota nem uma prova de aprendizagem.';
     final actionText = isEnglish
-        ? 'Review Functions lesson'
-        : 'Revisar aula de Funções';
+        ? 'Review recommended content'
+        : 'Revisar conteúdo recomendado';
 
     return Semantics(
       container: true,
