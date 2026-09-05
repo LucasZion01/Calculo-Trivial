@@ -231,30 +231,30 @@ class _EquationsCourseScreenState extends State<EquationsCourseScreen> {
                         Text(
                           canPractice
                               ? (isEnglish
-                                    ? 'Ready to practice'
-                                    : 'Pronto para praticar')
+                                    ? 'Ready for guided practice'
+                                    : 'Pronto para a prática guiada')
                               : (isEnglish
-                                    ? 'Final practice locked'
-                                    : 'Prática final bloqueada'),
+                                    ? 'Practice flow locked'
+                                    : 'Fluxo de prática bloqueado'),
                           style: AppTypography.titleMedium,
                         ),
                         const SizedBox(height: AppSpacing.xs),
                         Text(
                           canPractice
                               ? (isEnglish
-                                    ? 'Complete an exercise session to test your mastery of equations and inequalities.'
-                                    : 'Resolva uma sessão de exercícios para testar o domínio de equações e inequações.')
+                                    ? 'Start guided practice, review any mistakes, and then take a separate final test.'
+                                    : 'Faça a prática guiada, revise os erros e depois realize um teste final separado.')
                               : (isEnglish
-                                    ? 'Complete all eight lessons to unlock the final Equations and Inequalities practice.'
-                                    : 'Conclua as oito aulas para liberar a prática final de Equações e Inequações.'),
+                                    ? 'Complete all eight lessons to unlock guided practice, error review, and the final test.'
+                                    : 'Conclua as oito aulas para liberar a prática guiada, a revisão dos erros e o teste final.'),
                           textAlign: TextAlign.center,
                           style: AppTypography.bodyMedium,
                         ),
                         const SizedBox(height: AppSpacing.md),
                         PrimaryButton(
                           text: isEnglish
-                              ? 'Start exercises'
-                              : 'Iniciar exercícios',
+                              ? 'Start guided practice'
+                              : 'Iniciar prática guiada',
                           icon: Icons.play_arrow_rounded,
                           onPressed: canPractice ? _openExercises : null,
                         ),
