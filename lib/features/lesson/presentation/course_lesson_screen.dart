@@ -32,6 +32,7 @@ class _CourseLessonScreenState extends State<CourseLessonScreen> {
   final ScrollController _scrollController = ScrollController();
 
   bool _isCompleting = false;
+  bool _lessonCheckAnswered = false;
   double _readingProgress = 0;
 
   @override
@@ -61,8 +62,13 @@ class _CourseLessonScreenState extends State<CourseLessonScreen> {
     setState(() => _readingProgress = nextProgress);
   }
 
+  void _markLessonCheckAnswered() {
+    if (_lessonCheckAnswered) return;
+    setState(() => _lessonCheckAnswered = true);
+  }
+
   Future<void> _completeLesson() async {
-    if (_isCompleting) return;
+    if (_isCompleting || !_lessonCheckAnswered) return;
 
     setState(() => _isCompleting = true);
 
@@ -304,6 +310,7 @@ class _CourseLessonScreenState extends State<CourseLessonScreen> {
                     choices: lesson.check.choices,
                     correctIndex: lesson.check.correctIndex,
                     explanation: lesson.check.explanation,
+                    onAnswered: _markLessonCheckAnswered,
                   ),
                   const SizedBox(height: AppSpacing.md),
                   LessonTakeawaysCard(items: lesson.takeaways),
@@ -332,7 +339,9 @@ class _CourseLessonScreenState extends State<CourseLessonScreen> {
               child: PrimaryButton(
                 text: widget.actionLabel,
                 icon: Icons.arrow_forward_rounded,
-                onPressed: _isCompleting ? null : _completeLesson,
+                onPressed: _isCompleting || !_lessonCheckAnswered
+                    ? null
+                    : _completeLesson,
                 isLoading: _isCompleting,
               ),
             ),
