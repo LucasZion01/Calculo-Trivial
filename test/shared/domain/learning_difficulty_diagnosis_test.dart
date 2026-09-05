@@ -113,6 +113,85 @@ void main() {
     expect(diagnosis.reviewRecommendations.first.finalTestErrors, 2);
   });
 
+  test('prioriza taxa de erro no teste final antes da contagem bruta', () {
+    final diagnosis = LearningDifficultyDiagnoser.evaluate([
+      signal(
+        questionId: 'a1',
+        correct: false,
+        phase: LearningAttemptPhase.finalTest,
+        lessonId: 'limites-04-fatoracao',
+        skill: 'Fatoração',
+      ),
+      signal(
+        questionId: 'a2',
+        correct: false,
+        phase: LearningAttemptPhase.finalTest,
+        lessonId: 'limites-04-fatoracao',
+        skill: 'Fatoração',
+      ),
+      signal(
+        questionId: 'a3',
+        correct: false,
+        phase: LearningAttemptPhase.finalTest,
+        lessonId: 'limites-04-fatoracao',
+        skill: 'Fatoração',
+      ),
+      signal(
+        questionId: 'a4',
+        correct: true,
+        phase: LearningAttemptPhase.finalTest,
+        lessonId: 'limites-04-fatoracao',
+        skill: 'Fatoração',
+      ),
+      signal(
+        questionId: 'a5',
+        correct: true,
+        phase: LearningAttemptPhase.finalTest,
+        lessonId: 'limites-04-fatoracao',
+        skill: 'Fatoração',
+      ),
+      signal(
+        questionId: 'a6',
+        correct: true,
+        phase: LearningAttemptPhase.finalTest,
+        lessonId: 'limites-04-fatoracao',
+        skill: 'Fatoração',
+      ),
+      signal(
+        questionId: 'b1',
+        correct: false,
+        phase: LearningAttemptPhase.finalTest,
+        lessonId: 'limites-02-laterais',
+        skill: 'Limites laterais',
+      ),
+      signal(
+        questionId: 'b2',
+        correct: false,
+        phase: LearningAttemptPhase.finalTest,
+        lessonId: 'limites-02-laterais',
+        skill: 'Limites laterais',
+      ),
+      signal(
+        questionId: 'b3',
+        correct: true,
+        lessonId: 'limites-02-laterais',
+        skill: 'Limites laterais',
+      ),
+    ]);
+
+    expect(diagnosis.reviewRecommendations, hasLength(2));
+    expect(diagnosis.reviewRecommendations.first.skill, 'Limites laterais');
+    expect(diagnosis.reviewRecommendations.first.finalTestErrors, 2);
+    expect(diagnosis.reviewRecommendations.first.finalTestAttempts, 2);
+    expect(diagnosis.reviewRecommendations.first.finalTestErrorRate, 1);
+
+    final second = diagnosis.reviewRecommendations[1];
+    expect(second.skill, 'Fatoração');
+    expect(second.finalTestErrors, 3);
+    expect(second.finalTestAttempts, 6);
+    expect(second.finalTestErrorRate, 0.5);
+  });
+
   test('separa habilidades mesmo quando pertencem ao mesmo módulo', () {
     final diagnosis = LearningDifficultyDiagnoser.evaluate([
       signal(questionId: 'a1', correct: false, skill: 'Fatoração'),
