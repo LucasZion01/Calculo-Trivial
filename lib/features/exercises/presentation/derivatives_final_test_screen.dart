@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import 'package:calcquest/l10n/app_localizations.dart';
@@ -6,6 +8,7 @@ import 'package:calcquest/shared/data/mock_derivatives_exercise_data.dart';
 import 'package:calcquest/shared/data/mock_exercise_data.dart';
 import 'package:calcquest/shared/domain/exercise_review_item.dart';
 import 'package:calcquest/shared/domain/final_test_session_builder.dart';
+import 'package:calcquest/shared/services/learning_difficulty_tracker.dart';
 import 'package:calcquest/shared/state/app_progress.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
 import 'package:calcquest/shared/theme/app_spacing.dart';
@@ -97,6 +100,13 @@ class _DerivativesFinalTestScreenState extends State<DerivativesFinalTestScreen>
     );
 
     AppProgress.recordExerciseAnswer(isCorrect: isCorrect);
+    unawaited(
+      LearningDifficultyTracker.recordFinalTestAttempt(
+        moduleId: AppProgress.derivativesId,
+        exercise: exercise,
+        isCorrect: isCorrect,
+      ),
+    );
 
     if (isCorrect) {
       correctAnswers++;
@@ -122,6 +132,7 @@ class _DerivativesFinalTestScreenState extends State<DerivativesFinalTestScreen>
             xpEarned: 110,
             goldEarned: 50,
             reviewItems: List<ExerciseReviewItem>.unmodifiable(reviewItems),
+            enableLearningRecommendation: true,
           ),
         ),
       );
