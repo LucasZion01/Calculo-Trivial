@@ -64,9 +64,7 @@ ExerciseFeedbackGuidance resolveExerciseFeedbackGuidance({
     );
   }
 
-  if (_containsAny(normalized, const [
-    'distribut',
-  ])) {
+  if (_containsAny(normalized, const ['distribut'])) {
     return ExerciseFeedbackGuidance(
       firstHint: isEnglish
           ? 'Apply the factor outside the parentheses to every term inside them, not just to the first term.'
@@ -93,9 +91,7 @@ ExerciseFeedbackGuidance resolveExerciseFeedbackGuidance({
     );
   }
 
-  if (_containsAny(normalized, const [
-    'coeficient',
-  ])) {
+  if (_containsAny(normalized, const ['coeficient'])) {
     return ExerciseFeedbackGuidance(
       firstHint: isEnglish
           ? 'Separate the numerical factor from the literal part of the term.'
@@ -193,6 +189,236 @@ ExerciseFeedbackGuidance resolveExerciseFeedbackGuidance({
       nextStep: isEnglish
           ? 'Rewrite each fraction with that denominator, then combine the numerators and simplify if possible.'
           : 'Reescreva cada fração com esse denominador, depois opere os numeradores e simplifique se for possível.',
+      isSpecific: true,
+    );
+  }
+
+  if (_containsAny(normalized, const [
+    'limite lateral',
+    'one-sided limit',
+  ])) {
+    return ExerciseFeedbackGuidance(
+      firstHint: isEnglish
+          ? 'Respect the indicated side of approach. Inspect values or the expression only from that side of the target point.'
+          : 'Respeite o lado indicado da aproximação. Analise valores ou a expressão somente por esse lado do ponto-alvo.',
+      nextStep: isEnglish
+          ? 'Compare the behavior as x gets arbitrarily close from the requested side; do not replace a one-sided limit with a two-sided conclusion.'
+          : 'Compare o comportamento quando x fica arbitrariamente próximo pelo lado pedido; não troque um limite lateral por uma conclusão bilateral.',
+      isSpecific: true,
+    );
+  }
+
+  if (_containsAny(normalized, const [
+    'racionalizacao',
+    'conjugado',
+    'rationalization',
+    'conjugate',
+  ])) {
+    return ExerciseFeedbackGuidance(
+      firstHint: isEnglish
+          ? 'If direct substitution produces an indeterminate form with radicals, multiply numerator and denominator by the conjugate of the radical expression.'
+          : 'Se a substituição direta produzir uma indeterminação com radicais, multiplique numerador e denominador pelo conjugado da expressão radical.',
+      nextStep: isEnglish
+          ? 'Use the difference-of-squares identity created by the conjugate, simplify the common factor, and only then evaluate the limit.'
+          : 'Use a diferença de quadrados criada pelo conjugado, simplifique o fator comum e só então avalie o limite.',
+      isSpecific: true,
+    );
+  }
+
+  if (_containsAny(normalized, const [
+    'fatoracao',
+    'factorization',
+    'factoring',
+  ])) {
+    return ExerciseFeedbackGuidance(
+      firstHint: isEnglish
+          ? 'If substitution gives 0/0, look for a factorization that exposes a common factor between numerator and denominator.'
+          : 'Se a substituição resultar em 0/0, procure uma fatoração que revele um fator comum entre numerador e denominador.',
+      nextStep: isEnglish
+          ? 'Cancel only factors, never isolated terms. After simplification, evaluate the equivalent expression near the target point.'
+          : 'Cancele apenas fatores, nunca termos isolados. Depois da simplificação, avalie a expressão equivalente perto do ponto-alvo.',
+      isSpecific: true,
+    );
+  }
+
+  if (_containsAny(normalized, const [
+    'substituicao direta',
+    'direct substitution',
+  ])) {
+    return ExerciseFeedbackGuidance(
+      firstHint: isEnglish
+          ? 'First substitute the target value exactly as written and classify the result before choosing another technique.'
+          : 'Primeiro substitua o valor-alvo exatamente como está indicado e classifique o resultado antes de escolher outra técnica.',
+      nextStep: isEnglish
+          ? 'If the result is a finite real number, that usually settles the limit for a continuous expression; if it is indeterminate, switch techniques.'
+          : 'Se o resultado for um número real finito, isso normalmente resolve o limite para uma expressão contínua; se houver indeterminação, troque de técnica.',
+      isSpecific: true,
+    );
+  }
+
+  if (_containsAny(normalized, const [
+    'dominio de funcao racional',
+    'domain of rational',
+  ])) {
+    return ExerciseFeedbackGuidance(
+      firstHint: isEnglish
+          ? 'For a rational function, start by finding where the denominator becomes zero.'
+          : 'Em uma função racional, comece identificando onde o denominador se torna zero.',
+      nextStep: isEnglish
+          ? 'Those excluded points are outside the domain, so continuity cannot hold there. Analyze continuity only where the function is defined.'
+          : 'Esses pontos ficam fora do domínio, portanto a continuidade não pode valer neles. Analise continuidade apenas onde a função está definida.',
+      isSpecific: true,
+    );
+  }
+
+  if (_containsAny(normalized, const [
+    'tres condicoes',
+    'three conditions',
+    'continuidade em um ponto',
+    'continuity at a point',
+  ])) {
+    return ExerciseFeedbackGuidance(
+      firstHint: isEnglish
+          ? 'Check continuity in three separate questions: is f(a) defined, does the limit as x approaches a exist, and do both values agree?'
+          : 'Verifique a continuidade em três perguntas separadas: f(a) está definida, o limite quando x tende a a existe e os dois valores coincidem?',
+      nextStep: isEnglish
+          ? 'A failure in any one of the three conditions is enough to conclude that the function is not continuous at that point.'
+          : 'A falha em qualquer uma das três condições já é suficiente para concluir que a função não é contínua naquele ponto.',
+      isSpecific: true,
+    );
+  }
+
+  if (_containsAny(normalized, const [
+    'funcao por partes',
+    'piecewise',
+  ])) {
+    return ExerciseFeedbackGuidance(
+      firstHint: isEnglish
+          ? 'At the transition point of a piecewise function, evaluate the left-hand and right-hand limits using the corresponding formulas.'
+          : 'No ponto de transição de uma função definida por partes, calcule os limites laterais usando a fórmula correspondente a cada lado.',
+      nextStep: isEnglish
+          ? 'Then compare both one-sided limits with the actual function value at the transition point.'
+          : 'Depois compare os dois limites laterais com o valor real da função no ponto de transição.',
+      isSpecific: true,
+    );
+  }
+
+  if (_containsAny(normalized, const [
+    'familias de funcoes continuas',
+    'families of continuous functions',
+  ])) {
+    return ExerciseFeedbackGuidance(
+      firstHint: isEnglish
+          ? 'Identify the function family first. Polynomials, for example, are continuous for every real input.'
+          : 'Identifique primeiro a família da função. Polinômios, por exemplo, são contínuos para toda entrada real.',
+      nextStep: isEnglish
+          ? 'For quotients, roots and compositions, also check domain restrictions before applying the continuity rules.'
+          : 'Para quocientes, raízes e composições, verifique também as restrições de domínio antes de aplicar as regras de continuidade.',
+      isSpecific: true,
+    );
+  }
+
+  if (_containsAny(normalized, const [
+    'regra da potencia',
+    'power rule',
+  ])) {
+    return ExerciseFeedbackGuidance(
+      firstHint: isEnglish
+          ? 'For a power xⁿ, bring the exponent down as a multiplier.'
+          : 'Para uma potência xⁿ, traga o expoente para a frente como multiplicador.',
+      nextStep: isEnglish
+          ? 'Then reduce the original exponent by one. Apply constants and signs separately.'
+          : 'Depois diminua o expoente original em uma unidade. Trate constantes e sinais separadamente.',
+      isSpecific: true,
+    );
+  }
+
+  if (_containsAny(normalized, const [
+    'derivacao termo a termo',
+    'term-by-term differentiation',
+  ])) {
+    return ExerciseFeedbackGuidance(
+      firstHint: isEnglish
+          ? 'Differentiate each term independently; sums and differences let you apply the derivative term by term.'
+          : 'Derive cada termo de forma independente; somas e diferenças permitem aplicar a derivada termo a termo.',
+      nextStep: isEnglish
+          ? 'Use the appropriate rule on each term and remember that the derivative of a constant is zero.'
+          : 'Use a regra adequada em cada termo e lembre que a derivada de uma constante é zero.',
+      isSpecific: true,
+    );
+  }
+
+  if (_containsAny(normalized, const [
+    'regra do produto',
+    'product rule',
+  ])) {
+    return ExerciseFeedbackGuidance(
+      firstHint: isEnglish
+          ? 'For a product u·v, do not differentiate both factors at once. Keep one factor while differentiating the other.'
+          : 'Em um produto u·v, não derive os dois fatores ao mesmo tempo. Mantenha um fator enquanto deriva o outro.',
+      nextStep: isEnglish
+          ? 'Build u′v + uv′, then simplify. Check that both contributions are present.'
+          : 'Monte u′v + uv′ e depois simplifique. Confira se as duas parcelas estão presentes.',
+      isSpecific: true,
+    );
+  }
+
+  if (_containsAny(normalized, const [
+    'regra do quociente',
+    'quotient rule',
+  ])) {
+    return ExerciseFeedbackGuidance(
+      firstHint: isEnglish
+          ? 'For u/v, identify numerator and denominator before differentiating.'
+          : 'Em u/v, identifique numerador e denominador antes de derivar.',
+      nextStep: isEnglish
+          ? 'Use (u′v − uv′)/v² and keep the subtraction order. Only simplify after assembling the full expression.'
+          : 'Use (u′v − uv′)/v² e preserve a ordem da subtração. Só simplifique depois de montar a expressão completa.',
+      isSpecific: true,
+    );
+  }
+
+  if (_containsAny(normalized, const [
+    'regra da cadeia',
+    'chain rule',
+  ])) {
+    return ExerciseFeedbackGuidance(
+      firstHint: isEnglish
+          ? 'Identify the outer function and the inner function before differentiating.'
+          : 'Identifique a função externa e a função interna antes de derivar.',
+      nextStep: isEnglish
+          ? 'Differentiate the outer function while keeping the inner expression, then multiply by the derivative of the inner function.'
+          : 'Derive a função externa mantendo a expressão interna e depois multiplique pela derivada da função interna.',
+      isSpecific: true,
+    );
+  }
+
+  if (_containsAny(normalized, const [
+    'reta tangente',
+    'tangent line',
+  ])) {
+    return ExerciseFeedbackGuidance(
+      firstHint: isEnglish
+          ? 'The derivative at the point gives the slope of the tangent line.'
+          : 'A derivada no ponto fornece a inclinação da reta tangente.',
+      nextStep: isEnglish
+          ? 'Find the point on the curve and the derivative value there, then use the point-slope form of a line.'
+          : 'Encontre o ponto da curva e o valor da derivada nele; depois use a forma ponto-inclinação da reta.',
+      isSpecific: true,
+    );
+  }
+
+  if (_containsAny(normalized, const [
+    'taxa de variacao',
+    'rate of change',
+  ])) {
+    return ExerciseFeedbackGuidance(
+      firstHint: isEnglish
+          ? 'Translate the derivative into the quantity that is changing and keep track of the units.'
+          : 'Traduza a derivada para a grandeza que está variando e acompanhe as unidades.',
+      nextStep: isEnglish
+          ? 'Evaluate the derivative at the requested input and interpret its sign and units in the context of the problem.'
+          : 'Avalie a derivada na entrada solicitada e interprete o sinal e as unidades no contexto do problema.',
       isSpecific: true,
     );
   }
