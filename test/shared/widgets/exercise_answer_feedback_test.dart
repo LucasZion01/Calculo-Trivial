@@ -49,7 +49,7 @@ Widget buildLocalizedFeedback({
 }
 
 void main() {
-  testWidgets('erro oculta solução até revelação explícita', (
+  testWidgets('erro usa pista matemática sem revelar solução', (
     WidgetTester tester,
   ) async {
     await tester.pumpWidget(
@@ -57,7 +57,10 @@ void main() {
     );
 
     expect(find.text('Primeira pista'), findsOneWidget);
-    expect(find.textContaining('Dividir monômios'), findsOneWidget);
+    expect(
+      find.textContaining('divida os coeficientes numéricos'),
+      findsOneWidget,
+    );
     expect(find.text('Resposta correta: 4x²y'), findsNothing);
     expect(find.text(exercise.explanation), findsNothing);
 
@@ -67,6 +70,10 @@ void main() {
     await tester.pump();
 
     expect(find.text('Próximo passo'), findsOneWidget);
+    expect(
+      find.textContaining('subtraia o expoente do denominador'),
+      findsOneWidget,
+    );
     expect(find.text('Resposta correta: 4x²y'), findsNothing);
     expect(find.text(exercise.explanation), findsNothing);
 
