@@ -33,6 +33,29 @@ class LearningDifficultyTracker {
       exercise.id: AppProgress.derivativesId,
   };
 
+  static const Map<String, String> _functionSkillByQuestionId = <String, String>{
+    'funcoes-dominio': 'Domínio de funções',
+    'funcoes-dominio-racional': 'Domínio de funções',
+    'funcoes-composicao': 'Composição de funções',
+    'funcoes-composicao-inversa': 'Composição de funções',
+    'funcoes-composicao-3': 'Composição de funções',
+    'funcoes-inversa': 'Função inversa',
+    'funcoes-inversa-2': 'Função inversa',
+    'funcoes-paridade': 'Paridade de funções',
+    'funcoes-impar': 'Paridade de funções',
+    'funcoes-imagem-quadratica': 'Imagem e extremos de funções quadráticas',
+    'funcoes-vertice': 'Imagem e extremos de funções quadráticas',
+    'funcoes-imagem-quadratica-2': 'Imagem e extremos de funções quadráticas',
+    'funcoes-valor-numerico': 'Avaliação de funções',
+    'funcoes-valor-numerico-2': 'Avaliação de funções',
+    'funcoes-exponencial': 'Avaliação de funções',
+    'funcoes-raizes': 'Zeros de funções',
+    'funcoes-coeficiente-angular': 'Interpretação de função afim',
+    'funcoes-crescimento-afim': 'Interpretação de função afim',
+    'funcoes-intersecao-eixo-y': 'Interpretação de função afim',
+    'funcoes-imagem-modulo': 'Imagem de funções',
+  };
+
   static String _scope() {
     try {
       final uid = FirebaseAuth.instance.currentUser?.uid.trim();
@@ -80,8 +103,19 @@ class LearningDifficultyTracker {
     required bool isCorrect,
     required LearningAttemptPhase phase,
   }) async {
-    final contentLessonId = exercise.contentLessonId?.trim();
-    final skill = exercise.skill?.trim();
+    final explicitContentLessonId = exercise.contentLessonId?.trim();
+    final explicitSkill = exercise.skill?.trim();
+
+    final contentLessonId =
+        explicitContentLessonId != null && explicitContentLessonId.isNotEmpty
+        ? explicitContentLessonId
+        : moduleId == AppProgress.functionsId
+            ? AppProgress.functionsId
+            : null;
+
+    final skill = explicitSkill != null && explicitSkill.isNotEmpty
+        ? explicitSkill
+        : _functionSkillByQuestionId[exercise.id];
 
     if (moduleId.trim().isEmpty ||
         contentLessonId == null ||
