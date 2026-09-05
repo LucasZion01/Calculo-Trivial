@@ -29,10 +29,9 @@ void main() {
       findsOneWidget,
     );
 
-    await tester.ensureVisible(find.text('Ver resultado'));
-    final submitButton = tester.widget<ElevatedButton>(
-      find.byType(ElevatedButton).last,
-    );
+    final submitButtons = find.byType(ElevatedButton);
+    expect(submitButtons, findsWidgets);
+    final submitButton = tester.widget<ElevatedButton>(submitButtons.last);
     expect(submitButton.onPressed, isNull);
   });
 
