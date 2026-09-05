@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:calcquest/features/diagnostic/presentation/factoring_diagnostic_screen.dart';
 
 void main() {
+  const localizationsDelegates = <LocalizationsDelegate<dynamic>>[
+    GlobalMaterialLocalizations.delegate,
+    GlobalWidgetsLocalizations.delegate,
+    GlobalCupertinoLocalizations.delegate,
+  ];
+
   testWidgets('diagnóstico começa sem alterar progresso e exige três respostas', (
     tester,
   ) async {
@@ -11,6 +18,7 @@ void main() {
       const MaterialApp(
         locale: Locale('pt'),
         supportedLocales: <Locale>[Locale('pt')],
+        localizationsDelegates: localizationsDelegates,
         home: FactoringDiagnosticScreen(sourceSkill: 'Diferença de quadrados'),
       ),
     );
@@ -35,6 +43,7 @@ void main() {
       const MaterialApp(
         locale: Locale('pt'),
         supportedLocales: <Locale>[Locale('pt')],
+        localizationsDelegates: localizationsDelegates,
         home: FactoringDiagnosticScreen(sourceSkill: 'Diferença de quadrados'),
       ),
     );
