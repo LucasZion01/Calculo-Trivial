@@ -225,7 +225,7 @@ class _FactoringDiagnosticScreenState extends State<FactoringDiagnosticScreen> {
             const SizedBox(height: AppSpacing.md),
             Text(
               _isEnglish ? 'Points worth reviewing' : 'Pontos que merecem revisão',
-              style: AppTypography.titleSmall.copyWith(
+              style: AppTypography.titleMedium.copyWith(
                 color: AppColors.primary,
                 fontWeight: FontWeight.w700,
               ),
