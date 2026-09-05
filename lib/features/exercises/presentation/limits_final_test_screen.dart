@@ -5,6 +5,7 @@ import 'package:calcquest/shared/data/localized_limits_exercise_content.dart';
 import 'package:calcquest/shared/data/mock_exercise_data.dart';
 import 'package:calcquest/shared/data/mock_limits_exercise_data.dart';
 import 'package:calcquest/shared/domain/exercise_review_item.dart';
+import 'package:calcquest/shared/domain/final_test_session_builder.dart';
 import 'package:calcquest/shared/state/app_progress.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
 import 'package:calcquest/shared/theme/app_spacing.dart';
@@ -38,20 +39,11 @@ class _LimitsFinalTestScreenState extends State<LimitsFinalTestScreen> {
   void initState() {
     super.initState();
 
-    final unseen = mockLimitsExercises
-        .where((exercise) => !widget.practiceQuestionIds.contains(exercise.id))
-        .toList()
-      ..shuffle();
-
-    final fallback = mockLimitsExercises
-        .where((exercise) => widget.practiceQuestionIds.contains(exercise.id))
-        .toList()
-      ..shuffle();
-
-    sessionExercises = <ExerciseData>[
-      ...unseen,
-      ...fallback,
-    ].take(10).toList(growable: false);
+    sessionExercises = FinalTestSessionBuilder.build(
+      lessonId: AppProgress.limitsId,
+      exercises: mockLimitsExercises,
+      practiceQuestionIds: widget.practiceQuestionIds,
+    );
   }
 
   ExerciseData get currentExercise => localizeLimitsExerciseContent(

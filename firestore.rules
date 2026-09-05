@@ -110,6 +110,7 @@ service cloud.firestore {
           'dailyQuestionGoal',
           'dailyActivityDate',
           'lastQuestionSessionIds',
+          'lastFinalTestSessionIds',
           'updatedAt'
         ])
         && data.keys().hasAll([
@@ -131,6 +132,7 @@ service cloud.firestore {
           'dailyAnsweredQuestions',
           'dailyQuestionGoal',
           'lastQuestionSessionIds',
+          'lastFinalTestSessionIds',
           'updatedAt'
         ])
         && validLessonIds(data.completedLessonIds)
@@ -166,6 +168,7 @@ service cloud.firestore {
         && validDateKey(data.lastStudyDate)
         && validDateKey(data.dailyActivityDate)
         && validQuestionSessions(data.lastQuestionSessionIds)
+        && validQuestionSessions(data.lastFinalTestSessionIds)
         && data.updatedAt is timestamp
         && data.updatedAt == request.time;
     }
