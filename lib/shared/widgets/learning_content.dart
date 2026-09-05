@@ -485,6 +485,7 @@ class LessonCheckCard extends StatefulWidget {
   final List<String> choices;
   final int correctIndex;
   final String explanation;
+  final VoidCallback? onAnswered;
 
   const LessonCheckCard({
     super.key,
@@ -492,6 +493,7 @@ class LessonCheckCard extends StatefulWidget {
     required this.choices,
     required this.correctIndex,
     required this.explanation,
+    this.onAnswered,
   });
 
   @override
@@ -503,6 +505,11 @@ class _LessonCheckCardState extends State<LessonCheckCard> {
 
   bool get _answered => _selectedIndex != null;
   bool get _isCorrect => _selectedIndex == widget.correctIndex;
+
+  void _answer(int index) {
+    setState(() => _selectedIndex = index);
+    widget.onAnswered?.call();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -548,9 +555,7 @@ class _LessonCheckCardState extends State<LessonCheckCard> {
               SizedBox(
                 width: double.infinity,
                 child: OutlinedButton(
-                  onPressed: _answered
-                      ? null
-                      : () => setState(() => _selectedIndex = index),
+                  onPressed: _answered ? null : () => _answer(index),
                   style: OutlinedButton.styleFrom(
                     alignment: Alignment.centerLeft,
                     foregroundColor: AppColors.textPrimary,
