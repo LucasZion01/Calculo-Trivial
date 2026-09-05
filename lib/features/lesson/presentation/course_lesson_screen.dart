@@ -5,6 +5,7 @@ import 'package:calcquest/shared/localization/lesson_ui_text.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
 import 'package:calcquest/shared/theme/app_spacing.dart';
 import 'package:calcquest/shared/theme/app_typography.dart';
+import 'package:calcquest/shared/widgets/guided_factoring_practice_card.dart';
 import 'package:calcquest/shared/widgets/learning_content.dart';
 import 'package:calcquest/shared/widgets/lesson_visualization_resolver.dart';
 import 'package:calcquest/shared/widgets/primary_button.dart';
@@ -219,6 +220,8 @@ class _CourseLessonScreenState extends State<CourseLessonScreen> {
       lesson,
       isEnglish: isEnglish,
     );
+    final showGuidedFactoringPractice =
+        lesson.id == 'limites-04-fatoracao';
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -292,6 +295,10 @@ class _CourseLessonScreenState extends State<CourseLessonScreen> {
                   ],
                   const SizedBox(height: AppSpacing.xl),
                   ..._buildSections(),
+                  if (showGuidedFactoringPractice) ...[
+                    GuidedFactoringPracticeCard(isEnglish: isEnglish),
+                    const SizedBox(height: AppSpacing.xl),
+                  ],
                   LessonCheckCard(
                     question: lesson.check.question,
                     choices: lesson.check.choices,
