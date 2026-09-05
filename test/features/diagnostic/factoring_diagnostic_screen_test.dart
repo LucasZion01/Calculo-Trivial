@@ -14,8 +14,12 @@ void main() {
     );
 
     expect(find.text('Diagnóstico curto: fatoração em limites'), findsOneWidget);
-    expect(find.textContaining('Nada aqui altera sua nota ou progresso'), findsOneWidget);
+    expect(
+      find.textContaining('Nada aqui altera sua nota ou progresso'),
+      findsOneWidget,
+    );
 
+    await tester.ensureVisible(find.text('Ver resultado'));
     final submitButton = tester.widget<ElevatedButton>(
       find.byType(ElevatedButton).last,
     );
@@ -31,17 +35,25 @@ void main() {
       ),
     );
 
-    await tester.tap(find.text('(x − 3)(x + 3)'));
-    await tester.pump();
-    await tester.tap(find.text('x + 3'));
-    await tester.pump();
-    await tester.tap(
-      find.text('A forma atual é indeterminada e precisa ser transformada'),
-    );
+    final firstAnswer = find.text('(x − 3)(x + 3)');
+    await tester.ensureVisible(firstAnswer);
+    await tester.tap(firstAnswer);
     await tester.pump();
 
-    await tester.ensureVisible(find.text('Ver resultado'));
-    await tester.tap(find.text('Ver resultado'));
+    final secondAnswer = find.text('x + 3');
+    await tester.ensureVisible(secondAnswer);
+    await tester.tap(secondAnswer);
+    await tester.pump();
+
+    final thirdAnswer =
+        find.text('A forma atual é indeterminada e precisa ser transformada');
+    await tester.ensureVisible(thirdAnswer);
+    await tester.tap(thirdAnswer);
+    await tester.pump();
+
+    final submit = find.text('Ver resultado');
+    await tester.ensureVisible(submit);
+    await tester.tap(submit);
     await tester.pump();
 
     expect(find.text('O resultado é inconclusivo'), findsOneWidget);
