@@ -5,6 +5,7 @@ import 'package:calcquest/shared/data/localized_derivatives_exercise_content.dar
 import 'package:calcquest/shared/data/mock_derivatives_exercise_data.dart';
 import 'package:calcquest/shared/data/mock_exercise_data.dart';
 import 'package:calcquest/shared/domain/exercise_review_item.dart';
+import 'package:calcquest/shared/domain/final_test_session_builder.dart';
 import 'package:calcquest/shared/state/app_progress.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
 import 'package:calcquest/shared/theme/app_spacing.dart';
@@ -42,20 +43,11 @@ class _DerivativesFinalTestScreenState extends State<DerivativesFinalTestScreen>
   void initState() {
     super.initState();
 
-    final unseen = mockDerivativesExercises
-        .where((exercise) => !widget.practiceQuestionIds.contains(exercise.id))
-        .toList()
-      ..shuffle();
-
-    final fallback = mockDerivativesExercises
-        .where((exercise) => widget.practiceQuestionIds.contains(exercise.id))
-        .toList()
-      ..shuffle();
-
-    sessionExercises = <ExerciseData>[
-      ...unseen,
-      ...fallback,
-    ].take(10).toList(growable: false);
+    sessionExercises = FinalTestSessionBuilder.build(
+      lessonId: AppProgress.derivativesId,
+      exercises: mockDerivativesExercises,
+      practiceQuestionIds: widget.practiceQuestionIds,
+    );
   }
 
   ExerciseData get currentExercise => localizeDerivativesExerciseContent(
