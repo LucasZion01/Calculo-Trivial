@@ -93,11 +93,6 @@ class _OneSidedLimitVisualizationState
 
   @override
   Widget build(BuildContext context) {
-    final leftX = -_distance;
-    final rightX = _distance;
-    final leftY = leftX < 0 ? 1 + leftX.abs() * 0.15 : 3;
-    final rightY = rightX > 0 ? 3 - rightX.abs() * 0.15 : 1;
-
     return _MathVizCard(
       title: widget.isEnglish
           ? 'Approach the same point from both sides'
@@ -222,15 +217,28 @@ class _DiscontinuityTypesVisualizationState
         painter: _DiscontinuityPainter(type: _type),
         child: const SizedBox.expand(),
       ),
-      values: [_ValueChip(label: widget.isEnglish ? 'Type' : 'Tipo', value: label)],
+      values: [
+        _ValueChip(label: widget.isEnglish ? 'Type' : 'Tipo', value: label),
+      ],
       control: SegmentedButton<int>(
         segments: [
-          ButtonSegment(value: 0, label: Text(widget.isEnglish ? 'Hole' : 'Furo')),
-          ButtonSegment(value: 1, label: Text(widget.isEnglish ? 'Jump' : 'Salto')),
-          ButtonSegment(value: 2, label: Text(widget.isEnglish ? 'Infinite' : 'Infinita')),
+          ButtonSegment(
+            value: 0,
+            label: Text(widget.isEnglish ? 'Hole' : 'Furo'),
+          ),
+          ButtonSegment(
+            value: 1,
+            label: Text(widget.isEnglish ? 'Jump' : 'Salto'),
+          ),
+          ButtonSegment(
+            value: 2,
+            label: Text(widget.isEnglish ? 'Infinite' : 'Infinita'),
+          ),
         ],
         selected: {_type},
-        onSelectionChanged: (selection) => setState(() => _type = selection.first),
+        onSelectionChanged: (selection) {
+          setState(() => _type = selection.first);
+        },
       ),
       footer: switch (_type) {
         0 => widget.isEnglish
@@ -348,7 +356,9 @@ class _MathVizCard extends StatelessWidget {
             const SizedBox(height: AppSpacing.xs),
             Text(
               subtitle,
-              style: AppTypography.bodySmall.copyWith(color: AppColors.textSecondary),
+              style: AppTypography.bodySmall.copyWith(
+                color: AppColors.textSecondary,
+              ),
             ),
             const SizedBox(height: AppSpacing.md),
             AspectRatio(
@@ -362,13 +372,19 @@ class _MathVizCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: AppSpacing.md),
-            Wrap(spacing: AppSpacing.sm, runSpacing: AppSpacing.sm, children: values),
+            Wrap(
+              spacing: AppSpacing.sm,
+              runSpacing: AppSpacing.sm,
+              children: values,
+            ),
             const SizedBox(height: AppSpacing.sm),
             control,
             const SizedBox(height: AppSpacing.xs),
             Text(
               footer,
-              style: AppTypography.bodySmall.copyWith(color: AppColors.textSecondary),
+              style: AppTypography.bodySmall.copyWith(
+                color: AppColors.textSecondary,
+              ),
             ),
           ],
         ),
@@ -386,7 +402,10 @@ class _ValueChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.sm),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.md,
+        vertical: AppSpacing.sm,
+      ),
       decoration: BoxDecoration(
         color: AppColors.selectedBackground,
         borderRadius: BorderRadius.circular(14),
@@ -405,178 +424,390 @@ class _ValueChip extends StatelessWidget {
 abstract class _BasePainter extends CustomPainter {
   const _BasePainter();
 
-  Offset map(Size size, double x, double y, {double minX = -3, double maxX = 3, double minY = -3, double maxY = 6}) {
+  Offset map(
+    Size size,
+    double x,
+    double y, {
+    double minX = -3,
+    double maxX = 3,
+    double minY = -3,
+    double maxY = 6,
+  }) {
     return Offset(
       ((x - minX) / (maxX - minX)) * size.width,
       size.height - (((y - minY) / (maxY - minY)) * size.height),
     );
   }
 
-  void grid(Canvas canvas, Size size, {double minY = -3, double maxY = 6}) {
-    final gridPaint = Paint()..color = AppColors.border..strokeWidth = 1;
-    final axisPaint = Paint()..color = AppColors.textSecondary..strokeWidth = 1.5;
+  void grid(
+    Canvas canvas,
+    Size size, {
+    double minY = -3,
+    double maxY = 6,
+  }) {
+    final gridPaint = Paint()
+      ..color = AppColors.border
+      ..strokeWidth = 1;
+    final axisPaint = Paint()
+      ..color = AppColors.textSecondary
+      ..strokeWidth = 1.5;
+
     for (var x = -3; x <= 3; x++) {
-      canvas.drawLine(map(size, x.toDouble(), minY, minY: minY, maxY: maxY), map(size, x.toDouble(), maxY, minY: minY, maxY: maxY), gridPaint);
+      canvas.drawLine(
+        map(size, x.toDouble(), minY, minY: minY, maxY: maxY),
+        map(size, x.toDouble(), maxY, minY: minY, maxY: maxY),
+        gridPaint,
+      );
     }
+
     for (var y = minY.ceil(); y <= maxY.floor(); y++) {
-      canvas.drawLine(map(size, -3, y.toDouble(), minY: minY, maxY: maxY), map(size, 3, y.toDouble(), minY: minY, maxY: maxY), gridPaint);
+      canvas.drawLine(
+        map(size, -3, y.toDouble(), minY: minY, maxY: maxY),
+        map(size, 3, y.toDouble(), minY: minY, maxY: maxY),
+        gridPaint,
+      );
     }
+
     if (minY <= 0 && maxY >= 0) {
-      canvas.drawLine(map(size, -3, 0, minY: minY, maxY: maxY), map(size, 3, 0, minY: minY, maxY: maxY), axisPaint);
+      canvas.drawLine(
+        map(size, -3, 0, minY: minY, maxY: maxY),
+        map(size, 3, 0, minY: minY, maxY: maxY),
+        axisPaint,
+      );
     }
-    canvas.drawLine(map(size, 0, minY, minY: minY, maxY: maxY), map(size, 0, maxY, minY: minY, maxY: maxY), axisPaint);
+
+    canvas.drawLine(
+      map(size, 0, minY, minY: minY, maxY: maxY),
+      map(size, 0, maxY, minY: minY, maxY: maxY),
+      axisPaint,
+    );
   }
 }
 
 class _FunctionTransformPainter extends _BasePainter {
   final int mode;
+
   const _FunctionTransformPainter({required this.mode});
 
-  double value(double x) => switch (mode) {0 => x * x, 1 => x * x + 2, _ => -(x * x)};
+  double value(double x) => switch (mode) {
+        0 => x * x,
+        1 => x * x + 2,
+        _ => -(x * x),
+      };
 
   @override
   void paint(Canvas canvas, Size size) {
     grid(canvas, size, minY: -5, maxY: 7);
-    final paint = Paint()..color = AppColors.primary..strokeWidth = 3..style = PaintingStyle.stroke;
+    final paint = Paint()
+      ..color = AppColors.primary
+      ..strokeWidth = 3
+      ..style = PaintingStyle.stroke;
     final path = Path();
     var first = true;
+
     for (var x = -2.4; x <= 2.4; x += 0.04) {
-      final p = map(size, x, value(x), minY: -5, maxY: 7);
-      if (first) { path.moveTo(p.dx, p.dy); first = false; } else { path.lineTo(p.dx, p.dy); }
+      final point = map(size, x, value(x), minY: -5, maxY: 7);
+      if (first) {
+        path.moveTo(point.dx, point.dy);
+        first = false;
+      } else {
+        path.lineTo(point.dx, point.dy);
+      }
     }
+
     canvas.drawPath(path, paint);
   }
 
   @override
-  bool shouldRepaint(covariant _FunctionTransformPainter oldDelegate) => oldDelegate.mode != mode;
+  bool shouldRepaint(covariant _FunctionTransformPainter oldDelegate) {
+    return oldDelegate.mode != mode;
+  }
 }
 
 class _OneSidedLimitPainter extends _BasePainter {
   final double distance;
+
   const _OneSidedLimitPainter({required this.distance});
 
   @override
   void paint(Canvas canvas, Size size) {
     grid(canvas, size, minY: 0, maxY: 4);
-    final leftPaint = Paint()..color = AppColors.primary..strokeWidth = 3;
-    final rightPaint = Paint()..color = AppColors.secondaryDark..strokeWidth = 3;
-    canvas.drawLine(map(size, -3, 1.45, minY: 0, maxY: 4), map(size, 0, 1, minY: 0, maxY: 4), leftPaint);
-    canvas.drawLine(map(size, 0, 3, minY: 0, maxY: 4), map(size, 3, 2.55, minY: 0, maxY: 4), rightPaint);
-    final lx = -distance;
-    final rx = distance;
-    canvas.drawCircle(map(size, lx, 1 + lx.abs() * 0.15, minY: 0, maxY: 4), 7, Paint()..color = AppColors.primaryDark);
-    canvas.drawCircle(map(size, rx, 3 - rx.abs() * 0.15, minY: 0, maxY: 4), 7, Paint()..color = AppColors.secondaryDark);
+    final leftPaint = Paint()
+      ..color = AppColors.primary
+      ..strokeWidth = 3;
+    final rightPaint = Paint()
+      ..color = AppColors.secondaryDark
+      ..strokeWidth = 3;
+
+    canvas.drawLine(
+      map(size, -3, 1.45, minY: 0, maxY: 4),
+      map(size, 0, 1, minY: 0, maxY: 4),
+      leftPaint,
+    );
+    canvas.drawLine(
+      map(size, 0, 3, minY: 0, maxY: 4),
+      map(size, 3, 2.55, minY: 0, maxY: 4),
+      rightPaint,
+    );
+
+    final leftX = -distance;
+    final rightX = distance;
+    canvas.drawCircle(
+      map(size, leftX, 1 + leftX.abs() * 0.15, minY: 0, maxY: 4),
+      7,
+      Paint()..color = AppColors.primaryDark,
+    );
+    canvas.drawCircle(
+      map(size, rightX, 3 - rightX.abs() * 0.15, minY: 0, maxY: 4),
+      7,
+      Paint()..color = AppColors.secondaryDark,
+    );
+
     for (final y in [1.0, 3.0]) {
-      canvas.drawCircle(map(size, 0, y, minY: 0, maxY: 4), 7, Paint()..color = AppColors.surface);
-      canvas.drawCircle(map(size, 0, y, minY: 0, maxY: 4), 7, Paint()..color = AppColors.textSecondary..style = PaintingStyle.stroke..strokeWidth = 2);
+      canvas.drawCircle(
+        map(size, 0, y, minY: 0, maxY: 4),
+        7,
+        Paint()..color = AppColors.surface,
+      );
+      canvas.drawCircle(
+        map(size, 0, y, minY: 0, maxY: 4),
+        7,
+        Paint()
+          ..color = AppColors.textSecondary
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 2,
+      );
     }
   }
 
   @override
-  bool shouldRepaint(covariant _OneSidedLimitPainter oldDelegate) => oldDelegate.distance != distance;
+  bool shouldRepaint(covariant _OneSidedLimitPainter oldDelegate) {
+    return oldDelegate.distance != distance;
+  }
 }
 
 class _AsymptotePainter extends _BasePainter {
   final double x;
+
   const _AsymptotePainter({required this.x});
 
   @override
   void paint(Canvas canvas, Size size) {
     grid(canvas, size, minY: -5, maxY: 5);
-    final curvePaint = Paint()..color = AppColors.primary..strokeWidth = 3..style = PaintingStyle.stroke;
-    final asymptotePaint = Paint()..color = AppColors.error..strokeWidth = 2;
+    final curvePaint = Paint()
+      ..color = AppColors.primary
+      ..strokeWidth = 3
+      ..style = PaintingStyle.stroke;
+    final asymptotePaint = Paint()
+      ..color = AppColors.error
+      ..strokeWidth = 2;
     const dash = 8.0;
+    final asymptoteX = map(size, 0, 0, minY: -5, maxY: 5).dx;
+
     for (var y = 0.0; y < size.height; y += dash * 2) {
-      final xCanvas = map(size, 0, 0, minY: -5, maxY: 5).dx;
-      canvas.drawLine(Offset(xCanvas, y), Offset(xCanvas, math.min(y + dash, size.height)), asymptotePaint);
+      canvas.drawLine(
+        Offset(asymptoteX, y),
+        Offset(asymptoteX, math.min(y + dash, size.height)),
+        asymptotePaint,
+      );
     }
+
     for (final sign in [-1.0, 1.0]) {
       final path = Path();
       var first = true;
-      for (var ax = 0.22; ax <= 3; ax += 0.03) {
-        final gx = sign * ax;
-        final gy = 1 / gx;
-        final p = map(size, gx, gy.clamp(-5.0, 5.0), minY: -5, maxY: 5);
-        if (first) { path.moveTo(p.dx, p.dy); first = false; } else { path.lineTo(p.dx, p.dy); }
+      for (var absX = 0.22; absX <= 3; absX += 0.03) {
+        final graphX = sign * absX;
+        final graphY = 1 / graphX;
+        final point = map(
+          size,
+          graphX,
+          graphY.clamp(-5.0, 5.0),
+          minY: -5,
+          maxY: 5,
+        );
+        if (first) {
+          path.moveTo(point.dx, point.dy);
+          first = false;
+        } else {
+          path.lineTo(point.dx, point.dy);
+        }
       }
       canvas.drawPath(path, curvePaint);
     }
-    canvas.drawCircle(map(size, x, 1 / x, minY: -5, maxY: 5), 7, Paint()..color = AppColors.secondaryDark);
+
+    canvas.drawCircle(
+      map(size, x, 1 / x, minY: -5, maxY: 5),
+      7,
+      Paint()..color = AppColors.secondaryDark,
+    );
   }
 
   @override
-  bool shouldRepaint(covariant _AsymptotePainter oldDelegate) => oldDelegate.x != x;
+  bool shouldRepaint(covariant _AsymptotePainter oldDelegate) {
+    return oldDelegate.x != x;
+  }
 }
 
 class _DiscontinuityPainter extends _BasePainter {
   final int type;
+
   const _DiscontinuityPainter({required this.type});
 
   @override
   void paint(Canvas canvas, Size size) {
     grid(canvas, size, minY: -2, maxY: 5);
-    final p = Paint()..color = AppColors.primary..strokeWidth = 3..style = PaintingStyle.stroke;
+    final curvePaint = Paint()
+      ..color = AppColors.primary
+      ..strokeWidth = 3
+      ..style = PaintingStyle.stroke;
+
     if (type == 0) {
-      canvas.drawLine(map(size, -3, -1, minY: -2, maxY: 5), map(size, 3, 5, minY: -2, maxY: 5), p);
+      canvas.drawLine(
+        map(size, -3, -1, minY: -2, maxY: 5),
+        map(size, 3, 5, minY: -2, maxY: 5),
+        curvePaint,
+      );
       final hole = map(size, 0, 2, minY: -2, maxY: 5);
       canvas.drawCircle(hole, 8, Paint()..color = AppColors.surface);
-      canvas.drawCircle(hole, 8, Paint()..color = AppColors.primary..style = PaintingStyle.stroke..strokeWidth = 2.5);
-    } else if (type == 1) {
-      canvas.drawLine(map(size, -3, 1, minY: -2, maxY: 5), map(size, 0, 1, minY: -2, maxY: 5), p);
-      canvas.drawLine(map(size, 0, 3, minY: -2, maxY: 5), map(size, 3, 3, minY: -2, maxY: 5), p);
-      canvas.drawCircle(map(size, 0, 1, minY: -2, maxY: 5), 7, Paint()..color = AppColors.surface);
-      canvas.drawCircle(map(size, 0, 1, minY: -2, maxY: 5), 7, Paint()..color = AppColors.primary..style = PaintingStyle.stroke..strokeWidth = 2);
-      canvas.drawCircle(map(size, 0, 3, minY: -2, maxY: 5), 7, Paint()..color = AppColors.secondaryDark);
-    } else {
-      final asym = map(size, 0, 0, minY: -2, maxY: 5).dx;
-      canvas.drawLine(Offset(asym, 0), Offset(asym, size.height), Paint()..color = AppColors.error..strokeWidth = 2);
-      for (final sign in [-1.0, 1.0]) {
-        final path = Path();
-        var first = true;
-        for (var ax = 0.25; ax <= 3; ax += 0.04) {
-          final gx = sign * ax;
-          final gy = math.min(5.0, 1 / (gx * gx));
-          final pt = map(size, gx, gy, minY: -2, maxY: 5);
-          if (first) { path.moveTo(pt.dx, pt.dy); first = false; } else { path.lineTo(pt.dx, pt.dy); }
+      canvas.drawCircle(
+        hole,
+        8,
+        Paint()
+          ..color = AppColors.primary
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 2.5,
+      );
+      return;
+    }
+
+    if (type == 1) {
+      canvas.drawLine(
+        map(size, -3, 1, minY: -2, maxY: 5),
+        map(size, 0, 1, minY: -2, maxY: 5),
+        curvePaint,
+      );
+      canvas.drawLine(
+        map(size, 0, 3, minY: -2, maxY: 5),
+        map(size, 3, 3, minY: -2, maxY: 5),
+        curvePaint,
+      );
+      canvas.drawCircle(
+        map(size, 0, 1, minY: -2, maxY: 5),
+        7,
+        Paint()..color = AppColors.surface,
+      );
+      canvas.drawCircle(
+        map(size, 0, 1, minY: -2, maxY: 5),
+        7,
+        Paint()
+          ..color = AppColors.primary
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 2,
+      );
+      canvas.drawCircle(
+        map(size, 0, 3, minY: -2, maxY: 5),
+        7,
+        Paint()..color = AppColors.secondaryDark,
+      );
+      return;
+    }
+
+    final asymptoteX = map(size, 0, 0, minY: -2, maxY: 5).dx;
+    canvas.drawLine(
+      Offset(asymptoteX, 0),
+      Offset(asymptoteX, size.height),
+      Paint()
+        ..color = AppColors.error
+        ..strokeWidth = 2,
+    );
+
+    for (final sign in [-1.0, 1.0]) {
+      final path = Path();
+      var first = true;
+      for (var absX = 0.25; absX <= 3; absX += 0.04) {
+        final graphX = sign * absX;
+        final graphY = math.min(5.0, 1 / (graphX * graphX));
+        final point = map(size, graphX, graphY, minY: -2, maxY: 5);
+        if (first) {
+          path.moveTo(point.dx, point.dy);
+          first = false;
+        } else {
+          path.lineTo(point.dx, point.dy);
         }
-        canvas.drawPath(path, p);
       }
+      canvas.drawPath(path, curvePaint);
     }
   }
 
   @override
-  bool shouldRepaint(covariant _DiscontinuityPainter oldDelegate) => oldDelegate.type != type;
+  bool shouldRepaint(covariant _DiscontinuityPainter oldDelegate) {
+    return oldDelegate.type != type;
+  }
 }
 
 class _SecantPainter extends _BasePainter {
   final double h;
+
   const _SecantPainter({required this.h});
 
   @override
   void paint(Canvas canvas, Size size) {
     grid(canvas, size, minY: -1, maxY: 7);
-    final curvePaint = Paint()..color = AppColors.primary..strokeWidth = 3..style = PaintingStyle.stroke;
-    final secantPaint = Paint()..color = AppColors.secondaryDark..strokeWidth = 2.5;
-    final tangentPaint = Paint()..color = AppColors.successDark..strokeWidth = 2;
+    final curvePaint = Paint()
+      ..color = AppColors.primary
+      ..strokeWidth = 3
+      ..style = PaintingStyle.stroke;
+    final secantPaint = Paint()
+      ..color = AppColors.secondaryDark
+      ..strokeWidth = 2.5;
+    final tangentPaint = Paint()
+      ..color = AppColors.successDark
+      ..strokeWidth = 2;
+
     final path = Path();
     var first = true;
     for (var x = -2.4; x <= 2.4; x += 0.04) {
-      final pt = map(size, x, x * x, minY: -1, maxY: 7);
-      if (first) { path.moveTo(pt.dx, pt.dy); first = false; } else { path.lineTo(pt.dx, pt.dy); }
+      final point = map(size, x, x * x, minY: -1, maxY: 7);
+      if (first) {
+        path.moveTo(point.dx, point.dy);
+        first = false;
+      } else {
+        path.lineTo(point.dx, point.dy);
+      }
     }
     canvas.drawPath(path, curvePaint);
+
     const x0 = 1.0;
     final x1 = x0 + h;
     final y0 = x0 * x0;
     final y1 = x1 * x1;
     final slope = (y1 - y0) / h;
     final intercept = y0 - slope * x0;
-    canvas.drawLine(map(size, -0.5, slope * -0.5 + intercept, minY: -1, maxY: 7), map(size, 2.7, slope * 2.7 + intercept, minY: -1, maxY: 7), secantPaint);
-    canvas.drawLine(map(size, -0.5, 2 * -0.5 - 1, minY: -1, maxY: 7), map(size, 2.7, 2 * 2.7 - 1, minY: -1, maxY: 7), tangentPaint);
-    canvas.drawCircle(map(size, x0, y0, minY: -1, maxY: 7), 7, Paint()..color = AppColors.primaryDark);
-    canvas.drawCircle(map(size, x1, y1, minY: -1, maxY: 7), 7, Paint()..color = AppColors.secondaryDark);
+
+    canvas.drawLine(
+      map(size, -0.5, slope * -0.5 + intercept, minY: -1, maxY: 7),
+      map(size, 2.7, slope * 2.7 + intercept, minY: -1, maxY: 7),
+      secantPaint,
+    );
+    canvas.drawLine(
+      map(size, -0.5, 2 * -0.5 - 1, minY: -1, maxY: 7),
+      map(size, 2.7, 2 * 2.7 - 1, minY: -1, maxY: 7),
+      tangentPaint,
+    );
+    canvas.drawCircle(
+      map(size, x0, y0, minY: -1, maxY: 7),
+      7,
+      Paint()..color = AppColors.primaryDark,
+    );
+    canvas.drawCircle(
+      map(size, x1, y1, minY: -1, maxY: 7),
+      7,
+      Paint()..color = AppColors.secondaryDark,
+    );
   }
 
   @override
-  bool shouldRepaint(covariant _SecantPainter oldDelegate) => oldDelegate.h != h;
+  bool shouldRepaint(covariant _SecantPainter oldDelegate) {
+    return oldDelegate.h != h;
+  }
 }
