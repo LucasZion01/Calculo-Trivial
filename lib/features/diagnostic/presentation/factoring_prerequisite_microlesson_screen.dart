@@ -53,10 +53,12 @@ class FactoringPrerequisiteMicrolessonScreen extends StatelessWidget {
               ),
               const SizedBox(height: AppSpacing.md),
             ],
+            _EquivalentQuestionCard(isEnglish: isEnglish),
+            const SizedBox(height: AppSpacing.md),
             Text(
               isEnglish
-                  ? 'After reviewing, return to the diagnostic. An equivalent question will be added in the next pedagogical step.'
-                  : 'Depois da revisão, volte ao diagnóstico. Uma questão equivalente será adicionada na próxima etapa pedagógica.',
+                  ? 'The equivalent question checks whether you can apply the reviewed idea in a new example. It still does not change your score or progress.'
+                  : 'A questão equivalente verifica se você consegue aplicar a ideia revisada em um novo exemplo. Ela também não altera sua nota nem seu progresso.',
               style: AppTypography.bodySmall,
               textAlign: TextAlign.center,
             ),
@@ -70,6 +72,125 @@ class FactoringPrerequisiteMicrolessonScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class _EquivalentQuestionCard extends StatefulWidget {
+  final bool isEnglish;
+
+  const _EquivalentQuestionCard({required this.isEnglish});
+
+  @override
+  State<_EquivalentQuestionCard> createState() => _EquivalentQuestionCardState();
+}
+
+class _EquivalentQuestionCardState extends State<_EquivalentQuestionCard> {
+  int? _selectedIndex;
+
+  bool get _answered => _selectedIndex != null;
+  bool get _isCorrect => _selectedIndex == 2;
+
+  @override
+  Widget build(BuildContext context) {
+    final choices = widget.isEnglish
+        ? const ['0', '5', '10']
+        : const ['0', '5', '10'];
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(AppSpacing.cardPaddingLarge),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
+        border: Border.all(color: AppColors.primary),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            widget.isEnglish ? 'Equivalent question' : 'Questão equivalente',
+            style: AppTypography.titleMedium.copyWith(
+              color: AppColors.primary,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          const SizedBox(height: AppSpacing.xs),
+          Text(
+            widget.isEnglish
+                ? 'Evaluate: lim x→5 (x² − 25)/(x − 5)'
+                : 'Calcule: lim x→5 (x² − 25)/(x − 5)',
+            style: AppTypography.bodyLarge,
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          for (var index = 0; index < choices.length; index++) ...[
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton(
+                onPressed: _answered
+                    ? null
+                    : () => setState(() => _selectedIndex = index),
+                style: OutlinedButton.styleFrom(
+                  alignment: Alignment.centerLeft,
+                  foregroundColor: AppColors.textPrimary,
+                  disabledForegroundColor: AppColors.textPrimary,
+                  backgroundColor: _choiceBackground(index),
+                  side: BorderSide(color: _choiceBorder(index)),
+                ),
+                child: Text(choices[index]),
+              ),
+            ),
+            if (index < choices.length - 1)
+              const SizedBox(height: AppSpacing.xs),
+          ],
+          if (_answered) ...[
+            const SizedBox(height: AppSpacing.sm),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(AppSpacing.sm),
+              decoration: BoxDecoration(
+                color: _isCorrect
+                    ? AppColors.successLight
+                    : AppColors.warningLight,
+                borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
+              ),
+              child: Text(
+                _isCorrect
+                    ? (widget.isEnglish
+                        ? 'Correct. Factor x² − 25 = (x − 5)(x + 5), cancel the common factor for x ≠ 5, and evaluate x + 5 at 5: 10.'
+                        : 'Correto. Fatore x² − 25 = (x − 5)(x + 5), cancele o fator comum para x ≠ 5 e avalie x + 5 em 5: 10.')
+                    : (widget.isEnglish
+                        ? 'Review the same sequence: 0/0 is indeterminate, factor the difference of squares, cancel the common factor, then evaluate again.'
+                        : 'Retome a mesma sequência: 0/0 é indeterminado, fatore a diferença de quadrados, cancele o fator comum e só depois avalie novamente.'),
+                style: AppTypography.bodyMedium,
+              ),
+            ),
+            const SizedBox(height: AppSpacing.xs),
+            Align(
+              alignment: Alignment.centerRight,
+              child: TextButton.icon(
+                onPressed: () => setState(() => _selectedIndex = null),
+                icon: const Icon(Icons.refresh_rounded),
+                label: Text(widget.isEnglish ? 'Try again' : 'Tentar novamente'),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Color _choiceBorder(int index) {
+    if (!_answered) return AppColors.border;
+    if (index == 2) return AppColors.success;
+    if (_selectedIndex == index) return AppColors.warning;
+    return AppColors.border;
+  }
+
+  Color _choiceBackground(int index) {
+    if (!_answered) return AppColors.surface;
+    if (index == 2) return AppColors.successLight;
+    if (_selectedIndex == index) return AppColors.warningLight;
+    return AppColors.surface;
   }
 }
 
