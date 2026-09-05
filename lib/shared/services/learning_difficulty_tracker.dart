@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:calcquest/shared/data/equations_learning_metadata.dart';
 import 'package:calcquest/shared/data/mock_continuity_exercise_data.dart';
 import 'package:calcquest/shared/data/mock_derivatives_exercise_data.dart';
 import 'package:calcquest/shared/data/mock_equations_exercise_data.dart';
@@ -105,8 +106,12 @@ class LearningDifficultyTracker {
     required bool isCorrect,
     required LearningAttemptPhase phase,
   }) {
-    final explicitContentLessonId = exercise.contentLessonId?.trim();
-    final explicitSkill = exercise.skill?.trim();
+    final normalizedExercise = moduleId == AppProgress.equationsAndInequationsId
+        ? withEquationsLearningMetadata(exercise)
+        : exercise;
+
+    final explicitContentLessonId = normalizedExercise.contentLessonId?.trim();
+    final explicitSkill = normalizedExercise.skill?.trim();
 
     final contentLessonId =
         explicitContentLessonId != null && explicitContentLessonId.isNotEmpty
@@ -117,7 +122,7 @@ class LearningDifficultyTracker {
 
     final skill = explicitSkill != null && explicitSkill.isNotEmpty
         ? explicitSkill
-        : _functionSkillByQuestionId[exercise.id];
+        : _functionSkillByQuestionId[normalizedExercise.id];
 
     if (moduleId.trim().isEmpty ||
         contentLessonId == null ||
@@ -129,7 +134,7 @@ class LearningDifficultyTracker {
 
     final signal = LearningAttemptSignal(
       moduleId: moduleId,
-      questionId: exercise.id,
+      questionId: normalizedExercise.id,
       contentLessonId: contentLessonId,
       skill: skill,
       isCorrect: isCorrect,
