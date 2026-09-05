@@ -24,7 +24,9 @@ void main() {
 
     expect(find.text('Im = [0, +∞)'), findsOneWidget);
 
-    await tester.tap(find.text('x² + 2'));
+    final shifted = find.text('x² + 2');
+    await tester.ensureVisible(shifted);
+    await tester.tap(shifted);
     await tester.pumpAndSettle();
 
     expect(find.text('Im = [2, +∞)'), findsOneWidget);
@@ -46,7 +48,9 @@ void main() {
 
     expect(find.text('Tipo = Removível'), findsOneWidget);
 
-    await tester.tap(find.text('Salto'));
+    final jump = find.text('Salto');
+    await tester.ensureVisible(jump);
+    await tester.tap(jump);
     await tester.pumpAndSettle();
 
     expect(find.text('Tipo = Salto'), findsOneWidget);
