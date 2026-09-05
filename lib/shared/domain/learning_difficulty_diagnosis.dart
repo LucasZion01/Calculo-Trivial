@@ -39,7 +39,12 @@ class LearningDifficultyEvidence {
 
   double get errorRate => attempts == 0 ? 0 : errors / attempts;
 
+  double get finalTestErrorRate =>
+      finalTestAttempts == 0 ? 0 : finalTestErrors / finalTestAttempts;
+
   bool get hasRepeatedErrors => errors >= 2;
+
+  bool get hasFinalTestErrors => finalTestErrors > 0;
 }
 
 class LearningDifficultyDiagnosis {
@@ -102,11 +107,19 @@ class LearningDifficultyDiagnoser {
     }
 
     recommendations.sort((a, b) {
-      final finalErrorComparison = b.finalTestErrors.compareTo(a.finalTestErrors);
-      if (finalErrorComparison != 0) return finalErrorComparison;
+      final finalEvidenceComparison =
+          (b.hasFinalTestErrors ? 1 : 0).compareTo(a.hasFinalTestErrors ? 1 : 0);
+      if (finalEvidenceComparison != 0) return finalEvidenceComparison;
+
+      final finalRateComparison =
+          b.finalTestErrorRate.compareTo(a.finalTestErrorRate);
+      if (finalRateComparison != 0) return finalRateComparison;
 
       final rateComparison = b.errorRate.compareTo(a.errorRate);
       if (rateComparison != 0) return rateComparison;
+
+      final finalErrorComparison = b.finalTestErrors.compareTo(a.finalTestErrors);
+      if (finalErrorComparison != 0) return finalErrorComparison;
 
       final errorComparison = b.errors.compareTo(a.errors);
       if (errorComparison != 0) return errorComparison;
