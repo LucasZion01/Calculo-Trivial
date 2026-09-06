@@ -10,6 +10,7 @@ import 'package:calcquest/shared/widgets/learning_content.dart';
 import 'package:calcquest/shared/widgets/lesson_visualization_resolver.dart';
 import 'package:calcquest/shared/widgets/limits_example_variability_card.dart';
 import 'package:calcquest/shared/widgets/limits_interleaving_card.dart';
+import 'package:calcquest/shared/widgets/limits_metacognition_confidence_card.dart';
 import 'package:calcquest/shared/widgets/limits_progressive_scaffolding_card.dart';
 import 'package:calcquest/shared/widgets/limits_spaced_practice_card.dart';
 import 'package:calcquest/shared/widgets/limits_strategy_comparison_card.dart';
@@ -237,6 +238,7 @@ class _CourseLessonScreenState extends State<CourseLessonScreen> {
     final showProgressiveScaffolding = lesson.id == 'limites-04-fatoracao';
     final showInterleaving = lesson.id == 'limites-08-sintese';
     final showSpacedPractice = lesson.id == 'limites-08-sintese';
+    final showMetacognitionConfidence = lesson.id == 'limites-08-sintese';
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -332,6 +334,10 @@ class _CourseLessonScreenState extends State<CourseLessonScreen> {
                   ],
                   if (showSpacedPractice) ...[
                     LimitsSpacedPracticeCard(isEnglish: isEnglish),
+                    const SizedBox(height: AppSpacing.xl),
+                  ],
+                  if (showMetacognitionConfidence) ...[
+                    LimitsMetacognitionConfidenceCard(isEnglish: isEnglish),
                     const SizedBox(height: AppSpacing.xl),
                   ],
                   LessonCheckCard(
