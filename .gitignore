@@ -218,3 +218,4 @@ app.*.map.json
 
 ~$*
 .firebase/
+security-tests/node_modules/
