@@ -155,8 +155,8 @@ class ModuleMasteryTracker {
     if (document != null) {
       try {
         await document.set(<String, dynamic>{
-          if (bestPractice != null) 'bestPracticeAccuracy': bestPractice,
-          if (bestFinalTest != null) 'bestFinalTestAccuracy': bestFinalTest,
+          'bestPracticeAccuracy': ?bestPractice,
+          'bestFinalTestAccuracy': ?bestFinalTest,
           'updatedAt': FieldValue.serverTimestamp(),
         }, SetOptions(merge: true));
       } catch (_) {
