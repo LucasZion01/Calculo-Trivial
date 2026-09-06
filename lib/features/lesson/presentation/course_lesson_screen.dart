@@ -14,6 +14,7 @@ import 'package:calcquest/shared/widgets/limits_metacognition_confidence_card.da
 import 'package:calcquest/shared/widgets/limits_progressive_scaffolding_card.dart';
 import 'package:calcquest/shared/widgets/limits_spaced_practice_card.dart';
 import 'package:calcquest/shared/widgets/limits_strategy_comparison_card.dart';
+import 'package:calcquest/shared/widgets/limits_transfer_card.dart';
 import 'package:calcquest/shared/widgets/primary_button.dart';
 
 class CourseLessonScreen extends StatefulWidget {
@@ -239,6 +240,7 @@ class _CourseLessonScreenState extends State<CourseLessonScreen> {
     final showInterleaving = lesson.id == 'limites-08-sintese';
     final showSpacedPractice = lesson.id == 'limites-08-sintese';
     final showMetacognitionConfidence = lesson.id == 'limites-08-sintese';
+    final showTransfer = lesson.id == 'limites-08-sintese';
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -338,6 +340,10 @@ class _CourseLessonScreenState extends State<CourseLessonScreen> {
                   ],
                   if (showMetacognitionConfidence) ...[
                     LimitsMetacognitionConfidenceCard(isEnglish: isEnglish),
+                    const SizedBox(height: AppSpacing.xl),
+                  ],
+                  if (showTransfer) ...[
+                    LimitsTransferCard(isEnglish: isEnglish),
                     const SizedBox(height: AppSpacing.xl),
                   ],
                   LessonCheckCard(
