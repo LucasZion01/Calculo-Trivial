@@ -9,6 +9,7 @@ import 'package:calcquest/shared/data/mock_exercise_data.dart';
 import 'package:calcquest/shared/domain/exercise_review_item.dart';
 import 'package:calcquest/shared/domain/final_test_session_builder.dart';
 import 'package:calcquest/shared/services/learning_difficulty_tracker.dart';
+import 'package:calcquest/shared/services/module_mastery_tracker.dart';
 import 'package:calcquest/shared/state/app_progress.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
 import 'package:calcquest/shared/theme/app_spacing.dart';
@@ -123,6 +124,15 @@ class _EquationsFinalTestScreenState extends State<EquationsFinalTestScreen> {
     }
 
     if (isLastExercise) {
+      unawaited(
+        ModuleMasteryTracker.recordFinalTestResult(
+          moduleId: AppProgress.equationsAndInequationsId,
+          correctAnswers: correctAnswers,
+          totalQuestions: sessionExercises.length,
+          legacyCompleted: AppProgress.equationsAndInequationsCompleted,
+        ),
+      );
+
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (_) => ResultScreen(
