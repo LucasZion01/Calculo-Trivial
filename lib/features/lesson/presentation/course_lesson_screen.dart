@@ -11,6 +11,7 @@ import 'package:calcquest/shared/widgets/lesson_visualization_resolver.dart';
 import 'package:calcquest/shared/widgets/limits_example_variability_card.dart';
 import 'package:calcquest/shared/widgets/limits_interleaving_card.dart';
 import 'package:calcquest/shared/widgets/limits_progressive_scaffolding_card.dart';
+import 'package:calcquest/shared/widgets/limits_spaced_practice_card.dart';
 import 'package:calcquest/shared/widgets/limits_strategy_comparison_card.dart';
 import 'package:calcquest/shared/widgets/primary_button.dart';
 
@@ -235,6 +236,7 @@ class _CourseLessonScreenState extends State<CourseLessonScreen> {
     final showExampleVariability = lesson.id == 'limites-04-fatoracao';
     final showProgressiveScaffolding = lesson.id == 'limites-04-fatoracao';
     final showInterleaving = lesson.id == 'limites-08-sintese';
+    final showSpacedPractice = lesson.id == 'limites-08-sintese';
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -326,6 +328,10 @@ class _CourseLessonScreenState extends State<CourseLessonScreen> {
                   ],
                   if (showInterleaving) ...[
                     LimitsInterleavingCard(isEnglish: isEnglish),
+                    const SizedBox(height: AppSpacing.xl),
+                  ],
+                  if (showSpacedPractice) ...[
+                    LimitsSpacedPracticeCard(isEnglish: isEnglish),
                     const SizedBox(height: AppSpacing.xl),
                   ],
                   LessonCheckCard(
