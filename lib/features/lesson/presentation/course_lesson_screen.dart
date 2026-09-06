@@ -9,6 +9,7 @@ import 'package:calcquest/shared/widgets/guided_factoring_practice_card.dart';
 import 'package:calcquest/shared/widgets/learning_content.dart';
 import 'package:calcquest/shared/widgets/lesson_visualization_resolver.dart';
 import 'package:calcquest/shared/widgets/limits_example_variability_card.dart';
+import 'package:calcquest/shared/widgets/limits_interleaving_card.dart';
 import 'package:calcquest/shared/widgets/limits_progressive_scaffolding_card.dart';
 import 'package:calcquest/shared/widgets/limits_strategy_comparison_card.dart';
 import 'package:calcquest/shared/widgets/primary_button.dart';
@@ -233,6 +234,7 @@ class _CourseLessonScreenState extends State<CourseLessonScreen> {
     final showStrategyComparison = lesson.id == 'limites-04-fatoracao';
     final showExampleVariability = lesson.id == 'limites-04-fatoracao';
     final showProgressiveScaffolding = lesson.id == 'limites-04-fatoracao';
+    final showInterleaving = lesson.id == 'limites-08-sintese';
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -320,6 +322,10 @@ class _CourseLessonScreenState extends State<CourseLessonScreen> {
                   ],
                   if (showProgressiveScaffolding) ...[
                     LimitsProgressiveScaffoldingCard(isEnglish: isEnglish),
+                    const SizedBox(height: AppSpacing.xl),
+                  ],
+                  if (showInterleaving) ...[
+                    LimitsInterleavingCard(isEnglish: isEnglish),
                     const SizedBox(height: AppSpacing.xl),
                   ],
                   LessonCheckCard(
