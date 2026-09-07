@@ -7,6 +7,11 @@ import {
   getAlgebraFinalTestQuestion,
 } from "./algebraFinalTestCatalog";
 
+import {
+  ModuleCompletionResult,
+  ModuleCompletionService,
+} from "../progress/moduleCompletion";
+
 const ALGEBRA_MODULE_ID =
   "algebra-fundamental";
 
@@ -35,6 +40,14 @@ export interface FinalTestSubmissionResult {
 }
 
 /**
+ * Result of submission processing including trusted reward data.
+ */
+export interface FinalTestProcessingResult {
+  submission: FinalTestSubmissionResult;
+  reward: ModuleCompletionResult | null;
+}
+
+/**
  * Stored final-test session shape used during correction.
  */
 interface StoredFinalTestSession {
@@ -60,12 +73,68 @@ export class FinalTestSubmissionService {
    * Creates the final-test submission service.
    *
    * @param {Firestore} firestore Firestore Admin instance.
+   * @param {ModuleCompletionService} completionService Trusted rewards.
    */
   // eslint-disable-next-line require-jsdoc
   constructor(
     private readonly firestore:
     Firestore,
+    private readonly completionService:
+    ModuleCompletionService,
   ) {}
+
+  /**
+   * Processes correction and trusted reward application.
+   *
+   * A passing result is the only path that can reach the
+   * trusted module-completion service.
+   *
+   * The final-test session ID is also used as the reward
+   * idempotency key.
+   *
+   * @param {string} uid Authenticated user identifier.
+   * @param {string} sessionId Trusted session identifier.
+   * @param {FinalTestAnswer[]} answers Submitted answers.
+   * @return {Promise<FinalTestProcessingResult>} Trusted result.
+   */
+  // eslint-disable-next-line require-jsdoc
+  async processAlgebraFinalTest(
+    uid: string,
+    sessionId: string,
+    answers: readonly FinalTestAnswer[],
+  ): Promise<FinalTestProcessingResult> {
+    const submission =
+      await this.submitAlgebraFinalTest(
+        uid,
+        sessionId,
+        answers,
+      );
+
+    if (!submission.approved) {
+      return {
+        submission,
+        reward: null,
+      };
+    }
+
+    const reward =
+      await this.completionService
+        .awardAfterVerifiedPass(
+          uid,
+          ALGEBRA_MODULE_ID,
+          sessionId,
+        );
+
+    await this.markRewardApplied(
+      uid,
+      sessionId,
+    );
+
+    return {
+      submission,
+      reward,
+    };
+  }
 
   /**
    * Corrects one Algebra final-test session.
@@ -212,6 +281,72 @@ export class FinalTestSubmissionService {
           approved,
           alreadySubmitted: false,
         };
+      },
+    );
+  }
+
+  /**
+   * Marks a passing session after its idempotent reward succeeds.
+   *
+   * @param {string} uid Authenticated user identifier.
+   * @param {string} sessionId Final-test session identifier.
+   * @return {Promise<void>} Completion.
+   */
+  // eslint-disable-next-line require-jsdoc
+  private async markRewardApplied(
+    uid: string,
+    sessionId: string,
+  ): Promise<void> {
+    const sessionRef =
+      this.firestore
+        .collection("users")
+        .doc(uid)
+        .collection(
+          "final_test_sessions",
+        )
+        .doc(sessionId);
+
+    await this.firestore.runTransaction(
+      async (transaction) => {
+        const snapshot =
+          await transaction.get(
+            sessionRef,
+          );
+
+        if (!snapshot.exists) {
+          throw new Error(
+            "Final-test session not found.",
+          );
+        }
+
+        const session =
+          snapshot.data() as
+          StoredFinalTestSession;
+
+        validateStoredSessionIdentity(
+          session,
+          uid,
+        );
+
+        if (
+          session.consumed !== true ||
+          session.approved !== true
+        ) {
+          throw new Error(
+            "Final-test reward state mismatch.",
+          );
+        }
+
+        if (session.rewardApplied === true) {
+          return;
+        }
+
+        transaction.update(
+          sessionRef,
+          {
+            rewardApplied: true,
+          },
+        );
       },
     );
   }
@@ -379,7 +514,7 @@ function validateActiveSession(
 }
 
 /**
- * Validates answers against the questions assigned to the session.
+ * Validates answers against assigned questions.
  *
  * @param {string[]} questionIds Assigned question identifiers.
  * @param {FinalTestAnswer[]} answers Submitted answers.
