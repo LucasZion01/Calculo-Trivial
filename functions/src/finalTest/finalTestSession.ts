@@ -13,9 +13,16 @@ import {
   TrustedFinalTestQuestion,
   toPublicFinalTestQuestion,
 } from "./algebraFinalTestCatalog";
+import {
+  EQUATIONS_FINAL_TEST_CATALOG,
+  toPublicEquationsFinalTestQuestion,
+} from "./equationsFinalTestCatalog";
 
 const ALGEBRA_MODULE_ID =
   "algebra-fundamental";
+
+const EQUATIONS_MODULE_ID =
+  "equacoes-inequacoes";
 
 const FINAL_TEST_QUESTION_COUNT = 10;
 
@@ -62,14 +69,59 @@ export class FinalTestSessionService {
   /**
    * Creates one trusted Algebra final-test session.
    *
-   * The answer key is never included in the returned questions.
-   *
    * @param {string} uid Authenticated user identifier.
    * @return {Promise<FinalTestSessionResult>} Created session.
    */
   // eslint-disable-next-line require-jsdoc
   async startAlgebraFinalTest(
     uid: string,
+  ): Promise<FinalTestSessionResult> {
+    return this.startFinalTest(
+      uid,
+      ALGEBRA_MODULE_ID,
+      ALGEBRA_FINAL_TEST_CATALOG,
+      toPublicFinalTestQuestion,
+    );
+  }
+
+  /**
+   * Creates one trusted Equations and Inequalities final-test session.
+   *
+   * @param {string} uid Authenticated user identifier.
+   * @return {Promise<FinalTestSessionResult>} Created session.
+   */
+  // eslint-disable-next-line require-jsdoc
+  async startEquationsFinalTest(
+    uid: string,
+  ): Promise<FinalTestSessionResult> {
+    return this.startFinalTest(
+      uid,
+      EQUATIONS_MODULE_ID,
+      EQUATIONS_FINAL_TEST_CATALOG,
+      toPublicEquationsFinalTestQuestion,
+    );
+  }
+
+  /**
+   * Creates one trusted final-test session from a server-owned catalog.
+   *
+   * The answer key is never included in the returned questions.
+   *
+   * @param {string} uid Authenticated user identifier.
+   * @param {string} moduleId Trusted module identifier.
+   * @param {TrustedFinalTestQuestion[]} catalog Trusted question catalog.
+   * @param {Function} toPublic Removes the answer key.
+   * @return {Promise<FinalTestSessionResult>} Created session.
+   */
+  // eslint-disable-next-line require-jsdoc
+  private async startFinalTest(
+    uid: string,
+    moduleId: string,
+    catalog:
+    readonly TrustedFinalTestQuestion[],
+    toPublic: (
+      question: TrustedFinalTestQuestion,
+    ) => PublicFinalTestQuestion,
   ): Promise<FinalTestSessionResult> {
     if (
       typeof uid !== "string" ||
@@ -82,7 +134,7 @@ export class FinalTestSessionService {
 
     const selectedQuestions =
       selectRandomQuestions(
-        ALGEBRA_FINAL_TEST_CATALOG,
+        catalog,
         FINAL_TEST_QUESTION_COUNT,
       );
 
@@ -112,8 +164,7 @@ export class FinalTestSessionService {
     const storedSession:
     StoredFinalTestSession = {
       uid,
-      moduleId:
-        ALGEBRA_MODULE_ID,
+      moduleId,
       questionIds:
         selectedQuestions.map(
           (question) =>
@@ -130,15 +181,14 @@ export class FinalTestSessionService {
 
     return {
       sessionId,
-      moduleId:
-        ALGEBRA_MODULE_ID,
+      moduleId,
       expiresAt:
         expiresAt
           .toDate()
           .toISOString(),
       questions:
         selectedQuestions.map(
-          toPublicFinalTestQuestion,
+          toPublic,
         ),
     };
   }
