@@ -23,11 +23,24 @@ import {
   contentRepository,
 } from "./data/contentCatalog";
 import {
+  handleStartFinalTest,
+  handleSubmitFinalTest,
+} from "./finalTest/finalTestCallableHandler";
+import {
+  FinalTestSessionService,
+} from "./finalTest/finalTestSession";
+import {
+  FinalTestSubmissionService,
+} from "./finalTest/finalTestSubmission";
+import {
   createGeminiTutorClient,
 } from "./gemini/GeminiTutorClient";
 import {
   FirestoreIdempotencyStore,
 } from "./idempotency/FirestoreIdempotencyStore";
+import {
+  ModuleCompletionService,
+} from "./progress/moduleCompletion";
 import {
   FirestoreRateLimitStore,
 } from "./rateLimit/FirestoreRateLimitStore";
@@ -76,6 +89,22 @@ const sessions =
     new FirestoreSessionStore(
       firestore,
     ),
+  );
+
+const moduleCompletion =
+  new ModuleCompletionService(
+    firestore,
+  );
+
+const finalTestSessions =
+  new FinalTestSessionService(
+    firestore,
+  );
+
+const finalTestSubmissions =
+  new FinalTestSubmissionService(
+    firestore,
+    moduleCompletion,
   );
 
 let tutorOrchestrator:
@@ -174,7 +203,6 @@ export const tutor =
       ),
   );
 
-
 export const deleteAccount =
   onCall(
     {
@@ -193,5 +221,81 @@ export const deleteAccount =
           data: request.data,
         },
         accountDeletion,
+      ),
+  );
+
+export const startFinalTest =
+  onCall(
+    {
+      enforceAppCheck: true,
+      minInstances: 0,
+      maxInstances: 2,
+      concurrency: 20,
+      timeoutSeconds: 30,
+    },
+    async (request) =>
+      handleStartFinalTest(
+        {
+          authUid:
+            request.auth?.uid ??
+            null,
+          data: request.data,
+        },
+        {
+          start: (uid) =>
+            finalTestSessions
+              .startAlgebraFinalTest(
+                uid,
+              ),
+          submit: (
+            uid,
+            sessionId,
+            answers,
+          ) =>
+            finalTestSubmissions
+              .processAlgebraFinalTest(
+                uid,
+                sessionId,
+                answers,
+              ),
+        },
+      ),
+  );
+
+export const submitFinalTest =
+  onCall(
+    {
+      enforceAppCheck: true,
+      minInstances: 0,
+      maxInstances: 2,
+      concurrency: 20,
+      timeoutSeconds: 30,
+    },
+    async (request) =>
+      handleSubmitFinalTest(
+        {
+          authUid:
+            request.auth?.uid ??
+            null,
+          data: request.data,
+        },
+        {
+          start: (uid) =>
+            finalTestSessions
+              .startAlgebraFinalTest(
+                uid,
+              ),
+          submit: (
+            uid,
+            sessionId,
+            answers,
+          ) =>
+            finalTestSubmissions
+              .processAlgebraFinalTest(
+                uid,
+                sessionId,
+                answers,
+              ),
+        },
       ),
   );
