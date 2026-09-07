@@ -143,8 +143,8 @@ class TrustedFinalTestSubmission {
       correctAnswers: _requiredInt(submission, 'correctAnswers'),
       accuracy: _requiredDouble(submission, 'accuracy'),
       approved: _requiredBool(submission, 'approved'),
-      awardedXp: _optionalInt(reward, 'awardedXp'),
-      awardedGold: _optionalInt(reward, 'awardedGold'),
+      awardedXp: _optionalInt(reward, 'xpAwarded'),
+      awardedGold: _optionalInt(reward, 'goldAwarded'),
     );
   }
 }
