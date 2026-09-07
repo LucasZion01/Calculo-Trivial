@@ -2,9 +2,6 @@ import {
   FieldValue,
   Firestore,
 } from "firebase-admin/firestore";
-import {
-  HttpsError,
-} from "firebase-functions/v2/https";
 
 const MODULE_REWARDS = {
   "algebra-fundamental": {
@@ -39,20 +36,13 @@ const MODULE_REWARDS = {
   },
 } as const;
 
-type ModuleId = keyof typeof MODULE_REWARDS;
+export type ModuleId =
+  keyof typeof MODULE_REWARDS;
 
 /**
- * Input accepted by the module completion handler.
+ * Result of a trusted module completion.
  */
-export interface CompleteModuleInput {
-  authUid: string | null;
-  data: unknown;
-}
-
-/**
- * Result returned after processing a module completion.
- */
-export interface CompleteModuleResult {
+export interface ModuleCompletionResult {
   moduleId: ModuleId;
   alreadyCompleted: boolean;
   xpAwarded: number;
@@ -60,82 +50,10 @@ export interface CompleteModuleResult {
 }
 
 /**
- * Validated module completion request.
- */
-interface ParsedRequest {
-  moduleId: ModuleId;
-  requestId: string;
-}
-
-/**
- * Validates and parses a module completion request.
+ * Persists rewards only after another trusted backend service
+ * has verified that the user passed the module final test.
  *
- * @param {unknown} data Raw callable request payload.
- * @return {ParsedRequest} Validated request.
- */
-function parseRequest(
-  data: unknown,
-): ParsedRequest {
-  if (
-    typeof data !== "object" ||
-    data === null ||
-    Array.isArray(data)
-  ) {
-    throw new HttpsError(
-      "invalid-argument",
-      "Invalid request.",
-    );
-  }
-
-  const raw =
-    data as Record<string, unknown>;
-
-  const allowedKeys =
-    new Set([
-      "moduleId",
-      "requestId",
-    ]);
-
-  for (const key of Object.keys(raw)) {
-    if (!allowedKeys.has(key)) {
-      throw new HttpsError(
-        "invalid-argument",
-        "Invalid request.",
-      );
-    }
-  }
-
-  if (
-    typeof raw.moduleId !== "string" ||
-    !(raw.moduleId in MODULE_REWARDS)
-  ) {
-    throw new HttpsError(
-      "invalid-argument",
-      "Invalid module.",
-    );
-  }
-
-  if (
-    typeof raw.requestId !== "string" ||
-    !/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
-      .test(raw.requestId)
-  ) {
-    throw new HttpsError(
-      "invalid-argument",
-      "Invalid request.",
-    );
-  }
-
-  return {
-    moduleId:
-      raw.moduleId as ModuleId,
-    requestId:
-      raw.requestId,
-  };
-}
-
-/**
- * Persists trusted module completion and reward data.
+ * This service is intentionally not a callable handler.
  */
 export class ModuleCompletionService {
   // eslint-disable-next-line require-jsdoc
@@ -144,12 +62,23 @@ export class ModuleCompletionService {
     Firestore,
   ) {}
 
+  /**
+   * Awards canonical progress after a verified pass.
+   *
+   * The request ID must originate from a trusted backend
+   * operation, such as a validated final-test session ID.
+   *
+   * @param {string} uid Authenticated user identifier.
+   * @param {ModuleId} moduleId Trusted module identifier.
+   * @param {string} requestId Trusted idempotency identifier.
+   * @return {Promise<ModuleCompletionResult>} Completion result.
+   */
   // eslint-disable-next-line require-jsdoc
-  async complete(
+  async awardAfterVerifiedPass(
     uid: string,
     moduleId: ModuleId,
     requestId: string,
-  ): Promise<CompleteModuleResult> {
+  ): Promise<ModuleCompletionResult> {
     const progressRef =
       this.firestore
         .collection("users")
@@ -182,11 +111,11 @@ export class ModuleCompletionService {
             eventSnapshot.data();
 
           if (
-            eventData?.moduleId !== moduleId
+            eventData?.moduleId !==
+            moduleId
           ) {
-            throw new HttpsError(
-              "already-exists",
-              "Request already used.",
+            throw new Error(
+              "Trusted request already used.",
             );
           }
 
@@ -286,7 +215,7 @@ export class ModuleCompletionService {
 }
 
 /**
- * Calculates the canonical XP total for completed modules.
+ * Calculates canonical XP from trusted completed modules.
  *
  * @param {string[]} modules Completed module identifiers.
  * @return {number} Canonical XP total.
@@ -309,7 +238,7 @@ function calculateTotalXp(
 }
 
 /**
- * Calculates the canonical gold total for completed modules.
+ * Calculates canonical gold from trusted completed modules.
  *
  * @param {string[]} modules Completed module identifiers.
  * @return {number} Canonical gold total.
@@ -329,32 +258,4 @@ function calculateTotalGold(
   }
 
   return total;
-}
-
-/**
- * Handles an authenticated module completion request.
- *
- * @param {CompleteModuleInput} input Callable request input.
- * @param {ModuleCompletionService} service Completion service.
- * @return {Promise<CompleteModuleResult>} Completion result.
- */
-export async function handleCompleteModule(
-  input: CompleteModuleInput,
-  service: ModuleCompletionService,
-): Promise<CompleteModuleResult> {
-  if (!input.authUid) {
-    throw new HttpsError(
-      "unauthenticated",
-      "Authentication required.",
-    );
-  }
-
-  const parsed =
-    parseRequest(input.data);
-
-  return service.complete(
-    input.authUid,
-    parsed.moduleId,
-    parsed.requestId,
-  );
 }
