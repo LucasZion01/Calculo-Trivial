@@ -28,7 +28,7 @@ class ResultScreen extends StatelessWidget {
   final int goldEarned;
   final List<ExerciseReviewItem> reviewItems;
   final bool enableLearningRecommendation;
-
+  final bool rewardAlreadyAppliedByBackend;
   const ResultScreen({
     super.key,
     this.completedLessonId = 'algebra-fundamental',
@@ -38,6 +38,7 @@ class ResultScreen extends StatelessWidget {
     this.goldEarned = 25,
     this.reviewItems = const <ExerciseReviewItem>[],
     this.enableLearningRecommendation = false,
+    this.rewardAlreadyAppliedByBackend = false,
   });
 
   void _onMenuTap(BuildContext context, int index) {
@@ -80,6 +81,7 @@ class ResultScreen extends StatelessWidget {
           completedLessonId: completedLessonId,
           xpEarned: result.earnedXp,
           goldEarned: result.earnedGold,
+          rewardAlreadyAppliedByBackend: rewardAlreadyAppliedByBackend,
         ),
       ),
     );
@@ -111,9 +113,7 @@ class ResultScreen extends StatelessWidget {
       return;
     }
 
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => destination),
-    );
+    Navigator.of(context).push(MaterialPageRoute(builder: (_) => destination));
   }
 
   Widget _buildResultCard({
@@ -197,10 +197,7 @@ class ResultScreen extends StatelessWidget {
       builder: (context, value, child) {
         return Opacity(
           opacity: value.clamp(0.0, 1.0),
-          child: Transform.scale(
-            scale: 0.86 + (0.14 * value),
-            child: child,
-          ),
+          child: Transform.scale(scale: 0.86 + (0.14 * value), child: child),
         );
       },
       child: Column(
@@ -221,9 +218,7 @@ class ResultScreen extends StatelessWidget {
               ],
             ),
             child: AppIcon(
-              icon: isApproved
-                  ? Icons.check_rounded
-                  : Icons.refresh_rounded,
+              icon: isApproved ? Icons.check_rounded : Icons.refresh_rounded,
               size: AppIconSize.extraLarge,
               color: statusColor,
               semanticLabel: l10n.resultExercisesCompletedSemantic,
@@ -273,9 +268,7 @@ class ResultScreen extends StatelessWidget {
                 const SizedBox(width: AppSpacing.xs),
                 Text(
                   performanceText,
-                  style: AppTypography.labelMedium.copyWith(
-                    color: statusColor,
-                  ),
+                  style: AppTypography.labelMedium.copyWith(color: statusColor),
                 ),
               ],
             ),
@@ -302,8 +295,9 @@ class ResultScreen extends StatelessWidget {
     final performanceText = l10n.resultAccuracyPerformance(accuracyPercentage);
     final isApproved = result.isApproved;
     final statusColor = isApproved ? AppColors.success : AppColors.error;
-    final statusBackground =
-        isApproved ? AppColors.successLight : AppColors.errorLight;
+    final statusBackground = isApproved
+        ? AppColors.successLight
+        : AppColors.errorLight;
 
     int cardIndex = 0;
 
@@ -400,16 +394,16 @@ class ResultScreen extends StatelessWidget {
               PrimaryButton(
                 text: reviewItems.isNotEmpty
                     ? reviewItems.length == 1
-                        ? l10n.resultReviewOneError
-                        : l10n.resultReviewErrors(reviewItems.length)
+                          ? l10n.resultReviewOneError
+                          : l10n.resultReviewErrors(reviewItems.length)
                     : isApproved
-                        ? l10n.resultReceiveReward
-                        : l10n.resultBackToPath,
+                    ? l10n.resultReceiveReward
+                    : l10n.resultBackToPath,
                 icon: reviewItems.isNotEmpty
                     ? Icons.fact_check_outlined
                     : isApproved
-                        ? Icons.arrow_forward_rounded
-                        : Icons.refresh_rounded,
+                    ? Icons.arrow_forward_rounded
+                    : Icons.refresh_rounded,
                 onPressed: () {
                   if (reviewItems.isNotEmpty) {
                     _goToReview(context, result);

@@ -18,12 +18,13 @@ class RewardScreen extends StatefulWidget {
   final String completedLessonId;
   final int xpEarned;
   final int goldEarned;
-
+  final bool rewardAlreadyAppliedByBackend;
   const RewardScreen({
     super.key,
     this.completedLessonId = 'algebra-fundamental',
     this.xpEarned = 60,
     this.goldEarned = 25,
+    this.rewardAlreadyAppliedByBackend = false,
   });
 
   @override
@@ -34,7 +35,9 @@ class _RewardScreenState extends State<RewardScreen> {
   @override
   void initState() {
     super.initState();
-    _saveProgress();
+    if (!widget.rewardAlreadyAppliedByBackend) {
+      _saveProgress();
+    }
   }
 
   Future<void> _saveProgress() async {
