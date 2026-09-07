@@ -22,6 +22,10 @@ import {
 } from "./algebraFinalTestCatalog";
 
 import {
+  getEquationsFinalTestQuestion,
+} from "./equationsFinalTestCatalog";
+
+import {
   FinalTestSessionResult,
   FinalTestSessionService,
 } from "./finalTestSession";
@@ -127,6 +131,75 @@ function buildAnswers(
       if (!trustedQuestion) {
         throw new Error(
           "Trusted test question not found.",
+        );
+      }
+
+      if (index < correctCount) {
+        return {
+          questionId:
+            publicQuestion.id,
+          optionId:
+            trustedQuestion.correctOptionId,
+        };
+      }
+
+      const wrongOption =
+        trustedQuestion.options.find(
+          (option) =>
+            option.id !==
+            trustedQuestion.correctOptionId,
+        );
+
+      if (!wrongOption) {
+        throw new Error(
+          "Question has no wrong option for testing.",
+        );
+      }
+
+      return {
+        questionId:
+          publicQuestion.id,
+        optionId:
+          wrongOption.id,
+      };
+    },
+  );
+}
+
+/**
+ * Creates trusted Equations answers with an exact number correct.
+ *
+ * This helper reads the answer key only inside the trusted test
+ * environment.
+ *
+ * @param {FinalTestSessionResult} session Trusted test session.
+ * @param {number} correctCount Number of correct answers.
+ * @return {FinalTestAnswer[]} Generated answers.
+ */
+function buildEquationsAnswers(
+  session: FinalTestSessionResult,
+  correctCount: number,
+): FinalTestAnswer[] {
+  if (
+    !Number.isInteger(correctCount) ||
+    correctCount < 0 ||
+    correctCount > session.questions.length
+  ) {
+    throw new Error(
+      "Invalid requested correct-answer count.",
+    );
+  }
+
+  return session.questions.map(
+    (publicQuestion, index) => {
+      const trustedQuestion =
+        getEquationsFinalTestQuestion(
+          publicQuestion.id,
+        );
+
+      if (!trustedQuestion) {
+        throw new Error(
+          "Trusted Equations test question not found.",
         );
       }
 
@@ -880,6 +953,380 @@ test(
         "uid_a",
       ),
       null,
+    );
+  },
+);
+test(
+  "Equations session exposes trusted questions without answer keys",
+  async () => {
+    const session =
+      await sessionService
+        .startEquationsFinalTest(
+          "uid_equations",
+        );
+
+    assert.equal(
+      session.moduleId,
+      "equacoes-inequacoes",
+    );
+
+    assert.equal(
+      session.questions.length,
+      10,
+    );
+
+    assert.equal(
+      new Set(
+        session.questions.map(
+          (question) =>
+            question.id,
+        ),
+      ).size,
+      10,
+    );
+
+    for (
+      const question
+      of session.questions
+    ) {
+      assert.equal(
+        "correctOptionId" in question,
+        false,
+      );
+
+      assert.ok(
+        getEquationsFinalTestQuestion(
+          question.id,
+        ),
+      );
+
+      assert.equal(
+        getAlgebraFinalTestQuestion(
+          question.id,
+        ),
+        undefined,
+      );
+    }
+
+    const stored =
+      await readStoredSession(
+        "uid_equations",
+        session.sessionId,
+      );
+
+    assert.equal(
+      stored.moduleId,
+      "equacoes-inequacoes",
+    );
+
+    assert.equal(
+      stored.consumed,
+      false,
+    );
+  },
+);
+
+test(
+  "seven of ten Equations answers awards nothing",
+  async () => {
+    const session =
+      await sessionService
+        .startEquationsFinalTest(
+          "uid_equations",
+        );
+
+    const result =
+      await submissionService
+        .processEquationsFinalTest(
+          "uid_equations",
+          session.sessionId,
+          buildEquationsAnswers(
+            session,
+            7,
+          ),
+        );
+
+    assert.equal(
+      result.submission.correctAnswers,
+      7,
+    );
+
+    assert.equal(
+      result.submission.accuracy,
+      0.7,
+    );
+
+    assert.equal(
+      result.submission.approved,
+      false,
+    );
+
+    assert.equal(
+      result.reward,
+      null,
+    );
+
+    assert.equal(
+      await readProgress(
+        "uid_equations",
+      ),
+      null,
+    );
+  },
+);
+
+test(
+  "eight of ten Equations answers awards canonical reward",
+  async () => {
+    const session =
+      await sessionService
+        .startEquationsFinalTest(
+          "uid_equations",
+        );
+
+    const result =
+      await submissionService
+        .processEquationsFinalTest(
+          "uid_equations",
+          session.sessionId,
+          buildEquationsAnswers(
+            session,
+            8,
+          ),
+        );
+
+    assert.equal(
+      result.submission.moduleId,
+      "equacoes-inequacoes",
+    );
+
+    assert.equal(
+      result.submission.correctAnswers,
+      8,
+    );
+
+    assert.equal(
+      result.submission.accuracy,
+      0.8,
+    );
+
+    assert.equal(
+      result.submission.approved,
+      true,
+    );
+
+    assert.deepEqual(
+      result.reward,
+      {
+        moduleId:
+          "equacoes-inequacoes",
+        alreadyCompleted: false,
+        xpAwarded: 70,
+        goldAwarded: 30,
+      },
+    );
+
+    const progress =
+      await readProgress(
+        "uid_equations",
+      );
+
+    assert.ok(progress);
+
+    assert.equal(
+      progress.totalXp,
+      70,
+    );
+
+    assert.equal(
+      progress.totalGold,
+      30,
+    );
+
+    const stored =
+      await readStoredSession(
+        "uid_equations",
+        session.sessionId,
+      );
+
+    assert.equal(
+      stored.rewardApplied,
+      true,
+    );
+  },
+);
+
+test(
+  "Equations session cannot be processed through Algebra path",
+  async () => {
+    const session =
+      await sessionService
+        .startEquationsFinalTest(
+          "uid_equations",
+        );
+
+    await assert.rejects(
+      () =>
+        submissionService
+          .processAlgebraFinalTest(
+            "uid_equations",
+            session.sessionId,
+            buildEquationsAnswers(
+              session,
+              10,
+            ),
+          ),
+      /Invalid final-test module/,
+    );
+
+    assert.equal(
+      await readProgress(
+        "uid_equations",
+      ),
+      null,
+    );
+
+    const stored =
+      await readStoredSession(
+        "uid_equations",
+        session.sessionId,
+      );
+
+    assert.equal(
+      stored.consumed,
+      false,
+    );
+  },
+);
+
+test(
+  "invalid Equations option is rejected without consuming session",
+  async () => {
+    const session =
+      await sessionService
+        .startEquationsFinalTest(
+          "uid_equations",
+        );
+
+    const answers =
+      buildEquationsAnswers(
+        session,
+        10,
+      );
+
+    answers[0] = {
+      questionId:
+        answers[0].questionId,
+      optionId:
+        "forged-option",
+    };
+
+    await assert.rejects(
+      () =>
+        submissionService
+          .processEquationsFinalTest(
+            "uid_equations",
+            session.sessionId,
+            answers,
+          ),
+      /Invalid final-test option/,
+    );
+
+    assert.equal(
+      await readProgress(
+        "uid_equations",
+      ),
+      null,
+    );
+
+    const stored =
+      await readStoredSession(
+        "uid_equations",
+        session.sessionId,
+      );
+
+    assert.equal(
+      stored.consumed,
+      false,
+    );
+  },
+);
+
+test(
+  "replaying approved Equations session never duplicates reward",
+  async () => {
+    const session =
+      await sessionService
+        .startEquationsFinalTest(
+          "uid_equations",
+        );
+
+    const answers =
+      buildEquationsAnswers(
+        session,
+        8,
+      );
+
+    const first =
+      await submissionService
+        .processEquationsFinalTest(
+          "uid_equations",
+          session.sessionId,
+          answers,
+        );
+
+    const replay =
+      await submissionService
+        .processEquationsFinalTest(
+          "uid_equations",
+          session.sessionId,
+          answers,
+        );
+
+    assert.equal(
+      first.submission.alreadySubmitted,
+      false,
+    );
+
+    assert.equal(
+      replay.submission.alreadySubmitted,
+      true,
+    );
+
+    assert.ok(
+      replay.reward,
+    );
+
+    assert.equal(
+      replay.reward.alreadyCompleted,
+      true,
+    );
+
+    assert.equal(
+      replay.reward.xpAwarded,
+      0,
+    );
+
+    assert.equal(
+      replay.reward.goldAwarded,
+      0,
+    );
+
+    const progress =
+      await readProgress(
+        "uid_equations",
+      );
+
+    assert.ok(progress);
+
+    assert.equal(
+      progress.totalXp,
+      70,
+    );
+
+    assert.equal(
+      progress.totalGold,
+      30,
     );
   },
 );

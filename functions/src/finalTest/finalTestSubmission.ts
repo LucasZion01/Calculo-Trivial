@@ -5,15 +5,23 @@ import {
 
 import {
   getAlgebraFinalTestQuestion,
+  TrustedFinalTestQuestion,
 } from "./algebraFinalTestCatalog";
+import {
+  getEquationsFinalTestQuestion,
+} from "./equationsFinalTestCatalog";
 
 import {
   ModuleCompletionResult,
   ModuleCompletionService,
+  ModuleId,
 } from "../progress/moduleCompletion";
 
 const ALGEBRA_MODULE_ID =
   "algebra-fundamental";
+
+const EQUATIONS_MODULE_ID =
+  "equacoes-inequacoes";
 
 const MINIMUM_PASSING_ACCURACY =
   0.8;
@@ -66,6 +74,13 @@ interface StoredFinalTestSession {
 }
 
 /**
+ * Resolves a trusted question exclusively from backend-owned catalogs.
+ */
+type TrustedQuestionResolver = (
+  questionId: string,
+) => TrustedFinalTestQuestion | undefined;
+
+/**
  * Corrects final tests using only backend-owned answer keys.
  */
 export class FinalTestSubmissionService {
@@ -84,13 +99,7 @@ export class FinalTestSubmissionService {
   ) {}
 
   /**
-   * Processes correction and trusted reward application.
-   *
-   * A passing result is the only path that can reach the
-   * trusted module-completion service.
-   *
-   * The final-test session ID is also used as the reward
-   * idempotency key.
+   * Processes one trusted Algebra final test.
    *
    * @param {string} uid Authenticated user identifier.
    * @param {string} sessionId Trusted session identifier.
@@ -103,11 +112,66 @@ export class FinalTestSubmissionService {
     sessionId: string,
     answers: readonly FinalTestAnswer[],
   ): Promise<FinalTestProcessingResult> {
+    return this.processFinalTest(
+      uid,
+      sessionId,
+      answers,
+      ALGEBRA_MODULE_ID,
+      getAlgebraFinalTestQuestion,
+    );
+  }
+
+  /**
+   * Processes one trusted Equations and Inequalities final test.
+   *
+   * @param {string} uid Authenticated user identifier.
+   * @param {string} sessionId Trusted session identifier.
+   * @param {FinalTestAnswer[]} answers Submitted answers.
+   * @return {Promise<FinalTestProcessingResult>} Trusted result.
+   */
+  // eslint-disable-next-line require-jsdoc
+  async processEquationsFinalTest(
+    uid: string,
+    sessionId: string,
+    answers: readonly FinalTestAnswer[],
+  ): Promise<FinalTestProcessingResult> {
+    return this.processFinalTest(
+      uid,
+      sessionId,
+      answers,
+      EQUATIONS_MODULE_ID,
+      getEquationsFinalTestQuestion,
+    );
+  }
+
+  /**
+   * Corrects and conditionally rewards one trusted final test.
+   *
+   * The expected module and answer resolver are selected by trusted
+   * backend code. The client cannot select either one.
+   *
+   * @param {string} uid Authenticated user identifier.
+   * @param {string} sessionId Trusted session identifier.
+   * @param {FinalTestAnswer[]} answers Submitted answers.
+   * @param {string} expectedModuleId Trusted expected module.
+   * @param {TrustedQuestionResolver} resolveQuestion Trusted resolver.
+   * @return {Promise<FinalTestProcessingResult>} Trusted result.
+   */
+  // eslint-disable-next-line require-jsdoc
+  private async processFinalTest(
+    uid: string,
+    sessionId: string,
+    answers: readonly FinalTestAnswer[],
+    expectedModuleId: ModuleId,
+    resolveQuestion: TrustedQuestionResolver,
+  ): Promise<FinalTestProcessingResult> {
     const submission =
-      await this.submitAlgebraFinalTest(
+      await this.submitFinalTest(
         uid,
         sessionId,
         answers,
+        expectedModuleId,
+        resolveQuestion,
       );
 
     if (!submission.approved) {
@@ -121,13 +185,14 @@ export class FinalTestSubmissionService {
       await this.completionService
         .awardAfterVerifiedPass(
           uid,
-          ALGEBRA_MODULE_ID,
+          expectedModuleId,
           sessionId,
         );
 
     await this.markRewardApplied(
       uid,
       sessionId,
+      expectedModuleId,
     );
 
     return {
@@ -137,7 +202,7 @@ export class FinalTestSubmissionService {
   }
 
   /**
-   * Corrects one Algebra final-test session.
+   * Corrects one trusted final-test session.
    *
    * Repeated submissions return the previously trusted result
    * instead of recalculating the score.
@@ -145,13 +210,17 @@ export class FinalTestSubmissionService {
    * @param {string} uid Authenticated user identifier.
    * @param {string} sessionId Trusted session identifier.
    * @param {FinalTestAnswer[]} answers Submitted answers.
+   * @param {string} expectedModuleId Trusted expected module.
+   * @param {TrustedQuestionResolver} resolveQuestion Trusted resolver.
    * @return {Promise<FinalTestSubmissionResult>} Trusted result.
    */
   // eslint-disable-next-line require-jsdoc
-  async submitAlgebraFinalTest(
+  private async submitFinalTest(
     uid: string,
     sessionId: string,
     answers: readonly FinalTestAnswer[],
+    expectedModuleId: ModuleId,
+    resolveQuestion: TrustedQuestionResolver,
   ): Promise<FinalTestSubmissionResult> {
     validateUid(uid);
     validateSessionId(sessionId);
@@ -185,12 +254,14 @@ export class FinalTestSubmissionService {
         validateStoredSessionIdentity(
           session,
           uid,
+          expectedModuleId,
         );
 
         if (session.consumed === true) {
           return trustedStoredResult(
             sessionId,
             session,
+            expectedModuleId,
           );
         }
 
@@ -201,6 +272,7 @@ export class FinalTestSubmissionService {
         validateAnswers(
           session.questionIds,
           answers,
+          resolveQuestion,
         );
 
         const answerMap =
@@ -220,7 +292,7 @@ export class FinalTestSubmissionService {
           of session.questionIds
         ) {
           const question =
-            getAlgebraFinalTestQuestion(
+            resolveQuestion(
               questionId,
             );
 
@@ -274,7 +346,7 @@ export class FinalTestSubmissionService {
         return {
           sessionId,
           moduleId:
-            ALGEBRA_MODULE_ID,
+            session.moduleId,
           totalQuestions,
           correctAnswers,
           accuracy,
@@ -290,12 +362,14 @@ export class FinalTestSubmissionService {
    *
    * @param {string} uid Authenticated user identifier.
    * @param {string} sessionId Final-test session identifier.
+   * @param {string} expectedModuleId Trusted expected module.
    * @return {Promise<void>} Completion.
    */
   // eslint-disable-next-line require-jsdoc
   private async markRewardApplied(
     uid: string,
     sessionId: string,
+    expectedModuleId: ModuleId,
   ): Promise<void> {
     const sessionRef =
       this.firestore
@@ -326,6 +400,7 @@ export class FinalTestSubmissionService {
         validateStoredSessionIdentity(
           session,
           uid,
+          expectedModuleId,
         );
 
         if (
@@ -357,12 +432,20 @@ export class FinalTestSubmissionService {
  *
  * @param {string} sessionId Session identifier.
  * @param {StoredFinalTestSession} session Stored session.
+ * @param {string} expectedModuleId Trusted expected module.
  * @return {FinalTestSubmissionResult} Trusted stored result.
  */
 function trustedStoredResult(
   sessionId: string,
   session: StoredFinalTestSession,
+  expectedModuleId: ModuleId,
 ): FinalTestSubmissionResult {
+  validateStoredSessionIdentity(
+    session,
+    session.uid,
+    expectedModuleId,
+  );
+
   if (
     typeof session.totalQuestions !== "number" ||
     !Number.isInteger(
@@ -389,7 +472,7 @@ function trustedStoredResult(
   return {
     sessionId,
     moduleId:
-      ALGEBRA_MODULE_ID,
+      session.moduleId,
     totalQuestions:
       session.totalQuestions,
     correctAnswers:
@@ -450,11 +533,13 @@ function validateSessionId(
  *
  * @param {StoredFinalTestSession} session Stored session.
  * @param {string} uid Authenticated user identifier.
+ * @param {string} expectedModuleId Trusted expected module.
  * @return {void}
  */
 function validateStoredSessionIdentity(
   session: StoredFinalTestSession,
   uid: string,
+  expectedModuleId: ModuleId,
 ): void {
   if (
     session.uid !== uid
@@ -466,7 +551,7 @@ function validateStoredSessionIdentity(
 
   if (
     session.moduleId !==
-    ALGEBRA_MODULE_ID
+    expectedModuleId
   ) {
     throw new Error(
       "Invalid final-test module.",
@@ -518,11 +603,13 @@ function validateActiveSession(
  *
  * @param {string[]} questionIds Assigned question identifiers.
  * @param {FinalTestAnswer[]} answers Submitted answers.
+ * @param {TrustedQuestionResolver} resolveQuestion Trusted resolver.
  * @return {void}
  */
 function validateAnswers(
   questionIds: readonly string[],
   answers: readonly FinalTestAnswer[],
+  resolveQuestion: TrustedQuestionResolver,
 ): void {
   if (
     !Array.isArray(answers) ||
@@ -575,7 +662,7 @@ function validateAnswers(
     }
 
     const question =
-      getAlgebraFinalTestQuestion(
+      resolveQuestion(
         answer.questionId,
       );
 
