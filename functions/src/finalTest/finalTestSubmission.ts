@@ -99,6 +99,79 @@ export class FinalTestSubmissionService {
   ) {}
 
   /**
+   * Processes a final test using the server-owned session module.
+   *
+   * @param {string} uid Authenticated user identifier.
+   * @param {string} sessionId Trusted session identifier.
+   * @param {FinalTestAnswer[]} answers Submitted answers.
+   * @return {Promise<FinalTestProcessingResult>} Trusted result.
+   */
+  // eslint-disable-next-line require-jsdoc
+  async processTrustedFinalTest(
+    uid: string,
+    sessionId: string,
+    answers: readonly FinalTestAnswer[],
+  ): Promise<FinalTestProcessingResult> {
+    validateUid(uid);
+    validateSessionId(sessionId);
+
+    const sessionRef =
+      this.firestore
+        .collection("users")
+        .doc(uid)
+        .collection(
+          "final_test_sessions",
+        )
+        .doc(sessionId);
+
+    const snapshot =
+      await sessionRef.get();
+
+    if (!snapshot.exists) {
+      throw new Error(
+        "Final-test session not found.",
+      );
+    }
+
+    const session =
+      snapshot.data() as
+        StoredFinalTestSession;
+
+    if (
+      session.uid !== uid
+    ) {
+      throw new Error(
+        "Final-test session owner mismatch.",
+      );
+    }
+
+    if (
+      session.moduleId ===
+      ALGEBRA_MODULE_ID
+    ) {
+      return this.processAlgebraFinalTest(
+        uid,
+        sessionId,
+        answers,
+      );
+    }
+
+    if (
+      session.moduleId ===
+      EQUATIONS_MODULE_ID
+    ) {
+      return this.processEquationsFinalTest(
+        uid,
+        sessionId,
+        answers,
+      );
+    }
+
+    throw new Error(
+      "Unsupported final-test module.",
+    );
+  }
+  /**
    * Processes one trusted Algebra final test.
    *
    * @param {string} uid Authenticated user identifier.

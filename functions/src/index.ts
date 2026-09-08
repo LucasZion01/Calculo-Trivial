@@ -242,18 +242,32 @@ export const startFinalTest =
           data: request.data,
         },
         {
-          start: (uid) =>
-            finalTestSessions
-              .startAlgebraFinalTest(
+          start: (
+            uid,
+            moduleId,
+          ) => {
+            if (
+              moduleId ===
+              "algebra-fundamental"
+            ) {
+              return finalTestSessions
+                .startAlgebraFinalTest(
+                  uid,
+                );
+            }
+
+            return finalTestSessions
+              .startEquationsFinalTest(
                 uid,
-              ),
+              );
+          },
           submit: (
             uid,
             sessionId,
             answers,
           ) =>
             finalTestSubmissions
-              .processAlgebraFinalTest(
+              .processTrustedFinalTest(
                 uid,
                 sessionId,
                 answers,
@@ -280,18 +294,32 @@ export const submitFinalTest =
           data: request.data,
         },
         {
-          start: (uid) =>
-            finalTestSessions
-              .startAlgebraFinalTest(
+          start: (
+            uid,
+            moduleId,
+          ) => {
+            if (
+              moduleId ===
+              "algebra-fundamental"
+            ) {
+              return finalTestSessions
+                .startAlgebraFinalTest(
+                  uid,
+                );
+            }
+
+            return finalTestSessions
+              .startEquationsFinalTest(
                 uid,
-              ),
+              );
+          },
           submit: (
             uid,
             sessionId,
             answers,
           ) =>
             finalTestSubmissions
-              .processAlgebraFinalTest(
+              .processTrustedFinalTest(
                 uid,
                 sessionId,
                 answers,

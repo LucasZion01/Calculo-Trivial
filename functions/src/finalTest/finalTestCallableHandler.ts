@@ -11,8 +11,15 @@ import {
   FinalTestProcessingResult,
 } from "./finalTestSubmission";
 
-const ALGEBRA_MODULE_ID =
-  "algebra-fundamental";
+export type SupportedFinalTestModuleId =
+  "algebra-fundamental" |
+  "equacoes-inequacoes";
+
+const SUPPORTED_MODULE_IDS =
+  new Set<SupportedFinalTestModuleId>([
+    "algebra-fundamental",
+    "equacoes-inequacoes",
+  ]);
 
 const MAX_ANSWER_COUNT = 10;
 
@@ -30,6 +37,7 @@ export interface FinalTestCallableRequest {
 export interface FinalTestExecutor {
   start(
     uid: string,
+    moduleId: SupportedFinalTestModuleId,
   ): Promise<FinalTestSessionResult>;
 
   submit(
@@ -43,6 +51,7 @@ export interface FinalTestExecutor {
  * Handles final-test session creation.
  *
  * The authenticated UID is derived outside client-controlled data.
+ * The requested module must belong to the backend allowlist.
  *
  * @param {FinalTestCallableRequest} request Callable request.
  * @param {FinalTestExecutor} executor Trusted executor.
@@ -69,19 +78,15 @@ export async function handleStartFinalTest(
     ]),
   );
 
-  if (
-    data.moduleId !==
-    ALGEBRA_MODULE_ID
-  ) {
-    throw new HttpsError(
-      "invalid-argument",
-      "Unsupported final-test module.",
+  const moduleId =
+    requireSupportedModuleId(
+      data.moduleId,
     );
-  }
 
   try {
     return await executor.start(
       uid,
+      moduleId,
     );
   } catch {
     throw new HttpsError(
@@ -95,6 +100,7 @@ export async function handleStartFinalTest(
  * Handles trusted final-test submission.
  *
  * Client-calculated score, XP, gold and approval are never accepted.
+ * The module is intentionally not accepted from the client here.
  *
  * @param {FinalTestCallableRequest} request Callable request.
  * @param {FinalTestExecutor} executor Trusted executor.
@@ -172,6 +178,31 @@ function requireAuthenticatedUid(
   }
 
   return authUid;
+}
+
+/**
+ * Requires one supported final-test module.
+ *
+ * @param {unknown} value Candidate module identifier.
+ * @return {SupportedFinalTestModuleId} Trusted module identifier.
+ */
+function requireSupportedModuleId(
+  value: unknown,
+): SupportedFinalTestModuleId {
+  if (
+    typeof value !== "string" ||
+    !SUPPORTED_MODULE_IDS.has(
+      value as SupportedFinalTestModuleId,
+    )
+  ) {
+    throw new HttpsError(
+      "invalid-argument",
+      "Unsupported final-test module.",
+    );
+  }
+
+  return value as
+    SupportedFinalTestModuleId;
 }
 
 /**
