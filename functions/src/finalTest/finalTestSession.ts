@@ -17,12 +17,19 @@ import {
   EQUATIONS_FINAL_TEST_CATALOG,
   toPublicEquationsFinalTestQuestion,
 } from "./equationsFinalTestCatalog";
+import {
+  FUNCTIONS_FINAL_TEST_CATALOG,
+  toPublicFunctionsFinalTestQuestion,
+} from "./functionsFinalTestCatalog";
 
 const ALGEBRA_MODULE_ID =
   "algebra-fundamental";
 
 const EQUATIONS_MODULE_ID =
   "equacoes-inequacoes";
+
+const FUNCTIONS_MODULE_ID =
+  "funcoes";
 
 const FINAL_TEST_QUESTION_COUNT = 10;
 
@@ -99,6 +106,24 @@ export class FinalTestSessionService {
       EQUATIONS_MODULE_ID,
       EQUATIONS_FINAL_TEST_CATALOG,
       toPublicEquationsFinalTestQuestion,
+    );
+  }
+
+  /**
+   * Creates one trusted Functions final-test session.
+   *
+   * @param {string} uid Authenticated user identifier.
+   * @return {Promise<FinalTestSessionResult>} Created session.
+   */
+  // eslint-disable-next-line require-jsdoc
+  async startFunctionsFinalTest(
+    uid: string,
+  ): Promise<FinalTestSessionResult> {
+    return this.startFinalTest(
+      uid,
+      FUNCTIONS_MODULE_ID,
+      FUNCTIONS_FINAL_TEST_CATALOG,
+      toPublicFunctionsFinalTestQuestion,
     );
   }
 
