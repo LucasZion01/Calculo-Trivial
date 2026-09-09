@@ -1,14 +1,6 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 
-import 'package:calcquest/l10n/app_localizations.dart';
-import 'package:calcquest/shared/data/localized_limits_exercise_content.dart';
-import 'package:calcquest/shared/data/mock_exercise_data.dart';
-import 'package:calcquest/shared/data/mock_limits_exercise_data.dart';
-import 'package:calcquest/shared/domain/exercise_review_item.dart';
-import 'package:calcquest/shared/domain/final_test_session_builder.dart';
-import 'package:calcquest/shared/services/learning_difficulty_tracker.dart';
+import 'package:calcquest/shared/services/final_test_service.dart';
 import 'package:calcquest/shared/state/app_progress.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
 import 'package:calcquest/shared/theme/app_spacing.dart';
@@ -27,124 +19,174 @@ class LimitsFinalTestScreen extends StatefulWidget {
   });
 
   @override
-  State<LimitsFinalTestScreen> createState() => _LimitsFinalTestScreenState();
+  State<LimitsFinalTestScreen> createState() =>
+      _LimitsFinalTestScreenState();
 }
 
 class _LimitsFinalTestScreenState extends State<LimitsFinalTestScreen> {
-  late final List<ExerciseData> sessionExercises;
-  final List<ExerciseReviewItem> reviewItems = <ExerciseReviewItem>[];
+  final FinalTestService _finalTestService = FinalTestService();
+  final List<TrustedFinalTestAnswer> _answers = <TrustedFinalTestAnswer>[];
 
+  TrustedFinalTestSession? _session;
   int currentExerciseIndex = 0;
-  int correctAnswers = 0;
   String? selectedOptionId;
+  bool _isLoading = true;
+  bool _isSubmitting = false;
+  String? _errorMessage;
 
   @override
   void initState() {
     super.initState();
-
-    sessionExercises = FinalTestSessionBuilder.build(
-      lessonId: AppProgress.limitsId,
-      exercises: mockLimitsExercises,
-      practiceQuestionIds: widget.practiceQuestionIds,
-    );
+    _startFinalTest();
   }
-
-  ExerciseData get currentExercise => localizeLimitsExerciseContent(
-        sessionExercises[currentExerciseIndex],
-        Localizations.localeOf(context),
-      );
-
-  bool get isLastExercise =>
-      currentExerciseIndex == sessionExercises.length - 1;
-
-  double get progress => (currentExerciseIndex + 1) / sessionExercises.length;
 
   bool get _isEnglish =>
       Localizations.localeOf(context).languageCode.toLowerCase() == 'en';
 
-  String _difficultyLabel(
-    ExerciseDifficulty difficulty,
-    AppLocalizations l10n,
-  ) {
-    return switch (difficulty) {
-      ExerciseDifficulty.foundation => l10n.exerciseDifficultyFoundation,
-      ExerciseDifficulty.intermediate => l10n.exerciseDifficultyIntermediate,
-      ExerciseDifficulty.challenge => l10n.exerciseDifficultyChallenge,
-    };
+  TrustedFinalTestQuestion get currentQuestion =>
+      _session!.questions[currentExerciseIndex];
+
+  bool get isLastExercise =>
+      currentExerciseIndex == _session!.questions.length - 1;
+
+  double get progress =>
+      (currentExerciseIndex + 1) / _session!.questions.length;
+
+  Future<void> _startFinalTest() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    try {
+      final session = await _finalTestService.startLimitsFinalTest();
+
+      if (!mounted) {
+        return;
+      }
+
+      setState(() {
+        _session = session;
+        currentExerciseIndex = 0;
+        selectedOptionId = null;
+        _answers.clear();
+        _isLoading = false;
+      });
+    } catch (_) {
+      if (!mounted) {
+        return;
+      }
+
+      setState(() {
+        _isLoading = false;
+        _errorMessage = 'start';
+      });
+    }
   }
 
-  void _confirmAnswer() {
-    final l10n = AppLocalizations.of(context)!;
+  Future<void> _confirmAnswer() async {
+    if (_isSubmitting) {
+      return;
+    }
 
-    if (selectedOptionId == null) {
+    final selected = selectedOptionId;
+    if (selected == null) {
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
         ..showSnackBar(
           SnackBar(
             behavior: SnackBarBehavior.floating,
             backgroundColor: AppColors.warning,
-            content: Text(l10n.exerciseChooseAlternative),
+            content: Text(
+              _isEnglish
+                  ? 'Choose an alternative before continuing.'
+                  : 'Escolha uma alternativa antes de continuar.',
+            ),
           ),
         );
       return;
     }
 
-    final exercise = currentExercise;
-    final isCorrect = selectedOptionId == exercise.correctOptionId;
-    final selectedOption = exercise.options.firstWhere(
-      (option) => option.id == selectedOptionId,
-    );
-    final correctOption = exercise.options.firstWhere(
-      (option) => option.id == exercise.correctOptionId,
+    final question = currentQuestion;
+    final answer = TrustedFinalTestAnswer(
+      questionId: question.id,
+      optionId: selected,
     );
 
-    AppProgress.recordExerciseAnswer(isCorrect: isCorrect);
-    unawaited(
-      LearningDifficultyTracker.recordFinalTestAttempt(
-        moduleId: AppProgress.limitsId,
-        exercise: exercise,
-        isCorrect: isCorrect,
-      ),
-    );
+    if (!isLastExercise) {
+      _answers.add(answer);
 
-    if (isCorrect) {
-      correctAnswers++;
-    } else {
-      reviewItems.add(
-        ExerciseReviewItem(
-          questionId: exercise.id,
-          statement: exercise.statement,
-          selectedAnswer: selectedOption.text,
-          correctAnswer: correctOption.text,
-          explanation: exercise.explanation,
-        ),
-      );
+      setState(() {
+        currentExerciseIndex++;
+        selectedOptionId = null;
+      });
+      return;
     }
 
-    if (isLastExercise) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (_) => ResultScreen(
-            completedLessonId: AppProgress.limitsId,
-            totalQuestions: sessionExercises.length,
-            correctAnswers: correctAnswers,
-            xpEarned: 90,
-            goldEarned: 40,
-            reviewItems: List<ExerciseReviewItem>.unmodifiable(reviewItems),
-            enableLearningRecommendation: true,
-          ),
-        ),
-      );
+    final answers = <TrustedFinalTestAnswer>[..._answers, answer];
+
+    await _submitFinalTest(answers);
+  }
+
+  Future<void> _submitFinalTest(List<TrustedFinalTestAnswer> answers) async {
+    final session = _session;
+    if (session == null) {
       return;
     }
 
     setState(() {
-      currentExerciseIndex++;
-      selectedOptionId = null;
+      _isSubmitting = true;
     });
+
+    try {
+      final result = await _finalTestService.submitLimitsFinalTest(
+        sessionId: session.sessionId,
+        answers: answers,
+      );
+
+      if (!mounted) {
+        return;
+      }
+
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (_) => ResultScreen(
+            completedLessonId: AppProgress.limitsId,
+            totalQuestions: result.totalQuestions,
+            correctAnswers: result.correctAnswers,
+            xpEarned: result.awardedXp,
+            goldEarned: result.awardedGold,
+            enableLearningRecommendation: false,
+            rewardAlreadyAppliedByBackend: true,
+          ),
+        ),
+      );
+    } catch (_) {
+      if (!mounted) {
+        return;
+      }
+
+      setState(() {
+        _isSubmitting = false;
+      });
+
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            behavior: SnackBarBehavior.floating,
+            backgroundColor: AppColors.warning,
+            content: Text(
+              _isEnglish
+                  ? 'The test could not be submitted. Your answers were not changed. Try again.'
+                  : 'Não foi possível enviar o teste. Suas respostas não foram alteradas. Tente novamente.',
+            ),
+          ),
+        );
+    }
   }
 
-  Widget _buildOption(ExerciseOptionData option, int index) {
+  Widget _buildOption(TrustedFinalTestOption option, int index) {
     final isSelected = selectedOptionId == option.id;
     const letters = <String>['A', 'B', 'C', 'D'];
 
@@ -152,7 +194,11 @@ class _LimitsFinalTestScreenState extends State<LimitsFinalTestScreen> {
       color: Colors.transparent,
       borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
       child: InkWell(
-        onTap: () => setState(() => selectedOptionId = option.id),
+        onTap: _isSubmitting
+            ? null
+            : () => setState(() {
+                selectedOptionId = option.id;
+              }),
         borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 180),
@@ -181,7 +227,7 @@ class _LimitsFinalTestScreenState extends State<LimitsFinalTestScreen> {
                   borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
                 ),
                 child: Text(
-                  letters[index],
+                  index < letters.length ? letters[index] : '${index + 1}',
                   style: AppTypography.labelMedium.copyWith(
                     color: isSelected
                         ? AppColors.white
@@ -190,7 +236,9 @@ class _LimitsFinalTestScreenState extends State<LimitsFinalTestScreen> {
                 ),
               ),
               const SizedBox(width: AppSpacing.sm),
-              Expanded(child: Text(option.text, style: AppTypography.bodyLarge)),
+              Expanded(
+                child: Text(option.text, style: AppTypography.bodyLarge),
+              ),
               if (isSelected)
                 const Icon(
                   Icons.check_circle_rounded,
@@ -203,10 +251,79 @@ class _LimitsFinalTestScreenState extends State<LimitsFinalTestScreen> {
     );
   }
 
+  Widget _buildLoadingState() {
+    return Scaffold(
+      backgroundColor: AppColors.background,
+      appBar: AppBar(
+        backgroundColor: AppColors.background,
+        elevation: 0,
+        title: Text(_isEnglish ? 'Final test' : 'Teste final'),
+      ),
+      body: const SafeArea(child: Center(child: CircularProgressIndicator())),
+    );
+  }
+
+  Widget _buildErrorState() {
+    return Scaffold(
+      backgroundColor: AppColors.background,
+      appBar: AppBar(
+        backgroundColor: AppColors.background,
+        elevation: 0,
+        title: Text(_isEnglish ? 'Final test' : 'Teste final'),
+      ),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(AppSpacing.screenHorizontal),
+          child: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(
+                  Icons.cloud_off_rounded,
+                  size: 48,
+                  color: AppColors.warning,
+                ),
+                const SizedBox(height: AppSpacing.md),
+                Text(
+                  _isEnglish
+                      ? 'The secure final test could not be loaded.'
+                      : 'Não foi possível carregar o teste final seguro.',
+                  textAlign: TextAlign.center,
+                  style: AppTypography.headingSmall,
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                Text(
+                  _isEnglish
+                      ? 'Check your connection and try again.'
+                      : 'Verifique sua conexão e tente novamente.',
+                  textAlign: TextAlign.center,
+                  style: AppTypography.bodyMedium,
+                ),
+                const SizedBox(height: AppSpacing.lg),
+                PrimaryButton(
+                  text: _isEnglish ? 'Try again' : 'Tentar novamente',
+                  icon: Icons.refresh_rounded,
+                  onPressed: _startFinalTest,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    final exercise = currentExercise;
+    if (_isLoading) {
+      return _buildLoadingState();
+    }
+
+    if (_errorMessage != null || _session == null) {
+      return _buildErrorState();
+    }
+
+    final question = currentQuestion;
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -228,8 +345,8 @@ class _LimitsFinalTestScreenState extends State<LimitsFinalTestScreen> {
             children: [
               Text(
                 _isEnglish
-                    ? 'Question ${currentExerciseIndex + 1} of ${sessionExercises.length}'
-                    : 'Questão ${currentExerciseIndex + 1} de ${sessionExercises.length}',
+                    ? 'Question ${currentExerciseIndex + 1} of ${_session!.questions.length}'
+                    : 'Questão ${currentExerciseIndex + 1} de ${_session!.questions.length}',
                 style: AppTypography.headingSmall,
               ),
               const SizedBox(height: AppSpacing.xs),
@@ -243,25 +360,10 @@ class _LimitsFinalTestScreenState extends State<LimitsFinalTestScreen> {
               TweenAnimationBuilder<double>(
                 tween: Tween(begin: 0, end: progress),
                 duration: const Duration(milliseconds: 300),
-                builder: (context, value, child) => AppProgressBar(value: value),
+                builder: (context, value, child) =>
+                    AppProgressBar(value: value),
               ),
               const SizedBox(height: AppSpacing.lg),
-              Wrap(
-                spacing: AppSpacing.xs,
-                runSpacing: AppSpacing.xs,
-                children: [
-                  if (exercise.skill != null)
-                    Chip(
-                      avatar: const Icon(Icons.school_outlined, size: 18),
-                      label: Text(exercise.skill!),
-                    ),
-                  Chip(
-                    avatar: const Icon(Icons.signal_cellular_alt_rounded, size: 18),
-                    label: Text(_difficultyLabel(exercise.difficulty, l10n)),
-                  ),
-                ],
-              ),
-              const SizedBox(height: AppSpacing.md),
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(AppSpacing.cardPaddingLarge),
@@ -271,7 +373,7 @@ class _LimitsFinalTestScreenState extends State<LimitsFinalTestScreen> {
                   border: Border.all(color: AppColors.border),
                 ),
                 child: Text(
-                  exercise.statement,
+                  question.statement,
                   style: AppTypography.headingSmall.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
@@ -280,13 +382,18 @@ class _LimitsFinalTestScreenState extends State<LimitsFinalTestScreen> {
               const SizedBox(height: AppSpacing.lg),
               Expanded(
                 child: ListView.separated(
-                  itemCount: exercise.options.length,
+                  itemCount: question.options.length,
                   separatorBuilder: (_, _) =>
                       const SizedBox(height: AppSpacing.sm),
                   itemBuilder: (context, index) =>
-                      _buildOption(exercise.options[index], index),
+                      _buildOption(question.options[index], index),
                 ),
               ),
+              if (_isSubmitting) ...[
+                const SizedBox(height: AppSpacing.sm),
+                const Center(child: CircularProgressIndicator()),
+                const SizedBox(height: AppSpacing.sm),
+              ],
               PrimaryButton(
                 text: isLastExercise
                     ? (_isEnglish ? 'Finish test' : 'Finalizar teste')
@@ -296,7 +403,7 @@ class _LimitsFinalTestScreenState extends State<LimitsFinalTestScreen> {
                 icon: isLastExercise
                     ? Icons.flag_rounded
                     : Icons.arrow_forward_rounded,
-                onPressed: _confirmAnswer,
+                onPressed: _isSubmitting ? null : _confirmAnswer,
               ),
             ],
           ),
