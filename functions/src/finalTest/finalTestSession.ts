@@ -21,6 +21,10 @@ import {
   FUNCTIONS_FINAL_TEST_CATALOG,
   toPublicFunctionsFinalTestQuestion,
 } from "./functionsFinalTestCatalog";
+import {
+  LIMITS_FINAL_TEST_CATALOG,
+  toPublicLimitsFinalTestQuestion,
+} from "./limitsFinalTestCatalog";
 
 const ALGEBRA_MODULE_ID =
   "algebra-fundamental";
@@ -30,6 +34,9 @@ const EQUATIONS_MODULE_ID =
 
 const FUNCTIONS_MODULE_ID =
   "funcoes";
+
+const LIMITS_MODULE_ID =
+  "limites";
 
 const FINAL_TEST_QUESTION_COUNT = 10;
 
@@ -124,6 +131,24 @@ export class FinalTestSessionService {
       FUNCTIONS_MODULE_ID,
       FUNCTIONS_FINAL_TEST_CATALOG,
       toPublicFunctionsFinalTestQuestion,
+    );
+  }
+
+  /**
+   * Creates one trusted Limits final-test session.
+   *
+   * @param {string} uid Authenticated user identifier.
+   * @return {Promise<FinalTestSessionResult>} Created session.
+   */
+  // eslint-disable-next-line require-jsdoc
+  async startLimitsFinalTest(
+    uid: string,
+  ): Promise<FinalTestSessionResult> {
+    return this.startFinalTest(
+      uid,
+      LIMITS_MODULE_ID,
+      LIMITS_FINAL_TEST_CATALOG,
+      toPublicLimitsFinalTestQuestion,
     );
   }
 
