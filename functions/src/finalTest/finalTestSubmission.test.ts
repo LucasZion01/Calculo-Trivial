@@ -24,6 +24,9 @@ import {
 import {
   getEquationsFinalTestQuestion,
 } from "./equationsFinalTestCatalog";
+import {
+  getFunctionsFinalTestQuestion,
+} from "./functionsFinalTestCatalog";
 
 import {
   FinalTestSessionResult,
@@ -200,6 +203,75 @@ function buildEquationsAnswers(
       if (!trustedQuestion) {
         throw new Error(
           "Trusted Equations test question not found.",
+        );
+      }
+
+      if (index < correctCount) {
+        return {
+          questionId:
+            publicQuestion.id,
+          optionId:
+            trustedQuestion.correctOptionId,
+        };
+      }
+
+      const wrongOption =
+        trustedQuestion.options.find(
+          (option) =>
+            option.id !==
+            trustedQuestion.correctOptionId,
+        );
+
+      if (!wrongOption) {
+        throw new Error(
+          "Question has no wrong option for testing.",
+        );
+      }
+
+      return {
+        questionId:
+          publicQuestion.id,
+        optionId:
+          wrongOption.id,
+      };
+    },
+  );
+}
+
+/**
+ * Creates trusted Equations answers with an exact number correct.
+ *
+ * This helper reads the answer key only inside the trusted test
+ * environment.
+ *
+ * @param {FinalTestSessionResult} session Trusted test session.
+ * @param {number} correctCount Number of correct answers.
+ * @return {FinalTestAnswer[]} Generated answers.
+ */
+function buildFunctionsAnswers(
+  session: FinalTestSessionResult,
+  correctCount: number,
+): FinalTestAnswer[] {
+  if (
+    !Number.isInteger(correctCount) ||
+    correctCount < 0 ||
+    correctCount > session.questions.length
+  ) {
+    throw new Error(
+      "Invalid requested correct-answer count.",
+    );
+  }
+
+  return session.questions.map(
+    (publicQuestion, index) => {
+      const trustedQuestion =
+        getFunctionsFinalTestQuestion(
+          publicQuestion.id,
+        );
+
+      if (!trustedQuestion) {
+        throw new Error(
+          "Trusted Functions test question not found.",
         );
       }
 
@@ -1327,6 +1399,380 @@ test(
     assert.equal(
       progress.totalGold,
       30,
+    );
+  },
+);
+test(
+  "Functions session exposes trusted questions without answer keys",
+  async () => {
+    const session =
+      await sessionService
+        .startFunctionsFinalTest(
+          "uid_functions",
+        );
+
+    assert.equal(
+      session.moduleId,
+      "funcoes",
+    );
+
+    assert.equal(
+      session.questions.length,
+      10,
+    );
+
+    assert.equal(
+      new Set(
+        session.questions.map(
+          (question) =>
+            question.id,
+        ),
+      ).size,
+      10,
+    );
+
+    for (
+      const question
+      of session.questions
+    ) {
+      assert.equal(
+        "correctOptionId" in question,
+        false,
+      );
+
+      assert.ok(
+        getFunctionsFinalTestQuestion(
+          question.id,
+        ),
+      );
+
+      assert.equal(
+        getAlgebraFinalTestQuestion(
+          question.id,
+        ),
+        undefined,
+      );
+    }
+
+    const stored =
+      await readStoredSession(
+        "uid_functions",
+        session.sessionId,
+      );
+
+    assert.equal(
+      stored.moduleId,
+      "funcoes",
+    );
+
+    assert.equal(
+      stored.consumed,
+      false,
+    );
+  },
+);
+
+test(
+  "seven of ten Functions answers awards nothing",
+  async () => {
+    const session =
+      await sessionService
+        .startFunctionsFinalTest(
+          "uid_functions",
+        );
+
+    const result =
+      await submissionService
+        .processFunctionsFinalTest(
+          "uid_functions",
+          session.sessionId,
+          buildFunctionsAnswers(
+            session,
+            7,
+          ),
+        );
+
+    assert.equal(
+      result.submission.correctAnswers,
+      7,
+    );
+
+    assert.equal(
+      result.submission.accuracy,
+      0.7,
+    );
+
+    assert.equal(
+      result.submission.approved,
+      false,
+    );
+
+    assert.equal(
+      result.reward,
+      null,
+    );
+
+    assert.equal(
+      await readProgress(
+        "uid_functions",
+      ),
+      null,
+    );
+  },
+);
+
+test(
+  "eight of ten Functions answers awards canonical reward",
+  async () => {
+    const session =
+      await sessionService
+        .startFunctionsFinalTest(
+          "uid_functions",
+        );
+
+    const result =
+      await submissionService
+        .processFunctionsFinalTest(
+          "uid_functions",
+          session.sessionId,
+          buildFunctionsAnswers(
+            session,
+            8,
+          ),
+        );
+
+    assert.equal(
+      result.submission.moduleId,
+      "funcoes",
+    );
+
+    assert.equal(
+      result.submission.correctAnswers,
+      8,
+    );
+
+    assert.equal(
+      result.submission.accuracy,
+      0.8,
+    );
+
+    assert.equal(
+      result.submission.approved,
+      true,
+    );
+
+    assert.deepEqual(
+      result.reward,
+      {
+        moduleId:
+          "funcoes",
+        alreadyCompleted: false,
+        xpAwarded: 80,
+        goldAwarded: 35,
+      },
+    );
+
+    const progress =
+      await readProgress(
+        "uid_functions",
+      );
+
+    assert.ok(progress);
+
+    assert.equal(
+      progress.totalXp,
+      80,
+    );
+
+    assert.equal(
+      progress.totalGold,
+      35,
+    );
+
+    const stored =
+      await readStoredSession(
+        "uid_functions",
+        session.sessionId,
+      );
+
+    assert.equal(
+      stored.rewardApplied,
+      true,
+    );
+  },
+);
+
+test(
+  "Functions session cannot be processed through Algebra path",
+  async () => {
+    const session =
+      await sessionService
+        .startFunctionsFinalTest(
+          "uid_functions",
+        );
+
+    await assert.rejects(
+      () =>
+        submissionService
+          .processAlgebraFinalTest(
+            "uid_functions",
+            session.sessionId,
+            buildFunctionsAnswers(
+              session,
+              10,
+            ),
+          ),
+      /Invalid final-test module/,
+    );
+
+    assert.equal(
+      await readProgress(
+        "uid_functions",
+      ),
+      null,
+    );
+
+    const stored =
+      await readStoredSession(
+        "uid_functions",
+        session.sessionId,
+      );
+
+    assert.equal(
+      stored.consumed,
+      false,
+    );
+  },
+);
+
+test(
+  "invalid Functions option is rejected without consuming session",
+  async () => {
+    const session =
+      await sessionService
+        .startFunctionsFinalTest(
+          "uid_functions",
+        );
+
+    const answers =
+      buildFunctionsAnswers(
+        session,
+        10,
+      );
+
+    answers[0] = {
+      questionId:
+        answers[0].questionId,
+      optionId:
+        "forged-option",
+    };
+
+    await assert.rejects(
+      () =>
+        submissionService
+          .processFunctionsFinalTest(
+            "uid_functions",
+            session.sessionId,
+            answers,
+          ),
+      /Invalid final-test option/,
+    );
+
+    assert.equal(
+      await readProgress(
+        "uid_functions",
+      ),
+      null,
+    );
+
+    const stored =
+      await readStoredSession(
+        "uid_functions",
+        session.sessionId,
+      );
+
+    assert.equal(
+      stored.consumed,
+      false,
+    );
+  },
+);
+
+test(
+  "replaying approved Functions session never duplicates reward",
+  async () => {
+    const session =
+      await sessionService
+        .startFunctionsFinalTest(
+          "uid_functions",
+        );
+
+    const answers =
+      buildFunctionsAnswers(
+        session,
+        8,
+      );
+
+    const first =
+      await submissionService
+        .processFunctionsFinalTest(
+          "uid_functions",
+          session.sessionId,
+          answers,
+        );
+
+    const replay =
+      await submissionService
+        .processFunctionsFinalTest(
+          "uid_functions",
+          session.sessionId,
+          answers,
+        );
+
+    assert.equal(
+      first.submission.alreadySubmitted,
+      false,
+    );
+
+    assert.equal(
+      replay.submission.alreadySubmitted,
+      true,
+    );
+
+    assert.ok(
+      replay.reward,
+    );
+
+    assert.equal(
+      replay.reward.alreadyCompleted,
+      true,
+    );
+
+    assert.equal(
+      replay.reward.xpAwarded,
+      0,
+    );
+
+    assert.equal(
+      replay.reward.goldAwarded,
+      0,
+    );
+
+    const progress =
+      await readProgress(
+        "uid_functions",
+      );
+
+    assert.ok(progress);
+
+    assert.equal(
+      progress.totalXp,
+      80,
+    );
+
+    assert.equal(
+      progress.totalGold,
+      35,
     );
   },
 );

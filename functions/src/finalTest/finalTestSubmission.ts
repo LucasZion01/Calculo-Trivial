@@ -10,6 +10,9 @@ import {
 import {
   getEquationsFinalTestQuestion,
 } from "./equationsFinalTestCatalog";
+import {
+  getFunctionsFinalTestQuestion,
+} from "./functionsFinalTestCatalog";
 
 import {
   ModuleCompletionResult,
@@ -22,6 +25,9 @@ const ALGEBRA_MODULE_ID =
 
 const EQUATIONS_MODULE_ID =
   "equacoes-inequacoes";
+
+const FUNCTIONS_MODULE_ID =
+  "funcoes";
 
 const MINIMUM_PASSING_ACCURACY =
   0.8;
@@ -167,6 +173,17 @@ export class FinalTestSubmissionService {
       );
     }
 
+    if (
+      session.moduleId ===
+      FUNCTIONS_MODULE_ID
+    ) {
+      return this.processFunctionsFinalTest(
+        uid,
+        sessionId,
+        answers,
+      );
+    }
+
     throw new Error(
       "Unsupported final-test module.",
     );
@@ -214,6 +231,29 @@ export class FinalTestSubmissionService {
       answers,
       EQUATIONS_MODULE_ID,
       getEquationsFinalTestQuestion,
+    );
+  }
+
+  /**
+   * Processes one trusted Functions final test.
+   *
+   * @param {string} uid Authenticated user identifier.
+   * @param {string} sessionId Trusted session identifier.
+   * @param {FinalTestAnswer[]} answers Submitted answers.
+   * @return {Promise<FinalTestProcessingResult>} Trusted result.
+   */
+  // eslint-disable-next-line require-jsdoc
+  async processFunctionsFinalTest(
+    uid: string,
+    sessionId: string,
+    answers: readonly FinalTestAnswer[],
+  ): Promise<FinalTestProcessingResult> {
+    return this.processFinalTest(
+      uid,
+      sessionId,
+      answers,
+      FUNCTIONS_MODULE_ID,
+      getFunctionsFinalTestQuestion,
     );
   }
 
