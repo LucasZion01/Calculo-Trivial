@@ -13,6 +13,9 @@ import {
 import {
   getFunctionsFinalTestQuestion,
 } from "./functionsFinalTestCatalog";
+import {
+  getLimitsFinalTestQuestion,
+} from "./limitsFinalTestCatalog";
 
 import {
   ModuleCompletionResult,
@@ -28,6 +31,9 @@ const EQUATIONS_MODULE_ID =
 
 const FUNCTIONS_MODULE_ID =
   "funcoes";
+
+const LIMITS_MODULE_ID =
+  "limites";
 
 const MINIMUM_PASSING_ACCURACY =
   0.8;
@@ -184,6 +190,17 @@ export class FinalTestSubmissionService {
       );
     }
 
+    if (
+      session.moduleId ===
+      LIMITS_MODULE_ID
+    ) {
+      return this.processLimitsFinalTest(
+        uid,
+        sessionId,
+        answers,
+      );
+    }
+
     throw new Error(
       "Unsupported final-test module.",
     );
@@ -254,6 +271,29 @@ export class FinalTestSubmissionService {
       answers,
       FUNCTIONS_MODULE_ID,
       getFunctionsFinalTestQuestion,
+    );
+  }
+
+  /**
+   * Processes one trusted Limits final test.
+   *
+   * @param {string} uid Authenticated user identifier.
+   * @param {string} sessionId Trusted session identifier.
+   * @param {FinalTestAnswer[]} answers Submitted answers.
+   * @return {Promise<FinalTestProcessingResult>} Trusted result.
+   */
+  // eslint-disable-next-line require-jsdoc
+  async processLimitsFinalTest(
+    uid: string,
+    sessionId: string,
+    answers: readonly FinalTestAnswer[],
+  ): Promise<FinalTestProcessingResult> {
+    return this.processFinalTest(
+      uid,
+      sessionId,
+      answers,
+      LIMITS_MODULE_ID,
+      getLimitsFinalTestQuestion,
     );
   }
 

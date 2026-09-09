@@ -27,6 +27,9 @@ import {
 import {
   getFunctionsFinalTestQuestion,
 } from "./functionsFinalTestCatalog";
+import {
+  getLimitsFinalTestQuestion,
+} from "./limitsFinalTestCatalog";
 
 import {
   FinalTestSessionResult,
@@ -1402,6 +1405,67 @@ test(
     );
   },
 );
+/**
+ * Builds trusted Limits answers for integration tests.
+ *
+ * @param {FinalTestSessionResult} session Trusted test session.
+ * @param {number} correctCount Number of correct answers.
+ * @return {FinalTestAnswer[]} Generated answers.
+ */
+function buildLimitsAnswers(
+  session: FinalTestSessionResult,
+  correctCount: number,
+): FinalTestAnswer[] {
+  if (
+    !Number.isInteger(correctCount) ||
+    correctCount < 0 ||
+    correctCount > session.questions.length
+  ) {
+    throw new Error(
+      "Invalid Limits correct-answer count.",
+    );
+  }
+
+  return session.questions.map(
+    (publicQuestion, index) => {
+      const trustedQuestion =
+        getLimitsFinalTestQuestion(
+          publicQuestion.id,
+        );
+
+      if (!trustedQuestion) {
+        throw new Error(
+          "Trusted Limits test question not found.",
+        );
+      }
+
+      if (index < correctCount) {
+        return {
+          questionId: publicQuestion.id,
+          optionId: trustedQuestion.correctOptionId,
+        };
+      }
+
+      const wrongOption =
+        trustedQuestion.options.find(
+          (option) =>
+            option.id !==
+            trustedQuestion.correctOptionId,
+        );
+
+      if (!wrongOption) {
+        throw new Error(
+          "Limits question has no wrong option.",
+        );
+      }
+
+      return {
+        questionId: publicQuestion.id,
+        optionId: wrongOption.id,
+      };
+    },
+  );
+}
 test(
   "Functions session exposes trusted questions without answer keys",
   async () => {
@@ -1773,6 +1837,380 @@ test(
     assert.equal(
       progress.totalGold,
       35,
+    );
+  },
+);
+test(
+  "Limits session exposes trusted questions without answer keys",
+  async () => {
+    const session =
+      await sessionService
+        .startLimitsFinalTest(
+          "uid_limits",
+        );
+
+    assert.equal(
+      session.moduleId,
+      "limites",
+    );
+
+    assert.equal(
+      session.questions.length,
+      10,
+    );
+
+    assert.equal(
+      new Set(
+        session.questions.map(
+          (question) =>
+            question.id,
+        ),
+      ).size,
+      10,
+    );
+
+    for (
+      const question
+      of session.questions
+    ) {
+      assert.equal(
+        "correctOptionId" in question,
+        false,
+      );
+
+      assert.ok(
+        getLimitsFinalTestQuestion(
+          question.id,
+        ),
+      );
+
+      assert.equal(
+        getAlgebraFinalTestQuestion(
+          question.id,
+        ),
+        undefined,
+      );
+    }
+
+    const stored =
+      await readStoredSession(
+        "uid_limits",
+        session.sessionId,
+      );
+
+    assert.equal(
+      stored.moduleId,
+      "limites",
+    );
+
+    assert.equal(
+      stored.consumed,
+      false,
+    );
+  },
+);
+
+test(
+  "seven of ten Limits answers awards nothing",
+  async () => {
+    const session =
+      await sessionService
+        .startLimitsFinalTest(
+          "uid_limits",
+        );
+
+    const result =
+      await submissionService
+        .processLimitsFinalTest(
+          "uid_limits",
+          session.sessionId,
+          buildLimitsAnswers(
+            session,
+            7,
+          ),
+        );
+
+    assert.equal(
+      result.submission.correctAnswers,
+      7,
+    );
+
+    assert.equal(
+      result.submission.accuracy,
+      0.7,
+    );
+
+    assert.equal(
+      result.submission.approved,
+      false,
+    );
+
+    assert.equal(
+      result.reward,
+      null,
+    );
+
+    assert.equal(
+      await readProgress(
+        "uid_limits",
+      ),
+      null,
+    );
+  },
+);
+
+test(
+  "eight of ten Limits answers awards canonical reward",
+  async () => {
+    const session =
+      await sessionService
+        .startLimitsFinalTest(
+          "uid_limits",
+        );
+
+    const result =
+      await submissionService
+        .processLimitsFinalTest(
+          "uid_limits",
+          session.sessionId,
+          buildLimitsAnswers(
+            session,
+            8,
+          ),
+        );
+
+    assert.equal(
+      result.submission.moduleId,
+      "limites",
+    );
+
+    assert.equal(
+      result.submission.correctAnswers,
+      8,
+    );
+
+    assert.equal(
+      result.submission.accuracy,
+      0.8,
+    );
+
+    assert.equal(
+      result.submission.approved,
+      true,
+    );
+
+    assert.deepEqual(
+      result.reward,
+      {
+        moduleId:
+          "limites",
+        alreadyCompleted: false,
+        xpAwarded: 90,
+        goldAwarded: 40,
+      },
+    );
+
+    const progress =
+      await readProgress(
+        "uid_limits",
+      );
+
+    assert.ok(progress);
+
+    assert.equal(
+      progress.totalXp,
+      90,
+    );
+
+    assert.equal(
+      progress.totalGold,
+      40,
+    );
+
+    const stored =
+      await readStoredSession(
+        "uid_limits",
+        session.sessionId,
+      );
+
+    assert.equal(
+      stored.rewardApplied,
+      true,
+    );
+  },
+);
+
+test(
+  "Limits session cannot be processed through Algebra path",
+  async () => {
+    const session =
+      await sessionService
+        .startLimitsFinalTest(
+          "uid_limits",
+        );
+
+    await assert.rejects(
+      () =>
+        submissionService
+          .processAlgebraFinalTest(
+            "uid_limits",
+            session.sessionId,
+            buildLimitsAnswers(
+              session,
+              10,
+            ),
+          ),
+      /Invalid final-test module/,
+    );
+
+    assert.equal(
+      await readProgress(
+        "uid_limits",
+      ),
+      null,
+    );
+
+    const stored =
+      await readStoredSession(
+        "uid_limits",
+        session.sessionId,
+      );
+
+    assert.equal(
+      stored.consumed,
+      false,
+    );
+  },
+);
+
+test(
+  "invalid Limits option is rejected without consuming session",
+  async () => {
+    const session =
+      await sessionService
+        .startLimitsFinalTest(
+          "uid_limits",
+        );
+
+    const answers =
+      buildLimitsAnswers(
+        session,
+        10,
+      );
+
+    answers[0] = {
+      questionId:
+        answers[0].questionId,
+      optionId:
+        "forged-option",
+    };
+
+    await assert.rejects(
+      () =>
+        submissionService
+          .processLimitsFinalTest(
+            "uid_limits",
+            session.sessionId,
+            answers,
+          ),
+      /Invalid final-test option/,
+    );
+
+    assert.equal(
+      await readProgress(
+        "uid_limits",
+      ),
+      null,
+    );
+
+    const stored =
+      await readStoredSession(
+        "uid_limits",
+        session.sessionId,
+      );
+
+    assert.equal(
+      stored.consumed,
+      false,
+    );
+  },
+);
+
+test(
+  "replaying approved Limits session never duplicates reward",
+  async () => {
+    const session =
+      await sessionService
+        .startLimitsFinalTest(
+          "uid_limits",
+        );
+
+    const answers =
+      buildLimitsAnswers(
+        session,
+        8,
+      );
+
+    const first =
+      await submissionService
+        .processLimitsFinalTest(
+          "uid_limits",
+          session.sessionId,
+          answers,
+        );
+
+    const replay =
+      await submissionService
+        .processLimitsFinalTest(
+          "uid_limits",
+          session.sessionId,
+          answers,
+        );
+
+    assert.equal(
+      first.submission.alreadySubmitted,
+      false,
+    );
+
+    assert.equal(
+      replay.submission.alreadySubmitted,
+      true,
+    );
+
+    assert.ok(
+      replay.reward,
+    );
+
+    assert.equal(
+      replay.reward.alreadyCompleted,
+      true,
+    );
+
+    assert.equal(
+      replay.reward.xpAwarded,
+      0,
+    );
+
+    assert.equal(
+      replay.reward.goldAwarded,
+      0,
+    );
+
+    const progress =
+      await readProgress(
+        "uid_limits",
+      );
+
+    assert.ok(progress);
+
+    assert.equal(
+      progress.totalXp,
+      90,
+    );
+
+    assert.equal(
+      progress.totalGold,
+      40,
     );
   },
 );
