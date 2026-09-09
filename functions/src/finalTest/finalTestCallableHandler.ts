@@ -13,12 +13,14 @@ import {
 
 export type SupportedFinalTestModuleId =
   "algebra-fundamental" |
-  "equacoes-inequacoes";
+  "equacoes-inequacoes" |
+  "funcoes";
 
 const SUPPORTED_MODULE_IDS =
   new Set<SupportedFinalTestModuleId>([
     "algebra-fundamental",
     "equacoes-inequacoes",
+    "funcoes",
   ]);
 
 const MAX_ANSWER_COUNT = 10;

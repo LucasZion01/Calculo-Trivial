@@ -256,8 +256,18 @@ export const startFinalTest =
                 );
             }
 
+            if (
+              moduleId ===
+              "equacoes-inequacoes"
+            ) {
+              return finalTestSessions
+                .startEquationsFinalTest(
+                  uid,
+                );
+            }
+
             return finalTestSessions
-              .startEquationsFinalTest(
+              .startFunctionsFinalTest(
                 uid,
               );
           },
@@ -308,8 +318,18 @@ export const submitFinalTest =
                 );
             }
 
+            if (
+              moduleId ===
+              "equacoes-inequacoes"
+            ) {
+              return finalTestSessions
+                .startEquationsFinalTest(
+                  uid,
+                );
+            }
+
             return finalTestSessions
-              .startEquationsFinalTest(
+              .startFunctionsFinalTest(
                 uid,
               );
           },

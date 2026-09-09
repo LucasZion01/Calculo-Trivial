@@ -30,6 +30,9 @@ const ALGEBRA_MODULE_ID =
 const EQUATIONS_MODULE_ID =
   "equacoes-inequacoes";
 
+const FUNCTIONS_MODULE_ID =
+  "funcoes";
+
 const ANSWERS: readonly FinalTestAnswer[] =
   Array.from(
     {
@@ -243,6 +246,42 @@ test(
           uid: "trusted-user",
           moduleId:
             EQUATIONS_MODULE_ID,
+        },
+      ],
+    );
+  },
+);
+
+test(
+  "start accepts authenticated Functions request",
+  async () => {
+    const executor =
+      new FakeFinalTestExecutor();
+
+    const result =
+      await handleStartFinalTest(
+        {
+          authUid: "trusted-user",
+          data: {
+            moduleId:
+              FUNCTIONS_MODULE_ID,
+          },
+        },
+        executor,
+      );
+
+    assert.equal(
+      result.moduleId,
+      FUNCTIONS_MODULE_ID,
+    );
+
+    assert.deepEqual(
+      executor.startCalls,
+      [
+        {
+          uid: "trusted-user",
+          moduleId:
+            FUNCTIONS_MODULE_ID,
         },
       ],
     );
