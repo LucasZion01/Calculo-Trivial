@@ -25,6 +25,10 @@ import {
   LIMITS_FINAL_TEST_CATALOG,
   toPublicLimitsFinalTestQuestion,
 } from "./limitsFinalTestCatalog";
+import {
+  CONTINUITY_FINAL_TEST_CATALOG,
+  toPublicContinuityFinalTestQuestion,
+} from "./continuityFinalTestCatalog";
 
 const ALGEBRA_MODULE_ID =
   "algebra-fundamental";
@@ -37,6 +41,9 @@ const FUNCTIONS_MODULE_ID =
 
 const LIMITS_MODULE_ID =
   "limites";
+
+const CONTINUITY_MODULE_ID =
+  "continuidade";
 
 const FINAL_TEST_QUESTION_COUNT = 10;
 
@@ -149,6 +156,24 @@ export class FinalTestSessionService {
       LIMITS_MODULE_ID,
       LIMITS_FINAL_TEST_CATALOG,
       toPublicLimitsFinalTestQuestion,
+    );
+  }
+
+  /**
+   * Creates one trusted Continuity final-test session.
+   *
+   * @param {string} uid Authenticated user identifier.
+   * @return {Promise<FinalTestSessionResult>} Created session.
+   */
+  // eslint-disable-next-line require-jsdoc
+  async startContinuityFinalTest(
+    uid: string,
+  ): Promise<FinalTestSessionResult> {
+    return this.startFinalTest(
+      uid,
+      CONTINUITY_MODULE_ID,
+      CONTINUITY_FINAL_TEST_CATALOG,
+      toPublicContinuityFinalTestQuestion,
     );
   }
 
