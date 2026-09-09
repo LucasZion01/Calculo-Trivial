@@ -33,6 +33,9 @@ const EQUATIONS_MODULE_ID =
 const FUNCTIONS_MODULE_ID =
   "funcoes";
 
+const LIMITS_MODULE_ID =
+  "limites";
+
 const ANSWERS: readonly FinalTestAnswer[] =
   Array.from(
     {
@@ -288,6 +291,41 @@ test(
   },
 );
 
+test(
+  "start accepts authenticated Limits request",
+  async () => {
+    const executor =
+      new FakeFinalTestExecutor();
+
+    const result =
+      await handleStartFinalTest(
+        {
+          authUid: "trusted-user",
+          data: {
+            moduleId:
+              LIMITS_MODULE_ID,
+          },
+        },
+        executor,
+      );
+
+    assert.equal(
+      result.moduleId,
+      LIMITS_MODULE_ID,
+    );
+
+    assert.deepEqual(
+      executor.startCalls,
+      [
+        {
+          uid: "trusted-user",
+          moduleId:
+            LIMITS_MODULE_ID,
+        },
+      ],
+    );
+  },
+);
 test(
   "start rejects unsupported module",
   async () => {

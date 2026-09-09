@@ -266,8 +266,18 @@ export const startFinalTest =
                 );
             }
 
+            if (
+              moduleId ===
+              "funcoes"
+            ) {
+              return finalTestSessions
+                .startFunctionsFinalTest(
+                  uid,
+                );
+            }
+
             return finalTestSessions
-              .startFunctionsFinalTest(
+              .startLimitsFinalTest(
                 uid,
               );
           },
@@ -328,8 +338,18 @@ export const submitFinalTest =
                 );
             }
 
+            if (
+              moduleId ===
+              "funcoes"
+            ) {
+              return finalTestSessions
+                .startFunctionsFinalTest(
+                  uid,
+                );
+            }
+
             return finalTestSessions
-              .startFunctionsFinalTest(
+              .startLimitsFinalTest(
                 uid,
               );
           },
