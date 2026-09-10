@@ -15,7 +15,8 @@ export type SupportedFinalTestModuleId =
   "algebra-fundamental" |
   "equacoes-inequacoes" |
   "funcoes" |
-  "limites";
+  "limites" |
+  "continuidade";
 
 const SUPPORTED_MODULE_IDS =
   new Set<SupportedFinalTestModuleId>([
@@ -23,6 +24,7 @@ const SUPPORTED_MODULE_IDS =
     "equacoes-inequacoes",
     "funcoes",
     "limites",
+    "continuidade",
   ]);
 
 const MAX_ANSWER_COUNT = 10;

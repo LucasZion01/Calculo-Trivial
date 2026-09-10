@@ -36,6 +36,9 @@ const FUNCTIONS_MODULE_ID =
 const LIMITS_MODULE_ID =
   "limites";
 
+const CONTINUITY_MODULE_ID =
+  "continuidade";
+
 const ANSWERS: readonly FinalTestAnswer[] =
   Array.from(
     {
@@ -321,6 +324,41 @@ test(
           uid: "trusted-user",
           moduleId:
             LIMITS_MODULE_ID,
+        },
+      ],
+    );
+  },
+);
+test(
+  "start accepts authenticated Continuity request",
+  async () => {
+    const executor =
+      new FakeFinalTestExecutor();
+
+    const result =
+      await handleStartFinalTest(
+        {
+          authUid: "trusted-user",
+          data: {
+            moduleId:
+              CONTINUITY_MODULE_ID,
+          },
+        },
+        executor,
+      );
+
+    assert.equal(
+      result.moduleId,
+      CONTINUITY_MODULE_ID,
+    );
+
+    assert.deepEqual(
+      executor.startCalls,
+      [
+        {
+          uid: "trusted-user",
+          moduleId:
+            CONTINUITY_MODULE_ID,
         },
       ],
     );
