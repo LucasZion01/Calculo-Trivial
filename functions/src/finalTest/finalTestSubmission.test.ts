@@ -30,6 +30,9 @@ import {
 import {
   getLimitsFinalTestQuestion,
 } from "./limitsFinalTestCatalog";
+import {
+  getContinuityFinalTestQuestion,
+} from "./continuityFinalTestCatalog";
 
 import {
   FinalTestSessionResult,
@@ -407,6 +410,67 @@ after(async () => {
   }
 });
 
+/**
+ * Builds trusted Continuity answers for integration tests.
+ *
+ * @param {FinalTestSessionResult} session Trusted test session.
+ * @param {number} correctCount Number of correct answers.
+ * @return {FinalTestAnswer[]} Generated answers.
+ */
+function buildContinuityAnswers(
+  session: FinalTestSessionResult,
+  correctCount: number,
+): FinalTestAnswer[] {
+  if (
+    !Number.isInteger(correctCount) ||
+    correctCount < 0 ||
+    correctCount > session.questions.length
+  ) {
+    throw new Error(
+      "Invalid Continuity correct-answer count.",
+    );
+  }
+
+  return session.questions.map(
+    (publicQuestion, index) => {
+      const trustedQuestion =
+        getContinuityFinalTestQuestion(
+          publicQuestion.id,
+        );
+
+      if (!trustedQuestion) {
+        throw new Error(
+          "Trusted Continuity test question not found.",
+        );
+      }
+
+      if (index < correctCount) {
+        return {
+          questionId: publicQuestion.id,
+          optionId: trustedQuestion.correctOptionId,
+        };
+      }
+
+      const wrongOption =
+        trustedQuestion.options.find(
+          (option) =>
+            option.id !==
+            trustedQuestion.correctOptionId,
+        );
+
+      if (!wrongOption) {
+        throw new Error(
+          "Continuity question has no wrong option.",
+        );
+      }
+
+      return {
+        questionId: publicQuestion.id,
+        optionId: wrongOption.id,
+      };
+    },
+  );
+}
 test(
   "started session exposes ten unique questions without answer keys",
   async () => {
@@ -2211,6 +2275,175 @@ test(
     assert.equal(
       progress.totalGold,
       40,
+    );
+  },
+);
+test(
+  "Continuity session exposes trusted questions without answer keys",
+  async () => {
+    const session =
+      await sessionService
+        .startContinuityFinalTest(
+          "uid_continuity",
+        );
+
+    assert.equal(
+      session.moduleId,
+      "continuidade",
+    );
+
+    assert.equal(
+      session.questions.length,
+      10,
+    );
+
+    for (const question of session.questions) {
+      assert.equal(
+        Object.prototype.hasOwnProperty.call(
+          question,
+          "correctOptionId",
+        ),
+        false,
+      );
+
+      assert.ok(
+        getContinuityFinalTestQuestion(
+          question.id,
+        ),
+      );
+    }
+
+    const stored =
+      await readStoredSession(
+        "uid_continuity",
+        session.sessionId,
+      );
+
+    assert.equal(
+      stored.moduleId,
+      "continuidade",
+    );
+
+    assert.equal(
+      stored.consumed,
+      false,
+    );
+  },
+);
+test(
+  "seven of ten Continuity answers awards nothing",
+  async () => {
+    const session =
+      await sessionService
+        .startContinuityFinalTest(
+          "uid_continuity_fail",
+        );
+
+    const result =
+      await submissionService
+        .processContinuityFinalTest(
+          "uid_continuity_fail",
+          session.sessionId,
+          buildContinuityAnswers(
+            session,
+            7,
+          ),
+        );
+
+    assert.equal(
+      result.submission.correctAnswers,
+      7,
+    );
+
+    assert.equal(
+      result.submission.approved,
+      false,
+    );
+
+    assert.equal(
+      result.reward,
+      null,
+    );
+
+    assert.equal(
+      await readProgress(
+        "uid_continuity_fail",
+      ),
+      null,
+    );
+  },
+);
+test(
+  "eight of ten Continuity answers awards canonical reward",
+  async () => {
+    const session =
+      await sessionService
+        .startContinuityFinalTest(
+          "uid_continuity_pass",
+        );
+
+    const result =
+      await submissionService
+        .processContinuityFinalTest(
+          "uid_continuity_pass",
+          session.sessionId,
+          buildContinuityAnswers(
+            session,
+            8,
+          ),
+        );
+
+    assert.equal(
+      result.submission.moduleId,
+      "continuidade",
+    );
+
+    assert.equal(
+      result.submission.correctAnswers,
+      8,
+    );
+
+    assert.equal(
+      result.submission.approved,
+      true,
+    );
+
+    assert.deepEqual(
+      result.reward,
+      {
+        moduleId: "continuidade",
+        alreadyCompleted: false,
+        xpAwarded: 100,
+        goldAwarded: 45,
+      },
+    );
+
+    const progress =
+      await readProgress(
+        "uid_continuity_pass",
+      );
+
+    assert.ok(progress);
+
+    assert.equal(
+      progress.totalXp,
+      100,
+    );
+
+    assert.equal(
+      progress.totalGold,
+      45,
+    );
+
+    const stored =
+      await readStoredSession(
+        "uid_continuity_pass",
+        session.sessionId,
+      );
+
+    assert.equal(
+      stored.rewardApplied,
+      true,
     );
   },
 );

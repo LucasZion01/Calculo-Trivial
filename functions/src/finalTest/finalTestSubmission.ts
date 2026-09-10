@@ -16,6 +16,9 @@ import {
 import {
   getLimitsFinalTestQuestion,
 } from "./limitsFinalTestCatalog";
+import {
+  getContinuityFinalTestQuestion,
+} from "./continuityFinalTestCatalog";
 
 import {
   ModuleCompletionResult,
@@ -34,6 +37,9 @@ const FUNCTIONS_MODULE_ID =
 
 const LIMITS_MODULE_ID =
   "limites";
+
+const CONTINUITY_MODULE_ID =
+  "continuidade";
 
 const MINIMUM_PASSING_ACCURACY =
   0.8;
@@ -201,6 +207,17 @@ export class FinalTestSubmissionService {
       );
     }
 
+    if (
+      session.moduleId ===
+      CONTINUITY_MODULE_ID
+    ) {
+      return this.processContinuityFinalTest(
+        uid,
+        sessionId,
+        answers,
+      );
+    }
+
     throw new Error(
       "Unsupported final-test module.",
     );
@@ -294,6 +311,29 @@ export class FinalTestSubmissionService {
       answers,
       LIMITS_MODULE_ID,
       getLimitsFinalTestQuestion,
+    );
+  }
+
+  /**
+   * Processes one trusted Continuity final test.
+   *
+   * @param {string} uid Authenticated user identifier.
+   * @param {string} sessionId Trusted session identifier.
+   * @param {FinalTestAnswer[]} answers Submitted answers.
+   * @return {Promise<FinalTestProcessingResult>} Trusted result.
+   */
+  // eslint-disable-next-line require-jsdoc
+  async processContinuityFinalTest(
+    uid: string,
+    sessionId: string,
+    answers: readonly FinalTestAnswer[],
+  ): Promise<FinalTestProcessingResult> {
+    return this.processFinalTest(
+      uid,
+      sessionId,
+      answers,
+      CONTINUITY_MODULE_ID,
+      getContinuityFinalTestQuestion,
     );
   }
 
