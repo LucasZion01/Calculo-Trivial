@@ -154,6 +154,7 @@ class FinalTestService {
   static const String equationsModuleId = 'equacoes-inequacoes';
   static const String functionsModuleId = 'funcoes';
   static const String limitsModuleId = 'limites';
+  static const String continuityModuleId = 'continuidade';
 
   final FirebaseFunctions _functions;
 
@@ -221,6 +222,20 @@ class FinalTestService {
     );
   }
 
+  Future<TrustedFinalTestSession> startContinuityFinalTest() async {
+    final callable = _functions.httpsCallable(
+      'startFinalTest',
+      options: HttpsCallableOptions(timeout: const Duration(seconds: 30)),
+    );
+
+    final result = await callable.call<dynamic>(const <String, dynamic>{
+      'moduleId': continuityModuleId,
+    });
+
+    return TrustedFinalTestSession.fromMap(
+      _stringMap(result.data, 'Invalid startFinalTest response.'),
+    );
+  }
   Future<TrustedFinalTestSubmission> submitAlgebraFinalTest({
     required String sessionId,
     required List<TrustedFinalTestAnswer> answers,
@@ -304,7 +319,26 @@ class FinalTestService {
       _stringMap(result.data, 'Invalid submitFinalTest response.'),
     );
   }
-}
+  Future<TrustedFinalTestSubmission> submitContinuityFinalTest({
+    required String sessionId,
+    required List<TrustedFinalTestAnswer> answers,
+  }) async {
+    final callable = _functions.httpsCallable(
+      'submitFinalTest',
+      options: HttpsCallableOptions(timeout: const Duration(seconds: 30)),
+    );
+
+    final result = await callable.call<dynamic>(<String, dynamic>{
+      'sessionId': sessionId,
+      'answers': answers
+          .map((answer) => answer.toMap())
+          .toList(growable: false),
+    });
+
+    return TrustedFinalTestSubmission.fromMap(
+      _stringMap(result.data, 'Invalid submitFinalTest response.'),
+    );
+  }}
 
 Map<String, dynamic> _stringMap(Object? value, String errorMessage) {
   if (value is! Map) {
