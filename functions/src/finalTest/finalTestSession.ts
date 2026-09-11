@@ -29,6 +29,10 @@ import {
   CONTINUITY_FINAL_TEST_CATALOG,
   toPublicContinuityFinalTestQuestion,
 } from "./continuityFinalTestCatalog";
+import {
+  DERIVATIVES_FINAL_TEST_CATALOG,
+  toPublicDerivativesFinalTestQuestion,
+} from "./derivativesFinalTestCatalog";
 
 const ALGEBRA_MODULE_ID =
   "algebra-fundamental";
@@ -44,6 +48,9 @@ const LIMITS_MODULE_ID =
 
 const CONTINUITY_MODULE_ID =
   "continuidade";
+
+const DERIVATIVES_MODULE_ID =
+  "derivadas";
 
 const FINAL_TEST_QUESTION_COUNT = 10;
 
@@ -174,6 +181,24 @@ export class FinalTestSessionService {
       CONTINUITY_MODULE_ID,
       CONTINUITY_FINAL_TEST_CATALOG,
       toPublicContinuityFinalTestQuestion,
+    );
+  }
+
+  /**
+   * Creates one trusted Derivatives final-test session.
+   *
+   * @param {string} uid Authenticated user identifier.
+   * @return {Promise<FinalTestSessionResult>} Created session.
+   */
+  // eslint-disable-next-line require-jsdoc
+  async startDerivativesFinalTest(
+    uid: string,
+  ): Promise<FinalTestSessionResult> {
+    return this.startFinalTest(
+      uid,
+      DERIVATIVES_MODULE_ID,
+      DERIVATIVES_FINAL_TEST_CATALOG,
+      toPublicDerivativesFinalTestQuestion,
     );
   }
 

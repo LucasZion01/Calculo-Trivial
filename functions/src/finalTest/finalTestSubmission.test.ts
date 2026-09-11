@@ -33,6 +33,9 @@ import {
 import {
   getContinuityFinalTestQuestion,
 } from "./continuityFinalTestCatalog";
+import {
+  getDerivativesFinalTestQuestion,
+} from "./derivativesFinalTestCatalog";
 
 import {
   FinalTestSessionResult,
@@ -2275,6 +2278,58 @@ test(
     assert.equal(
       progress.totalGold,
       40,
+    );
+  },
+);
+test(
+  "Derivatives session exposes trusted questions without answer keys",
+  async () => {
+    const session =
+      await sessionService
+        .startDerivativesFinalTest(
+          "uid_derivatives",
+        );
+
+    assert.equal(
+      session.moduleId,
+      "derivadas",
+    );
+
+    assert.equal(
+      session.questions.length,
+      10,
+    );
+
+    for (const question of session.questions) {
+      assert.equal(
+        Object.prototype.hasOwnProperty.call(
+          question,
+          "correctOptionId",
+        ),
+        false,
+      );
+
+      assert.ok(
+        getDerivativesFinalTestQuestion(
+          question.id,
+        ),
+      );
+    }
+
+    const stored =
+      await readStoredSession(
+        "uid_derivatives",
+        session.sessionId,
+      );
+
+    assert.equal(
+      stored.moduleId,
+      "derivadas",
+    );
+
+    assert.equal(
+      stored.consumed,
+      false,
     );
   },
 );
