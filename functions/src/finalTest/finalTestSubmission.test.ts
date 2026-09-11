@@ -474,6 +474,68 @@ function buildContinuityAnswers(
     },
   );
 }
+
+/**
+ * Builds trusted Derivatives answers for integration tests.
+ *
+ * @param {FinalTestSessionResult} session Trusted test session.
+ * @param {number} correctCount Number of correct answers.
+ * @return {FinalTestAnswer[]} Generated answers.
+ */
+function buildDerivativesAnswers(
+  session: FinalTestSessionResult,
+  correctCount: number,
+): FinalTestAnswer[] {
+  if (
+    !Number.isInteger(correctCount) ||
+    correctCount < 0 ||
+    correctCount > session.questions.length
+  ) {
+    throw new Error(
+      "Invalid Derivatives correct-answer count.",
+    );
+  }
+
+  return session.questions.map(
+    (publicQuestion, index) => {
+      const trustedQuestion =
+        getDerivativesFinalTestQuestion(
+          publicQuestion.id,
+        );
+
+      if (!trustedQuestion) {
+        throw new Error(
+          "Trusted Derivatives test question not found.",
+        );
+      }
+
+      if (index < correctCount) {
+        return {
+          questionId: publicQuestion.id,
+          optionId: trustedQuestion.correctOptionId,
+        };
+      }
+
+      const wrongOption =
+        trustedQuestion.options.find(
+          (option) =>
+            option.id !==
+            trustedQuestion.correctOptionId,
+        );
+
+      if (!wrongOption) {
+        throw new Error(
+          "Derivatives question has no wrong option.",
+        );
+      }
+
+      return {
+        questionId: publicQuestion.id,
+        optionId: wrongOption.id,
+      };
+    },
+  );
+}
 test(
   "started session exposes ten unique questions without answer keys",
   async () => {
@@ -2493,6 +2555,124 @@ test(
     const stored =
       await readStoredSession(
         "uid_continuity_pass",
+        session.sessionId,
+      );
+
+    assert.equal(
+      stored.rewardApplied,
+      true,
+    );
+  },
+);
+
+test(
+  "seven of ten Derivatives answers awards nothing",
+  async () => {
+    const session =
+      await sessionService
+        .startDerivativesFinalTest(
+          "uid_derivatives_fail",
+        );
+
+    const result =
+      await submissionService
+        .processDerivativesFinalTest(
+          "uid_derivatives_fail",
+          session.sessionId,
+          buildDerivativesAnswers(
+            session,
+            7,
+          ),
+        );
+
+    assert.equal(
+      result.submission.correctAnswers,
+      7,
+    );
+
+    assert.equal(
+      result.submission.approved,
+      false,
+    );
+
+    assert.equal(
+      result.reward,
+      null,
+    );
+
+    assert.equal(
+      await readProgress(
+        "uid_derivatives_fail",
+      ),
+      null,
+    );
+  },
+);
+test(
+  "eight of ten Derivatives answers awards canonical reward",
+  async () => {
+    const session =
+      await sessionService
+        .startDerivativesFinalTest(
+          "uid_derivatives_pass",
+        );
+
+    const result =
+      await submissionService
+        .processDerivativesFinalTest(
+          "uid_derivatives_pass",
+          session.sessionId,
+          buildDerivativesAnswers(
+            session,
+            8,
+          ),
+        );
+
+    assert.equal(
+      result.submission.moduleId,
+      "derivadas",
+    );
+
+    assert.equal(
+      result.submission.correctAnswers,
+      8,
+    );
+
+    assert.equal(
+      result.submission.approved,
+      true,
+    );
+
+    assert.deepEqual(
+      result.reward,
+      {
+        moduleId: "derivadas",
+        alreadyCompleted: false,
+        xpAwarded: 110,
+        goldAwarded: 50,
+      },
+    );
+
+    const progress =
+      await readProgress(
+        "uid_derivatives_pass",
+      );
+
+    assert.ok(progress);
+
+    assert.equal(
+      progress.totalXp,
+      110,
+    );
+
+    assert.equal(
+      progress.totalGold,
+      50,
+    );
+
+    const stored =
+      await readStoredSession(
+        "uid_derivatives_pass",
         session.sessionId,
       );
 

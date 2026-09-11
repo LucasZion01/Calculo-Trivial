@@ -19,6 +19,9 @@ import {
 import {
   getContinuityFinalTestQuestion,
 } from "./continuityFinalTestCatalog";
+import {
+  getDerivativesFinalTestQuestion,
+} from "./derivativesFinalTestCatalog";
 
 import {
   ModuleCompletionResult,
@@ -40,6 +43,9 @@ const LIMITS_MODULE_ID =
 
 const CONTINUITY_MODULE_ID =
   "continuidade";
+
+const DERIVATIVES_MODULE_ID =
+  "derivadas";
 
 const MINIMUM_PASSING_ACCURACY =
   0.8;
@@ -218,6 +224,17 @@ export class FinalTestSubmissionService {
       );
     }
 
+    if (
+      session.moduleId ===
+      DERIVATIVES_MODULE_ID
+    ) {
+      return this.processDerivativesFinalTest(
+        uid,
+        sessionId,
+        answers,
+      );
+    }
+
     throw new Error(
       "Unsupported final-test module.",
     );
@@ -337,6 +354,28 @@ export class FinalTestSubmissionService {
     );
   }
 
+  /**
+   * Processes one trusted Derivatives final test.
+   *
+   * @param {string} uid Authenticated user identifier.
+   * @param {string} sessionId Trusted session identifier.
+   * @param {FinalTestAnswer[]} answers Submitted answers.
+   * @return {Promise<FinalTestProcessingResult>} Trusted result.
+   */
+  // eslint-disable-next-line require-jsdoc
+  async processDerivativesFinalTest(
+    uid: string,
+    sessionId: string,
+    answers: readonly FinalTestAnswer[],
+  ): Promise<FinalTestProcessingResult> {
+    return this.processFinalTest(
+      uid,
+      sessionId,
+      answers,
+      DERIVATIVES_MODULE_ID,
+      getDerivativesFinalTestQuestion,
+    );
+  }
   /**
    * Corrects and conditionally rewards one trusted final test.
    *
