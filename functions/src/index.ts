@@ -286,6 +286,16 @@ export const startFinalTest =
                 );
             }
 
+            if (
+              moduleId ===
+              "derivadas"
+            ) {
+              return finalTestSessions
+                .startDerivativesFinalTest(
+                  uid,
+                );
+            }
+
             return finalTestSessions
               .startContinuityFinalTest(
                 uid,
@@ -364,6 +374,16 @@ export const submitFinalTest =
             ) {
               return finalTestSessions
                 .startLimitsFinalTest(
+                  uid,
+                );
+            }
+
+            if (
+              moduleId ===
+              "derivadas"
+            ) {
+              return finalTestSessions
+                .startDerivativesFinalTest(
                   uid,
                 );
             }

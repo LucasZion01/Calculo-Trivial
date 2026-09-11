@@ -365,6 +365,41 @@ test(
   },
 );
 test(
+  "start accepts authenticated Derivatives request",
+  async () => {
+    const executor =
+      new FakeFinalTestExecutor();
+
+    const result =
+      await handleStartFinalTest(
+        {
+          authUid: "trusted-user",
+          data: {
+            moduleId:
+              "derivadas",
+          },
+        },
+        executor,
+      );
+
+    assert.equal(
+      result.moduleId,
+      "derivadas",
+    );
+
+    assert.deepEqual(
+      executor.startCalls,
+      [
+        {
+          uid: "trusted-user",
+          moduleId:
+            "derivadas",
+        },
+      ],
+    );
+  },
+);
+test(
   "start rejects unsupported module",
   async () => {
     const executor =
