@@ -34,8 +34,13 @@ service cloud.firestore {
 
     function validContentLessonIds(values) {
       return values is list
-        && values.size() <= 39
+        && values.size() <= 44
         && values.hasOnly([
+          'precalculo-00-01-reais',
+          'precalculo-00-02-operacoes',
+          'precalculo-00-03-linguagem',
+          'precalculo-00-04-potencias-raizes',
+          'precalculo-00-05-modulo',
           'algebra-01-linguagem',
           'algebra-02-termos-semelhantes',
           'algebra-03-distributiva',
