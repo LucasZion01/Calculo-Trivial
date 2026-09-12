@@ -783,3 +783,41 @@ test(
     );
   },
 );
+
+test(
+  "start preserves trusted HttpsError from executor",
+  async () => {
+    const executor =
+      new FakeFinalTestExecutor();
+
+    executor.start = async () => {
+      throw new HttpsError(
+        "resource-exhausted",
+        "Final-test rate limit reached.",
+        {
+          retryAfterMs: 5000,
+        },
+      );
+    };
+
+    await assert.rejects(
+      () =>
+        handleStartFinalTest(
+          {
+            authUid:
+              "trusted-user",
+            data: {
+              moduleId:
+                ALGEBRA_MODULE_ID,
+            },
+          },
+          executor,
+        ),
+      (error) =>
+        hasHttpsCode(
+          error,
+          "resource-exhausted",
+        ),
+    );
+  },
+);

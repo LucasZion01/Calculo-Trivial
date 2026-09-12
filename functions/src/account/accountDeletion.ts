@@ -102,6 +102,14 @@ implements AccountDeletionExecutor {
         .collection("tutorRateLimits")
         .doc(ownerHash)
         .delete(),
+      this.firestore
+        .collection("finalTestStartRateLimits")
+        .doc(ownerHash)
+        .delete(),
+      this.firestore
+        .collection("finalTestSubmitRateLimits")
+        .doc(ownerHash)
+        .delete(),
     ]);
 
     await this.auth.deleteUser(uid);

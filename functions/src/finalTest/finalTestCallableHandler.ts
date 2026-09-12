@@ -96,7 +96,13 @@ export async function handleStartFinalTest(
       uid,
       moduleId,
     );
-  } catch {
+  } catch (error) {
+    if (
+      error instanceof HttpsError
+    ) {
+      throw error;
+    }
+
     throw new HttpsError(
       "internal",
       "Unable to start final test.",

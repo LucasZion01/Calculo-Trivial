@@ -9,6 +9,7 @@ import {
   getFirestore,
 } from "firebase-admin/firestore";
 import {
+  HttpsError,
   onCall,
 } from "firebase-functions/v2/https";
 
@@ -19,6 +20,9 @@ import {
 import {
   TUTOR_RUNTIME_CONFIG,
 } from "./config/tutorRuntimeConfig";
+import {
+  FINAL_TEST_RUNTIME_CONFIG,
+} from "./config/finalTestRuntimeConfig";
 import {
   contentRepository,
 } from "./data/contentCatalog";
@@ -82,6 +86,24 @@ const idempotency =
 const rateLimit =
   new FirestoreRateLimitStore(
     firestore,
+    TUTOR_RUNTIME_CONFIG.rateLimit,
+    "tutorRateLimits",
+  );
+
+const finalTestStartRateLimit =
+  new FirestoreRateLimitStore(
+    firestore,
+    FINAL_TEST_RUNTIME_CONFIG
+      .startRateLimit,
+    "finalTestStartRateLimits",
+  );
+
+const finalTestSubmitRateLimit =
+  new FirestoreRateLimitStore(
+    firestore,
+    FINAL_TEST_RUNTIME_CONFIG
+      .submitRateLimit,
+    "finalTestSubmitRateLimits",
   );
 
 const sessions =
@@ -242,10 +264,27 @@ export const startFinalTest =
           data: request.data,
         },
         {
-          start: (
+          start: async (
             uid,
             moduleId,
           ) => {
+            const limit =
+              await finalTestStartRateLimit
+                .consume(
+                  uid,
+                  new Date(),
+                );
+
+            if (!limit.allowed) {
+              throw new HttpsError(
+                "resource-exhausted",
+                "Final-test start rate limit reached.",
+                {
+                  retryAfterMs:
+                    limit.retryAfterMs,
+                },
+              );
+            }
             if (
               moduleId ===
               "algebra-fundamental"
@@ -301,17 +340,36 @@ export const startFinalTest =
                 uid,
               );
           },
-          submit: (
+          submit: async (
             uid,
             sessionId,
             answers,
-          ) =>
-            finalTestSubmissions
+          ) => {
+            const limit =
+              await finalTestSubmitRateLimit
+                .consume(
+                  uid,
+                  new Date(),
+                );
+
+            if (!limit.allowed) {
+              throw new HttpsError(
+                "resource-exhausted",
+                "Final-test submit rate limit reached.",
+                {
+                  retryAfterMs:
+                    limit.retryAfterMs,
+                },
+              );
+            }
+
+            return finalTestSubmissions
               .processTrustedFinalTest(
                 uid,
                 sessionId,
                 answers,
-              ),
+              );
+          },
         },
       ),
   );
@@ -334,10 +392,27 @@ export const submitFinalTest =
           data: request.data,
         },
         {
-          start: (
+          start: async (
             uid,
             moduleId,
           ) => {
+            const limit =
+              await finalTestStartRateLimit
+                .consume(
+                  uid,
+                  new Date(),
+                );
+
+            if (!limit.allowed) {
+              throw new HttpsError(
+                "resource-exhausted",
+                "Final-test start rate limit reached.",
+                {
+                  retryAfterMs:
+                    limit.retryAfterMs,
+                },
+              );
+            }
             if (
               moduleId ===
               "algebra-fundamental"
@@ -393,17 +468,36 @@ export const submitFinalTest =
                 uid,
               );
           },
-          submit: (
+          submit: async (
             uid,
             sessionId,
             answers,
-          ) =>
-            finalTestSubmissions
+          ) => {
+            const limit =
+              await finalTestSubmitRateLimit
+                .consume(
+                  uid,
+                  new Date(),
+                );
+
+            if (!limit.allowed) {
+              throw new HttpsError(
+                "resource-exhausted",
+                "Final-test submit rate limit reached.",
+                {
+                  retryAfterMs:
+                    limit.retryAfterMs,
+                },
+              );
+            }
+
+            return finalTestSubmissions
               .processTrustedFinalTest(
                 uid,
                 sessionId,
                 answers,
-              ),
+              );
+          },
         },
       ),
   );

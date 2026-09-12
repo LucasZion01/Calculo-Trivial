@@ -7,12 +7,18 @@ import {
 } from "firebase-admin/firestore";
 
 import {
-  TUTOR_RUNTIME_CONFIG,
-} from "../config/tutorRuntimeConfig";
-import {
   RateLimitResult,
   RateLimitStore,
 } from "./rateLimitTypes";
+
+export interface RateLimitConfig {
+  burstWindowMs: number;
+  burstMaxRequests: number;
+  minuteWindowMs: number;
+  minuteMaxRequests: number;
+  dayWindowMs: number;
+  dayMaxRequests: number;
+}
 
 interface RateLimitDocument {
   burstWindowStart: Timestamp;
@@ -107,6 +113,8 @@ implements RateLimitStore {
    */
   constructor(
     private readonly firestore: Firestore,
+    private readonly config: RateLimitConfig,
+    private readonly collectionName: string,
   ) {}
 
   /**
@@ -121,13 +129,13 @@ implements RateLimitStore {
     now: Date,
   ): Promise<RateLimitResult> {
     const config =
-      TUTOR_RUNTIME_CONFIG.rateLimit;
+      this.config;
 
     const documentId =
       createRateLimitDocumentId(uid);
 
     const reference = this.firestore
-      .collection("tutorRateLimits")
+      .collection(this.collectionName)
       .doc(documentId);
 
     return this.firestore.runTransaction(
