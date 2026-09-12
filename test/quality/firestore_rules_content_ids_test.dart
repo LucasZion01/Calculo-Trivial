@@ -7,11 +7,13 @@ import 'package:calcquest/shared/data/continuity_course_data.dart';
 import 'package:calcquest/shared/data/derivatives_course_data.dart';
 import 'package:calcquest/shared/data/equations_course_data.dart';
 import 'package:calcquest/shared/data/limits_course_data.dart';
+import 'package:calcquest/shared/data/precalculus_foundations_course_data.dart';
 
 void main() {
   test('Firestore accepts every content lesson id used by the app', () {
     final rules = File('firestore.rules').readAsStringSync();
     final appContentLessonIds = <String>{
+      ...precalculusFoundationsCourseLessons.map((lesson) => lesson.id),
       ...algebraCourseLessons.map((lesson) => lesson.id),
       ...equationsCourseLessons.map((lesson) => lesson.id),
       ...limitsCourseLessons.map((lesson) => lesson.id),
