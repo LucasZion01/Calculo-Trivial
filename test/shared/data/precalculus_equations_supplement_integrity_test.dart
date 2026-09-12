@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:calcquest/shared/data/precalculus_equations_supplement_data.dart';
@@ -27,7 +28,10 @@ void main() {
         expect(lesson.takeaways.length, greaterThanOrEqualTo(4));
         expect(lesson.check.question.trim(), isNotEmpty);
         expect(lesson.check.choices.length, greaterThanOrEqualTo(3));
-        expect(lesson.check.correctIndex, inInclusiveRange(0, lesson.check.choices.length - 1));
+        expect(
+          lesson.check.correctIndex,
+          inInclusiveRange(0, lesson.check.choices.length - 1),
+        );
       }
     });
 
