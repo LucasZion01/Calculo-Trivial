@@ -1,4 +1,4 @@
-import 'dart:io';
+﻿import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 
@@ -18,7 +18,7 @@ void main() {
     );
   });
 
-  test('os seis testes finais usam o seletor persistente compartilhado', () {
+  test('os seis testes finais usam o serviço seguro compartilhado', () {
     const files = <String>[
       'algebra_final_test_screen.dart',
       'equations_final_test_screen.dart',
@@ -28,6 +28,9 @@ void main() {
       'derivatives_final_test_screen.dart',
     ];
 
+    final startPattern = RegExp(r'_finalTestService\.start[A-Za-z]+FinalTest\(');
+    final submitPattern = RegExp(r'_finalTestService\.submit[A-Za-z]+FinalTest\(');
+
     for (final file in files) {
       final source = File(
         'lib/features/exercises/presentation/$file',
@@ -35,8 +38,23 @@ void main() {
 
       expect(
         source,
-        contains('FinalTestSessionBuilder.build('),
-        reason: '$file deve usar o histórico persistente do teste final.',
+        contains('FinalTestService'),
+        reason: '$file deve usar o serviço seguro compartilhado.',
+      );
+      expect(
+        source,
+        matches(startPattern),
+        reason: '$file deve iniciar o teste final pelo backend confiável.',
+      );
+      expect(
+        source,
+        matches(submitPattern),
+        reason: '$file deve enviar o teste final pelo backend confiável.',
+      );
+      expect(
+        source,
+        isNot(contains('FinalTestSessionBuilder.build(')),
+        reason: '$file não deve voltar ao construtor local antigo.',
       );
       expect(
         source,

@@ -69,7 +69,8 @@ readonly BibliographicSource[] = [
       {
         id: "transformacoes_graficos",
         section:
-          "Capítulo 1 — Combinação de funções, translações e escalas de gráficos",
+          "Capítulo 1 — Combinação de funções, translações " +
+          "e escalas de gráficos",
       },
       {
         id: "trigonometria",
@@ -193,7 +194,8 @@ readonly BibliographicSource[] = [
       {
         id: "funcoes_elementares",
         section:
-          "Funções constante, afim, quadrática, modular e outras funções elementares",
+          "Funções constante, afim, quadrática, modular " +
+          "e outras funções elementares",
       },
       {
         id: "composicao_inversa",
