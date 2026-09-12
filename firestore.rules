@@ -173,6 +173,94 @@ service cloud.firestore {
         && data.updatedAt == request.time;
     }
 
+    function canonicalProgressIsInitial() {
+      let data = request.resource.data;
+
+      return data.completedLessonIds == []
+        && data.completedContentLessonIds == []
+        && data.algebraFundamentalCompleted == false
+        && data.equationsAndInequationsCompleted == false
+        && data.functionsCompleted == false
+        && data.limitsCompleted == false
+        && data.continuityCompleted == false
+        && data.derivativesCompleted == false
+        && data.totalXp == 0
+        && data.totalGold == 0
+        && data.totalAnswerAttempts == 0
+        && data.correctAnswerAttempts == 0
+        && data.incorrectAnswerAttempts == 0
+        && data.accuracy == 0
+        && data.studyStreak == 0
+        && data.lastStudyDate == null
+        && data.dailyAnsweredQuestions == 0
+        && data.dailyQuestionGoal == 5
+        && data.lastQuestionSessionIds == {}
+        && data.lastFinalTestSessionIds == {};
+    }
+
+    function canonicalProgressUnchanged() {
+      let before = resource.data;
+      let after = request.resource.data;
+
+      return after.completedLessonIds == before.completedLessonIds
+        && after.algebraFundamentalCompleted == before.algebraFundamentalCompleted
+        && after.equationsAndInequationsCompleted == before.equationsAndInequationsCompleted
+        && after.functionsCompleted == before.functionsCompleted
+        && after.limitsCompleted == before.limitsCompleted
+        && after.continuityCompleted == before.continuityCompleted
+        && after.derivativesCompleted == before.derivativesCompleted
+        && after.totalXp == before.totalXp
+        && after.totalGold == before.totalGold;
+    }
+
+    function clientStatisticsUpdateIsPlausible() {
+      let before = resource.data;
+      let after = request.resource.data;
+
+      return after.totalAnswerAttempts >= before.totalAnswerAttempts
+        && after.totalAnswerAttempts <= before.totalAnswerAttempts + 1
+        && after.correctAnswerAttempts >= before.correctAnswerAttempts
+        && after.correctAnswerAttempts <= before.correctAnswerAttempts + 1
+        && after.correctAnswerAttempts - before.correctAnswerAttempts
+          <= after.totalAnswerAttempts - before.totalAnswerAttempts
+        && (
+          after.dailyAnsweredQuestions == before.dailyAnsweredQuestions
+          || after.dailyAnsweredQuestions == before.dailyAnsweredQuestions + 1
+          || after.dailyAnsweredQuestions == 0
+          || after.dailyAnsweredQuestions == 1
+        )
+        && (
+          after.studyStreak == before.studyStreak
+          || after.studyStreak == before.studyStreak + 1
+          || after.studyStreak == 1
+        );
+    }
+
+    function canonicalProgressReset() {
+      let data = request.resource.data;
+
+      return data.completedLessonIds == []
+        && data.completedContentLessonIds == []
+        && data.algebraFundamentalCompleted == false
+        && data.equationsAndInequationsCompleted == false
+        && data.functionsCompleted == false
+        && data.limitsCompleted == false
+        && data.continuityCompleted == false
+        && data.derivativesCompleted == false
+        && data.totalXp == 0
+        && data.totalGold == 0
+        && data.totalAnswerAttempts == 0
+        && data.correctAnswerAttempts == 0
+        && data.incorrectAnswerAttempts == 0
+        && data.accuracy == 0
+        && data.studyStreak == 0
+        && data.lastStudyDate == null
+        && data.dailyAnsweredQuestions == 0
+        && data.dailyQuestionGoal == 5
+        && data.lastQuestionSessionIds == {}
+        && data.lastFinalTestSessionIds == {};
+    }
+
     match /users/{userId} {
       allow read, delete:
         if isOwner(userId);
@@ -181,9 +269,18 @@ service cloud.firestore {
         allow read, delete:
           if isOwner(userId);
 
-        allow create, update:
+        allow create:
           if isOwner(userId)
-          && validProgress();
+          && validProgress()
+          && canonicalProgressIsInitial();
+
+        allow update:
+          if isOwner(userId)
+          && validProgress()
+          && (
+            (canonicalProgressUnchanged() && clientStatisticsUpdateIsPlausible())
+            || canonicalProgressReset()
+          );
       }
     }
   }
