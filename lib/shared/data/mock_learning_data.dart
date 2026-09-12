@@ -63,8 +63,8 @@ const List<ModuleData> mockModules = [
       ),
       LessonData(
         id: 'funcoes',
-        title: 'Aula 3 — Funções',
-        subtitle: 'Domínio, imagem e gráficos',
+        title: 'Aula 3 — Funções e Pré-Cálculo',
+        subtitle: '14 aulas • domínio, gráficos, trigonometria e cônicas',
         symbol: 'f',
         status: 'Bloqueado',
         isUnlocked: false,
