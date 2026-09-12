@@ -56,7 +56,7 @@ const List<ModuleData> mockModules = [
       LessonData(
         id: 'equacoes-inequacoes',
         title: 'Aula 2 — Equações e Inequações',
-        subtitle: 'Manipulação algébrica e resolução',
+        subtitle: '11 aulas • equações, radicais, módulo e estudo de sinal',
         symbol: '=',
         status: 'Bloqueado',
         isUnlocked: false,
