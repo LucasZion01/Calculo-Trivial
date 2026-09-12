@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:calcquest/shared/data/localized_algebra_course_content.dart';
+import 'package:calcquest/shared/data/precalculus_foundations_course_data.dart';
 import 'package:calcquest/shared/domain/course_lesson_data.dart';
 import 'package:calcquest/shared/state/app_progress.dart';
 import 'package:calcquest/shared/theme/app_colors.dart';
@@ -23,8 +24,13 @@ class AlgebraCourseScreen extends StatefulWidget {
 class _AlgebraCourseScreenState extends State<AlgebraCourseScreen> {
   bool get _isEnglish => Localizations.localeOf(context).languageCode == 'en';
 
-  List<CourseLessonData> get _lessons =>
-      localizedAlgebraCourseLessons(Localizations.localeOf(context));
+  List<CourseLessonData> get _lessons {
+    final locale = Localizations.localeOf(context);
+    return [
+      ...localizedPrecalculusFoundationsCourseLessons(locale),
+      ...localizedAlgebraCourseLessons(locale),
+    ];
+  }
 
   int get _completedCount => _lessons
       .where((lesson) => AppProgress.isContentLessonCompleted(lesson.id))
@@ -101,7 +107,9 @@ class _AlgebraCourseScreenState extends State<AlgebraCourseScreen> {
                   const SizedBox(width: AppSpacing.xs),
                   Expanded(
                     child: Text(
-                      _isEnglish ? 'Fundamental Algebra' : 'Álgebra Fundamental',
+                      _isEnglish
+                          ? 'Precalculus — Algebra Foundations'
+                          : 'Pré-Cálculo — Fundamentos de Álgebra',
                       style: AppTypography.titleMedium,
                     ),
                   ),
@@ -137,8 +145,8 @@ class _AlgebraCourseScreenState extends State<AlgebraCourseScreen> {
                       children: [
                         Text(
                           _isEnglish
-                              ? 'FOUNDATION FOR ALL CALCULUS'
-                              : 'BASE PARA TODO O CÁLCULO',
+                              ? 'PRECALCULUS FOUNDATION'
+                              : 'BASE DE PRÉ-CÁLCULO',
                           style: AppTypography.labelSmall.copyWith(
                             color: AppColors.secondaryLight,
                           ),
@@ -146,8 +154,8 @@ class _AlgebraCourseScreenState extends State<AlgebraCourseScreen> {
                         const SizedBox(height: AppSpacing.xs),
                         Text(
                           _isEnglish
-                              ? 'Turn symbols into strategy'
-                              : 'Transforme símbolos em estratégia',
+                              ? 'Build the language Calculus expects'
+                              : 'Construa a linguagem que o Cálculo exige',
                           style: AppTypography.headingMedium.copyWith(
                             color: AppColors.white,
                           ),
@@ -155,10 +163,12 @@ class _AlgebraCourseScreenState extends State<AlgebraCourseScreen> {
                         const SizedBox(height: AppSpacing.sm),
                         Text(
                           _isEnglish
-                              ? 'Variables, simplification, distribution, powers, '
-                                  'special products, factoring, and algebraic fractions.'
-                              : 'Variáveis, simplificação, distributiva, potências, '
-                                  'produtos notáveis, fatoração e frações algébricas.',
+                              ? 'Real numbers, intervals, operations, variables, powers, roots, '
+                                  'absolute value, simplification, special products, factoring, '
+                                  'and algebraic fractions.'
+                              : 'Números reais, intervalos, operações, variáveis, potências, raízes, '
+                                  'valor absoluto, simplificação, produtos notáveis, fatoração e '
+                                  'frações algébricas.',
                           style: AppTypography.bodyMedium.copyWith(
                             color: AppColors.primaryLight,
                           ),
@@ -191,10 +201,10 @@ class _AlgebraCourseScreenState extends State<AlgebraCourseScreen> {
                   const SizedBox(height: AppSpacing.xs),
                   Text(
                     _isEnglish
-                        ? 'Algebra is the workshop of Calculus. Each lesson teaches '
-                            'a tool you will use in limits, functions, and derivatives.'
-                        : 'A Álgebra é a oficina do Cálculo. Cada aula ensina uma '
-                            'ferramenta que você vai usar em limites, funções e derivadas.',
+                        ? 'Start with the real-number language and progress into the algebraic '
+                            'tools used in functions, limits, and derivatives.'
+                        : 'Comece pela linguagem dos números reais e avance para as ferramentas '
+                            'algébricas usadas em funções, limites e derivadas.',
                     style: AppTypography.bodyMedium,
                   ),
                   const SizedBox(height: AppSpacing.md),
@@ -258,9 +268,9 @@ class _AlgebraCourseScreenState extends State<AlgebraCourseScreen> {
                                     : 'Pratique com feedback imediato, revise cada erro e '
                                         'depois faça um teste final separado.')
                               : (_isEnglish
-                                    ? 'Complete all eight lessons to unlock guided practice '
+                                    ? 'Complete all $total lessons to unlock guided practice '
                                         'and the final Fundamental Algebra test.'
-                                    : 'Conclua as oito aulas para liberar a prática guiada '
+                                    : 'Conclua as $total aulas para liberar a prática guiada '
                                         'e o teste final de Álgebra Fundamental.'),
                           textAlign: TextAlign.center,
                           style: AppTypography.bodyMedium,

@@ -47,8 +47,8 @@ const List<ModuleData> mockModules = [
     lessons: [
       LessonData(
         id: 'algebra-fundamental',
-        title: 'Aula 1 — Álgebra Fundamental',
-        subtitle: '8 aulas • expressões, potências e fatoração',
+        title: 'Aula 1 — Pré-Cálculo e Álgebra Fundamental',
+        subtitle: '13 aulas • números reais, operações, potências e fatoração',
         symbol: 'x',
         status: 'Comece aqui',
         isUnlocked: true,
@@ -56,15 +56,15 @@ const List<ModuleData> mockModules = [
       LessonData(
         id: 'equacoes-inequacoes',
         title: 'Aula 2 — Equações e Inequações',
-        subtitle: 'Manipulação algébrica e resolução',
+        subtitle: '11 aulas • equações, radicais, módulo e estudo de sinal',
         symbol: '=',
         status: 'Bloqueado',
         isUnlocked: false,
       ),
       LessonData(
         id: 'funcoes',
-        title: 'Aula 3 — Funções',
-        subtitle: 'Domínio, imagem e gráficos',
+        title: 'Aula 3 — Funções e Pré-Cálculo',
+        subtitle: '14 aulas • domínio, gráficos, trigonometria e cônicas',
         symbol: 'f',
         status: 'Bloqueado',
         isUnlocked: false,

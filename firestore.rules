@@ -34,8 +34,13 @@ service cloud.firestore {
 
     function validContentLessonIds(values) {
       return values is list
-        && values.size() <= 39
+        && values.size() <= 61
         && values.hasOnly([
+          'precalculo-00-01-reais',
+          'precalculo-00-02-operacoes',
+          'precalculo-00-03-linguagem',
+          'precalculo-00-04-potencias-raizes',
+          'precalculo-00-05-modulo',
           'algebra-01-linguagem',
           'algebra-02-termos-semelhantes',
           'algebra-03-distributiva',
@@ -52,6 +57,23 @@ service cloud.firestore {
           'equations-06-quadraticas',
           'equations-07-inequacoes',
           'equations-08-modulo-revisao',
+          'equations-09-radicais',
+          'equations-10-inequacoes-quadraticas',
+          'equations-11-inequacoes-racionais',
+          'funcoes-01-conceito-dominio-imagem',
+          'funcoes-02-composicao-inversa',
+          'funcoes-03-transformacoes-graficos',
+          'funcoes-04-polinomiais',
+          'funcoes-05-racionais',
+          'funcoes-06-exponenciais',
+          'funcoes-07-logaritmos',
+          'funcoes-08-radianos-circulo',
+          'funcoes-09-trigonometricas-graficos',
+          'funcoes-10-identidades-equacoes-trig',
+          'funcoes-11-inversas-trig',
+          'funcoes-12-geometria-analitica',
+          'funcoes-13-conicas',
+          'funcoes-14-taxa-media-sintese',
           'limites-01-intuicao',
           'limites-02-laterais',
           'limites-03-propriedades',

@@ -17,10 +17,8 @@ export interface BibliographicSource {
 }
 
 export const RESERVED_BIBLIOGRAPHIC_SOURCE_IDS = [
-  "stewart_calculo_v1_8ed",
   "thomas_calculo_v1_14ed",
   "guidorizzi_calculo_v1_5ed",
-  "iezzi_fme_v1_9ed",
 ] as const;
 
 export const BIBLIOGRAPHIC_SOURCES:
@@ -38,6 +36,10 @@ readonly BibliographicSource[] = [
     year: 2017,
     isbn13: "978-85-221-2583-8",
     sections: [
+      {
+        id: "funcoes_modelos",
+        section: "Capítulo 1 — Funções e modelos",
+      },
       {
         id: "limites_continuidade",
         section:
@@ -60,6 +62,19 @@ readonly BibliographicSource[] = [
     year: 2012,
     isbn13: "978-85-8143-086-7",
     sections: [
+      {
+        id: "funcoes_graficos",
+        section: "Capítulo 1 — Funções e seus gráficos",
+      },
+      {
+        id: "transformacoes_graficos",
+        section:
+          "Capítulo 1 — Combinação de funções, translações e escalas de gráficos",
+      },
+      {
+        id: "trigonometria",
+        section: "Capítulo 1 — Funções trigonométricas",
+      },
       {
         id: "limites_continuidade",
         section: "Capítulo 2 — Limites e continuidade",
@@ -98,6 +113,23 @@ readonly BibliographicSource[] = [
     isbn13: "978-85-216-3557-4",
     sections: [
       {
+        id: "numeros_reais",
+        section: "Capítulo 1 — Números reais",
+      },
+      {
+        id: "funcoes",
+        section: "Capítulo 2 — Funções",
+      },
+      {
+        id: "trigonometria",
+        section:
+          "Seções 2.2–2.3 — Funções trigonométricas",
+      },
+      {
+        id: "operacoes_funcoes",
+        section: "Seção 2.4 — Operações com funções",
+      },
+      {
         id: "limites_continuidade",
         section: "Capítulo 3 — Limite e continuidade",
       },
@@ -125,6 +157,116 @@ readonly BibliographicSource[] = [
       {
         id: "limites_infinito",
         section: "Capítulo 4 — Extensões do conceito de limite",
+      },
+      {
+        id: "exponenciais_logaritmos",
+        section: "Capítulo 6 — Funções exponencial e logarítmica",
+      },
+      {
+        id: "funcoes_inversas",
+        section: "Capítulo 8 — Funções inversas",
+      },
+    ],
+  },
+  {
+    sourceId: "iezzi_fme_v1_9ed",
+    authors: [
+      "Gelson Iezzi",
+      "Carlos Murakami",
+    ],
+    title: "Fundamentos de matemática elementar: conjuntos, funções",
+    volume: "1",
+    edition: "9. ed.",
+    publisher: "Atual",
+    publicationPlace: "São Paulo",
+    year: 2013,
+    isbn13: "978-85-357-1680-1",
+    sections: [
+      {
+        id: "conjuntos_numericos",
+        section: "Conjuntos numéricos",
+      },
+      {
+        id: "introducao_funcoes",
+        section: "Introdução às funções",
+      },
+      {
+        id: "funcoes_elementares",
+        section:
+          "Funções constante, afim, quadrática, modular e outras funções elementares",
+      },
+      {
+        id: "composicao_inversa",
+        section: "Função composta e função inversa",
+      },
+      {
+        id: "equacoes_inequacoes_irracionais",
+        section: "Equações e inequações irracionais",
+      },
+    ],
+  },
+  {
+    sourceId: "iezzi_fme_v2_10ed",
+    authors: [
+      "Gelson Iezzi",
+      "Osvaldo Dolce",
+      "Carlos Murakami",
+    ],
+    title: "Fundamentos de matemática elementar: logaritmos",
+    volume: "2",
+    edition: "10. ed.",
+    publisher: "Atual",
+    publicationPlace: "São Paulo",
+    year: 2013,
+    isbn13: "978-85-357-1682-5",
+    sections: [
+      {
+        id: "exponenciais_logaritmos",
+        section:
+          "Volume 2 — Potências, exponenciais e logaritmos",
+      },
+    ],
+  },
+  {
+    sourceId: "iezzi_fme_v3_9ed",
+    authors: [
+      "Gelson Iezzi",
+    ],
+    title: "Fundamentos de matemática elementar: trigonometria",
+    volume: "3",
+    edition: "9. ed.",
+    publisher: "Atual",
+    publicationPlace: "São Paulo",
+    year: 2013,
+    isbn13: "978-85-357-1684-9",
+    sections: [
+      {
+        id: "trigonometria",
+        section: "Volume 3 — Trigonometria",
+      },
+    ],
+  },
+  {
+    sourceId: "iezzi_fme_v7_6ed",
+    authors: [
+      "Gelson Iezzi",
+    ],
+    title: "Fundamentos de matemática elementar: geometria analítica",
+    volume: "7",
+    edition: "6. ed.",
+    publisher: "Atual",
+    publicationPlace: "São Paulo",
+    year: 2013,
+    isbn13: "978-85-357-1754-9",
+    sections: [
+      {
+        id: "geometria_analitica",
+        section: "Volume 7 — Geometria analítica",
+      },
+      {
+        id: "conicas",
+        section:
+          "Volume 7 — Reta, circunferência e cônicas",
       },
     ],
   },

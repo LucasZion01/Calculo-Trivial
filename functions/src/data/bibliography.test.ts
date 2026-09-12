@@ -35,6 +35,19 @@ test("section ids are unique inside each source", () => {
   }
 });
 
+test("resolves Stewart precalculus functions reference", () => {
+  const result = resolveReference({
+    sourceId: "stewart_calculo_v1_8ed",
+    sectionId: "funcoes_modelos",
+  });
+
+  assert.notEqual(result, null);
+  assert.equal(
+    result?.section,
+    "Capítulo 1 — Funções e modelos",
+  );
+});
+
 test("resolves Stewart limites_continuidade", () => {
   const result = resolveReference({
     sourceId: "stewart_calculo_v1_8ed",
@@ -48,6 +61,15 @@ test("resolves Stewart limites_continuidade", () => {
   );
 });
 
+test("resolves Thomas graph transformations reference", () => {
+  const result = resolveReference({
+    sourceId: "thomas_calculo_v1_12ed",
+    sectionId: "transformacoes_graficos",
+  });
+
+  assert.notEqual(result, null);
+});
+
 test("resolves Thomas limites_continuidade", () => {
   const result = resolveReference({
     sourceId: "thomas_calculo_v1_12ed",
@@ -57,10 +79,62 @@ test("resolves Thomas limites_continuidade", () => {
   assert.notEqual(result, null);
 });
 
+test("resolves Guidorizzi numbers and functions references", () => {
+  const result = resolveReferences([
+    {
+      sourceId: "guidorizzi_calculo_v1_6ed",
+      sectionId: "numeros_reais",
+    },
+    {
+      sourceId: "guidorizzi_calculo_v1_6ed",
+      sectionId: "funcoes",
+    },
+  ]);
+
+  assert.notEqual(result, null);
+  assert.equal(result?.length, 2);
+});
+
 test("resolves Guidorizzi limites_continuidade", () => {
   const result = resolveReference({
     sourceId: "guidorizzi_calculo_v1_6ed",
     sectionId: "limites_continuidade",
+  });
+
+  assert.notEqual(result, null);
+});
+
+test("resolves Iezzi volume 1 functions reference", () => {
+  const result = resolveReference({
+    sourceId: "iezzi_fme_v1_9ed",
+    sectionId: "introducao_funcoes",
+  });
+
+  assert.notEqual(result, null);
+});
+
+test("resolves Iezzi volume 2 exponential and logarithm reference", () => {
+  const result = resolveReference({
+    sourceId: "iezzi_fme_v2_10ed",
+    sectionId: "exponenciais_logaritmos",
+  });
+
+  assert.notEqual(result, null);
+});
+
+test("resolves Iezzi volume 3 trigonometry reference", () => {
+  const result = resolveReference({
+    sourceId: "iezzi_fme_v3_9ed",
+    sectionId: "trigonometria",
+  });
+
+  assert.notEqual(result, null);
+});
+
+test("resolves Iezzi volume 7 conics reference", () => {
+  const result = resolveReference({
+    sourceId: "iezzi_fme_v7_6ed",
+    sectionId: "conicas",
   });
 
   assert.notEqual(result, null);

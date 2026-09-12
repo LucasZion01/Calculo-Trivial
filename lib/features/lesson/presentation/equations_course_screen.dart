@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:calcquest/shared/data/equations_course_data.dart';
 import 'package:calcquest/shared/data/localized_equations_course_data.dart';
+import 'package:calcquest/shared/data/precalculus_equations_supplement_data.dart';
 import 'package:calcquest/shared/domain/course_lesson_data.dart';
 import 'package:calcquest/shared/localization/lesson_ui_text.dart';
 import 'package:calcquest/shared/state/app_progress.dart';
@@ -23,16 +23,22 @@ class EquationsCourseScreen extends StatefulWidget {
 }
 
 class _EquationsCourseScreenState extends State<EquationsCourseScreen> {
-  List<CourseLessonData> get _lessons =>
-      localizedEquationsCourseLessons(Localizations.localeOf(context));
+  List<CourseLessonData> get _lessons {
+    final locale = Localizations.localeOf(context);
+    return [
+      ...localizedEquationsCourseLessons(locale),
+      ...localizedPrecalculusEquationsSupplementLessons(locale),
+    ];
+  }
 
-  int get _completedCount => equationsCourseLessons
+  int get _completedCount => _lessons
       .where((lesson) => AppProgress.isContentLessonCompleted(lesson.id))
       .length;
 
   bool _isUnlocked(int index) {
+    final lessons = _lessons;
     return index == 0 ||
-        AppProgress.isContentLessonCompleted(equationsCourseLessons[index - 1].id);
+        AppProgress.isContentLessonCompleted(lessons[index - 1].id);
   }
 
   Future<void> _openLesson(int index) async {
@@ -151,8 +157,8 @@ class _EquationsCourseScreenState extends State<EquationsCourseScreen> {
                         const SizedBox(height: AppSpacing.sm),
                         Text(
                           isEnglish
-                              ? 'Linear equations, fractions, systems, quadratics, inequalities, absolute value, and special cases.'
-                              : 'Equações lineares, frações, sistemas, quadráticas, inequações, módulo e casos especiais.',
+                              ? 'Linear, quadratic, radical and rational equations; systems, sign analysis, inequalities, and absolute value.'
+                              : 'Equações lineares, quadráticas, com radicais e racionais; sistemas, estudo de sinal, inequações e módulo.',
                           style: AppTypography.bodyMedium.copyWith(
                             color: AppColors.primaryLight,
                           ),
@@ -185,8 +191,8 @@ class _EquationsCourseScreenState extends State<EquationsCourseScreen> {
                   const SizedBox(height: AppSpacing.xs),
                   Text(
                     isEnglish
-                        ? 'Learn to recognize the problem type, choose the right strategy, and justify each transformation.'
-                        : 'Aprenda a reconhecer o tipo de problema, escolher a estratégia correta e justificar cada transformação.',
+                        ? 'Learn to recognize the problem type, choose the right strategy, preserve restrictions, and justify each transformation.'
+                        : 'Aprenda a reconhecer o tipo de problema, escolher a estratégia correta, preservar restrições e justificar cada transformação.',
                     style: AppTypography.bodyMedium,
                   ),
                   const SizedBox(height: AppSpacing.md),
@@ -245,8 +251,8 @@ class _EquationsCourseScreenState extends State<EquationsCourseScreen> {
                                     ? 'Start guided practice, review any mistakes, and then take a separate final test.'
                                     : 'Faça a prática guiada, revise os erros e depois realize um teste final separado.')
                               : (isEnglish
-                                    ? 'Complete all eight lessons to unlock guided practice, error review, and the final test.'
-                                    : 'Conclua as oito aulas para liberar a prática guiada, a revisão dos erros e o teste final.'),
+                                    ? 'Complete all $total lessons to unlock guided practice, error review, and the final test.'
+                                    : 'Conclua as $total aulas para liberar a prática guiada, a revisão dos erros e o teste final.'),
                           textAlign: TextAlign.center,
                           style: AppTypography.bodyMedium,
                         ),
@@ -296,8 +302,7 @@ class _LessonCard extends StatelessWidget {
         : (isEnglish ? 'Locked' : 'Bloqueada');
 
     return MathCard(
-      title:
-          '${isEnglish ? 'Lesson' : 'Aula'} $number — ${lesson.title}',
+      title: '${isEnglish ? 'Lesson' : 'Aula'} $number — ${lesson.title}',
       subtitle: '${lesson.duration} • ${lesson.description}',
       symbol: lesson.symbol,
       status: status,
