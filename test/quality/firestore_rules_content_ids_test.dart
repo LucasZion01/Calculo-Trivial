@@ -7,6 +7,7 @@ import 'package:calcquest/shared/data/continuity_course_data.dart';
 import 'package:calcquest/shared/data/derivatives_course_data.dart';
 import 'package:calcquest/shared/data/equations_course_data.dart';
 import 'package:calcquest/shared/data/limits_course_data.dart';
+import 'package:calcquest/shared/data/precalculus_equations_supplement_data.dart';
 import 'package:calcquest/shared/data/precalculus_foundations_course_data.dart';
 
 void main() {
@@ -16,6 +17,7 @@ void main() {
       ...precalculusFoundationsCourseLessons.map((lesson) => lesson.id),
       ...algebraCourseLessons.map((lesson) => lesson.id),
       ...equationsCourseLessons.map((lesson) => lesson.id),
+      ...precalculusEquationsSupplementLessons.map((lesson) => lesson.id),
       ...limitsCourseLessons.map((lesson) => lesson.id),
       ...continuityCourseLessons.map((lesson) => lesson.id),
       ...derivativesCourseLessons.map((lesson) => lesson.id),
