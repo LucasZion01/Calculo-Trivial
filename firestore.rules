@@ -34,7 +34,7 @@ service cloud.firestore {
 
     function validContentLessonIds(values) {
       return values is list
-        && values.size() <= 44
+        && values.size() <= 47
         && values.hasOnly([
           'precalculo-00-01-reais',
           'precalculo-00-02-operacoes',
@@ -57,6 +57,9 @@ service cloud.firestore {
           'equations-06-quadraticas',
           'equations-07-inequacoes',
           'equations-08-modulo-revisao',
+          'equations-09-radicais',
+          'equations-10-inequacoes-quadraticas',
+          'equations-11-inequacoes-racionais',
           'limites-01-intuicao',
           'limites-02-laterais',
           'limites-03-propriedades',
