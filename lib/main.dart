@@ -10,6 +10,7 @@ import 'debug/tutor_callable_probe.dart';
 import 'features/splash/presentation/splash_screen.dart';
 import 'firebase_options.dart';
 import 'l10n/app_localizations.dart';
+import 'shared/services/update_notification_service.dart';
 import 'shared/state/app_locale_controller.dart';
 import 'shared/theme/app_colors.dart';
 
@@ -44,6 +45,14 @@ Future<void> main() async {
     debugPrint('Firebase App Check inicializado.');
   } catch (error) {
     debugPrint('Firebase App Check não pôde ser inicializado: $error');
+  }
+
+  try {
+    await UpdateNotificationService.initialize();
+  } catch (error) {
+    debugPrint(
+      'Notificações de atualização não puderam ser inicializadas: $error',
+    );
   }
 
   if (_useFirebaseEmulators && _runTutorProbe) {
