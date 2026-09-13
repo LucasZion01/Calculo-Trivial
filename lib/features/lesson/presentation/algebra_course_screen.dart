@@ -28,7 +28,7 @@ class _AlgebraCourseScreenState extends State<AlgebraCourseScreen> {
     final locale = Localizations.localeOf(context);
     return [
       ...localizedPrecalculusFoundationsCourseLessons(locale),
-      ...localizedAlgebraCourseLessons(locale),
+      ...localizedAlgebraCourseLessons(locale).where((lesson) => lesson.id != 'algebra-04-potencias'),
     ];
   }
 
