@@ -47,8 +47,8 @@ const List<ModuleData> mockModules = [
     lessons: [
       LessonData(
         id: 'algebra-fundamental',
-        title: 'Aula 1 — Pré-Cálculo e Álgebra Fundamental',
-        subtitle: '13 aulas • números reais, operações, potências e fatoração',
+        title: 'Álgebra Fundamental',
+        subtitle: '14 aulas • números reais, polinômios, fatoração e frações algébricas',
         symbol: 'x',
         status: 'Comece aqui',
         isUnlocked: true,
